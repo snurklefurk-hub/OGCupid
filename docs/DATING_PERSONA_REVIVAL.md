@@ -1,0 +1,50 @@
+# Dating Persona Test — Revival Edition (v1)
+
+**Status:** Live interactive preview on the OG Cupid landing page.
+
+## Historical foundation
+
+The early OkCupid Dating Persona Test used four binary axes:
+
+1. **D / R** — Deliberate / Random
+2. **G / B** — Gentle / Brutal
+3. **L / S** — Love / Sex
+4. **D / M** — Dreamer / Master
+
+These yield 16 four-letter classifications and 32 historical character names (two sets of 16). Historical result pages survive on archived blogs and forums, but we have **not** recovered or verified the original question bank, scoring rules, or source code. Do not characterize our quiz as the same test or as scientifically validated.
+
+Useful public historical references:
+- https://www.recoveryourlife.com/forum/archive/index.php/t-27153.html
+- https://forums.civfanatics.com/threads/the-online-dating-persona-test.205252/
+- https://www.newyorker.com/magazine/2011/07/04/looking-for-someone-online-dating
+
+## What we shipped
+
+- 28 **new, independently written** statements (seven per axis), with reverse-worded items.
+- Four answer choices per statement, valued -2 / -1 / +1 / +2.
+- Score each response times its question polarity; sum seven scores per axis.
+- Positive score selects first trait; negative score selects second trait.
+- A zero sum is broken with the majority of signed responses (seven nonzero responses means there is no majority tie).
+- Map four letters to one of 16 archetype codes.
+- Each code provides two selectable historical character names, yielding 32 distinct outcomes.
+- All result prose, introductory copy and stylized SVG cartoon portraits are **original**.
+- The two name sets were historically gendered. Our edition lets visitors choose either without assigning gender or changing scores.
+- Shareable URL: `/?persona=RGLM&style=B#quiz` (example); this includes **only** the type code and selected character set, never the quiz answers.
+- Client-side only: no database, signup, form posting or answer collection.
+
+## Important honesty and safety notes
+
+- **Not the original OkCupid scoring algorithm.** This is an original deterministic recreation of the known structural model.
+- It is for entertainment, not psychological diagnosis or actual match prediction. Do not describe the dimensions as scientifically validated.
+- Historical labels such as "Brutal" and "Sex" are intentionally preserved as archival nomenclature. The newly written questions avoid presenting sexual openness or directness as a moral failing.
+- The result names are archival references. Do not copy original illustrations or descriptions without rights/permission.
+- "OG Cupid" is still a working brand name pending trademark clearance; the quiz is an independent tribute and should not imply an endorsement by OkCupid or Match Group.
+
+## Next iteration candidates
+
+- Test on desktop and mobile browsers with real users.
+- Commission polished, distinct original illustrations for every result.
+- Improve accessibility and test for understandable question interpretation.
+- Ask original-team members about surviving historical scoring, visual materials, or permissions if contact becomes possible.
+- Consider calibrated answer confidence instead of binary labels, while keeping the fun result format.
+- Add optional profile badges *only once* a privacy-conscious real user account system exists.
