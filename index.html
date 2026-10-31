@@ -123,7 +123,9 @@
     .persona-warning{font-size:13px;color:#775c63;min-height:20px;margin:14px 0 0}
     .persona-result-layout{display:grid;grid-template-columns:230px 1fr;gap:28px;align-items:start}
     .persona-portrait{background:#fff0d2;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);padding:8px}
-    .persona-portrait svg{display:block;width:100%;height:auto}
+    .persona-portrait svg,.persona-portrait img{display:block;width:100%;height:auto;max-height:320px;object-fit:contain}
+    .persona-art-note{margin:8px 0 2px;font-size:10px!important;line-height:1.35;color:#514b62}
+    .persona-art-note a{color:var(--blue)}
     .persona-name{font:900 clamp(32px,4vw,49px)/1.04 Impact,"Arial Black",sans-serif;color:var(--rose);margin:3px 0 8px;text-transform:uppercase}
     .persona-code{font-size:15px;font-weight:900;letter-spacing:1px;margin:0 0 17px}
     .persona-result-copy{font-size:17px}
@@ -299,7 +301,7 @@
                 <p>Seven original statements measure each of four dimensions. Answers are weighted -2, -1, +1 or +2, with reverse-worded statements counted in the opposite direction. Positive scores map to the first letter of each pair; negative scores map to the second. On a zero score, the majority direction breaks the tie. The result is one of 16 codes, each with two selectable classic character names. This is an entertainment quiz and its scoring has not been validated scientifically.</p>
                 <p id="persona-score-detail"></p>
               </details>
-              <p class="persona-small">Illustrations, questions and descriptions © 2026 OG Cupid. Original character names and four-axis concept are presented as historical references. Independent project; not endorsed by or affiliated with OkCupid or Match Group.</p>
+              <p class="persona-small">New placeholder illustrations, questions and descriptions © 2026 OG Cupid. Historical illustrations, when available, are credited to their original publisher. Original character names and four-axis concept are presented as historical references. Independent project; not endorsed by or affiliated with OkCupid or Match Group.</p>
             </div>
           </div>
         </section>
@@ -511,6 +513,57 @@
     const code=sides.map(function(s,i){return s.code[sum[i]>0||(sum[i]===0&&majority[i]>0)?0:1];}).join("");
     return {code:code,sum:sum};
   }
+  // Historical artwork references are loaded only when available; fallback portraits remain
+  // visible when vintage hosts refuse requests. Source URLs are from 2006-2011 public archives.
+  const historicalArtwork = {
+    "DGLD-B": {
+      url:"https://lh3.googleusercontent.com/blogger_img_proxy/AEn0k_syBTo21-0pfOkaqZJrkWs_YtVe5MLNe_sLspJ184QvHIrd8IwWHDaKOFRUYB9IX2AW3A5erMfQnAzZTFdZM57s6xZXqIn5Qus6RK-wp3gVCP-EeSg=s0-d",
+      source:"https://dianacorner.blogspot.com/2006/12/32-type-dating-test.html"
+    },
+    "RBSM-B": {
+      url:"https://i0.wp.com/panther.is0.okcupid.com/graphics/persons/RBSMf.gif",
+      source:"https://sheilabryson.wordpress.com/2008/06/04/americanadian-totally-offended-by-okcupid-dating-persona-quiz-results/"
+    },
+    "RBLM-B": {
+      url:"https://panther.is0.okcupid.com/graphics/persons/RBLMf.gif",
+      source:"https://www.recoveryourlife.com/forum/archive/index.php/t-27153.html"
+    },
+    "RGLD-B": {
+      url:"https://panther.is0.okcupid.com/graphics/persons/RGLDf.gif",
+      source:"https://www.recoveryourlife.com/forum/archive/index.php/t-27153.html"
+    }
+  };
+  let portraitRenderSequence=0;
+  function displayPersonaPortrait(type, selectedStyle){
+    const holder=$("persona-portrait");
+    holder.replaceChildren();
+    const fallback=document.createElement("div");
+    fallback.innerHTML=portrait(type,selectedStyle);
+    holder.appendChild(fallback);
+    const key=type+"-"+selectedStyle, entry=historicalArtwork[key];
+    const note=document.createElement("p");
+    note.className="persona-art-note";
+    if(!entry){note.textContent="Original illustration not yet recovered — OGC placeholder";holder.appendChild(note);return;}
+    note.textContent="Checking historical illustration...";
+    holder.appendChild(note);
+    const thisRender=++portraitRenderSequence;
+    const old=new Image();
+    old.alt="Historical OkCupid Dating Persona illustration for "+archetypes[type][selectedStyle][0];
+    old.decoding="async";
+    old.referrerPolicy="no-referrer";
+    old.onload=function(){
+      if(thisRender!==portraitRenderSequence || !holder.isConnected)return;
+      fallback.replaceChildren(old);
+      const credit=document.createElement("a");
+      credit.href=entry.source;credit.target="_blank";credit.rel="noopener noreferrer";
+      credit.textContent="Original OkCupid artwork · archived source ↗";
+      note.replaceChildren(credit);
+    };
+    old.onerror=function(){
+      if(thisRender===portraitRenderSequence)note.textContent="Historical image unavailable — OGC placeholder";
+    };
+    old.src=entry.url;
+  }
   function portrait(type,selectedStyle){
     const idx=order.indexOf(type),a=selectedStyle==="A";
     const palettes=["#ffe2ae","#ffc7d0","#c3e8ed","#c1d8ff","#e2cdff","#ffe0b6","#c8e8c2","#ffdae5"];
@@ -548,7 +601,8 @@
     }).join(" · ")+" ("+code+")";
     $("persona-story").textContent=data.story;
     $("persona-flavor").textContent=chosen[1];
-    $("persona-portrait").innerHTML=portrait(code,style);
+    portraitRenderSequence++;
+    displayPersonaPortrait(code,style);
     const traitHolder=$("persona-traits");traitHolder.replaceChildren();
     code.split("").forEach(function(c,i){
       const span=document.createElement("span");span.textContent=sides[i].labels[sides[i].code.indexOf(c)];traitHolder.appendChild(span);
