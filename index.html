@@ -86,6 +86,67 @@
     .symbol{font-size:35px;display:block;line-height:1;margin-bottom:17px}
     .tile h3{font-size:19px;line-height:1.15;margin:0 0 10px}
     .tile p{font-size:14px;margin:0}
+
+    /* OG Cupid Dating Persona revival: all original artwork is drawn as SVG in the browser */
+    .persona-zone{border-top:3px solid var(--ink);border-bottom:3px solid var(--ink);background:linear-gradient(155deg,#f2ecff,#fff8e8);padding:55px 42px}
+    .persona-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin:0 0 25px}
+    .persona-heading h2{font:900 clamp(37px,5.3vw,63px)/.98 Impact,"Arial Black",sans-serif;text-transform:uppercase;margin:7px 0 12px;max-width:650px}
+    .persona-heading p{max-width:640px;font-size:17px;margin:0}
+    .persona-ribbon{background:var(--rose);color:white;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);padding:12px 15px;transform:rotate(5deg);font-weight:900;text-align:center;white-space:nowrap;font-size:14px}
+    .persona-app{border:3px solid var(--ink);background:var(--white);box-shadow:7px 7px 0 var(--ink);overflow:hidden}
+    .persona-titlebar{background:var(--ink);color:white;padding:10px 17px;display:flex;justify-content:space-between;font-size:12px;font-weight:900;letter-spacing:.5px}
+    .persona-content{padding:30px}
+    .persona-content[hidden],.persona-page[hidden]{display:none}
+    .persona-content h3{font-size:26px;margin:0 0 10px;line-height:1.2}
+    .persona-content p{font-size:16px;line-height:1.55}
+    .persona-explain{background:#fff4ce;border:2px solid var(--ink);padding:13px 16px;margin:19px 0;font-size:14px}
+    .persona-explain p{margin:5px 0}
+    .persona-choice-title{font-weight:900;margin:20px 0 9px}
+    .persona-styles{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 22px}
+    .persona-styles label{display:flex;align-items:center;gap:8px;border:2px solid var(--ink);padding:10px 13px;font-weight:800;background:#f4efff;cursor:pointer}
+    .persona-styles input{accent-color:var(--rose);width:18px;height:18px}
+    .persona-btn{border:3px solid var(--ink);background:var(--blue);box-shadow:4px 4px 0 var(--ink);color:white;font:900 15px "Trebuchet MS",Verdana,sans-serif;padding:13px 20px;cursor:pointer}
+    .persona-btn:hover{background:#3239a8}
+    .persona-btn:disabled{opacity:.5;cursor:not-allowed}
+    .persona-btn-alt{background:white;color:var(--ink)}
+    .persona-btn-alt:hover{background:#f0ebff}
+    .persona-steps{display:flex;justify-content:space-between;gap:10px;font-size:13px;font-weight:900}
+    .persona-meter{height:14px;background:#e3def0;border:2px solid var(--ink);margin:12px 0 22px}
+    .persona-meter-fill{background:var(--rose);height:100%;width:0;transition:width .2s}
+    .persona-question{border:2px solid #c3bfd1;padding:16px;margin:0 0 13px;min-width:0}
+    .persona-question legend{font-weight:900;padding:0 7px;font-size:15px}
+    .persona-question .persona-answers{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+    .persona-question label{display:flex;align-items:center;gap:5px;padding:8px;border:2px solid #ded9e8;font-size:12px;font-weight:700;cursor:pointer;line-height:1.3}
+    .persona-question label:has(input:checked){background:var(--mint);border-color:var(--ink)}
+    .persona-question input{accent-color:var(--blue);flex-shrink:0}
+    .persona-buttons{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:20px}
+    .persona-warning{font-size:13px;color:#775c63;min-height:20px;margin:14px 0 0}
+    .persona-result-layout{display:grid;grid-template-columns:230px 1fr;gap:28px;align-items:start}
+    .persona-portrait{background:#fff0d2;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);padding:8px}
+    .persona-portrait svg{display:block;width:100%;height:auto}
+    .persona-name{font:900 clamp(32px,4vw,49px)/1.04 Impact,"Arial Black",sans-serif;color:var(--rose);margin:3px 0 8px;text-transform:uppercase}
+    .persona-code{font-size:15px;font-weight:900;letter-spacing:1px;margin:0 0 17px}
+    .persona-result-copy{font-size:17px}
+    .persona-traits{display:flex;flex-wrap:wrap;gap:7px;margin:17px 0}
+    .persona-traits span{background:var(--mint);border:2px solid var(--ink);font-size:12px;font-weight:900;padding:5px 8px}
+    .persona-compare{border-top:2px solid #d6d0df;margin:20px 0 0;padding:14px 0 0;font-size:13px}
+    .persona-actions{display:flex;gap:10px;flex-wrap:wrap;margin:26px 0 0}
+    .persona-small{font-size:12px!important;color:#665f72;line-height:1.6;margin:17px 0 0}
+    .persona-how{margin-top:20px;font-size:13px}
+    .persona-how summary{font-weight:900;cursor:pointer}
+    .persona-how p{font-size:13px}
+    @media(max-width:760px){
+      .persona-zone{padding:38px 20px}
+      .persona-heading{display:block}.persona-ribbon{display:inline-block;transform:rotate(2deg);margin:17px 0 4px}
+      .persona-content{padding:21px 17px}
+      .persona-question .persona-answers{grid-template-columns:repeat(2,1fr)}
+      .persona-result-layout{grid-template-columns:1fr}.persona-portrait{max-width:235px}
+    }
+    @media(max-width:410px){
+      .persona-question .persona-answers{grid-template-columns:1fr 1fr}
+      .persona-buttons{flex-wrap:wrap}.persona-btn{padding:11px 13px}
+    }
+
     .quiz{border-top:3px solid var(--ink);border-bottom:3px solid var(--ink);background:var(--yellow);display:grid;grid-template-columns:1fr 1fr;gap:30px;padding:50px 48px;align-items:center}
     .quiz-intro p{font-size:17px;max-width:360px}
     .question{background:var(--white);border:3px solid var(--ink);box-shadow:var(--shadow);padding:24px}
@@ -128,7 +189,7 @@
         </a>
         <nav aria-label="Main navigation">
           <a href="#why">The idea</a>
-          <a href="#quiz">The weird stuff</a>
+          <a href="#quiz">Persona quiz</a>
           <a href="#status">What's next?</a>
         </nav>
       </header>
@@ -139,7 +200,7 @@
             <h1 id="hero-title">AY! WE'RE<br>BRINGING<br>IT <span>BACK.</span></h1>
             <p class="lead">Actual personalities. Ridiculous quizzes. Compatibility that means something. People worth getting to know.</p>
             <p class="tagline">No swipe casino. No empty profiles. No bullshit.</p>
-            <a class="button" href="#why">Tell me more ↘</a>
+            <a class="button" href="#quiz">TAKE THE DATING PERSONA TEST ↘</a>
           </div>
           <div class="art" aria-hidden="true">
             <div class="card">
@@ -178,21 +239,68 @@
             <article class="tile"><span class="symbol" aria-hidden="true">☼</span><h3>More than dating</h3><p>Meet friends. Have conversations. Find your people. Be a little weird together.</p></article>
           </div>
         </section>
-        <section class="quiz" id="quiz" aria-labelledby="quiz-title">
-          <div class="quiz-intro">
-            <p class="eyebrow">A tiny taste of the nonsense</p>
-            <h2 id="quiz-title">THE QUIZZES<br>ARE COMING BACK.</h2>
-            <p>Not a real compatibility test yet—just a little something to remind you why the old internet ruled.</p>
-          </div>
-          <div class="question">
-            <span class="pill">Demo quiz · Question 1 of 1</span>
-            <h3>You've found a mysterious button on the internet. What do you do?</h3>
-            <div class="answers" role="group" aria-label="Choose an answer">
-              <button type="button" data-result="You're the reason the internet used to be fun.">A. Push it immediately.</button>
-              <button type="button" data-result="You read the terms of service. Impressive, honestly.">B. Research it for three hours.</button>
-              <button type="button" data-result="You are a natural community builder. We like that.">C. Ask your friends to push it.</button>
+        <section class="persona-zone" id="quiz" aria-labelledby="persona-title">
+          <div class="persona-heading">
+            <div>
+              <p class="eyebrow">The return of a legend · Playable right now</p>
+              <h2 id="persona-title">THE DATING<br>PERSONA TEST.</h2>
+              <p>Back when dating websites had personality, there was a test that told you exactly what kind of romantic menace you were. We're bringing back its spirit—with fresh questions, original artwork, and all 32 historical persona names.</p>
             </div>
-            <p class="result" id="result" aria-live="polite">Go on. Pick one.</p>
+            <div class="persona-ribbon">32 PERSONAS<br>28 QUESTIONS<br>100% OLD-WEB ENERGY</div>
+          </div>
+          <div class="persona-app" id="persona-app">
+            <div class="persona-titlebar"><span>♥ OG CUPID / PERSONALITY LAB</span><span>REVIVAL EDITION · V1</span></div>
+            <div class="persona-content" id="persona-intro">
+              <h3>So... what's your dating persona?</h3>
+              <p>Answer 28 quick questions. We'll sort you along the four classic scales and reveal one of 32 wonderfully strange archetypes. This quiz is for fun, not a diagnosis, a compatibility score, or a judgment of anyone's worth.</p>
+              <div class="persona-explain"><strong>A note for fellow internet archaeologists:</strong> The original four scales and character names survive. The original questions and scoring key have not been recovered. This is an independently written reconstruction, <strong>not</strong> the 2004 original. All result descriptions and illustrations here are new.</div>
+              <p class="persona-choice-title">Which vintage character collection would you like?</p>
+              <div class="persona-styles" role="radiogroup" aria-label="Character collection">
+                <label><input type="radio" name="persona-style" value="A" checked> Classic set A</label>
+                <label><input type="radio" name="persona-style" value="B"> Classic set B</label>
+              </div>
+              <p class="persona-small">The old test divided its names into men's and women's versions. Here, pick whichever collection you like. Your answers and scores stay the same, and you can switch later.</p>
+              <button type="button" class="persona-btn" id="persona-start">LET'S FIND OUT WHAT I AM ↗</button>
+              <p class="persona-small">No account required. Answers stay in your browser. No data is sent to us.</p>
+            </div>
+            <div class="persona-content" id="persona-play" hidden>
+              <form id="persona-form" novalidate>
+                <div class="persona-steps"><span id="persona-page-label">Page 1 of 4</span><span id="persona-progress-label">0 of 28 answered</span></div>
+                <div class="persona-meter" aria-hidden="true"><div class="persona-meter-fill" id="persona-meter-fill"></div></div>
+                <div id="persona-questions"></div>
+                <p class="persona-warning" id="persona-warning" role="status" aria-live="polite"></p>
+                <div class="persona-buttons">
+                  <button type="button" class="persona-btn persona-btn-alt" id="persona-back">← Previous</button>
+                  <button type="submit" class="persona-btn" id="persona-next">Next questions →</button>
+                </div>
+              </form>
+            </div>
+            <div class="persona-content" id="persona-result" hidden>
+              <p class="eyebrow">Your results are in!</p>
+              <div class="persona-result-layout">
+                <div class="persona-portrait" id="persona-portrait"></div>
+                <div>
+                  <h3 class="persona-name" id="persona-name"></h3>
+                  <p class="persona-code" id="persona-code"></p>
+                  <p class="persona-result-copy" id="persona-story"></p>
+                  <p class="persona-result-copy" id="persona-flavor"></p>
+                  <div class="persona-traits" id="persona-traits"></div>
+                  <p class="persona-compare" id="persona-opposite"></p>
+                </div>
+              </div>
+              <div class="persona-actions">
+                <button class="persona-btn" type="button" id="persona-share">COPY MY RESULT LINK ↗</button>
+                <button class="persona-btn persona-btn-alt" type="button" id="persona-switch">SWITCH CHARACTER SET</button>
+                <button class="persona-btn persona-btn-alt" type="button" id="persona-retake">↺ RETAKE THE TEST</button>
+              </div>
+              <p class="persona-small" id="persona-share-status" role="status" aria-live="polite"></p>
+              <details class="persona-how">
+                <summary>How were my scores calculated?</summary>
+                <p>Seven original statements measure each of four dimensions. Answers are weighted -2, -1, +1 or +2, with reverse-worded statements counted in the opposite direction. Positive scores map to the first letter of each pair; negative scores map to the second. On a zero score, the majority direction breaks the tie. The result is one of 16 codes, each with two selectable classic character names. This is an entertainment quiz and its scoring has not been validated scientifically.</p>
+                <p id="persona-score-detail"></p>
+              </details>
+              <p class="persona-small">Illustrations, questions and descriptions © 2026 OG Cupid. Original character names and four-axis concept are presented as historical references. Independent project; not endorsed by or affiliated with OkCupid or Match Group.</p>
+            </div>
           </div>
         </section>
         <section class="section notice" id="status" aria-labelledby="status-title">
@@ -211,12 +319,285 @@
     </div>
   </div>
   <script>
-    const choices = document.querySelectorAll(".answers button");
-    const result = document.getElementById("result");
-    choices.forEach(button => button.addEventListener("click", () => {
-      choices.forEach(other => other.setAttribute("aria-pressed", String(other === button)));
-      result.textContent = button.dataset.result;
-    }));
+
+(function () {
+  "use strict";
+  const sides = [
+    {code:["D","R"], labels:["Deliberate","Random"], description:"planning vs spontaneity"},
+    {code:["G","B"], labels:["Gentle","Brutal"], description:"gentle vs blunt communication"},
+    {code:["L","S"], labels:["Love","Sex"], description:"bonding vs chemistry"},
+    {code:["D","M"], labels:["Dreamer","Master"], description:"exploration vs decisiveness"}
+  ];
+  /* These are ORIGINAL, not recovered historical, questions.
+     Each: axis 0..3, polarity (+1 means agreement favors first letter), statement. */
+  const groups = [
+    [
+      [1,"Before a first date, I like having a plan rather than just seeing where we end up."],
+      [-1,"Some of my best romantic stories started with absolutely no plan."],
+      [1,"I think through what I want before I make a romantic move."],
+      [-1,"If the chemistry is right, I'm happy to change my plans on the spot."],
+      [1,"I appreciate knowing where a relationship might be heading."],
+      [-1,"I'd rather improvise a date than make reservations."],
+      [1,"When I like someone, I prefer taking my time to make a decision."]
+    ],
+    [
+      [1,"I try to deliver hard truths as kindly as I can."],
+      [-1,"Playful verbal sparring is one of my favorite ways to flirt."],
+      [1,"During disagreements, I prioritize understanding someone's feelings."],
+      [-1,"I respect a date who can handle an extremely direct opinion."],
+      [1,"When someone opens up to me, reassurance is usually my first response."],
+      [-1,"I like a little competition and sharp teasing on a date."],
+      [1,"I'd usually rather be diplomatic than brutally frank."]
+    ],
+    [
+      [1,"When I date, I'm usually hoping for an emotional connection."],
+      [-1,"A date can be great even if it clearly isn't leading to a relationship."],
+      [1,"For me, attraction tends to deepen as trust grows."],
+      [-1,"Physical chemistry can be worthwhile even without a romantic future."],
+      [1,"I'd rather build a slow romance than rush into a spark."],
+      [-1,"I don't need long-term potential to enjoy dating someone."],
+      [1,"When I picture someone special, I imagine sharing ordinary days together."]
+    ],
+    [
+      [1,"I still daydream about how a new romance could unfold."],
+      [-1,"When sparks fly, I'm comfortable taking the lead."],
+      [1,"I like discovering what I want as I go instead of relying on a dating playbook."],
+      [-1,"I usually know what I want and say it with confidence."],
+      [1,"First dates still feel like opening a mystery novel to me."],
+      [-1,"I rarely second-guess myself about romantic decisions."],
+      [1,"Even with experience, love can still make me feel like a beginner."]
+    ]
+  ];
+  const questions = [];
+  for (let round=0; round<7; round++) for (let axis=0; axis<4; axis++) {
+    questions.push({axis:axis, polarity:groups[axis][round][0], prompt:groups[axis][round][1]});
+  }
+  const archetypes = {
+    "DGLD": {
+      A:["The Slow Dancer","You remember the little things: the first song, the quiet joke, the way somebody looked when the room emptied."],
+      B:["The Sonnet","You've probably composed a three-page letter in your head and edited it twice before breakfast."],
+      story:"You bring intention, kindness, romance, and wide-eyed wonder to the party. You don't need a grand gesture so much as one beautiful thing that feels real. Your strength is making someone feel chosen; your trap is waiting for a perfect moment that isn't coming."
+    },
+    "DGLM": {
+      A:["The Gentleman","You can charm a room without making anybody feel like furniture. A rare and useful superpower."],
+      B:["The Maid of Honor","You are somehow everybody's emergency contact and everyone's favorite person at the reception."],
+      story:"Considerate, prepared, relationship-minded, and confident in your choices: you know how to show up. You build trust by doing what you say. Just remember that being dependable doesn't mean you have to organize everyone else's feelings."
+    },
+    "DGSD": {
+      A:["The Backrubber","Your flirting style is approximately 80 percent kindness and 20 percent accidentally making somebody blush."],
+      B:["The Intern","You're still collecting stories and testing the waters, but your curiosity is doing excellent work."],
+      story:"You like chemistry, but you approach it carefully and pay attention to other people's comfort. Curiosity doesn't have to come with chaos. Your greatest talent is making space for possibility; your challenge is speaking up when you want something yourself."
+    },
+    "DGSM": {
+      A:["The Bachelor","You have a plan, a good shirt, and absolutely no intention of being talked into a surprise brunch."],
+      B:["The Dirty Little Secret","You understand discretion. You also understand that a little mystery can do a lot of heavy lifting."],
+      story:"You favor clarity, boundaries, and attraction on your own terms. When something feels right, you can enjoy it without inventing a whole future around it. Keep your honesty as visible as your confidence and nobody has to guess where they stand."
+    },
+    "DBLD": {
+      A:["The Mixed Messenger","Your heart says 'romance'; your face says 'I have notes.' It's a fascinating combination."],
+      B:["The Priss","Your standards are not impossible. They are simply laminated, alphabetized, and filed."],
+      story:"You take feelings seriously, but you're not afraid to speak plainly about them. You have a romantic streak beneath a carefully maintained outer shell. Your superpower is discernment; your danger is mistaking awkwardness for incompatibility."
+    },
+    "DBLM": {
+      A:["The False Messiah","You are brilliant at making an entrance. Working on the exits remains an open issue."],
+      B:["The Battleaxe","You know what you want, you can defend it, and you brought your own metaphorical gavel."],
+      story:"Romantic intentions plus a strong will make you an unmistakable presence. You don't want a vague maybe; you want a real connection with a clear direction. When you make room for another person's pace, your conviction becomes a gift instead of a bulldozer."
+    },
+    "DBSD": {
+      A:["The Billy Goat","You're climbing that mountain, mostly because somebody said it was a bad idea."],
+      B:["The Nymph","You're more complicated than your reputation, and more curious than your carefully chosen outfit suggests."],
+      story:"You're selective, direct, and interested in sparks—but you still enjoy figuring yourself out. There's a mischievous scientist behind the flirting. Your challenge is to stay open to surprises even when you've already decided how the night should go."
+    },
+    "DBSM": {
+      A:["The 5-Night Stand","You keep excellent boundaries, a full calendar, and very few illusions about mixed signals."],
+      B:["The Stiletto","You enter the room with a plan, a punchline, and shoes that could win an argument."],
+      story:"You're decisive, bold, and comfortable talking about chemistry without apology. Independence is your signature. The trick is remembering that being clear and considerate aren't opposites; the best confidence leaves everybody feeling respected."
+    },
+    "RGLD": {
+      A:["The Boy Next Door","You walked over to borrow sugar and accidentally started the cutest subplot in town."],
+      B:["The Window Shopper","You're a sucker for unexpected possibilities; a charming smile can reroute your whole afternoon."],
+      story:"You're spontaneous, gentle, romantic, and full of possibility. You find potential in people and magic in ordinary moments. The upside is warmth and wonder; the downside is falling for an idea before you've met the actual person."
+    },
+    "RGLM": {
+      A:["The Loverboy","Your superpower is remembering that romance should also be fun. Ridiculous concept, apparently."],
+      B:["The Peach","You somehow make flirting feel like being invited to a picnic by your favorite person."],
+      story:"You bring playfulness, tenderness, romantic intentions, and confident momentum. You're the person who says 'let's go' and actually goes. Your gift is making affection feel easy. Don't let your enthusiasm volunteer somebody else for a commitment they haven't made."
+    },
+    "RGSD": {
+      A:["The Poolboy","You're here for sunshine, surprises, and possibly a conversation that lasts until 3 a.m."],
+      B:["The Nurse","You're soothing, curious, and just rebellious enough to surprise people who think they've figured you out."],
+      story:"You like sparks, new experiences, and treating people kindly along the way. Exploration matters to you, but so does everyone's comfort. Your strength is openness; your growth edge is noticing when a playful connection deserves a more direct conversation."
+    },
+    "RGSM": {
+      A:["The Playboy","You're charming on purpose, but the best part might be when you forget to be."],
+      B:["The Playstation","You're a joyful troublemaker with excellent timing and questionable respect for the snooze button."],
+      story:"You combine spontaneity, empathy, physical confidence, and a talent for enjoying the moment. A good time doesn't need a ten-year plan. Just make sure everyone involved knows what kind of story they're signing up for."
+    },
+    "RBLD": {
+      A:["The Manchild","You still believe romance ought to have a little adventure. Fine, maybe a LOT of adventure."],
+      B:["The Wild Rose","You grow where you want, bloom when you please, and are not interested in being arranged."],
+      story:"You're romantic, adventurous, outspoken, and still discovering your own rules. You're drawn to big feelings and bold declarations. Your joy is infectious; your challenge is giving important connections enough steady attention to thrive."
+    },
+    "RBLM": {
+      A:["The Vapor Trail","You leave people with stories. Whether those stories are complaints or love songs is your call."],
+      B:["The Sudden Departure","You're excellent at beginnings, and your suitcase may have developed a personality."],
+      story:"You want meaningful connection, but you move fast and speak plainly. Your confidence makes life exciting, and your unpredictability keeps the plot moving. Before changing chapters, try telling the other character what happened."
+    },
+    "RBSD": {
+      A:["The Last Man on Earth","You have strong opinions, strange adventures, and a surprising amount of hope left."],
+      B:["Half-Cocked","You leap before looking, then look around and declare the scenery interesting."],
+      story:"You're impulsive, direct, curious, and attracted to chemistry without needing all the answers. You bring the energy of a fascinating road trip. A little patience and a few good check-ins can turn the wild detours into excellent memories."
+    },
+    "RBSM": {
+      A:["The Hornivore","You didn't just take the scenic route—you invented a new kind of scenic route."],
+      B:["Genghis Khunt","Subtlety called. You were busy having a much more interesting conversation."],
+      story:"You're spontaneous, blunt, self-assured, and very comfortable with attraction. You know how to turn a spark into a full-blown story. Use that confidence to communicate clearly and make sure the fun is mutual; being daring works best when everyone has agency."
+    }
+  };
+  const order=["DGLD","DGLM","DGSD","DGSM","DBLD","DBLM","DBSD","DBSM","RGLD","RGLM","RGSD","RGSM","RBLD","RBLM","RBSD","RBSM"];
+  const $=function(id){return document.getElementById(id);};
+  const intro=$("persona-intro"),play=$("persona-play"),results=$("persona-result");
+  const form=$("persona-form");
+  const answers=new Array(questions.length).fill(null);
+  const values=[-2,-1,1,2];
+  const options=["Strongly disagree","Somewhat disagree","Somewhat agree","Strongly agree"];
+  let page=0, code=null, style="A", scores=null;
+  function show(which){
+    intro.hidden=which!=="intro";play.hidden=which!=="play";results.hidden=which!=="result";
+  }
+  function totalAnswered(){return answers.filter(function(a){return a!==null;}).length;}
+  function updateProgress(){
+    const n=totalAnswered();
+    $("persona-progress-label").textContent=n+" of 28 answered";
+    $("persona-meter-fill").style.width=(n/28*100)+"%";
+  }
+  function readyPage(){
+    return questions.slice(page*7,page*7+7).every(function(q,j){return answers[page*7+j]!==null;});
+  }
+  function renderPage(){
+    show("play");
+    $("persona-page-label").textContent="Page "+(page+1)+" of 4";
+    $("persona-back").disabled=page===0;
+    $("persona-next").textContent=page===3?"REVEAL MY PERSONA ♥":"Next questions →";
+    $("persona-warning").textContent="";
+    const holder=$("persona-questions");
+    holder.replaceChildren();
+    questions.slice(page*7,page*7+7).forEach(function(q,k){
+      const i=page*7+k;
+      const fieldset=document.createElement("fieldset");fieldset.className="persona-question";
+      const legend=document.createElement("legend");
+      legend.textContent=(i+1)+". "+q.prompt;
+      fieldset.appendChild(legend);
+      const opts=document.createElement("div");opts.className="persona-answers";
+      options.forEach(function(label,j){
+        const wrapper=document.createElement("label");
+        const radio=document.createElement("input");
+        radio.type="radio";radio.name="q"+i;radio.value=String(values[j]);
+        radio.checked=answers[i]===values[j];radio.dataset.question=String(i);
+        const text=document.createElement("span");text.textContent=label;
+        wrapper.appendChild(radio);wrapper.appendChild(text);opts.appendChild(wrapper);
+      });
+      fieldset.appendChild(opts);holder.appendChild(fieldset);
+    });
+    $("persona-next").disabled=!readyPage();
+    updateProgress();
+  }
+  function scoreTest(){
+    const sum=[0,0,0,0],majority=[0,0,0,0];
+    questions.forEach(function(q,i){
+      const weighted=answers[i]*q.polarity;
+      sum[q.axis]+=weighted;majority[q.axis]+=Math.sign(weighted);
+    });
+    const code=sides.map(function(s,i){return s.code[sum[i]>0||(sum[i]===0&&majority[i]>0)?0:1];}).join("");
+    return {code:code,sum:sum};
+  }
+  function portrait(type,selectedStyle){
+    const idx=order.indexOf(type),a=selectedStyle==="A";
+    const palettes=["#ffe2ae","#ffc7d0","#c3e8ed","#c1d8ff","#e2cdff","#ffe0b6","#c8e8c2","#ffdae5"];
+    const bg=palettes[idx%palettes.length];
+    const hair=["#553121","#30233d","#9c503c","#b77b31","#302d4d","#75443d","#61452d","#2c244d"][idx%8];
+    const shirt=["#d94667","#505ac1","#3b9281","#874ec5","#e67e42","#347eaf"][idx%6];
+    const skin=["#f4c298","#a65f40","#e1a47b","#f6d7bb","#8d5438","#d68e61"][idx%6];
+    const symbol=["✦","♥","★","☀","✿","♫","⚡","☾","◆","♣","✧","◎","☂","✳","♦","∞"][idx];
+    const glasses=idx%4===2?'<rect x="77" y="102" width="25" height="15" rx="5" fill="none" stroke="#2a223e" stroke-width="3"/><rect x="118" y="102" width="25" height="15" rx="5" fill="none" stroke="#2a223e" stroke-width="3"/><path d="M102 108 L118 108" stroke="#2a223e" stroke-width="3"/>':'';
+    const hairShape=a?'<path d="M69 101 Q67 44 111 50 Q166 46 151 104 Q149 77 134 75 Q115 86 86 75 Q73 92 69 101" fill="'+hair+'"/>':'<path d="M67 102 Q56 51 111 47 Q167 48 154 116 L161 170 Q144 161 143 121 Q146 83 133 80 Q104 90 85 77 Q71 96 77 126 L68 165 Q51 135 67 102" fill="'+hair+'"/>';
+    const accessory=idx%3===0?'<path d="M92 175 Q110 189 129 175" stroke="#ffe7a5" stroke-width="5" fill="none"/>':idx%3===1?'<path d="M105 177 L112 187 L119 177" stroke="#ffe7a5" stroke-width="4" fill="none"/>':'<circle cx="111" cy="178" r="7" fill="#ffe7a5"/>';
+    return '<svg viewBox="0 0 220 270" role="img" aria-label="Original illustrated cartoon portrait" xmlns="http://www.w3.org/2000/svg">'+
+      '<rect x="0" y="0" width="220" height="270" rx="10" fill="'+bg+'"/>'+
+      '<circle cx="110" cy="111" r="89" fill="#ffffff" opacity=".4"/>'+
+      '<text x="19" y="34" font-family="Georgia,serif" font-size="25" fill="#51407c">'+symbol+'</text>'+
+      '<text x="174" y="45" font-family="Georgia,serif" font-size="21" fill="#51407c">✧</text>'+
+      '<path d="M27 270 Q30 176 95 162 L125 162 Q193 179 192 270 Z" fill="'+shirt+'" stroke="#2c2542" stroke-width="4"/>'+
+      '<rect x="97" y="151" width="29" height="36" rx="11" fill="'+skin+'"/>'+
+      '<ellipse cx="111" cy="114" rx="44" ry="62" fill="'+skin+'" stroke="#5f3a33" stroke-width="2"/>'+
+      hairShape+
+      '<path d="M82 106 Q90 101 98 107 M122 107 Q132 101 140 107" stroke="#3a2526" stroke-width="3" fill="none"/>'+
+      '<circle cx="91" cy="116" r="3.3" fill="#2e2732"/><circle cx="132" cy="116" r="3.3" fill="#2e2732"/>'+
+      '<path d="M109 118 L105 137 Q111 142 117 138" stroke="#b87961" stroke-width="2" fill="none"/>'+
+      '<path d="M97 149 Q111 '+(idx%2?"158":"164")+' 126 148" fill="none" stroke="#963e4b" stroke-width="3.5" stroke-linecap="round"/>'+
+      glasses+accessory+
+      '<rect x="5" y="234" width="210" height="31" rx="2" fill="#ffffff" stroke="#2c2542" stroke-width="2"/>'+
+      '<text x="110" y="255" text-anchor="middle" font-size="16" font-weight="bold" font-family="Verdana,sans-serif" fill="#2c2542">'+type+' / '+selectedStyle+'</text></svg>';
+  }
+  function renderResult(){
+    const data=archetypes[code];if(!data)return;
+    const chosen=data[style];
+    $("persona-name").textContent=chosen[0];
+    $("persona-code").textContent=code.split("").map(function(c,i){
+      return sides[i].labels[sides[i].code.indexOf(c)];
+    }).join(" · ")+" ("+code+")";
+    $("persona-story").textContent=data.story;
+    $("persona-flavor").textContent=chosen[1];
+    $("persona-portrait").innerHTML=portrait(code,style);
+    const traitHolder=$("persona-traits");traitHolder.replaceChildren();
+    code.split("").forEach(function(c,i){
+      const span=document.createElement("span");span.textContent=sides[i].labels[sides[i].code.indexOf(c)];traitHolder.appendChild(span);
+    });
+    const inverse=code.split("").map(function(c,i){return sides[i].code[1-sides[i].code.indexOf(c)];}).join("");
+    $("persona-opposite").textContent="Your opposite on all four scales: "+inverse+" — "+archetypes[inverse][style][0]+". Different isn't worse. It just makes for a very interesting conversation.";
+    $("persona-score-detail").textContent=scores?"Your directional scores: "+sides.map(function(s,i){return s.description+": "+scores[i];}).join(" · ")+". Positive means the first trait; negative means the second.":"This is a shared result link; no answers or scores were stored with it.";
+    $("persona-share-status").textContent="";
+    show("result");
+  }
+  function resultUrl(){
+    const url=new URL(window.location.href);
+    url.searchParams.set("persona",code);
+    url.searchParams.set("style",style);
+    url.hash="quiz";
+    return url.toString();
+  }
+  $("persona-start").addEventListener("click",function(){
+    const selected=document.querySelector('input[name="persona-style"]:checked');
+    style=selected?selected.value:"A";page=0;renderPage();$("quiz").scrollIntoView({behavior:"smooth",block:"start"});
+  });
+  $("persona-questions").addEventListener("change",function(e){
+    const radio=e.target;
+    if(radio.matches('input[type="radio"][data-question]')){
+      answers[Number(radio.dataset.question)]=Number(radio.value);
+      $("persona-next").disabled=!readyPage();updateProgress();
+    }
+  });
+  $("persona-back").addEventListener("click",function(){if(page>0){page--;renderPage();$("quiz").scrollIntoView({behavior:"smooth"});}});
+  form.addEventListener("submit",function(e){
+    e.preventDefault();
+    if(!readyPage()){$("persona-warning").textContent="Answer all seven questions on this page to continue.";return;}
+    if(page<3){page++;renderPage();$("quiz").scrollIntoView({behavior:"smooth"});return;}
+    const scored=scoreTest();code=scored.code;scores=scored.sum;renderResult();$("quiz").scrollIntoView({behavior:"smooth"});
+  });
+  $("persona-switch").addEventListener("click",function(){style=style==="A"?"B":"A";renderResult();});
+  $("persona-retake").addEventListener("click",function(){for(let i=0;i<answers.length;i++)answers[i]=null;page=0;code=null;scores=null;show("intro");});
+  $("persona-share").addEventListener("click",async function(){
+    const url=resultUrl();
+    try{await navigator.clipboard.writeText(url);$("persona-share-status").textContent="Link copied! Send it to your favorite weirdos.";}
+    catch(e){$("persona-share-status").textContent="Copy this result URL: "+url;}
+  });
+  const params=new URLSearchParams(window.location.search);
+  const fromUrl=params.get("persona"),fromStyle=params.get("style");
+  if(fromUrl&&Object.prototype.hasOwnProperty.call(archetypes,fromUrl)){
+    code=fromUrl;style=fromStyle==="B"?"B":"A";scores=null;renderResult();
+  }
+})();
+
   </script>
 </body>
 </html>
