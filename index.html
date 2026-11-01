@@ -358,6 +358,28 @@ header .wordmark{flex-shrink:0}
  .new-hero .manifesto-promise{font-size:15px}
  .feature-section{padding:43px 22px}
 }
+
+    /* Persistent old-web interest clicker. Display never silently substitutes a local-only count. */
+    .interest-section{border-top:3px solid var(--ink);background:#fce7ef;padding:60px 46px 64px;display:grid;grid-template-columns:minmax(0,1.12fr) minmax(290px,.88fr);gap:44px;align-items:center}
+    .interest-copy h2{font:900 clamp(35px,4.5vw,55px)/1.05 Impact,"Arial Black",sans-serif;letter-spacing:-.4px;margin:6px 0 18px;text-transform:uppercase;max-width:650px}
+    .interest-copy>p:not(.eyebrow){font-size:20px;font-weight:700;line-height:1.5;margin:0 0 16px;max-width:590px}
+    .interest-copy .interest-subcopy{font-size:15px!important;color:#665779;font-weight:500!important}
+    .interest-counter{border:3px solid var(--ink);background:#fffdf6;padding:17px;box-shadow:8px 8px 0 var(--ink);max-width:440px;width:100%;justify-self:end}
+    .interest-counter-label{display:flex;justify-content:space-between;gap:12px;font-size:10px;font-weight:900;letter-spacing:1px;margin:0 0 12px}
+    .interest-display-frame{border:4px ridge #6f6482;background:#27243a;padding:14px 12px 10px;box-shadow:inset 2px 3px 11px #090914}
+    .interest-tally-label{font-size:10px;letter-spacing:2.5px;color:#f9e4b1;text-align:center;font-weight:900;margin-bottom:9px}
+    .interest-digits{display:block;color:#ffdb85;text-align:center;font:bold clamp(31px,5.4vw,54px)/1 "Courier New",monospace;letter-spacing:2px;white-space:nowrap;text-shadow:0 0 11px rgba(255,196,100,.38);font-variant-numeric:tabular-nums}
+    .interest-tally-footer{display:flex;justify-content:space-between;margin-top:9px;font:bold 9px/1.2 "Courier New",monospace;letter-spacing:1px;color:#b5acc5}
+    .interest-button{width:100%;margin-top:16px;display:flex;align-items:center;justify-content:center;gap:16px;padding:14px 18px;min-height:75px;border:3px solid var(--ink);border-bottom-width:7px;border-radius:10px;background:var(--rose);color:white;box-shadow:4px 5px 0 var(--ink);font:900 25px/1 Impact,"Arial Black",sans-serif;letter-spacing:1px;cursor:pointer;touch-action:manipulation;transition:transform .09s,box-shadow .09s,background .09s}
+    .interest-button .interest-button-icon{font:900 31px/1 Arial,sans-serif;color:#ffe6ad}
+    .interest-button small{font:900 14px/1 "Trebuchet MS",sans-serif;background:var(--yellow);color:var(--ink);border:2px solid var(--ink);padding:4px 7px;vertical-align:middle}
+    .interest-button:hover{background:#cf3153}
+    .interest-button:active,.interest-button.is-clicked{transform:translate(3px,4px);box-shadow:1px 1px 0 var(--ink);border-bottom-width:3px}
+    .interest-button:disabled{opacity:.55;cursor:wait}
+    .interest-hint{font:700 12px/1.5 "Trebuchet MS",Verdana,sans-serif;text-align:center;color:#6c5a71;margin:15px 0 0}
+    .interest-feedback{font:800 12px/1.5 "Trebuchet MS",Verdana,sans-serif;text-align:center;color:var(--ink);min-height:19px;margin:8px 0 0}
+    @media(max-width:800px){.interest-section{grid-template-columns:1fr;padding:46px 25px;gap:24px}.interest-counter{justify-self:center;max-width:470px}}
+    @media(max-width:440px){.interest-section{padding:43px 18px}.interest-counter{padding:12px}.interest-digits{font-size:clamp(27px,9.2vw,43px)}.interest-button{font-size:23px}}
 </style>
 </head>
 <body>
@@ -505,6 +527,25 @@ header .wordmark{flex-shrink:0}
             <p>OG Cupid is an independent project under construction. The Dating Persona Test is playable now; member accounts, compatibility search, messaging, and community spaces aren't live yet. No paid plans or waitlist at this point.</p>
           </div>
           <div class="stamp" aria-hidden="true">GOOD<br>WEIRD<br>COMING<br>SOON &#x2665;</div>
+        </section>
+        <section class="interest-section" id="interest" aria-labelledby="interest-title">
+          <div class="interest-copy">
+            <p class="eyebrow">A LITTLE SOMETHING FOR THE PEOPLE WHO GET IT</p>
+            <h2 id="interest-title">HEY, INTERESTED? GIVE THIS A CLICK.</h2>
+            <p>If you're really interested in what we're trying to do, give it a bunch. We'll see it.</p>
+            <p class="interest-subcopy">Consider this our extremely scientific, very old-school enthusiasm detector. No signup necessary.</p>
+          </div>
+          <div class="interest-counter" aria-label="The OG Cupid enthusiasm counter">
+            <div class="interest-counter-label"><span>&#x2665; OG CUPID</span><span>THE INTEREST-O-METER</span></div>
+            <div class="interest-display-frame">
+              <div class="interest-tally-label">THE RUNNING TALLY</div>
+              <output class="interest-digits" id="interest-digits" aria-label="Total interest clicks" aria-live="off">-------</output>
+              <div class="interest-tally-footer"><span>EST. 2026</span><span>VERY OFFICIAL</span></div>
+            </div>
+            <button class="interest-button" id="interest-button" type="button" aria-describedby="interest-hint"><span class="interest-button-icon" aria-hidden="true">&#x2665;</span><span>CLICK ME! <small>+1</small></span></button>
+            <p class="interest-hint" id="interest-hint">Every push adds to the tally. Make some noise.</p>
+            <p class="interest-feedback" id="interest-feedback" role="status" aria-live="polite">Connecting the counter...</p>
+          </div>
         </section>
       </main>
       <footer>
@@ -944,6 +985,101 @@ header .wordmark{flex-shrink:0}
 
   </script>
 <script>document.querySelectorAll('[data-preview-action]').forEach(function(button){button.addEventListener('click',function(){document.getElementById('profile-demo-message').hidden=false;});});</script>
+
+<script>
+(function(){
+  "use strict";
+  // Shared persistent counter service. We can swap this for OG Cupid's own backend later.
+  const endpoint="https://countapi.mileshilliard.com/api/v1/";
+  const key="ogcupid_community_interest_v1_20261101_5575603";
+  const counter=document.getElementById("interest-digits");
+  const button=document.getElementById("interest-button");
+  const feedback=document.getElementById("interest-feedback");
+  if(!counter||!button||!feedback)return;
+
+  let confirmed=null;
+  let queued=0;
+  let sending=false;
+  let clickAnimation=null;
+  const format=function(n){return String(Math.max(0,Math.floor(n))).padStart(7,"0");};
+  const display=function(){
+    if(confirmed===null&&queued===0){counter.textContent="-------";return;}
+    counter.textContent=format(Math.max(0,confirmed===null?0:confirmed)+queued);
+  };
+  function numeric(value){
+    const n=Number(value);
+    if(!Number.isSafeInteger(n)||n<0)throw new Error("Invalid counter value");
+    return n;
+  }
+  async function request(action){
+    const controller=new AbortController();
+    const timeout=setTimeout(function(){controller.abort();},9000);
+    try{
+      const response=await fetch(endpoint+action+"/"+key+"?t="+Date.now(),{
+        method:"GET",cache:"no-store",mode:"cors",signal:controller.signal
+      });
+      if(response.status===404&&action==="get")return 0;
+      if(!response.ok)throw new Error("Counter unavailable: "+response.status);
+      return numeric((await response.json()).value);
+    }finally{clearTimeout(timeout);}
+  }
+  async function refresh(){
+    try{
+      const value=await request("get");
+      confirmed=Math.max(confirmed===null?0:confirmed,value);
+      display();
+      if(!sending&&queued===0)feedback.textContent="Ready when you are. Give it a click!";
+    }catch(err){
+      if(confirmed===null&&queued===0){
+        counter.textContent="-------";
+        feedback.textContent="Counter is temporarily unavailable. Try clicking to reconnect.";
+      }
+    }
+  }
+  async function process(){
+    if(sending||queued===0)return;
+    sending=true;
+    while(queued>0){
+      try{
+        const value=await request("hit");
+        confirmed=Math.max(confirmed===null?0:confirmed,value);
+        queued--;
+        display();
+        feedback.textContent="CLACK! That one's counted. Keep 'em coming!";
+      }catch(err){
+        queued--;
+        display();
+        feedback.textContent="That click didn't go through. Give it another try.";
+        // Preserve extra pending taps but don't hammer a failing service.
+        if(queued>0){
+          queued=0;
+          display();
+        }
+        break;
+      }
+    }
+    sending=false;
+  }
+  button.addEventListener("click",function(){
+    if(queued>=40){
+      feedback.textContent="We're still counting your clicks. Keep 'em coming in a moment!";
+      return;
+    }
+    queued++;
+    display();
+    feedback.textContent="CLACK!";
+    button.classList.remove("is-clicked");
+    void button.offsetWidth;
+    button.classList.add("is-clicked");
+    clearTimeout(clickAnimation);
+    clickAnimation=setTimeout(function(){button.classList.remove("is-clicked");},110);
+    process();
+  });
+  refresh();
+  document.addEventListener("visibilitychange",function(){if(!document.hidden&&queued===0)refresh();});
+  window.setInterval(function(){if(!document.hidden&&queued===0&&!sending)refresh();},30000);
+})();
+</script>
 </body>
 </html>
 
