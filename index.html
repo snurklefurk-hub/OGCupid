@@ -178,6 +178,20 @@
     .persona-traits span{background:var(--mint);border:2px solid var(--ink);font-size:12px;font-weight:900;padding:5px 8px}
     .persona-compare{border-top:2px solid #d6d0df;margin:20px 0 0;padding:14px 0 0;font-size:13px}
     .persona-actions{display:flex;gap:10px;flex-wrap:wrap;margin:26px 0 0}
+
+    .persona-archive-buttons{display:flex;gap:11px;flex-wrap:wrap;margin:15px 0}
+    .persona-catalog-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+    .persona-catalog-entry{display:block;background:#f8f6ff;border:2px solid #b9b3d0;padding:11px 12px;text-align:left;color:var(--ink);cursor:pointer;font:inherit;min-width:0}
+    .persona-catalog-entry:hover,.persona-catalog-entry:focus-visible{border-color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+    .persona-catalog-name{font-size:16px;font-weight:900;display:block;line-height:1.2}
+    .persona-catalog-code{font-size:11px;font-weight:800;color:#5b5871;display:block;margin:4px 0 8px}
+    .persona-catalog-flags{display:flex;gap:5px;flex-wrap:wrap;margin:8px 0}
+    .persona-archive-flag{display:inline-block;padding:4px 6px;background:#f2f0f4;border:1px solid #b9b2bf;font-size:10px;line-height:1.2;font-weight:900}
+    .persona-archive-flag.ok{background:#def0e1;border-color:#8dad97}
+    .persona-archive-flag.pending{background:#fff1ce;border-color:#cbb478}
+    .persona-original-copy p{font-size:16px;line-height:1.65;margin:0 0 14px}
+    .persona-catalog-intro{font-size:15px;line-height:1.6;margin:0 0 18px}
+    @media(max-width:610px){.persona-catalog-grid{grid-template-columns:1fr}}
     .persona-small{font-size:12px!important;color:#665f72;line-height:1.6;margin:17px 0 0}
     .persona-how{margin-top:20px;font-size:13px}
     .persona-how summary{font-weight:900;cursor:pointer}
@@ -390,14 +404,14 @@ header .wordmark{flex-shrink:0}
             <div class="persona-content" id="persona-intro">
               <h3>So... what's your dating persona?</h3>
               <p>Answer 28 quick questions. We'll sort you along the four classic scales and reveal one of 32 wonderfully strange archetypes. This quiz is for fun, not a diagnosis, a compatibility score, or a judgment of anyone's worth.</p>
-              <div class="persona-explain"><strong>A note for fellow internet archaeologists:</strong> The original four scales and character names survive. The original questions and scoring key have not been recovered. This is an independently written reconstruction, <strong>not</strong> the 2004 original. All result descriptions and illustrations here are new.</div>
+              <div class="persona-explain"><strong>A note for fellow internet archaeologists:</strong> The original four scales and character names survive. The original questions and scoring key have not been recovered. This is an independently written reconstruction, <strong>not</strong> the 2004 original. Some historical result writeups have now been restored and are individually labeled.</div>
               <p class="persona-choice-title">Choose your Dating Persona results:</p>
               <div class="persona-styles" role="radiogroup" aria-label="Character collection">
                 <label><input type="radio" name="persona-style" value="A" checked> Man</label>
                 <label><input type="radio" name="persona-style" value="B"> Woman</label>
               </div>
               <p class="persona-small">The original test had separate results for men and women. Your answers use the same four-dimension scoring system.</p>
-              <button type="button" class="persona-btn" id="persona-start">LET'S FIND OUT WHAT I AM &#x2197;</button>
+              <div class="persona-archive-buttons"><button type="button" class="persona-btn" id="persona-start">LET'S FIND OUT WHAT I AM &#x2197;</button><button type="button" class="persona-btn persona-btn-alt" id="persona-see-all-intro">SEE ALL 32 RESULTS &#x2197;</button></div>
               <p class="persona-small">No account required. Answers stay in your browser. No data is sent to us.</p>
             </div>
             <div class="persona-content" id="persona-play" hidden>
@@ -421,6 +435,8 @@ header .wordmark{flex-shrink:0}
                   <p class="persona-code" id="persona-code"></p>
                   <p class="persona-result-copy" id="persona-story"></p>
                   <p class="persona-result-copy" id="persona-flavor"></p>
+                  <div class="persona-original-copy" id="persona-original-copy" hidden></div>
+                  <div class="persona-catalog-flags"><span class="persona-archive-flag" id="persona-art-flag">ORIGINAL IMAGE MISSING</span><span class="persona-archive-flag" id="persona-text-flag">ORIGINAL TEXT MISSING</span></div>
                   <div class="persona-traits" id="persona-traits"></div>
                   <p class="persona-compare" id="persona-opposite"></p>
                 </div>
@@ -429,6 +445,7 @@ header .wordmark{flex-shrink:0}
                 <button class="persona-btn" type="button" id="persona-share">COPY MY RESULT LINK &#x2197;</button>
                 <button class="persona-btn persona-btn-alt" type="button" id="persona-switch">SWITCH MAN / WOMAN RESULT</button>
                 <button class="persona-btn persona-btn-alt" type="button" id="persona-retake">&#x21BA; RETAKE THE TEST</button>
+                <button class="persona-btn persona-btn-alt" type="button" id="persona-see-all-result">SEE ALL 32 RESULTS &#x2197;</button>
               </div>
               <p class="persona-small" id="persona-share-status" role="status" aria-live="polite"></p>
               <details class="persona-how">
@@ -436,7 +453,13 @@ header .wordmark{flex-shrink:0}
                 <p>Seven original statements measure each of four dimensions. Answers are weighted -2, -1, +1 or +2, with reverse-worded statements counted in the opposite direction. Positive scores map to the first letter of each pair; negative scores map to the second. On a zero score, the majority direction breaks the tie. The result is one of 16 codes, each with two selectable classic character names. This is an entertainment quiz and its scoring has not been validated scientifically.</p>
                 <p id="persona-score-detail"></p>
               </details>
-              <p class="persona-small">New placeholder illustrations, questions and descriptions &#xA9; 2026 OG Cupid. Historical illustrations, when available, are credited to their original publisher. Original character names and four-axis concept are presented as historical references. Independent project; not endorsed by or affiliated with OkCupid or Match Group.</p>
+              <p class="persona-small">New placeholder illustrations, questions and reconstructed descriptions belong to OG Cupid. Restored historical text and imagery remain the work of their original creators. Original character names and four-axis concept are presented as historical references. Independent project; not endorsed by or affiliated with OkCupid or Match Group.</p>
+            </div>
+            <div class="persona-content" id="persona-catalog" hidden>
+              <h3>ALL 32 DATING PERSONAS</h3>
+              <p class="persona-catalog-intro">The complete original Man/Woman character lineup, with our reconstruction and restoration progress. <strong>Original text missing</strong> means we haven't restored it here; <strong>Original image missing</strong> means we haven't verified that the historical picture is displayed. Unverified image links are explicitly marked.</p>
+              <button type="button" class="persona-btn persona-btn-alt" id="persona-catalog-back">&#x2190; BACK</button>
+              <div class="persona-catalog-grid" id="persona-catalog-grid" aria-label="Browse all 32 personas"></div>
             </div>
           </div>
         </section>
@@ -592,6 +615,35 @@ header .wordmark{flex-shrink:0}
     }
   };
   const order=["DGLD","DGLM","DGSD","DGSM","DBLD","DBLM","DBSD","DBSM","RGLD","RGLM","RGSD","RGSM","RBLD","RBLM","RBSD","RBSM"];
+  const originalWriteups={"DBLM-A":["People believe in you, and then you send them to hell. Behold, the False Messiah.","You’re usually a very kind person, and conscientious, too. Socially, you’re a leader, and your friends and associates look up to you. In intimate relationships, you’re a capable, responsive, and experienced lover. Outside the box, however, you run into trouble.","Girls fall hard for you, but you’re much more ambivalent about them. The beginnings of your relationships are unusually intense, making it all the rougher on her when they end. At first, using all your accumulated tricks of the trade, you ladle on the affection. But once she’s all covered in soup, you withhold the true napkins of commitment. What’s that all about? We should’ve called you the False Waiter.","You’re looking for Love. But history tells us you struggle to settle down and accept it. There’s a deep streak of carnality within you. And while you’ll never be a predator, you’ll always fight the urge to roam free. You like to plan things out, so plan this: find someone who can indulge your selfish side, has a healthy sexual appetite, and doesn’t mind uncertainty."],"DGLM-A":["Steady & mature. You are The Gentleman. For anyone looking for an even-keeled, considerate lover, you’re their man. You’re sophisticated. You know what you want both in a relationship and outside of it. You have a substantial romantic side, and you’re experienced enough sexually to handle yourself in that arena, too. Your future relationships will be long-lasting; you’re classic “marrying material,” a prize in the eyes of many.","It’s possible that behind it all, you’re a bit of a male slut. Your best friends know that in relationships you’re fundamentally sex-driven. You’re a safe, reliable guy, who does get laid. In a lot of ways, you’re like a well-worn, comfortable pair of socks. Did you ever jack off into one of those? All the time.","Your ideal mate is NOT a nut-job. She is giving and loving, like you, but also experienced."]};
+  const recoveredImages=Object.create(null);
+  let catalogOrigin="intro";
+  function flag(el, kind, status){
+    el.textContent="ORIGINAL "+kind+" "+status;
+    el.className="persona-archive-flag"+(status==="FOUND"?" ok":status==="UNVERIFIED"?" pending":"");
+  }
+  function paragraphs(el,items){el.replaceChildren();items.forEach(function(item){const p=document.createElement("p");p.textContent=item;el.appendChild(p);});}
+  function openCatalog(origin){
+    catalogOrigin=origin;
+    const grid=$("persona-catalog-grid");
+    if(!grid.children.length){
+      order.forEach(function(type){["A","B"].forEach(function(gender){
+        const key=type+"-"+gender, item=archetypes[type];
+        const button=document.createElement("button");
+        button.type="button";button.className="persona-catalog-entry";button.dataset.type=type;button.dataset.gender=gender;
+        const name=document.createElement("span");name.className="persona-catalog-name";name.textContent=item[gender][0];
+        const typeName=document.createElement("span");typeName.className="persona-catalog-code";typeName.textContent=type+" · "+(gender==="A"?"MAN":"WOMAN");
+        const flags=document.createElement("span");flags.className="persona-catalog-flags";
+        const img=document.createElement("span"),copy=document.createElement("span");
+        img.dataset.imageKey=key;
+        flag(img,"IMAGE",recoveredImages[key]?"FOUND":historicalArtwork[key]?"UNVERIFIED":"MISSING");
+        flag(copy,"TEXT",originalWriteups[key]?"FOUND":"MISSING");
+        flags.appendChild(img);flags.appendChild(copy);
+        button.appendChild(name);button.appendChild(typeName);button.appendChild(flags);grid.appendChild(button);
+      });});
+    }
+    show("catalog");$("quiz").scrollIntoView({behavior:"smooth",block:"start"});
+  }
   const $=function(id){return document.getElementById(id);};
   const intro=$("persona-intro"),play=$("persona-play"),results=$("persona-result");
   const form=$("persona-form");
@@ -600,7 +652,7 @@ header .wordmark{flex-shrink:0}
   const options=["Strongly disagree","Somewhat disagree","Somewhat agree","Strongly agree"];
   let page=0, code=null, style="A", scores=null;
   function show(which){
-    intro.hidden=which!=="intro";play.hidden=which!=="play";results.hidden=which!=="result";
+    intro.hidden=which!=="intro";play.hidden=which!=="play";results.hidden=which!=="result";$("persona-catalog").hidden=which!=="catalog";
   }
   function totalAnswered(){return answers.filter(function(a){return a!==null;}).length;}
   function updateProgress(){
@@ -676,6 +728,7 @@ header .wordmark{flex-shrink:0}
     fallback.innerHTML=portrait(type,selectedStyle);
     holder.appendChild(fallback);
     const key=type+"-"+selectedStyle, entry=historicalArtwork[key];
+    flag($("persona-art-flag"),"IMAGE",recoveredImages[key]?"FOUND":entry?"UNVERIFIED":"MISSING");
     const note=document.createElement("p");
     note.className="persona-art-note";
     if(!entry){note.textContent="Original illustration not yet recovered \u2014 OGC placeholder";holder.appendChild(note);return;}
@@ -689,6 +742,9 @@ header .wordmark{flex-shrink:0}
     old.onload=function(){
       if(thisRender!==portraitRenderSequence || !holder.isConnected)return;
       fallback.replaceChildren(old);
+      recoveredImages[key]=true;
+      flag($("persona-art-flag"),"IMAGE","FOUND");
+      document.querySelectorAll("[data-image-key]").forEach(function(node){if(node.dataset.imageKey===key)flag(node,"IMAGE","FOUND");});
       const credit=document.createElement("a");
       credit.href=entry.source;credit.target="_blank";credit.rel="noopener noreferrer";
       credit.textContent="Original OkCupid artwork \u00b7 archived source \u2197";
@@ -734,8 +790,14 @@ header .wordmark{flex-shrink:0}
     $("persona-code").textContent=code.split("").map(function(c,i){
       return sides[i].labels[sides[i].code.indexOf(c)];
     }).join(" \u00b7 ")+" ("+code+")";
+    const original=originalWriteups[code+"-"+style];
+    $("persona-story").hidden=Boolean(original);
+    $("persona-flavor").hidden=Boolean(original);
+    $("persona-original-copy").hidden=!original;
+    if(original)paragraphs($("persona-original-copy"),original);
     $("persona-story").textContent=data.story;
     $("persona-flavor").textContent=chosen[1];
+    flag($("persona-text-flag"),"TEXT",original?"FOUND":"MISSING");
     portraitRenderSequence++;
     displayPersonaPortrait(code,style);
     const traitHolder=$("persona-traits");traitHolder.replaceChildren();
@@ -775,6 +837,15 @@ header .wordmark{flex-shrink:0}
   });
   $("persona-switch").addEventListener("click",function(){style=style==="A"?"B":"A";renderResult();});
   $("persona-retake").addEventListener("click",function(){for(let i=0;i<answers.length;i++)answers[i]=null;page=0;code=null;scores=null;show("intro");});
+  $("persona-see-all-intro").addEventListener("click",function(){openCatalog("intro");});
+  $("persona-see-all-result").addEventListener("click",function(){openCatalog("result");});
+  $("persona-catalog-back").addEventListener("click",function(){show(catalogOrigin);$("quiz").scrollIntoView({behavior:"smooth",block:"start"});});
+  $("persona-catalog-grid").addEventListener("click",function(e){
+    const button=e.target.closest("button[data-type][data-gender]");
+    if(!button)return;
+    code=button.dataset.type;style=button.dataset.gender;scores=null;
+    renderResult();$("quiz").scrollIntoView({behavior:"smooth",block:"start"});
+  });
   $("persona-share").addEventListener("click",async function(){
     const url=resultUrl();
     try{await navigator.clipboard.writeText(url);$("persona-share-status").textContent="Link copied! Send it to your favorite weirdos.";}
