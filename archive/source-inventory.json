@@ -1,0 +1,60 @@
+{
+  "summary": "Inventory of unique historical screenshot files the user uploaded to ChatGPT. Their raw PNG bytes have NOT yet been committed; this manifest enables future deduplication and import.",
+  "source": "OG Cupid Project chat uploads",
+  "file_status": "PENDING_RAW_IMPORT",
+  "files": [
+    {
+      "name": "image(1).png",
+      "sha256": "2ca9bf8dce5402ef350262e4e18e59ae13d7c577325ce4ec2876889439452833",
+      "size_bytes": 166114,
+      "dimensions": "399x398",
+      "description": "Classic OkCupid member profile screenshot",
+      "privacy_review": "required_before_publication"
+    },
+    {
+      "name": "image(2).png",
+      "sha256": "ee736d631911fbb31add2996a0e554d8249ece30588539fad0b91bdeb1a32443",
+      "size_bytes": 341632,
+      "dimensions": "702x1172",
+      "description": "Historical personality-trait bar-chart screenshot"
+    },
+    {
+      "name": "image(3).png",
+      "sha256": "82c8371d184ffe8c85d8e2fd7a4cca95adb158c092c0394a03fa5fef3fa2bc01",
+      "size_bytes": 441440,
+      "dimensions": "504x1266",
+      "description": "Genghis Khunt original Dating Persona result and artwork"
+    },
+    {
+      "name": "image(4).png",
+      "sha256": "b438cff9ad5ef3c40938ec1645c49b6db9b267ef7099dad11c3d669da00690f6",
+      "size_bytes": 415228,
+      "dimensions": "486x986",
+      "description": "The Peach original Dating Persona result and artwork"
+    },
+    {
+      "name": "image(5).png",
+      "sha256": "5b061e9919b3dbcad4bba9aed06e4037bd077796ab7c68fa67e156d989f5fc4e",
+      "size_bytes": 539451,
+      "dimensions": "492x1065",
+      "description": "The Playstation original Dating Persona result and artwork"
+    },
+    {
+      "name": "image(6).png",
+      "sha256": "d1d985e1fb88e28e5422723831a5632f13b7fbafc230a39a0d30a92964fc6003",
+      "size_bytes": 543788,
+      "dimensions": "1213x582",
+      "description": "Classic full-width OkCupid member profile screenshot",
+      "privacy_review": "required_before_publication"
+    }
+  ],
+  "duplicates_not_needed": {
+    "image(8).png": "image(3).png",
+    "image(9).png": "image(4).png",
+    "image(10).png": "image(5).png"
+  },
+  "excluded": [
+    "image.png (current chat screenshot; not a historic OkCupid artifact)",
+    "image(7).png (blank browser/page debug screenshot)"
+  ]
+}
