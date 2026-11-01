@@ -429,9 +429,9 @@ header .wordmark{flex-shrink:0}
             <div>
               <p class="eyebrow">The return of a legend &#xB7; Playable right now</p>
               <h2 id="persona-title">THE DATING<br>PERSONA TEST.</h2>
-              <p>Back when dating websites had personality, there was a test that told you exactly what kind of romantic menace you were. We're bringing back its spirit&#x2014;with fresh questions, original artwork, and all 32 historical persona names.</p>
+              <p>The original 32 characters are here. Our 28-question revival is playable, with <strong>18 recovered historic descriptions</strong> and <strong>three recovered character illustrations</strong>. The questions and scoring are a new reconstruction, not the lost original.</p>
             </div>
-            <div class="persona-ribbon">32 PERSONAS<br>28 QUESTIONS<br>100% OLD-WEB ENERGY</div>
+            <div class="persona-ribbon">32 PERSONAS<br>18 ORIGINAL WRITEUPS<br>3 ORIGINAL PORTRAITS</div>
           </div>
           <div class="persona-app" id="persona-app">
             <div class="persona-titlebar"><span>&#x2665; OG CUPID / PERSONALITY LAB</span><span>REVIVAL EDITION &#xB7; V1</span></div>
@@ -492,7 +492,7 @@ header .wordmark{flex-shrink:0}
             </div>
             <div class="persona-content" id="persona-catalog" hidden>
               <h3>ALL 32 DATING PERSONAS</h3>
-              <p class="persona-catalog-intro">The complete classic Man/Woman character lineup, with recovery status for each result. <strong>Original text found</strong> means a period writeup has been recovered, <strong>partial</strong> means only an excerpt survives here, and <strong>missing</strong> means the visible description is our reconstruction. Original image status is tracked independently.</p>
+              <p class="persona-catalog-intro">All 32 historic personas are listed. <strong>18 original descriptions</strong> and <strong>three original illustrations</strong> have been recovered. Missing descriptions display clearly labeled OG Cupid reconstructions; historical source leads are linked where available. Original artwork status is tracked separately.</p>
               <button type="button" class="persona-btn persona-btn-alt" id="persona-catalog-back">&#x2190; BACK</button>
               <div class="persona-catalog-grid" id="persona-catalog-grid" aria-label="Browse all 32 personas"></div>
             </div>
@@ -501,8 +501,8 @@ header .wordmark{flex-shrink:0}
         <section class="section notice" id="status" aria-labelledby="status-title">
           <div>
             <p class="eyebrow">Under construction, in the best way</p>
-            <h2 id="status-title">We're just getting started.</h2>
-            <p>OG Cupid is an independent project in early development. No accounts, subscriptions, or waitlist yet. We wanted to plant a flag and say it out loud: <strong>the internet can be better than this.</strong></p>
+            <h2 id="status-title">The doors aren't open yet.</h2>
+            <p>OG Cupid is an independent project under construction. The Dating Persona Test is playable now; member accounts, compatibility search, messaging, and community spaces aren't live yet. No paid plans or waitlist at this point.</p>
           </div>
           <div class="stamp" aria-hidden="true">GOOD<br>WEIRD<br>COMING<br>SOON &#x2665;</div>
         </section>
@@ -658,6 +658,7 @@ header .wordmark{flex-shrink:0}
   for(const key of ["RBSM-B","RGSM-B","RGLM-B"]){
     originalWriteupMeta[key]={status:"FOUND",source:"https://imgur.com/a/ORHpIDj"};
   }
+  const historicalTextLeads={"DGSD-A":["https://forums.anandtech.com/threads/okcupid-take-this-test-about-you-and-love-accurate.1334430/page-2","2004 result"],"DGSD-B":["https://talksfu.ca/forum/discussion/5507/which-one-are-you","historical forum result"],"DGSM-A":["https://www.ilxor.com/ILX/ThreadSelectedControllerServlet?action=showall&boardid=40&threadid=29797","2004 forum result"],"DBLD-A":["https://forums.anandtech.com/threads/okcupid-take-this-test-about-you-and-love-accurate.1334430/page-3","2004 result"],"DBLD-B":["https://bay-bay.blogspot.com/2004/04/","2004 personal blog"],"DBLM-B":["https://www.dance-forums.com/threads/the-famous-okcupid-test.10761/page-2","historical result"],"DBSM-A":["https://forums.anandtech.com/threads/the-32-type-dating-personality-test.1862067/","2006 result"],"DBSM-B":["https://www.sixtwentysevenblog.com/2008/10/stiletto.html","2008 blog result"],"RGSD-A":["https://www.ilxor.com/ILX/ThreadSelectedControllerServlet?action=showall&boardid=40&threadid=29797","2004 result"],"RGSD-B":["https://www.ilxor.com/ILX/ThreadSelectedControllerServlet?action=showall&boardid=40&threadid=29797","historical mention; full text not verified"],"RBLD-A":["https://www.ilxor.com/ILX/ThreadSelectedControllerServlet?action=showall&boardid=40&threadid=29797","2004 result"],"RBLM-A":["https://forums.anandtech.com/threads/the-32-type-dating-personality-test.1862067/","2006 result"],"RBSD-A":["https://forums.anandtech.com/threads/okcupid-take-this-test-about-you-and-love-accurate.1334430/","2004 result"],"RBSD-B":["https://forums.ohtori.nu/viewtopic0a22.html?id=846&p=3","2007 result"]};
   const recoveredImages=Object.assign(Object.create(null),{"RBSM-B":true,"RGLM-B":true,"RGSM-B":true}); // verified locally embedded screenshot originals
   const unavailableImages=Object.create(null);
   let catalogOrigin="intro";
@@ -682,7 +683,13 @@ header .wordmark{flex-shrink:0}
         flag(img,"IMAGE",recoveredImages[key]?"FOUND":unavailableImages[key]?"MISSING":historicalArtwork[key]?"UNVERIFIED":"MISSING");
         flag(copy,"TEXT",originalWriteupMeta[key]?originalWriteupMeta[key].status:"MISSING");
         flags.appendChild(img);flags.appendChild(copy);
-        button.appendChild(name);button.appendChild(typeName);button.appendChild(flags);grid.appendChild(button);
+        button.appendChild(name);button.appendChild(typeName);button.appendChild(flags);
+        if(!originalWriteups[key]&&historicalTextLeads[key]){
+          const research=document.createElement("span");research.className="persona-catalog-code";
+          research.textContent="HISTORICAL SOURCE LEAD · ORIGINAL WRITEUP NOT YET RESTORED";
+          button.appendChild(research);
+        }
+        grid.appendChild(button);
       });});
     }
     show("catalog");$("quiz").scrollIntoView({behavior:"smooth",block:"start"});
@@ -861,15 +868,15 @@ header .wordmark{flex-shrink:0}
     if(original)paragraphs($("persona-original-copy"),original);
     const meta=originalWriteupMeta[code+"-"+style];
     const sourceNote=$("persona-original-source");
-    sourceNote.hidden=!meta;
+    const lead=historicalTextLeads[code+"-"+style];
+    sourceNote.hidden=!meta&&!lead;
     sourceNote.replaceChildren();
-    if(meta){
+    if(meta||lead){
       const label=document.createElement("span");
-      label.textContent=meta.status==="PARTIAL"?"PARTIAL ORIGINAL EXCERPT — the rest of the original description is still missing. ":"Archived original OkCupid result text (historical language retained). ";
+      label.textContent=meta?"Restored original result text. ":"ORIGINAL TEXT MISSING — the text shown here is an OG Cupid reconstruction. A historical source has been located but not yet transcribed. ";
       const source=document.createElement("a");
-      source.href=meta.source;
-      source.target="_blank";source.rel="noopener noreferrer";
-      source.textContent=meta.source.includes("reddit.com")?"View 2016 Reddit archive":"View original screenshot archive";
+      source.href=meta?meta.source:lead[0];source.target="_blank";source.rel="noopener noreferrer";
+      source.textContent=meta?"View original text source":"View historical source lead";
       sourceNote.appendChild(label);sourceNote.appendChild(source);
     }
     $("persona-story").textContent=data.story;
