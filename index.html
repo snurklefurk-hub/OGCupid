@@ -617,6 +617,7 @@ header .wordmark{flex-shrink:0}
   const order=["DGLD","DGLM","DGSD","DGSM","DBLD","DBLM","DBSD","DBSM","RGLD","RGLM","RGSD","RGSM","RBLD","RBLM","RBSD","RBSM"];
   const originalWriteups={"DBLM-A":["People believe in you, and then you send them to hell. Behold, the False Messiah.","You’re usually a very kind person, and conscientious, too. Socially, you’re a leader, and your friends and associates look up to you. In intimate relationships, you’re a capable, responsive, and experienced lover. Outside the box, however, you run into trouble.","Girls fall hard for you, but you’re much more ambivalent about them. The beginnings of your relationships are unusually intense, making it all the rougher on her when they end. At first, using all your accumulated tricks of the trade, you ladle on the affection. But once she’s all covered in soup, you withhold the true napkins of commitment. What’s that all about? We should’ve called you the False Waiter.","You’re looking for Love. But history tells us you struggle to settle down and accept it. There’s a deep streak of carnality within you. And while you’ll never be a predator, you’ll always fight the urge to roam free. You like to plan things out, so plan this: find someone who can indulge your selfish side, has a healthy sexual appetite, and doesn’t mind uncertainty."],"DGLM-A":["Steady & mature. You are The Gentleman. For anyone looking for an even-keeled, considerate lover, you’re their man. You’re sophisticated. You know what you want both in a relationship and outside of it. You have a substantial romantic side, and you’re experienced enough sexually to handle yourself in that arena, too. Your future relationships will be long-lasting; you’re classic “marrying material,” a prize in the eyes of many.","It’s possible that behind it all, you’re a bit of a male slut. Your best friends know that in relationships you’re fundamentally sex-driven. You’re a safe, reliable guy, who does get laid. In a lot of ways, you’re like a well-worn, comfortable pair of socks. Did you ever jack off into one of those? All the time.","Your ideal mate is NOT a nut-job. She is giving and loving, like you, but also experienced."]};
   const recoveredImages=Object.create(null);
+  const unavailableImages=Object.create(null);
   let catalogOrigin="intro";
   function flag(el, kind, status){
     el.textContent="ORIGINAL "+kind+" "+status;
@@ -636,7 +637,7 @@ header .wordmark{flex-shrink:0}
         const flags=document.createElement("span");flags.className="persona-catalog-flags";
         const img=document.createElement("span"),copy=document.createElement("span");
         img.dataset.imageKey=key;
-        flag(img,"IMAGE",recoveredImages[key]?"FOUND":historicalArtwork[key]?"UNVERIFIED":"MISSING");
+        flag(img,"IMAGE",recoveredImages[key]?"FOUND":unavailableImages[key]?"MISSING":historicalArtwork[key]?"UNVERIFIED":"MISSING");
         flag(copy,"TEXT",originalWriteups[key]?"FOUND":"MISSING");
         flags.appendChild(img);flags.appendChild(copy);
         button.appendChild(name);button.appendChild(typeName);button.appendChild(flags);grid.appendChild(button);
@@ -728,7 +729,7 @@ header .wordmark{flex-shrink:0}
     fallback.innerHTML=portrait(type,selectedStyle);
     holder.appendChild(fallback);
     const key=type+"-"+selectedStyle, entry=historicalArtwork[key];
-    flag($("persona-art-flag"),"IMAGE",recoveredImages[key]?"FOUND":entry?"UNVERIFIED":"MISSING");
+    flag($("persona-art-flag"),"IMAGE",recoveredImages[key]?"FOUND":unavailableImages[key]?"MISSING":entry?"UNVERIFIED":"MISSING");
     const note=document.createElement("p");
     note.className="persona-art-note";
     if(!entry){note.textContent="Original illustration not yet recovered \u2014 OGC placeholder";holder.appendChild(note);return;}
@@ -751,7 +752,12 @@ header .wordmark{flex-shrink:0}
       note.replaceChildren(credit);
     };
     old.onerror=function(){
-      if(thisRender===portraitRenderSequence)note.textContent="Historical image unavailable \u2014 OGC placeholder";
+      if(thisRender===portraitRenderSequence){
+        unavailableImages[key]=true;
+        note.textContent="Historical image unavailable \u2014 OGC placeholder";
+        flag($("persona-art-flag"),"IMAGE","MISSING");
+        document.querySelectorAll("[data-image-key]").forEach(function(node){if(node.dataset.imageKey===key)flag(node,"IMAGE","MISSING");});
+      }
     };
     old.src=entry.url;
   }
