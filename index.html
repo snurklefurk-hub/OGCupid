@@ -42,31 +42,53 @@
     nav{display:flex;gap:24px;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.3px}
     nav a{text-decoration:none;border-bottom:3px solid transparent}
     nav a:hover{border-color:var(--rose)}
-    .hero{display:grid;grid-template-columns:1.13fr .87fr;min-height:520px;background:linear-gradient(140deg,#fffdf5,#fff0d6);overflow:hidden}
-    .pitch{padding:65px 0 72px 50px;position:relative;z-index:1}
+    .hero{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);min-height:595px;background:linear-gradient(140deg,#fffdf5,#fff0d6);overflow:hidden}
+    .pitch{padding:65px 0 68px 38px;position:relative;z-index:1}
     .sticker{display:inline-block;border:2px solid var(--ink);background:var(--mint);box-shadow:3px 3px 0 var(--ink);font-size:11px;font-weight:900;letter-spacing:2px;padding:7px 11px;text-transform:uppercase;transform:rotate(-2deg)}
-    h1{font:900 clamp(57px,7.1vw,95px)/.98 Impact,"Arial Black",sans-serif;letter-spacing:-1px;text-transform:uppercase;margin:25px 0}
+    h1{font:900 clamp(53px,6.2vw,88px)/.98 Impact,"Arial Black",sans-serif;letter-spacing:-1px;text-transform:uppercase;margin:25px 0}
     h1 span{color:var(--rose);text-decoration:underline;text-decoration-color:var(--yellow);text-decoration-thickness:10px;text-underline-offset:5px}
     .lead{font-size:21px;font-weight:800;max-width:550px;line-height:1.4;margin:0 0 12px}
     .tagline{font-size:16px;font-weight:800;color:#64567b;margin:0 0 30px}
     .button{display:inline-block;background:var(--blue);color:white;border:3px solid var(--ink);box-shadow:var(--shadow);padding:13px 23px;text-decoration:none;font-weight:900;text-transform:uppercase;transition:transform .15s,box-shadow .15s}
     .button:hover{transform:translate(3px,3px);box-shadow:3px 3px 0 var(--ink)}
-    .art{display:grid;place-items:center;padding:38px 42px 38px 10px;position:relative}
-    .art::before{content:"✳";position:absolute;top:25px;right:18px;color:var(--yellow);font-size:70px;text-shadow:3px 3px 0 var(--ink)}
-    .art::after{content:"✦";position:absolute;bottom:30px;left:12px;color:var(--rose);font-size:60px}
-    .card{width:100%;max-width:320px;background:white;border:3px solid var(--ink);box-shadow:9px 9px 0 var(--ink);transform:rotate(4deg);position:relative}
-    .card:before{content:"PREVIEW ONLY";position:absolute;right:-17px;top:-20px;background:var(--yellow);border:2px solid var(--ink);padding:5px 8px;transform:rotate(8deg);font-size:10px;font-weight:900}
-    .card-top{background:#e3d8ff;border-bottom:3px solid var(--ink);padding:10px 13px;display:flex;justify-content:space-between;font-size:12px;font-weight:900}
-    .dots{color:var(--rose);letter-spacing:3px}
-    .card-body{padding:20px}
-    .bio{display:flex;gap:14px;align-items:center}
-    .avatar{width:76px;height:76px;flex-shrink:0;border:3px solid var(--ink);background:var(--yellow);display:grid;place-items:center;border-radius:12px;font-size:42px}
-    .bio h2{font-size:18px;margin:0 0 2px;line-height:1.1}
-    .online{color:#2d805c;font-weight:900;font-size:11px}
-    .card p{font-size:14px;line-height:1.5}
-    .chips{display:flex;gap:7px;flex-wrap:wrap}
-    .chips span{font-size:10px;font-weight:900;padding:3px 7px;border:2px solid var(--ink);background:#f4eeff}
-    .match{margin-top:16px;background:var(--mint);border:2px solid var(--ink);padding:9px 11px;font-size:13px;font-weight:900}
+    /* Classic OkCupid-era profile preview, with an original OG Cupid identity and sample data */
+    .art{display:flex;align-items:center;justify-content:center;min-width:0;padding:35px 26px 40px 12px}
+    .classic-profile{width:100%;max-width:540px;background:#fff;border:2px solid #477cad;box-shadow:6px 7px 0 #302d59;color:#26374c;font:12px/1.4 Arial,Helvetica,sans-serif;min-width:0}
+    .cp-bar{background:#d2e6f6;border-bottom:1px solid #80a8c7;padding:8px 10px;display:flex;justify-content:space-between;align-items:center;gap:8px;color:#225c8c;font-weight:bold}
+    .cp-brand{font-size:15px;letter-spacing:-.6px;white-space:nowrap}
+    .cp-brand strong{color:#e04c71}
+    .cp-top-links{display:flex;gap:9px;white-space:nowrap;color:#37638b;font-size:10px;text-transform:uppercase}
+    .cp-demo{background:#fff0aa;border-bottom:1px solid #e7d17e;color:#67582b;text-align:center;font-weight:bold;font-size:10px;padding:5px 9px;letter-spacing:.6px}
+    .cp-layout{display:grid;grid-template-columns:96px minmax(0,1fr)}
+    .cp-side{background:#307bad;color:#fff;border-right:1px solid #21618e;padding:16px 9px}
+    .cp-side-title{font-size:10px;font-weight:bold;letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px;color:#d9f0ff}
+    .cp-side-items{margin:0;padding:0;list-style:none}
+    .cp-side-items li{padding:7px 3px;border-bottom:1px solid rgba(255,255,255,.23);font-weight:700;font-size:11px}
+    .cp-side-items li:first-child{background:#f2f9ff;color:#24648f;padding-left:6px;border-radius:2px}
+    .cp-side-note{font-size:10px;line-height:1.5;color:#daeeff;margin-top:25px}
+    .cp-content{padding:14px 15px 16px;min-width:0}
+    .cp-profile-head{display:flex;align-items:flex-start;gap:12px;min-width:0}
+    .cp-photo{flex:0 0 81px;width:81px;height:91px;background:#cfe6f1;border:1px solid #7198b5;padding:3px}
+    .cp-photo svg{width:100%;height:100%;display:block}
+    .cp-person{min-width:0}
+    .cp-person h2{font:700 19px/1.15 Arial,Helvetica,sans-serif;color:#22659c;margin:1px 0 4px;overflow-wrap:anywhere}
+    .cp-person .cp-subline{color:#4b5b70;font-size:11px;margin:0 0 4px}
+    .cp-lastonline{color:#327b42;font-size:11px;font-weight:bold;margin:0}
+    .cp-percentages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:13px 0 12px}
+    .cp-score{text-align:center;border:1px solid #aac0d1;background:#f2f7fc;padding:5px 3px 4px;min-width:0}
+    .cp-score b{display:block;color:#2877b7;font-size:22px;line-height:1.1}
+    .cp-score.friend b{color:#4d936c}.cp-score.enemy b{color:#a37a6d}
+    .cp-score span{font-size:10px;text-transform:uppercase;letter-spacing:.3px;color:#667381}
+    .cp-tabs{display:flex;align-items:end;gap:2px;border-bottom:2px solid #3a80b7;padding:0 0 0 1px;flex-wrap:wrap}
+    .cp-tabs span{display:inline-block;border:1px solid #a9c8e0;border-bottom:0;background:#e5f0f8;color:#276492;padding:5px 8px;font-weight:bold;font-size:10px}
+    .cp-tabs span:first-child{background:#387fae;color:#fff;border-color:#387fae}
+    .cp-section{padding:10px 1px 0}
+    .cp-section h3{font:bold 12px/1.2 Arial,Helvetica,sans-serif;color:#2670a1;margin:0 0 4px;border-bottom:1px dotted #b9c9d7;padding-bottom:3px}
+    .cp-section p{font-size:11px;margin:0;color:#334253;line-height:1.44}
+    .cp-mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .cp-interests{border-top:1px solid #d9e4ed;margin-top:11px;padding-top:9px;color:#446482;font-size:10px}
+    .cp-interests b{color:#236b9b}
+    .cp-foot{background:#eaf4fb;border-top:1px solid #b5cbdd;color:#607486;font-size:10px;text-align:center;padding:7px 10px}
     .strip{background:var(--ink);color:white;text-align:center;padding:12px;font-size:13px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase}
     .manifesto{border-bottom:3px solid var(--ink);background:#ffe2e9;text-align:center;padding:45px 28px 48px}
     .manifesto-kicker{display:inline-block;margin:0 0 14px;padding:5px 12px;border:2px solid var(--ink);background:var(--yellow);font-size:11px;font-weight:900;letter-spacing:2px;text-transform:uppercase;transform:rotate(-2deg)}
@@ -163,15 +185,16 @@
     .stamp{border:3px solid var(--ink);box-shadow:var(--shadow);background:var(--rose);width:157px;height:157px;border-radius:50%;transform:rotate(-10deg);display:grid;place-items:center;text-align:center;font-weight:900;font-size:18px;line-height:1.25}
     footer{background:var(--ink);color:white;padding:22px 32px;display:flex;justify-content:space-between;gap:20px;font-size:12px}
     footer a{color:var(--yellow)}
-    @media(max-width:800px){
-      .hero{grid-template-columns:1fr}.pitch{padding:50px 30px 16px}.art{padding:25px 60px 58px}.card{max-width:325px}
+    @media(max-width:900px){
+      .hero{grid-template-columns:1fr}.pitch{padding:50px 30px 16px}.art{padding:20px 25px 55px}.classic-profile{max-width:570px}
       .grid{grid-template-columns:repeat(2,minmax(0,1fr))}.quiz{grid-template-columns:1fr}
     }
     @media(max-width:580px){
       .wrap{margin:12px auto 35px;padding:0 10px}.ticker{font-size:10px;letter-spacing:.3px;flex-wrap:wrap}
       header{padding:19px;align-items:flex-start;flex-direction:column}.wordmark{font-size:27px}
       nav{gap:16px;flex-wrap:wrap}.pitch{padding:40px 22px 22px}
-      h1{font-size:clamp(49px,13vw,72px)}.lead{font-size:19px}.art{padding:20px 45px 65px}
+      h1{font-size:clamp(49px,13vw,72px)}.lead{font-size:19px}.art{padding:22px 12px 40px}
+      .cp-layout{grid-template-columns:76px minmax(0,1fr)}.cp-side{padding:12px 5px}.cp-side-items li{font-size:10px}.cp-content{padding:10px 9px}.cp-profile-head{gap:8px}.cp-photo{flex-basis:61px;width:61px;height:74px}.cp-person h2{font-size:15px}.cp-percentages{gap:4px}.cp-score b{font-size:18px}.cp-score span{font-size:9px}.cp-tabs span{padding:4px 5px;font-size:9px}.cp-mini-grid{grid-template-columns:1fr;gap:0}.cp-top-links{gap:5px;font-size:9px}
       .section{padding:44px 22px}.grid{grid-template-columns:1fr}
       .tile{min-height:auto}.quiz{padding:40px 22px}
       .notice{grid-template-columns:1fr}.stamp{width:125px;height:125px;font-size:14px}
@@ -204,22 +227,62 @@
             <p class="tagline">No swipe casino. No empty profiles. No bullshit.</p>
             <a class="button" href="#quiz">TAKE THE DATING PERSONA TEST ↘</a>
           </div>
-          <div class="art" aria-hidden="true">
-            <div class="card">
-              <div class="card-top"><span>☆ the profile page ☆</span><span class="dots">● ● ●</span></div>
-              <div class="card-body">
-                <div class="bio">
-                  <div class="avatar">☺</div>
-                  <div>
-                    <h2>actually_interesting_82</h2>
-                    <div class="online">● Last online: 2 hours ago</div>
+          <div class="art">
+            <article class="classic-profile" aria-label="Fictional sample member profile inspired by classic OkCupid layouts">
+              <div class="cp-bar"><span class="cp-brand">og<strong>cupid</strong> ♥</span><div class="cp-top-links"><span>People</span><span>Quizzes</span><span>Journals</span></div></div>
+              <div class="cp-demo">✦ FICTIONAL SAMPLE PROFILE — THIS IS WHAT WE'RE BRINGING BACK ✦</div>
+              <div class="cp-layout">
+                <aside class="cp-side" aria-label="Sample profile sections">
+                  <div class="cp-side-title">Member page</div>
+                  <ul class="cp-side-items"><li>About me</li><li>Details</li><li>Personality</li><li>Tests</li><li>Journal</li></ul>
+                  <div class="cp-side-note">The old internet had more to say than “hey.”</div>
+                </aside>
+                <div class="cp-content">
+                  <div class="cp-profile-head">
+                    <div class="cp-photo" aria-hidden="true">
+                      <svg viewBox="0 0 76 84" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="76" height="84" fill="#cce9e7"/>
+                        <circle cx="60" cy="14" r="18" fill="#e9f6db"/>
+                        <path d="M4 84 Q7 59 37 60 Q70 61 73 84Z" fill="#5276a5"/>
+                        <path d="M18 38 Q16 11 38 11 Q61 12 59 39 L57 48 L18 49Z" fill="#583b31"/>
+                        <ellipse cx="39" cy="37" rx="18" ry="23" fill="#dca47f"/>
+                        <path d="M20 34 Q20 12 42 13 Q57 15 56 31 Q47 29 45 22 Q34 32 20 34" fill="#583b31"/>
+                        <circle cx="32" cy="38" r="2" fill="#3d342f"/><circle cx="47" cy="38" r="2" fill="#3d342f"/>
+                        <path d="M33 49 Q39 54 46 48" stroke="#96524a" stroke-width="2" fill="none" stroke-linecap="round"/>
+                        <rect x="33" y="57" width="12" height="9" fill="#dca47f"/>
+                      </svg>
+                    </div>
+                    <div class="cp-person">
+                      <h2>mixtape_and_mischief</h2>
+                      <p class="cp-subline">32 · Savannah, GA · Looking for a real connection</p>
+                      <p class="cp-lastonline">● Last online: 2 days ago</p>
+                    </div>
                   </div>
+                  <div class="cp-percentages" aria-label="Illustrative compatibility scores, not real match calculations">
+                    <div class="cp-score"><b>94%</b><span>Match</span></div>
+                    <div class="cp-score friend"><b>87%</b><span>Friend</span></div>
+                    <div class="cp-score enemy"><b>6%</b><span>Enemy</span></div>
+                  </div>
+                  <div class="cp-tabs" aria-label="Sample profile tabs"><span>About Me</span><span>Details</span><span>Personality</span><span>Tests</span></div>
+                  <div class="cp-section">
+                    <h3>My self-summary</h3>
+                    <p>I collect terrible records, make excellent pancakes, and still believe a three-hour conversation beats a thousand swipes. I once drove across two states for a used pinball machine. Absolutely worth it.</p>
+                  </div>
+                  <div class="cp-mini-grid">
+                    <div class="cp-section">
+                      <h3>What I'm passionate about</h3>
+                      <p>Live music, flea markets, old bookstores, and fixing things that probably shouldn't work anymore.</p>
+                    </div>
+                    <div class="cp-section">
+                      <h3>Message me if...</h3>
+                      <p>You have an oddball hobby, a favorite terrible movie, or a strong opinion about breakfast.</p>
+                    </div>
+                  </div>
+                  <div class="cp-interests"><b>Interests:</b> Road trips · Records · Bad puns · Good coffee</div>
                 </div>
-                <p>Part-time amateur philosopher. Full-time overthinker. I have strong opinions about breakfast food and can explain every one of them.</p>
-                <div class="chips"><span>Bad puns</span><span>Good books</span><span>Mixtapes</span></div>
-                <div class="match">♥ 94% match · 87% friend · 100% interesting</div>
               </div>
-            </div>
+              <div class="cp-foot">Preview only · Sample member and percentages are fictional · No actual profiles yet</div>
+            </article>
           </div>
         </section>
         <div class="strip">COME FOR THE QUIZZES. <em>STAY FOR THE PEOPLE.</em></div>
