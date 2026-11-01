@@ -42,8 +42,8 @@
     nav{display:flex;gap:24px;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.3px}
     nav a{text-decoration:none;border-bottom:3px solid transparent}
     nav a:hover{border-color:var(--rose)}
-    .hero{display:block;background:linear-gradient(140deg,#fffdf5,#fff0d6)}
-    .pitch{padding:49px 45px 38px}
+    .hero{display:block;background:#2a639e}
+    .pitch{padding:36px 45px 45px;background:linear-gradient(140deg,#fffdf5,#fff0d6)}
     .sticker{display:inline-block;border:2px solid var(--ink);background:var(--mint);box-shadow:3px 3px 0 var(--ink);font-size:11px;font-weight:900;letter-spacing:2px;padding:7px 11px;text-transform:uppercase;transform:rotate(-2deg)}
     h1{font:900 clamp(53px,7vw,88px)/.98 Impact,"Arial Black",sans-serif;letter-spacing:-1px;text-transform:uppercase;margin:20px 0}
     h1 span{color:var(--rose);text-decoration:underline;text-decoration-color:var(--yellow);text-decoration-thickness:10px;text-underline-offset:5px}
@@ -52,7 +52,7 @@
     .button{display:inline-block;background:var(--blue);color:white;border:3px solid var(--ink);box-shadow:var(--shadow);padding:13px 23px;text-decoration:none;font-weight:900;text-transform:uppercase;transition:transform .15s,box-shadow .15s}
     .button:hover{transform:translate(3px,3px);box-shadow:3px 3px 0 var(--ink)}
     /* Full-width late-2000s inspired profile, deliberately labeled as a fictional OG Cupid preview. */
-    .art{padding:22px 23px 28px;background:#2a639e}
+    .art{padding:12px 23px 22px;background:#2a639e;scroll-margin-top:14px}
     .classic-profile{width:100%;background:#2a639e;color:#2a3444;font:12px/1.43 Arial,Helvetica,sans-serif;overflow:hidden}
     .classic-profile *{box-sizing:border-box}
     .cp-top-mini{height:21px;display:flex;align-items:center;justify-content:flex-end;gap:13px;padding:0 7px;color:#d6e7f8;font-size:10px}
@@ -256,14 +256,7 @@
       footer{flex-direction:column;padding:22px}
     }
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:no        <section class="hero" id="top" aria-labelledby="hero-title">
-          <div class="pitch">
-            <div class="sticker">Hey, remember when the internet was fun?</div>
-            <h1 id="hero-title">AY! WE'RE<br>BRINGING IT <span>BACK.</span></h1>
-            <p class="lead">Actual personalities. Ridiculous quizzes. Compatibility that means something. People worth getting to know.</p>
-            <p class="tagline">No swipe casino. No empty profiles. No bullshit.</p>
-            <a class="button" href="#quiz">TAKE THE DATING PERSONA TEST ↘</a>
-          </div>
-          <div class="art">
+          <div class="art" id="profile-preview">
             <article class="classic-profile" aria-label="Fictional member profile preview inspired by the layout of 2000s OkCupid">
               <div class="cp-top-mini"><span>OLD-SCHOOL PROFILE PREVIEW · THE INTERNET HAD PERSONALITY</span><span class="cp-demo-pill">DEMO PROFILE · NOT A REAL MEMBER</span></div>
               <div class="cp-navbar">
@@ -278,7 +271,14 @@
                     <div class="cp-suggest"><span class="cp-suggest-thumb" aria-hidden="true">♬</span><span>analog_annie<small>Also owns a record player</small></span></div>
                     <div class="cp-suggest"><span class="cp-suggest-thumb" aria-hidden="true">☕</span><span>caffeinated_fox<small>Probably overthinking</small></span></div>
                     <div class="cp-suggest"><span class="cp-suggest-thumb" aria-hidden="true">✦</span><span>roll_the_dice<small>Random match</small></span></div>
-                  </section>
+                    <div class="pitch">
+            <div class="sticker">Hey, remember when the internet was fun?</div>
+            <h1 id="hero-title">AY! WE'RE<br>BRINGING IT <span>BACK.</span></h1>
+            <p class="lead">Actual personalities. Ridiculous quizzes. Compatibility that means something. People worth getting to know.</p>
+            <p class="tagline">No swipe casino. No empty profiles. No bullshit.</p>
+            <a class="button" href="#quiz">TAKE THE DATING PERSONA TEST ↘</a>
+          </div>
+        </section>
                   <h3>Favorites</h3><p class="cp-sideline">Your future list of interesting humans.</p>
                   <h3>Profile completion</h3><div class="cp-progress" aria-label="Demo profile 70 percent complete"><span></span></div>
                   <p class="cp-sidebar-caption">70% · Write more. Be weird.</p>
