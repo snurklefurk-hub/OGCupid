@@ -381,29 +381,25 @@ header .wordmark{flex-shrink:0}
     @media(max-width:800px){.interest-section{grid-template-columns:1fr;padding:46px 25px;gap:24px}.interest-counter{justify-self:center;max-width:470px}}
     @media(max-width:440px){.interest-section{padding:43px 18px}.interest-counter{padding:12px}.interest-digits{font-size:clamp(27px,9.2vw,43px)}.interest-button{font-size:23px}}
 
-/* Clear separation between restored classic features and modern anti-abuse promises. */
+/* Shared feature-card family for both consecutive homepage sections. */
 .different-section{border-top:3px solid var(--ink);background:#e9efff;padding:62px 48px 56px}
 .different-intro{display:flex;align-items:end;justify-content:space-between;gap:24px;margin:0 0 27px}
 .different-intro h2{margin:4px 0 0;max-width:620px}
 .different-intro>p{max-width:310px;margin:0 0 3px;font-size:16px;line-height:1.5;font-weight:700;color:#534d72}
-.different-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-.different-card{border:3px solid var(--ink);background:#fffdf9;box-shadow:5px 5px 0 var(--ink);padding:23px 23px 25px;min-height:205px}
-.different-card:nth-child(2){background:#fff1da}
-.different-card:nth-child(3){background:#ffe7ed}
-.different-card:nth-child(4){background:#dbf4e6}
-.different-number{display:inline-block;border:2px solid var(--ink);background:var(--yellow);font-size:10px;font-weight:900;letter-spacing:1px;padding:4px 8px}
-.different-card h3{font:900 clamp(20px,2.4vw,27px)/1.07 Impact,"Arial Black",sans-serif;letter-spacing:.3px;margin:19px 0 11px}
-.different-card p{font-size:15px;line-height:1.58;margin:0}
-
+.different-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}
+.different-grid .different-card{min-height:200px;padding:22px}
+.different-grid .different-card:nth-child(1){background:var(--mint)}
+.different-grid .different-card:nth-child(2){background:#ffe2e9}
+.different-grid .different-card:nth-child(3){background:#ebe4ff}
+.different-grid .different-card:nth-child(4){background:var(--yellow)}
+.different-grid .different-card h3{font-size:19px;line-height:1.15;margin:0 0 10px}
+.different-grid .different-card p{font-size:14px;line-height:1.5;margin:0}
 @media(max-width:700px){
-  .different-section{padding:45px 24px 47px}
-  .different-intro{display:block}
-  .different-intro>p{margin:14px 0 0;max-width:540px}
+ .different-section{padding:45px 24px 47px}
+ .different-intro{display:block}
+ .different-intro>p{margin:14px 0 0;max-width:540px}
 }
-@media(max-width:540px){
-  .different-grid{grid-template-columns:1fr}
-  .different-card{min-height:0;padding:21px}
-}
+@media(max-width:540px){.different-grid{grid-template-columns:1fr}.different-grid .different-card{min-height:0}}
 </style>
 </head>
 <body>
@@ -479,24 +475,20 @@ header .wordmark{flex-shrink:0}
     </div>
     <p>We loved the old site. We didn't love every part of online dating. These are the problems we're designing against.</p>
   </div>
-  <div class="different-grid">
-    <article class="different-card">
-      <span class="different-number" aria-hidden="true">01 / NOT HERE</span>
+  <div class="grid different-grid">
+    <article class="tile different-card"><span class="symbol" aria-hidden="true">&#x270E;</span>
       <h3>NO-EFFORT PROFILES</h3>
       <p>A picture and “just ask” aren't a profile. A little real writing and some answered questions will be the price of admission.</p>
     </article>
-    <article class="different-card">
-      <span class="different-number" aria-hidden="true">02 / NOT HERE</span>
+    <article class="tile different-card"><span class="symbol" aria-hidden="true">&#x2709;</span>
       <h3>“HEY” PESTS</h3>
       <p>Copy-pasted one-word openers shouldn't drown out actual conversation. We'll encourage thoughtful introductions and discourage message spam.</p>
     </article>
-    <article class="different-card">
-      <span class="different-number" aria-hidden="true">03 / NOT HERE</span>
+    <article class="tile different-card"><span class="symbol" aria-hidden="true">&#x2298;</span>
       <h3>UNSOLICITED DICK PICS</h3>
       <p>Nobody should open a message and get ambushed. Consent-first image sharing, easy reporting, and meaningful consequences for harassment.</p>
     </article>
-    <article class="different-card">
-      <span class="different-number" aria-hidden="true">04 / NOT HERE</span>
+    <article class="tile different-card"><span class="symbol" aria-hidden="true">&#x26A0;</span>
       <h3>BOTS &amp; SCAMMERS</h3>
       <p>We'd rather have a smaller community of real people than an ocean of fake matches. Account-integrity checks and abuse reporting are part of the plan.</p>
     </article>
