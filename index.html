@@ -625,7 +625,7 @@ header .wordmark{flex-shrink:0}
   for(const key of ["RBSM-B","RGSM-B","RGLM-B"]){
     originalWriteupMeta[key]={status:"FOUND",source:"https://imgur.com/a/ORHpIDj"};
   }
-  const recoveredImages=Object.create(null);
+  const recoveredImages=Object.assign(Object.create(null),{"RBSM-B":true,"RGLM-B":true,"RGSM-B":true}); // verified locally embedded screenshot originals
   const unavailableImages=Object.create(null);
   let catalogOrigin="intro";
   function flag(el, kind, status){
