@@ -182,8 +182,17 @@
 
     .persona-archive-buttons{display:flex;gap:11px;flex-wrap:wrap;margin:15px 0}
     .persona-catalog-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
-    .persona-catalog-entry{display:block;background:#f8f6ff;border:2px solid #b9b3d0;padding:11px 12px;text-align:left;color:var(--ink);cursor:pointer;font:inherit;min-width:0}
+    .persona-catalog-entry{display:flex;align-items:center;gap:12px;background:#f8f6ff;border:2px solid #b9b3d0;padding:11px 12px;text-align:left;color:var(--ink);cursor:pointer;font:inherit;min-width:0}
     .persona-catalog-entry:hover,.persona-catalog-entry:focus-visible{border-color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+    .persona-catalog-thumb{display:flex;align-items:center;justify-content:center;flex:0 0 64px;width:64px;height:76px;overflow:hidden;border:1px solid #d5cfdb;background:#fff}
+    .persona-catalog-label{min-width:0}
+    .persona-art-frame{display:flex;width:100%;align-items:center;justify-content:center}
+    .persona-art-frame>svg,.persona-art-frame>img{display:block;width:100%;height:auto;object-fit:contain}
+    .persona-catalog-thumb .persona-art-frame{height:100%}
+    .persona-catalog-thumb .persona-art-frame>svg,.persona-catalog-thumb .persona-art-frame>img{width:100%;height:100%;object-fit:contain}
+    .persona-catalog-thumb .persona-original-sprite{width:auto;height:100%;min-height:0;flex:none}
+    .persona-opposite-art>.persona-art-frame{width:107px;flex:0 0 107px}
+    .persona-opposite-art>.persona-art-frame>svg,.persona-opposite-art>.persona-art-frame>img{max-height:145px;object-fit:contain}
     .persona-catalog-name{font-size:16px;font-weight:900;display:block;line-height:1.2}
     .persona-catalog-code{font-size:11px;font-weight:800;color:#5b5871;display:block;margin:4px 0 8px}
     .persona-catalog-flags{display:flex;gap:5px;flex-wrap:wrap;margin:8px 0}
@@ -789,7 +798,12 @@ header .wordmark{flex-shrink:0}
           const codeLabel=document.createElement("span");
           codeLabel.className="persona-catalog-code";
           codeLabel.textContent=type+gender+" · "+(gender==="m"?"MAN":"WOMAN");
-          button.appendChild(name);button.appendChild(codeLabel);grid.appendChild(button);
+          const thumb=document.createElement("span");
+          thumb.className="persona-catalog-thumb";thumb.setAttribute("aria-hidden","true");
+          thumb.appendChild(personaArtwork(type,gender));
+          const label=document.createElement("span");label.className="persona-catalog-label";
+          label.appendChild(name);label.appendChild(codeLabel);
+          button.appendChild(thumb);button.appendChild(label);grid.appendChild(button);
         });
       });
     }
@@ -851,48 +865,14 @@ header .wordmark{flex-shrink:0}
     const code=sides.map(function(s,i){return s.code[sum[i]>0||(sum[i]===0&&majority[i]>0)?0:1];}).join("");
     return {code:code,sum:sum};
   }
-  // Historical artwork references are loaded only when available; fallback portraits remain
-  // visible when vintage hosts refuse requests. Source URLs are from 2006-2011 public archives.
-  const historicalArtwork = {
-    "DBLM-f": {url:"/persona-assets/battleaxe.avif"},
-    "DGSD-f": {url:"/persona-assets/intern-restored.png"},
-    // Recovered classic OkCupid persona badges from the archived MBTI forum mirror.
-    // Only mappings with a surviving forum image and a locally saved GIF are listed.
-    "DGLD-m": {url:"https://2img.net/h/akcdn.okccdn.com/graphics/persons/DGLDm.gif"},
-    "DGLD-f": {url:"https://2img.net/h/akcdn.okccdn.com/graphics/persons/DGLDf.gif"},
-    "DGLM-m": {url:"https://2img.net/h/akcdn.okccdn.com/graphics/persons/DGLMm.gif"},
-    "DGLM-f": {url:"https://2img.net/h/akcdn.okccdn.com/graphics/persons/DGLMf.gif"},
-    "DGSD-m": {url:"https://2img.net/h/akcdn.okccdn.com/graphics/persons/DGSDm.gif"},
-    "RGLD-f": {url:"https://2img.net/h/akcdn.okccdn.com/graphics/persons/RGLDf.gif"},
-    "RGLM-m": {url:"https://2img.net/h/akcdn.okccdn.com/graphics/persons/RGLMm.gif"},
-    "RGSD-m": {url:"https://2img.net/h/akcdn.okccdn.com/graphics/persons/RGSDm.gif"},
-    "RBLD-m": {url:"https://2img.net/h/akcdn.okccdn.com/graphics/persons/RBLDm.gif"},
-    "RBLD-f": {url:"https://2img.net/h/akcdn.okccdn.com/graphics/persons/RBLDf.gif"},
-    "RBSD-m": {url:"https://2img.net/h/akcdn.okccdn.com/graphics/persons/RBSDm.gif"},
-    "RBSD-f": {url:"https://2img.net/h/akcdn.okccdn.com/graphics/persons/RBSDf.gif"},
-    "RBSM-f": {url:"https://2img.net/h/akcdn.okccdn.com/graphics/persons/RBSMf.gif"},
-    "DBSD-m": {url:"https://2img.net/h/akcdn.okccdn.com/graphics/persons/DBSDm.gif"},
-    "DGLDf": {
-      url:"https://www.infjs.com/proxy.php?image=http%3A%2F%2Fcdn.okcimg.com%2Fgraphics%2Fpersons%2FDGLDf.gif&hash=ade1e138817dd48a1626b68665d4dd53",
-      fallbackUrl:"https://lh3.googleusercontent.com/blogger_img_proxy/AEn0k_syBTo21-0pfOkaqZJrkWs_YtVe5MLNe_sLspJ184QvHIrd8IwWHDaKOFRUYB9IX2AW3A5erMfQnAzZTFdZM57s6xZXqIn5Qus6RK-wp3gVCP-EeSg=s0-d"
-    },
-    "RBSMf": {
-      url:"https://i0.wp.com/panther.is0.okcupid.com/graphics/persons/RBSMf.gif"
-    },
-    "RBLMf": {
-      url:"https://panther.is0.okcupid.com/graphics/persons/RBLMf.gif"
-    },
-    "RGLDf": {
-      url:"https://panther.is0.okcupid.com/graphics/persons/RGLDf.gif"
-    }
-  };
+  // Only recovered original artwork is listed. Missing art uses one neutral placeholder.
+  const historicalArtwork={"DBSDm":{"url":"/persona-assets/DBSDm.gif"},"DGLDf":{"url":"/persona-assets/DGLDf.gif"},"DGLDm":{"url":"/persona-assets/DGLDm.gif"},"DGLMf":{"url":"/persona-assets/DGLMf.gif"},"DGLMm":{"url":"/persona-assets/DGLMm.gif"},"DGSDm":{"url":"/persona-assets/DGSDm.gif"},"RBLDf":{"url":"/persona-assets/RBLDf.gif"},"RBLDm":{"url":"/persona-assets/RBLDm.gif"},"RBSDf":{"url":"/persona-assets/RBSDf.gif"},"RBSDm":{"url":"/persona-assets/RBSDm.gif"},"RBSMf":{"url":"/persona-assets/RBSMf.gif"},"RGLDf":{"url":"/persona-assets/RGLDf.gif"},"RGLMm":{"url":"/persona-assets/RGLMm.gif"},"RGSDm":{"url":"/persona-assets/RGSDm.gif"},"DBLMf":{"url":"/persona-assets/battleaxe.avif"}};
   // Three recovered original illustrations cropped from user-supplied historical screenshots.
   // Single small sprite is embedded so it cannot fail because a 2006 image host vanished.
   const recoveredPersonaSprite="data:image/webp;base64,UklGRr4TAABXRUJQVlA4ILITAABwawCdASosAdwAPu1srlGppamjqNH74TAdiU3bq8pYAjTP+ZXgAEVw8v7lvHPNB5pnSAf27qhvQd6Wf92MoR9P9puPfoLxzUgu0pgC6w/VxyAOEloFf0D/Tejxoz1EzLPmV57eympqrSMPqsg0GArMq+8J6KKx9lcyVzrct2hjjWWlj1iaod0Q1hj9F8F+pIELKhzGRirvV0DXq80uEJdus+r4dCwkWDul2trX7iBjoJHHffWbSGwV0CxRom4PF5YnqCgPI0tW+ghAck83kYQnYLwu/aKyQCeGtjjoxLZNSK6i2RbhfvgvtEEFjrOqcEXqK//nG9tVqPsjWEDHHKTb3pid4yTeqroP5I/EtYkwllCVsQyYrtrpigcEt1ubsJFb12gKDIqvvHHQ2Wz5UoaRct8Tyoz0OsG/dPusyTuvOthSIZvb1f1AB7qo9JsEXvEu18uDd9QYa2u+qObJxCIwqUxs8LgH5qERM9bAWEQiTVB7ZXKhr4e2dAWEj07SpxPckzzo3+m682eGmVkHY+GEKYguhO0B9IvDuGjtTAWZI9qnPSdsOVK55xMYZ6O/y2T7gMg0RJjHcRCokTGOoyeUz0TLhHKkoMkE/dfb8aXFdE2MjL0VQ7s17uYCOzzSnzRWcQfTuRb7yoImAi2LeafGVuC3IRfxG66jRB+AlEURpTrI7Rr6Le34R7X7/6L5SOa8C75Qe2UdDBbz32lcuo1BS4sQjS+WIsbo4sGLmIeBAwPkFejO9QoJhlG0T2NRR1n2jUp+LWto3S6dVFSry2PsuKRFCuX/bJmvgMESo5LJPJATZ9Wru0wHU5TAF6XvsFhEOBJlMZJ6nlRu9teGaCnnLRK+MXUgz6w8i3n2qfAXcb1NBcb91o4MtjWA7Uhy8XMQ4KIfrMxKm/pPBBw6Mzr3Q6CMZZ1jjG/QM+m79Fj//a3krxeqTvjeXDKR/qXkuRo7FR/IFN/W3tMuIaO9FT5FSm9dy7s/0QP/o+mvxeZHpEmxtxT07I2wRKbkl+ZsoKftZ3EJ2gWYzH2lBPJ+tRUWPByQFzPTAfB4ghUda48DSC5AHPtC9ObFLoGWAB2FAp5oEAobqCUsWc3m2X6XzHqpuLjdGlsaBB3IycqbNeI4s8tHQHo7+ekzOy2Oh5rjdGlwRR9wAP70fd2xzzqZ58GjPWO+vKaZ+UhFb8uq5SHeJI+IKLjVTv5JWNBPQi9QwQyXTcPs/zuhjpby8uQXowr5yuvtL5r+m0KFX6Rn7bd3OStxJGhlxZQBZn98zQFGUTitcXFM3oUefsS94UfbxrLnHF4GeKCh8BAdbtoRSAqlQ0+B25ccOBFhyUrtMoLQPB2X31dRFTsO01BX4res3GUj0Eh0wstUMp26Mp5a5UJkUt0sLQWU+WiuNya/cLhJJ4X/I+lDOWN/RbWLBQ7olpEwX+Vs8eKHNkISvW5L11Fzow3BhnURKOYSMaIw7WygtgRKmeLh/prFYaz+Wai7LmkcveuXvagYTCCwO9oG8vWvMU5WkfZVrB8LtjMelLLQ/S4O8KSyM3C7/0X1aop2lvtZp2d1l4lkYuYUuWM7g4c94f1Kl1L6VftTl8Fsxgq3DaE3g0Li9upVKciX/8xmE542mG/88tUFUmQKvFjBXue8aSo59Fgp9YzKhWOHxUM/NWsdzPLVsPO22PB+tAbeLTGahtCUfB2bxZ9JhNm/eoLqzE6EH7HLdk93WsI0ZSgqE5nkab4I42GbP7nx0TO+ieZhRe7tchyTH+IOBsUawbLaePv985820A7L7oVEeLj1I1QHBvS0mfJyftU54fL1aGj/8SsfloQi7Hdg7a7TR7fuOEDlazvzHVL2HFy0LnPPwSGhWarMxECoKZR0vUCGTr51/8fjKb4TePhM6nMPd9LVMJh0l3dRl1df7rp5tB93UzI7CiV7ba41j74reWrbAi4BoCPCJnMhAv+rou1miV4WSF+psXiiMm5Y8rW+LvlhyEBSvZBOsqciHrOZ74M4l5vafSwGctdaQDe3kiHITCusJHpfIkCFko077vdRcJOKZvsRJxUzLWAI0tCj1h/3PUStImjfvV3ZvI0Voqkc4vElDlaxUetO++agic/y817uhhwPZtnr3eVPk5vYYyfZ4epIIGEkbLe3pxGDr82OfdmbWiV59fugsTuYVugTNesV6IEg8DdyKZ7HXyvewLqKgPTYq01r1aTuMvlvIaBKYkB0ebxSTHrbaHz/ZdpwMqCGCJ8DyvdVOokP9tH4JzqFZZr5xkW6mg1uSIDU4ax+dwOVgNsM6ks9Vv6KZnDSdLJwRjZ59+S5ZeYAc8U9uKPzjuDrrd6GbkALZAWd1TsQBLJH3RoKsO+ANdF9Ip9GFw5fdVfodfEz3kyALbKoRgZPbeRBptNTQyT2OrjbOGjxyCgdk305e7vmgPl0WciFSp7UXlTIxBvdlGr+MNZbZ1iuy1BaSe7G/pAyS0i2fmOla+kxH1R7wOgnKqWHS8rPa4foMq6NslnBTW0l4lvOYEUdQzM9mg6IJzcyxcuvgahr7PBy28D+KQ1+unuJ4kDKfFzcVzKChW4h3/7FJF7pNsZ1Z4ztMKufEPTogfyB5/Yy9y4wr+JkxOE5VV57ustH9dIFnGzsnbie3/NH3ktUGqj6HUhusjmZNtZJLz0EBL7nfzx2G84uL8vDJg/6A88MrJmww0kCYDiHN/MCHepSraSKR9j5Cgm9lrSPjxmgreh98D5Ryaql26PktV7dvrVBij76TvKbP4/VtsL1FWbhNkvyapCe5x2ZVaAT7G9o997lzFONL4jiftKn0FAy46Z6Ron+hJ30aER+1wEzVKpH+DnTmrR0Rsa/yiDfPKROL9PdQrtBWTP1kP/qjgIZPJ5AKAyCr0S0b0quj9HuKyC8Q9Z5ZKaAne0UD8ABTOTfhJo3V/VmRCEZ64RorRD/c8wQukJK4LXUdecHqZCmOLipQwTuay0llvniqOVZfqwpcL+obhXrGKSctkzyqfcrWbl++2MjmNkEpA75MctB8Wj7i0qtX5kmbb3fpd9Q++oaVLQ6BlsnoIDuc5/SKLUaPZRCgnwnY74Y6Bzr7q5/hUFoxWqmUkf3sckEqhKnAcLzWqWt0K0Oz4pAt67i/rm0QW8CZVoDRhjOAxZSjLKJSO30CNhWDgsnSxW813YmzDnnXWAKZ4CfkLrSoDU0lBrVF2NE0fyRhHQJmzCt+aCBBGwLx3U4ygzHyUVa83rce/eAfCGmeGxBvpN3N8a6+WNXfP5sT8F4Q1vfmOZpKlIqCaAPJtsbmVtqFGabCPjoyADElXw4vz7ovcYoJfha3Aia76lpnhG7+DviqiRE0dW2kJfpVQEjKyNSQTsp8hCzHastjaEhZfGnrJnGXVUh2vvufjMMeQg1ONNsm/4kZEz08zbXOinKj/Po14eEtn27GaraTolBYE38K34kfjELCF1/afpyCJK8snAvtjsFCZbbIg4otNhWYA+/khqikqlN9D+EPCiiav5nr9G1WPhjGNVo3dhjFy3E5HzG25o/ex5llZtu7NGdHXs//u3y37Prf/YXt9gDj3zu2Klw5EIqO9h7yGqVss3lRbpAU7FISp3tkBmYLd3Xc+GeH5klE9UQPwMOgBjy27TYjrEbG34khW8qeGVNUL7v8Wsb0UsloimtuSCb49Bd3zmkQpw5SSyZXYBrmH3LmtmMWXmkbdJhBf+pamp25ClR9mSL3QiS5bTFtIaGCu8Xg5cfBOxFhEFk817JSjG8ycSOLqAStNTSGnnkcue/kEGjVl1XV/C4P3e7bA2D6fXxQA+/ye4AfPDrb7MTI7GLjAFYFKJK+4dQyyxvbU5yRSD2wqF+kFuNleasWn7rYPkaj/STE3BJwtZv8b1InBa4GFGFljbD4M/sn/lXr78YwBbwV83+katdQflyVeXm0zpi/lyCORYDRb1rylshscCKriRnTxe/PSOBST8XHt2pifJBDC8fG9RIJeEGFyLK/M3C27HNXR6JXQ4AGV2cSyraZVkjcGNSxSusl0dAyLIdD739wu9PFAE2h1jPKLAzXDOkUHBADdiVABJE6RjjQp2CR/L1SqZD1xtRbOU3gy7mHMw2Xgaiyw+1m1K/oJH4oXLZ6qY2/kBFVdcTS/QL0cfg0GeixeoT9bCIdHM0aTEqQbpUCi3bwMQ8KGN1ikPK6MIJPDv3GoxC2s3jVKWZN4IonCWI+C3hx5dm7L8YIV0k1BZBp6ujpbtmeG0qsnvXn6smSSe4HRzphGMf9sMZIid45Nam3eWaZNADiwvGiHtMOboKa9RRZJpW0Z5+7fyz39349R6ZpwLkB4w/aMgbY3dp3jGsKaxO+Uktm3ZvE2Q/Zf8pTPZplBvcMD2hCYJ94QWFT9+kU+0kE7FNlwHh1iAUW/5prsq3ptGjZGn3aojqFDcpdT/nUYqggLFW1iNQIWrKOGK8nf7V0mUpcjYtndpeHGlN/ZkOe8YNU7npGCay7J0LiA0463WHR6OvtDXUeMj8gZVj5CinhiLOmH3y7XEWJYA9fjEK34AYw2k4YplklZIn5eqtb434bhGOxnu+2W8UFUc/xzkVSDqOIKCOANQWBB9KjC+K+sG2TRoybSdUIo5sKNuW1aZi8s72jRixlPE3mGmNbmKPMsSsGsDTKT1f3+e2o3IQDbswo8rHjmLFwWw/0tvKTVPDVTDkxrDs9SHmNmUvyS/o8DJxAmZfALU0cnM0Ro/cjOlDftBv1v27X5eKfgkw+0uA+S8AU7Kb2clzU2Z/O0jMV4I1OZO/gwGEN3QxuafvrVh96dq5s1wt4PGI0jaiOUUnf5gGhhYTGReuclBmYXN9AGHaCVxZcck1AGrAVstRErEF99P8NXPBm9dmvGBRMfWI6vRr6wqsxRjES1JS5i8fC7fIBRRCaQujIAumOPXeAk0PxX/ZraFm31HpJYVxZjyan2WzqSI6KvYTSio2RY2a0+oOPKonQeo/vJHNhibAxNsJzFSXwfigsYmyITS5s7Wbtwuy6qVrz7eUhLbky2LL0ClCOPIM1fzoOJJRkOH2SzIEGs2LGF86NB/H1LshvYf+dNmBKktfX9UTgVpaUvxAvyXb5d/yoZcCYuhBfwFggkoss/Y8mHuEPlHnFYx+TR2zgHXsWf4xhusW26BqyqsaXRgfDsDXWNGbDAJVgy2Jt6MzmF/quy+NGNlcb9RDyVqlPoBqrPzIkuhagEHVhFUgKMerAesszEbAv7VVfZB9MFU1Ely7dzEC5O1XktJalRWWnQkzf5J51OIq0y3VFFxSrOCGJzay1d3z09vwg3Ezr3ef1zTg3MI8UAKGbKIVszQOW06KLt9im1A+Fy2pPeOUh55kjf7VyPqadAqF7QQulD4GmAtn3N3mOWsKNYOoK3YkndKyxl5Eb8OczIvFr1J9NUzfsA1rFWiSeGbPPF1cegDnDQgRPSEhSeLHVcFP6SA+Dj1DdGpjt4L3bUx30CmNruxCHCO4HoxkOL/BwmHFTcooW0S5vMACsVqVaEF+8o/qKhgeS5GFScREkB7Ww11vtfIk4XjPJgKfLuzBmN5s5/ULFeJeZm8htYXGN2dvItixAqJGtNrXh/oeiL7SpDPvfvP5ZbMfLf1KX6sULdxocpQC6hr4Q10Zr/VKIKyd+qNcsebv6XPqqFbIspQ8NDybYq2K9BDtje7ofdbff1lxhX/qBH3v8W/Ikvcl1OxF6IY2xHGlA+8YPBzLKVqFE2/JdsyXFjUj1TH5D4vjS2cxCaZHRVqshnmGQZZxVWVyF1jYY3hnK9TR775Fv0hXMTUTp0G6plCQ6loRa+4qPLCy3E6/bfjFMZWo4Mz9zQlg3zNMlHy+UsTDTj9iRHe5ICGz6ULohQFTtZyRVb4V0g1RrYdDuI+6T2SN0cWdwYZqdVOi0GREqmoY5dy1wUha5ezzcpMy+kWUk5/ANhhgUb6vK8NTBeA6FUz+T3F52Qru0wFkxUEOgn53TGf1raV2Ik6l3x/IZYyqxPwyrqOPsMZvpyWexqRdV3dyJF0qacP6/kEspxTX476h+za01SX9O4RMJENE2qljkJ6bAEUwRRiOzh87+fznZ7W+3L6qHjDcxN0bxA3VRDNOyRW6GRjyliQlgXR3YqRzGxXqqbKzSkpKtTLO4iJVxfCNtxG8DsS4pHXyvjFGO5HB8v8RRa4+s8lBEYO39I7C3dOEj1uc4vRonB5INUmWek+mVVniNvVsV2H8OI2BYO8pcAP3gUuC60a1l1j2tBaDSC8hqatBNMv6Caix/0tSj4szMz0f3F5jjVkcdVsF5j47BsX1ccbzW0GtiHZ1JHN4e3pNzL32n49cTSbOoMduI3ZSus9Q+S3MNOo0YbHZTdSeD90/WXlN4MjTjNLgjMxIV6EL0GyeeDxbACKFe+3SbjzWMu2ZNSwaTIAzinaJj41mqc/qxiv8gK8PUtLJyi1KZDNAYG+Anpp8cJmERvHBsXUIGul3X9DoMIq6HIWx95NJPgG6wARAsnt4hoqkcZkxOEGLiqasSIXG6MPFSzGfKCAFAVTCTi+MjLBrc6wLs00P1jK3Qf7rUU2j0BAGFLWUsIuW7QABUHEAB0WNUcqDeCHEViwcTi0yDJ7mmIKwdDigonyXKMlzDlDFZIEfFNsxeQfBt16sveAAASnyI/UYuBWbca99UW/pDRfI73PJtlZIYlhRHVjjEm26xdcR9OYJmQkqLI79aNcFO73+wiffh10fq4AAAAAAAA==";
-  for(const [key,index] of [["RBSMf",0],["RGLMf",1],["RGSMf",2]]){
+  for(const [key,index] of [["RGLMf",1],["RGSMf",2]]){
     historicalArtwork[key]={url:recoveredPersonaSprite,spriteIndex:index};
   }
-  let portraitRenderSequence=0;
   function historicCropElement(entry,label){
     const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
     const rect=entry.slice(3);
@@ -908,71 +888,55 @@ header .wordmark{flex-shrink:0}
     svg.appendChild(image);
     return svg;
   }
-  function displayPersonaPortrait(type, selectedStyle){
-    const holder=$("persona-portrait");holder.replaceChildren();
-    const key=type+"-"+selectedStyle;
-    const crop=historicCrops[key]||(type==="RBLM"?historicCrops[type+selectedStyle]:null);
-    if(crop&&key!=="DGSD-f"){
-      holder.appendChild(historicCropElement(crop,"Character illustration: "+archetypes[type][selectedStyle][0]));
-      return;
+  function featurelessArtwork(){
+    const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+    svg.setAttribute("viewBox","0 0 180 210");
+    svg.setAttribute("aria-label","Original illustration not yet recovered");
+    svg.setAttribute("role","img");
+    const background=document.createElementNS("http://www.w3.org/2000/svg","rect");
+    background.setAttribute("width","180");background.setAttribute("height","210");
+    background.setAttribute("fill","#efedef");
+    const head=document.createElementNS("http://www.w3.org/2000/svg","circle");
+    head.setAttribute("cx","90");head.setAttribute("cy","73");head.setAttribute("r","32");
+    head.setAttribute("fill","#c4bfc8");
+    const shoulders=document.createElementNS("http://www.w3.org/2000/svg","path");
+    shoulders.setAttribute("d","M29 190v-23a61 55 0 0 1 122 0v23Z");
+    shoulders.setAttribute("fill","#c4bfc8");
+    svg.appendChild(background);svg.appendChild(head);svg.appendChild(shoulders);
+    return svg;
+  }
+  function personaArtwork(type,gender){
+    const key=type+gender,entry=historicalArtwork[key];
+    const crop=entry?null:historicCrops[key];
+    const frame=document.createElement("span");
+    frame.className="persona-art-frame";
+    frame.appendChild(featurelessArtwork());
+    if(!entry&&!crop)return frame;
+    if(crop){
+      const panel=historicCropElement(crop,"Original OkCupid illustration: "+archetypes[type][gender][0]);
+      panel.children[0].addEventListener("error",function(){frame.replaceChildren(featurelessArtwork());});
+      frame.replaceChildren(panel);
+      return frame;
     }
-    const fallback=document.createElement("div");
-    fallback.innerHTML=portrait(type,selectedStyle);
-    holder.appendChild(fallback);
-    const entry=historicalArtwork[key];
-    if(!entry)return;
-    const renderSequence=++portraitRenderSequence;
     const artwork=new Image();
-    artwork.alt="Character illustration: "+archetypes[type][selectedStyle][0];
-    artwork.decoding="async";artwork.referrerPolicy="no-referrer";
+    artwork.alt="Original OkCupid illustration: "+archetypes[type][gender][0];
+    artwork.decoding="async";
     artwork.onload=function(){
-      if(renderSequence!==portraitRenderSequence||!holder.isConnected)return;
-      if(typeof entry.spriteIndex==="number"){
-        const panel=document.createElement("div");
+      if(Number.isInteger(entry.spriteIndex)){
+        const panel=document.createElement("span");
         panel.className="persona-original-sprite";
         panel.style.backgroundImage="url('"+entry.url+"')";
         panel.style.backgroundPosition=["0% 0%","50% 0%","100% 0%"][entry.spriteIndex];
-        panel.setAttribute("role","img");
-        panel.setAttribute("aria-label",artwork.alt);
-        fallback.replaceChildren(panel);
-      }else fallback.replaceChildren(artwork);
+        panel.setAttribute("role","img");panel.setAttribute("aria-label",artwork.alt);
+        frame.replaceChildren(panel);
+      }else frame.replaceChildren(artwork);
     };
-    artwork.onerror=function(){
-      if(renderSequence!==portraitRenderSequence||!holder.isConnected)return;
-      if(entry.fallbackUrl&&!artwork.dataset.triedFallback){
-        artwork.dataset.triedFallback="yes";
-        artwork.src=entry.fallbackUrl;
-      }
-    };
+    artwork.onerror=function(){frame.replaceChildren(featurelessArtwork());};
     artwork.src=entry.url;
+    return frame;
   }
-  function portrait(type,selectedStyle){
-    const idx=order.indexOf(type),isMan=selectedStyle==="m";
-    const palettes=["#ffe2ae","#ffc7d0","#c3e8ed","#c1d8ff","#e2cdff","#ffe0b6","#c8e8c2","#ffdae5"];
-    const bg=palettes[idx%palettes.length];
-    const hair=["#553121","#30233d","#9c503c","#b77b31","#302d4d","#75443d","#61452d","#2c244d"][idx%8];
-    const shirt=["#d94667","#505ac1","#3b9281","#874ec5","#e67e42","#347eaf"][idx%6];
-    const skin=["#f4c298","#a65f40","#e1a47b","#f6d7bb","#8d5438","#d68e61"][idx%6];
-    const symbol=["\u2726","\u2665","\u2605","\u2600","\u273f","\u266b","\u26a1","\u263e","\u25c6","\u2663","\u2727","\u25ce","\u2602","\u2733","\u2666","\u221e"][idx];
-    const glasses=idx%4===2?'<rect x="77" y="102" width="25" height="15" rx="5" fill="none" stroke="#2a223e" stroke-width="3"/><rect x="118" y="102" width="25" height="15" rx="5" fill="none" stroke="#2a223e" stroke-width="3"/><path d="M102 108 L118 108" stroke="#2a223e" stroke-width="3"/>':'';
-    const hairShape=isMan?'<path d="M69 101 Q67 44 111 50 Q166 46 151 104 Q149 77 134 75 Q115 86 86 75 Q73 92 69 101" fill="'+hair+'"/>':'<path d="M67 102 Q56 51 111 47 Q167 48 154 116 L161 170 Q144 161 143 121 Q146 83 133 80 Q104 90 85 77 Q71 96 77 126 L68 165 Q51 135 67 102" fill="'+hair+'"/>';
-    const accessory=idx%3===0?'<path d="M92 175 Q110 189 129 175" stroke="#ffe7a5" stroke-width="5" fill="none"/>':idx%3===1?'<path d="M105 177 L112 187 L119 177" stroke="#ffe7a5" stroke-width="4" fill="none"/>':'<circle cx="111" cy="178" r="7" fill="#ffe7a5"/>';
-    return '<svg viewBox="0 0 220 270" role="img" aria-label="Cartoon portrait" xmlns="http://www.w3.org/2000/svg">'+
-      '<rect x="0" y="0" width="220" height="270" rx="10" fill="'+bg+'"/>'+
-      '<circle cx="110" cy="111" r="89" fill="#ffffff" opacity=".4"/>'+
-      '<text x="19" y="34" font-family="Georgia,serif" font-size="25" fill="#51407c">'+symbol+'</text>'+
-      '<text x="174" y="45" font-family="Georgia,serif" font-size="21" fill="#51407c">\u2727</text>'+
-      '<path d="M27 270 Q30 176 95 162 L125 162 Q193 179 192 270 Z" fill="'+shirt+'" stroke="#2c2542" stroke-width="4"/>'+
-      '<rect x="97" y="151" width="29" height="36" rx="11" fill="'+skin+'"/>'+
-      '<ellipse cx="111" cy="114" rx="44" ry="62" fill="'+skin+'" stroke="#5f3a33" stroke-width="2"/>'+
-      hairShape+
-      '<path d="M82 106 Q90 101 98 107 M122 107 Q132 101 140 107" stroke="#3a2526" stroke-width="3" fill="none"/>'+
-      '<circle cx="91" cy="116" r="3.3" fill="#2e2732"/><circle cx="132" cy="116" r="3.3" fill="#2e2732"/>'+
-      '<path d="M109 118 L105 137 Q111 142 117 138" stroke="#b87961" stroke-width="2" fill="none"/>'+
-      '<path d="M97 149 Q111 '+(idx%2?"158":"164")+' 126 148" fill="none" stroke="#963e4b" stroke-width="3.5" stroke-linecap="round"/>'+
-      glasses+accessory+
-      '<rect x="5" y="234" width="210" height="31" rx="2" fill="#ffffff" stroke="#2c2542" stroke-width="2"/>'+
-      '<text x="110" y="255" text-anchor="middle" font-size="16" font-weight="bold" font-family="Verdana,sans-serif" fill="#2c2542">'+type+' / '+selectedStyle+'</text></svg>';
+  function displayPersonaPortrait(type,selectedStyle){
+    $("persona-portrait").replaceChildren(personaArtwork(type,selectedStyle));
   }
   function renderResult(){
     const data=archetypes[code];if(!data)return;
@@ -1008,7 +972,6 @@ header .wordmark{flex-shrink:0}
     }
     $("persona-story").textContent=data.story;
     $("persona-flavor").textContent=chosen[1];
-    portraitRenderSequence++;
     displayPersonaPortrait(code,style);
     const traitHolder=$("persona-traits");traitHolder.replaceChildren();
     code.split("").forEach(function(c,i){
@@ -1016,28 +979,13 @@ header .wordmark{flex-shrink:0}
     });
     const inverse=code.split("").map(function(c,i){return sides[i].code[1-sides[i].code.indexOf(c)];}).join("");
     $("persona-opposite").textContent="Your exact "+(style==="f"?"female":"male")+" opposite: "+archetypes[inverse][style][0]+" ("+inverse+style+").";
-    const oppositeKey=inverse+style, oppositeArt=$("persona-opposite-art");
-    const oppositeCrop=historicCrops[oppositeKey], oppositeArtwork=historicalArtwork[oppositeKey];
-    const oppositeSprite=oppositeArtwork&&Number.isInteger(oppositeArtwork.spriteIndex);
-    oppositeArt.replaceChildren();oppositeArt.hidden=!oppositeCrop&&!oppositeSprite;
-    if(oppositeCrop||oppositeSprite){
-      if(oppositeCrop){
-        oppositeArt.appendChild(historicCropElement(oppositeCrop,"Character art: "+archetypes[inverse][style][0]));
-      }else{
-        const panel=document.createElement("div");
-        panel.className="persona-original-sprite";
-        panel.style.backgroundImage="url('"+oppositeArtwork.url+"')";
-        panel.style.backgroundPosition=["0% 0%","50% 0%","100% 0%"][oppositeArtwork.spriteIndex];
-        panel.setAttribute("role","img");
-        panel.setAttribute("aria-label","Character art: "+archetypes[inverse][style][0]);
-        oppositeArt.appendChild(panel);
-      }
-      const caption=document.createElement("p");
-      const heading=document.createElement("strong");heading.textContent="YOUR EXACT OPPOSITE";
-      caption.appendChild(heading);caption.appendChild(document.createElement("br"));
-      caption.appendChild(document.createTextNode(archetypes[inverse][style][0]));
-      oppositeArt.appendChild(caption);
-    }
+    const oppositeArt=$("persona-opposite-art");
+    oppositeArt.replaceChildren(personaArtwork(inverse,style));oppositeArt.hidden=false;
+    const caption=document.createElement("p");
+    const heading=document.createElement("strong");heading.textContent="YOUR EXACT OPPOSITE";
+    caption.appendChild(heading);caption.appendChild(document.createElement("br"));
+    caption.appendChild(document.createTextNode(archetypes[inverse][style][0]));
+    oppositeArt.appendChild(caption);
     const relationArea=$("persona-relationship-notes");
     const relation=observedHistoricRecommendations[resultKey];
     const exactQuote=exactHistoricalRecommendationQuotes[resultKey];
