@@ -710,7 +710,7 @@
       "code": "RBSD",
       "group": "man",
       "name": "The Last Man on Earth",
-      "text_status": "missing",
+      "text_status": "transcribed",
       "primary_art": null,
       "exact_opposite": {
         "key": "DGLMm",
@@ -719,7 +719,8 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false
+      "recommendations_observed": false,
+      "text_source": "User-supplied original result text"
     },
     {
       "key": "RBSDf",

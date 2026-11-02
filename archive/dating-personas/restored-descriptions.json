@@ -2,8 +2,8 @@
   "schema_version": 2,
   "collection": "Classic OkCupid Dating Persona Test",
   "total": 32,
-  "transcribed": 20,
-  "missing": 11,
+  "transcribed": 21,
+  "missing": 10,
   "records": [
     {
       "key": "DGLDm",
@@ -373,8 +373,16 @@
       "code": "RBSD",
       "result_group": "man",
       "original_name": "The Last Man on Earth",
-      "text_status": "missing",
-      "original_text_paragraphs": null
+      "text_status": "transcribed",
+      "original_text_paragraphs": [
+        "**FACT:** The apocalypse has come. All are dead. You never should’ve asked her out.",
+        "Shit, rejected again. You are **The Last Man on Earth**.",
+        "Sorry, but most women would rather see the human species wither to an end—and therefore deny the most fundamental instinct that living creatures have—than sleep with you.",
+        "We’ve learned the following: you don’t think things through. You’re haphazard. You’re dangerous. You’re somewhat inexperienced. It’s totally obvious that you’re a horny bugger, as well. Everybody knows that and steers clear.",
+        "To top things off, when you do find your way into a relationship, you tend to be a dick somewhere down the line and fuck it all up.",
+        "There’s a small, but negligible, chance we’re wrong. In any case, your friends find your shit hilarious. There’s nothing cooler than a dude reducing himself to human rubble."
+      ],
+      "text_source": "User-supplied original result text"
     },
     {
       "key": "RBSDf",
