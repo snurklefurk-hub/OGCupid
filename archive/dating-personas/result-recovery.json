@@ -47,7 +47,15 @@
       ],
       "recommendations_observed": true,
       "text_source": "User-supplied original result text",
-      "recommendations_source": "User-supplied original result guidance"
+      "recommendations_source": "https://web.archive.org/web/20080121172821/http://www.okcupid.com:80/personality?type=DGLD&g=1&o=1",
+      "historical_guidance": {
+        "always_avoid_verbatim": "The Battleaxe (DBLM)",
+        "consider_verbatim": "The Maid of Honor (DGLM), The Sonnet (DGLD)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080121172821/http://www.okcupid.com:80/personality?type=DGLD&g=1&o=1",
+        "verified_from_capture": true
+      }
     },
     {
       "key": "DGLDf",
@@ -79,7 +87,16 @@
         "RGLMm"
       ],
       "recommendations_observed": true,
-      "recommendations_exact_quote": "Always avoid: The 5-Night Stand (DBSM), The False Messiah (DBLM), The Hornivore (RBSM), The Last Man on Earth (RBSD)\n\nConsider: The Loverboy (RGLM)"
+      "recommendations_exact_quote": "Always avoid: The 5-Night Stand (DBSM), The False Messiah (DBLM), The Hornivore (RBSM), The Last Man on Earth (RBSD)\n\nConsider: The Loverboy (RGLM)",
+      "historical_guidance": {
+        "always_avoid_verbatim": "The 5-Night Stand (DBSM), The False Messiah (DBLM), The Hornivore (RBSM), The Last Man on Earth (RBSD)",
+        "consider_verbatim": "The Loverboy (RGLM)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080119195137/http://www.okcupid.com:80/personality?type=DGLD&o=1&g=2",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080119195137/http://www.okcupid.com:80/personality?type=DGLD&o=1&g=2"
     },
     {
       "key": "DGLMm",
@@ -94,16 +111,28 @@
         "art": null,
         "traits": "Random Brutal Sex Dreamer"
       },
-      "always_avoid": [],
+      "always_avoid": [
+        "DBLMf"
+      ],
       "consider": [
         "DGLMf"
       ],
       "recommendations_observed": true,
       "text_source": "User-supplied original result text",
-      "recommendations_source": "User-supplied original result guidance",
+      "recommendations_source": "https://web.archive.org/web/20080117220913/http://www.okcupid.com:80/personality?type=DGLM&g=1&o=1",
       "consider_note": "someone just like you",
       "recommendations_status": "partial",
-      "always_avoid_status": "unrecovered"
+      "always_avoid_status": "unrecovered",
+      "historical_guidance": {
+        "always_avoid_verbatim": "The Battleaxe (DBLM)",
+        "consider_verbatim": "The Maid of Honor (DGLM), someone just like you.",
+        "always_avoid_notes": [],
+        "consider_notes": [
+          "someone just like you."
+        ],
+        "archive_url": "https://web.archive.org/web/20080117220913/http://www.okcupid.com:80/personality?type=DGLM&g=1&o=1",
+        "verified_from_capture": true
+      }
     },
     {
       "key": "DGLMf",
@@ -127,7 +156,18 @@
         "DGLMm"
       ],
       "recommendations_observed": true,
-      "recommendations_exact_quote": "ALWAYS AVOID: **The False Messiah**, **The 5-Night Stand**, **The Vapor Trail**, **The Bachelor**\n\nCONSIDER: **The Gentleman**, someone just like you."
+      "recommendations_exact_quote": "ALWAYS AVOID: **The False Messiah**, **The 5-Night Stand**, **The Vapor Trail**, **The Bachelor**\n\nCONSIDER: **The Gentleman**, someone just like you.",
+      "historical_guidance": {
+        "always_avoid_verbatim": "The False Messiah (DBLM), The 5-Night Stand (DBSM), The Vapor Trail (RBLM), The Bachelor (DGSM)",
+        "consider_verbatim": "The Gentleman (DGLM), someone just like you.",
+        "always_avoid_notes": [],
+        "consider_notes": [
+          "someone just like you."
+        ],
+        "archive_url": "https://web.archive.org/web/20080205210303/http://www.okcupid.com:80/personality?type=DGLM&o=1&g=2",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205210303/http://www.okcupid.com:80/personality?type=DGLM&o=1&g=2"
     },
     {
       "key": "DGSDm",
@@ -165,10 +205,23 @@
           "provenance_status": "Recovered directly from OkCupid CDN in browser"
         }
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false,
-      "text_source": "User-supplied original result text"
+      "always_avoid": [
+        "RGLMf"
+      ],
+      "consider": [
+        "RGSMf"
+      ],
+      "recommendations_observed": true,
+      "text_source": "User-supplied original result text",
+      "historical_guidance": {
+        "always_avoid_verbatim": "The Peach (RGLM)",
+        "consider_verbatim": "The Playstation (RGSM)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080117233847/http://www.okcupid.com:80/personality?type=DGSD&o=1&g=1",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080117233847/http://www.okcupid.com:80/personality?type=DGSD&o=1&g=1"
     },
     {
       "key": "DGSDf",
@@ -200,11 +253,25 @@
           "quality": "original_gif"
         }
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false,
+      "always_avoid": [
+        "DBLMm",
+        "RBLMm"
+      ],
+      "consider": [
+        "DGSMm"
+      ],
+      "recommendations_observed": true,
       "text_source": "User-supplied original result text",
-      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN",
+      "historical_guidance": {
+        "always_avoid_verbatim": "The False Messiah (DBLM), The Vapor Trail (RBLM)",
+        "consider_verbatim": "The Bachelor (DGSM)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080205211315/http://www.okcupid.com:80/personality?type=DGSD&o=1&g=2",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205211315/http://www.okcupid.com:80/personality?type=DGSD&o=1&g=2"
     },
     {
       "key": "DGSMm",
@@ -242,10 +309,24 @@
           "quality": "screenshot_original"
         }
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false,
-      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
+      "always_avoid": [
+        "RBLDf"
+      ],
+      "consider": [
+        "DGSMf",
+        "DGSDf"
+      ],
+      "recommendations_observed": true,
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN",
+      "historical_guidance": {
+        "always_avoid_verbatim": "The Wild Rose (RBLD)",
+        "consider_verbatim": "The Dirty Little Secret (DGSM), The Intern (DGSD)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080117003021/http://www.okcupid.com:80/personality?type=DGSM&g=1&o=1",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080117003021/http://www.okcupid.com:80/personality?type=DGSM&g=1&o=1"
     },
     {
       "key": "DGSMf",
@@ -269,10 +350,26 @@
         "name": "The Wild Rose",
         "art": null
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false,
-      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
+      "always_avoid": [
+        "RBSMm",
+        "RBLDm",
+        "RBSDm"
+      ],
+      "consider": [
+        "DGSMm",
+        "DGSDm"
+      ],
+      "recommendations_observed": true,
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN",
+      "historical_guidance": {
+        "always_avoid_verbatim": "The Hornivore (RBSM), The Manchild (RBLD), The Last Man on Earth (RBSD)",
+        "consider_verbatim": "The Bachelor (DGSM), The Backrubber (DGSD)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080205211928/http://www.okcupid.com:80/personality?type=DGSM&o=1&g=2",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205211928/http://www.okcupid.com:80/personality?type=DGSM&o=1&g=2"
     },
     {
       "key": "DBLDm",
@@ -306,10 +403,24 @@
           "provenance_status": "Recovered directly from OkCupid CDN in browser"
         }
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false,
-      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
+      "always_avoid": [
+        "RGSMf",
+        "RGLMf"
+      ],
+      "consider": [
+        "DBLDf"
+      ],
+      "recommendations_observed": true,
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN",
+      "historical_guidance": {
+        "always_avoid_verbatim": "The Playstation (RGSM), The Peach (RGLM)",
+        "consider_verbatim": "The Priss (DBLD)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080118122902/http://www.okcupid.com:80/personality?type=DBLD&g=1&o=1",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080118122902/http://www.okcupid.com:80/personality?type=DBLD&g=1&o=1"
     },
     {
       "key": "DBLDf",
@@ -353,7 +464,15 @@
       "recommendations_observed": true,
       "text_source": "User-supplied original result text",
       "art_recovery_status": "Original-format GIF supplied in admin drop",
-      "recommendations_source": "User-supplied original result guidance"
+      "recommendations_source": "https://web.archive.org/web/20080119211518/http://www.okcupid.com:80/personality?type=DBLD&g=2&o=1",
+      "historical_guidance": {
+        "always_avoid_verbatim": "The Playboy (RGSM), The Loverboy (RGLM)",
+        "consider_verbatim": "The Manchild (RBLD)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080119211518/http://www.okcupid.com:80/personality?type=DBLD&g=2&o=1",
+        "verified_from_capture": true
+      }
     },
     {
       "key": "DBLMm",
@@ -377,10 +496,26 @@
         "name": "The Poolboy",
         "art": null
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false,
-      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
+      "always_avoid": [
+        "DGLDf",
+        "RGLDf"
+      ],
+      "consider": [
+        "DBSMf",
+        "RGLMf",
+        "DBSDf"
+      ],
+      "recommendations_observed": true,
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN",
+      "historical_guidance": {
+        "always_avoid_verbatim": "The Sonnet (DGLD), The Window Shopper (RGLD)",
+        "consider_verbatim": "The Stiletto (DBSM), The Peach (RGLM), The Nymph (DBSD)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080205211912/http://www.okcupid.com:80/personality?type=DBLM&o=1&g=1",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205211912/http://www.okcupid.com:80/personality?type=DBLM&o=1&g=1"
     },
     {
       "key": "DBLMf",
@@ -425,9 +560,19 @@
       ],
       "recommendations_observed": true,
       "text_source": "User-supplied original result text",
-      "recommendations_source": "User-supplied original result guidance",
+      "recommendations_source": "https://web.archive.org/web/20080119124603/http://www.okcupid.com:80/personality?type=DBLM&g=2&o=1",
       "consider_note": "someone just like you",
-      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN",
+      "historical_guidance": {
+        "always_avoid_verbatim": "The Poolboy (RGSD)",
+        "consider_verbatim": "The False Messiah (DBLM), someone just like you.",
+        "always_avoid_notes": [],
+        "consider_notes": [
+          "someone just like you."
+        ],
+        "archive_url": "https://web.archive.org/web/20080119124603/http://www.okcupid.com:80/personality?type=DBLM&g=2&o=1",
+        "verified_from_capture": true
+      }
     },
     {
       "key": "DBSDm",
@@ -441,9 +586,24 @@
         "name": "The Loverboy",
         "art": null
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false
+      "always_avoid": [
+        "DBSDf",
+        "DGLDf",
+        "RBLDf"
+      ],
+      "consider": [
+        "RGSMf"
+      ],
+      "recommendations_observed": true,
+      "historical_guidance": {
+        "always_avoid_verbatim": "The Nymph (DBSD), The Sonnet (DGLD), The Wild Rose (RBLD)",
+        "consider_verbatim": "The Playstation (RGSM)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080117160326/http://www.okcupid.com:80/personality?type=DBSD&g=1&o=1",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080117160326/http://www.okcupid.com:80/personality?type=DBSD&g=1&o=1"
     },
     {
       "key": "DBSDf",
@@ -486,10 +646,18 @@
       ],
       "recommendations_observed": true,
       "text_source": "User-supplied original result text",
-      "recommendations_source": "User-supplied original result guidance",
+      "recommendations_source": "https://web.archive.org/web/20080121002427/http://www.okcupid.com:80/personality?type=DBSD&o=1&g=2",
       "original_art_url": "http://akcdn.okccdn.com/graphics/persons/DBSDf.gif",
       "art_recovery_status": "Original GIF recovered directly from OkCupid CDN",
-      "artwork_verification_note": "Recovered GIF pixels exactly match the user-supplied images.png candidate."
+      "artwork_verification_note": "Recovered GIF pixels exactly match the user-supplied images.png candidate.",
+      "historical_guidance": {
+        "always_avoid_verbatim": "The False Messiah (DBLM)",
+        "consider_verbatim": "The Playboy (RGSM)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080121002427/http://www.okcupid.com:80/personality?type=DBSD&o=1&g=2",
+        "verified_from_capture": true
+      }
     },
     {
       "key": "DBSMm",
@@ -523,10 +691,25 @@
           "provenance_status": "Recovered directly from OkCupid CDN in browser"
         }
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false,
-      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
+      "always_avoid": [
+        "DBLMf",
+        "RBLMf",
+        "DGSMf"
+      ],
+      "consider": [
+        "DBSMf"
+      ],
+      "recommendations_observed": true,
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN",
+      "historical_guidance": {
+        "always_avoid_verbatim": "The Battleaxe (DBLM), The Sudden Departure (RBLM), The Dirty Little Secret (DGSM)",
+        "consider_verbatim": "The Stiletto (DBSM)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080205211917/http://www.okcupid.com:80/personality?type=DBSM&o=1&g=1",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205211917/http://www.okcupid.com:80/personality?type=DBSM&o=1&g=1"
     },
     {
       "key": "DBSMf",
@@ -550,10 +733,25 @@
         "name": "The Window Shopper",
         "art": null
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false,
-      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
+      "always_avoid": [
+        "DGLDm",
+        "RBLDm"
+      ],
+      "consider": [
+        "DBSMm",
+        "DGSMm"
+      ],
+      "recommendations_observed": true,
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN",
+      "historical_guidance": {
+        "always_avoid_verbatim": "The Slow Dancer (DGLD), The Manchild (RBLD)",
+        "consider_verbatim": "The 5-Night Stand (DBSM), The Bachelor (DGSM)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080205211923/http://www.okcupid.com:80/personality?type=DBSM&o=1&g=2",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205211923/http://www.okcupid.com:80/personality?type=DBSM&o=1&g=2"
     },
     {
       "key": "RGLDm",
@@ -598,8 +796,16 @@
         "RGLMf"
       ],
       "recommendations_observed": true,
-      "recommendations_source": "User-supplied original result guidance",
-      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
+      "recommendations_source": "https://web.archive.org/web/20080205210451/http://www.okcupid.com:80/personality?type=RGLD&o=1&g=1",
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN",
+      "historical_guidance": {
+        "always_avoid_verbatim": "The Nymph (DBSD)",
+        "consider_verbatim": "The Maid of Honor (DGLM), The Peach (RGLM)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080205210451/http://www.okcupid.com:80/personality?type=RGLD&o=1&g=1",
+        "verified_from_capture": true
+      }
     },
     {
       "key": "RGLDf",
@@ -623,9 +829,24 @@
           "provenance_status": "Recovered directly from OkCupid CDN in browser"
         }
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false
+      "always_avoid": [
+        "RBSMm"
+      ],
+      "consider": [
+        "DGLMm",
+        "RGLMm",
+        "RGLDm"
+      ],
+      "recommendations_observed": true,
+      "historical_guidance": {
+        "always_avoid_verbatim": "The Hornivore (RBSM)",
+        "consider_verbatim": "The Gentleman (DGLM), The Loverboy (RGLM), The Boy Next Door (RGLD)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080205211336/http://www.okcupid.com:80/personality?type=RGLD&o=1&g=2",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205211336/http://www.okcupid.com:80/personality?type=RGLD&o=1&g=2"
     },
     {
       "key": "RGLMm",
@@ -639,9 +860,23 @@
         "name": "The Billy Goat",
         "art": null
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false
+      "always_avoid": [
+        "DBSDf"
+      ],
+      "consider": [
+        "RGLDf",
+        "RGLMf"
+      ],
+      "recommendations_observed": true,
+      "historical_guidance": {
+        "always_avoid_verbatim": "The Nymph (DBSD)",
+        "consider_verbatim": "The Window Shopper (RGLD), The Peach (RGLM)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080205210505/http://www.okcupid.com:80/personality?type=RGLM&o=1&g=1",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205210505/http://www.okcupid.com:80/personality?type=RGLM&o=1&g=1"
     },
     {
       "key": "RGLMf",
@@ -685,8 +920,16 @@
         "RGLDm"
       ],
       "recommendations_observed": true,
-      "recommendations_source": "User-supplied original result guidance",
-      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
+      "recommendations_source": "https://web.archive.org/web/20080205211939/http://www.okcupid.com:80/personality?type=RGLM&o=1&g=2",
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN",
+      "historical_guidance": {
+        "always_avoid_verbatim": "The False Messiah (DBLM)",
+        "consider_verbatim": "The Loverboy (RGLM), The Playboy (RGSM), The Boy Next Door (RGLD)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080205211939/http://www.okcupid.com:80/personality?type=RGLM&o=1&g=2",
+        "verified_from_capture": true
+      }
     },
     {
       "key": "RGSDm",
@@ -710,9 +953,24 @@
           "provenance_status": "Recovered directly from OkCupid CDN in browser"
         }
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false
+      "always_avoid": [
+        "DGSMf",
+        "RGSMf"
+      ],
+      "consider": [
+        "DBLMf",
+        "RGSDf"
+      ],
+      "recommendations_observed": true,
+      "historical_guidance": {
+        "always_avoid_verbatim": "The Dirty Little Secret (DGSM), The Playstation (RGSM)",
+        "consider_verbatim": "The Battleaxe (DBLM), The Nurse (RGSD)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080128031107/http://www.okcupid.com:80/personality?type=RGSD&g=1&o=1",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080128031107/http://www.okcupid.com:80/personality?type=RGSD&g=1&o=1"
     },
     {
       "key": "RGSDf",
@@ -746,11 +1004,26 @@
           "provenance_status": "Recovered directly from OkCupid CDN in browser"
         }
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false,
+      "always_avoid": [
+        "DBLMm",
+        "DBSDm"
+      ],
+      "consider": [
+        "RGSDm",
+        "RGSMm"
+      ],
+      "recommendations_observed": true,
       "text_source": "User-supplied original result text",
-      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN",
+      "historical_guidance": {
+        "always_avoid_verbatim": "The False Messiah (DBLM), The Billy Goat (DBSD)",
+        "consider_verbatim": "The Poolboy (RGSD), The Playboy (RGSM)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080205210328/http://www.okcupid.com:80/personality?type=RGSD&o=1&g=2",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205210328/http://www.okcupid.com:80/personality?type=RGSD&o=1&g=2"
     },
     {
       "key": "RGSMm",
@@ -784,10 +1057,24 @@
           "provenance_status": "Recovered directly from OkCupid CDN in browser"
         }
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false,
-      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
+      "always_avoid": [
+        "RGSMf"
+      ],
+      "consider": [
+        "DGSMf",
+        "RGSDf"
+      ],
+      "recommendations_observed": true,
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN",
+      "historical_guidance": {
+        "always_avoid_verbatim": "The Playstation (RGSM)",
+        "consider_verbatim": "The Dirty Little Secret (DGSM), The Nurse (RGSD)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080117003026/http://www.okcupid.com:80/personality?type=RGSM&g=1&o=1",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080117003026/http://www.okcupid.com:80/personality?type=RGSM&g=1&o=1"
     },
     {
       "key": "RGSMf",
@@ -820,10 +1107,23 @@
           "source": "research/Admin drop/dbldf.gif"
         }
       },
-      "always_avoid": [],
+      "always_avoid": [
+        "DBLDm"
+      ],
       "consider": [],
-      "recommendations_observed": false,
-      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
+      "recommendations_observed": true,
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN",
+      "historical_guidance": {
+        "always_avoid_verbatim": "The Mixed Messenger (DBLD)",
+        "consider_verbatim": "Anyone else",
+        "always_avoid_notes": [],
+        "consider_notes": [
+          "Anyone else"
+        ],
+        "archive_url": "https://web.archive.org/web/20080205211341/http://www.okcupid.com:80/personality?type=RGSM&o=1&g=2",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205211341/http://www.okcupid.com:80/personality?type=RGSM&o=1&g=2"
     },
     {
       "key": "RBLDm",
@@ -867,7 +1167,16 @@
       "consider": [
         "RBLMf"
       ],
-      "recommendations_observed": true
+      "recommendations_observed": true,
+      "historical_guidance": {
+        "always_avoid_verbatim": "The Dirty Little Secret (DGSM)",
+        "consider_verbatim": "The Sudden Departure (RBLM)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080205211320/http://www.okcupid.com:80/personality?type=RBLD&o=1&g=1",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205211320/http://www.okcupid.com:80/personality?type=RBLD&o=1&g=1"
     },
     {
       "key": "RBLDf",
@@ -891,9 +1200,22 @@
           "provenance_status": "Recovered directly from OkCupid CDN in browser"
         }
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false
+      "always_avoid": [
+        "DGSMm"
+      ],
+      "consider": [
+        "RBLMm"
+      ],
+      "recommendations_observed": true,
+      "historical_guidance": {
+        "always_avoid_verbatim": "The Bachelor (DGSM)",
+        "consider_verbatim": "The Vapor Trail (RBLM)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080205211325/http://www.okcupid.com:80/personality?type=RBLD&o=1&g=2",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205211325/http://www.okcupid.com:80/personality?type=RBLD&o=1&g=2"
     },
     {
       "key": "RBLMm",
@@ -957,7 +1279,16 @@
           "quality": "screenshot_original"
         }
       ],
-      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN",
+      "historical_guidance": {
+        "always_avoid_verbatim": "The Intern (DGSD), The Maid of Honor (DGLM)",
+        "consider_verbatim": "The Sudden Departure (RBLM)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080117084714/http://www.okcupid.com:80/personality?type=RBLM&o=1&g=1",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080117084714/http://www.okcupid.com:80/personality?type=RBLM&o=1&g=1"
     },
     {
       "key": "RBLMf",
@@ -998,7 +1329,18 @@
         "RBLMm"
       ],
       "recommendations_observed": true,
-      "consider_note": "someone just like you"
+      "consider_note": "someone just like you",
+      "historical_guidance": {
+        "always_avoid_verbatim": "The Backrubber (DGSD), The Gentleman (DGLM)",
+        "consider_verbatim": "The Vapor Trail (RBLM), someone just like you",
+        "always_avoid_notes": [],
+        "consider_notes": [
+          "someone just like you"
+        ],
+        "archive_url": "https://web.archive.org/web/20080205211331/http://www.okcupid.com:80/personality?type=RBLM&o=1&g=2",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205211331/http://www.okcupid.com:80/personality?type=RBLM&o=1&g=2"
     },
     {
       "key": "RBSDm",
@@ -1012,10 +1354,24 @@
         "name": "The Gentleman",
         "art": null
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false,
-      "text_source": "User-supplied original result text"
+      "always_avoid": [
+        "DGLDf"
+      ],
+      "consider": [
+        "RBSDf",
+        "DBSDf"
+      ],
+      "recommendations_observed": true,
+      "text_source": "User-supplied original result text",
+      "historical_guidance": {
+        "always_avoid_verbatim": "The Sonnet (DGLD)",
+        "consider_verbatim": "Half-Cocked (RBSD), The Nymph (DBSD)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080205211934/http://www.okcupid.com:80/personality?type=RBSD&o=1&g=1",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205211934/http://www.okcupid.com:80/personality?type=RBSD&o=1&g=1"
     },
     {
       "key": "RBSDf",
@@ -1038,7 +1394,15 @@
       ],
       "recommendations_observed": true,
       "text_source": "User-supplied original result text",
-      "recommendations_source": "User-supplied guidance, converted to male equivalents at user request"
+      "recommendations_source": "https://web.archive.org/web/20080205210441/http://www.okcupid.com:80/personality?type=RBSD&o=1&g=2",
+      "historical_guidance": {
+        "always_avoid_verbatim": "The Slow Dancer (DGLD)",
+        "consider_verbatim": "The Playboy (RGSM), The Billy Goat (DBSD)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080205210441/http://www.okcupid.com:80/personality?type=RBSD&o=1&g=2",
+        "verified_from_capture": true
+      }
     },
     {
       "key": "RBSMm",
@@ -1076,10 +1440,25 @@
           "quality": "screenshot_original"
         }
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false,
-      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
+      "always_avoid": [
+        "RBSMf",
+        "DGLDf"
+      ],
+      "consider": [
+        "RBSDf",
+        "RBSMf"
+      ],
+      "recommendations_observed": true,
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN",
+      "historical_guidance": {
+        "always_avoid_verbatim": "Genghis Khunt (RBSM), The Sonnet (DGLD)",
+        "consider_verbatim": "Half-Cocked (RBSD), Genghis Khunt (RBSM)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080205210313/http://www.okcupid.com:80/personality?type=RBSM&o=1&g=1",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205210313/http://www.okcupid.com:80/personality?type=RBSM&o=1&g=1"
     },
     {
       "key": "RBSMf",
@@ -1097,9 +1476,24 @@
         "name": "The Sonnet",
         "art": null
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false
+      "always_avoid": [
+        "DGLDm"
+      ],
+      "consider": [
+        "DBSMm",
+        "RBSMm",
+        "RGSMm"
+      ],
+      "recommendations_observed": true,
+      "historical_guidance": {
+        "always_avoid_verbatim": "The Slow Dancer (DGLD)",
+        "consider_verbatim": "The 5-Night Stand (DBSM), The Hornivore (RBSM), The Playboy (RGSM)",
+        "always_avoid_notes": [],
+        "consider_notes": [],
+        "archive_url": "https://web.archive.org/web/20080119124608/http://www.okcupid.com:80/personality?type=RBSM&o=1&g=2",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080119124608/http://www.okcupid.com:80/personality?type=RBSM&o=1&g=2"
     }
   ]
 }
