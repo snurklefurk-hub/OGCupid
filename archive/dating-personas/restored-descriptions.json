@@ -2,8 +2,8 @@
   "schema_version": 2,
   "collection": "Classic OkCupid Dating Persona Test",
   "total": 32,
-  "transcribed": 24,
-  "missing": 7,
+  "transcribed": 25,
+  "missing": 6,
   "records": [
     {
       "key": "DGLDm",
@@ -164,8 +164,24 @@
       "code": "DBLM",
       "result_group": "woman",
       "original_name": "The Battleaxe",
-      "text_status": "missing",
-      "original_text_paragraphs": null
+      "text_status": "transcribed",
+      "original_text_paragraphs": [
+        "Sharp. Hardened. Dominating. The **Battleaxe** sweeps all before her, smiting and what not.",
+        "You've had a number of serious relationships, so you obviously have many attractive qualities. You're well experienced in dealing with other people's weirdnesses, and it's likely you're good in bed by now, too. Also, like the drunken housewife chucking Heinekens at her no-good husband, you've got a lot of energy.",
+        "People can tell you're **sophisticated**, and so you find yourself the object of infatuations quite often. But it's how you handle yourself in your relationships that gets you the 'brutal' tag. Controlling? Imperious? Overbearing? Yes, please.",
+        "Remarkably, you don't mind the same from your men. You've experience enough to take whatever you dish out. Overall, you're a very good person and a capable lover, and when the time comes you'll make a fine divorcee."
+      ],
+      "text_source": "User-supplied original result text",
+      "recommendations_source": "User-supplied original result guidance",
+      "historic_recommendations": {
+        "always_avoid": [
+          "RGSDm"
+        ],
+        "consider": [
+          "DBLMm"
+        ],
+        "consider_note": "someone just like you"
+      }
     },
     {
       "key": "DBSDm",

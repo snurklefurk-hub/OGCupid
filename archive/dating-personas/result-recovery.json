@@ -329,7 +329,7 @@
       "code": "DBLM",
       "group": "woman",
       "name": "The Battleaxe",
-      "text_status": "missing",
+      "text_status": "transcribed",
       "primary_art": {
         "type": "image",
         "url": "/persona-assets/battleaxe.avif",
@@ -343,11 +343,21 @@
       "exact_opposite": {
         "key": "RGSDf",
         "name": "The Nurse",
-        "art": null
+        "art": null,
+        "traits": "Random Gentle Sex Dreamer",
+        "original_art_url": "http://panther.is0.okcupid.com/graphics/persons/RGSDf_thumb.gif",
+        "art_recovery_status": "Source URL unavailable; original thumbnail not recovered"
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false
+      "always_avoid": [
+        "RGSDm"
+      ],
+      "consider": [
+        "DBLMm"
+      ],
+      "recommendations_observed": true,
+      "text_source": "User-supplied original result text",
+      "recommendations_source": "User-supplied original result guidance",
+      "consider_note": "someone just like you"
     },
     {
       "key": "DBSDm",
