@@ -593,7 +593,7 @@
       "code": "RBLM",
       "group": "man",
       "name": "The Vapor Trail",
-      "text_status": "partial",
+      "text_status": "transcribed",
       "primary_art": {
         "type": "image_crop",
         "url": "/persona-assets/vapor-trail.webp",
@@ -603,9 +603,9 @@
         ],
         "crop_rect": [
           0,
-          0,
+          2,
           192,
-          224
+          220
         ],
         "quality": "screenshot_original"
       },
@@ -635,7 +635,25 @@
       "consider": [
         "RBLMf"
       ],
-      "recommendations_observed": true
+      "recommendations_observed": true,
+      "inline_art": [
+        {
+          "type": "image_crop",
+          "url": "/persona-assets/vapor-trail.webp",
+          "source_dimensions": [
+            640,
+            474
+          ],
+          "crop_rect": [
+            250,
+            222,
+            205,
+            125
+          ],
+          "alt": "Positive feelings over time: her feelings rise while yours fall.",
+          "quality": "screenshot_original"
+        }
+      ]
     },
     {
       "key": "RBLMf",
@@ -651,10 +669,10 @@
           465
         ],
         "crop_rect": [
-          13,
-          1,
-          196,
-          381
+          16,
+          0,
+          200,
+          350
         ],
         "quality": "screenshot_original"
       },
@@ -684,7 +702,8 @@
       "consider": [
         "RBLMm"
       ],
-      "recommendations_observed": true
+      "recommendations_observed": true,
+      "consider_note": "someone just like you"
     },
     {
       "key": "RBSDm",

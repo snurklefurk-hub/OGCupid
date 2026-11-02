@@ -2,7 +2,7 @@
   "schema_version": 2,
   "collection": "Classic OkCupid Dating Persona Test",
   "total": 32,
-  "transcribed": 19,
+  "transcribed": 20,
   "missing": 11,
   "records": [
     {
@@ -326,11 +326,14 @@
       "code": "RBLM",
       "result_group": "man",
       "original_name": "The Vapor Trail",
-      "text_status": "partial",
+      "text_status": "transcribed",
       "original_text_paragraphs": [
-        "Here today, gone today. You are The Vapor Trail. Are you in a relationship now? What about now?",
+        "Here today, gone today. You are **The Vapor Trail**. Are you in a relationship now?",
+        "What about now?",
         "Vapor Trails can be highly charismatic people--unpredictable, confident, and magnetic. You're experienced. You know how to handle yourself in a relationship, and many people appreciate that. Many people, all in a row.",
-        "Vapor Trails especially need a girl who will laugh at their jokes. They're also the most likely male type to be haunted by serious regret."
+        "You've had your share of blissful beginnings, to be sure. But things almost never turn out how you'd like, do they? The problem is you're never happy with someone for an extended period of time. Relate to the following:",
+        "Vapor Trails especially need a girl who will laugh at their jokes. They're also the most likely male type to be haunted by serious regret.",
+        "**FACT:** A few of your exes, the ones you were best to, will always love you. Nice going."
       ],
       "historic_recommendations": {
         "always_avoid": [
@@ -349,10 +352,10 @@
       "original_name": "The Sudden Departure",
       "text_status": "transcribed",
       "original_text_paragraphs": [
-        "Sweet. Dear. Loving. At Gate 18. Final call. You are The Sudden Departure.",
-        "You’ve been in a lot of serious relationships. More than a few have ended ugly. Uglily. Whatever. Our guess is that you’re a really fantastic girl who doesn’t really know what she wants, and you’ve broken a few hearts as a result. You fall for people easily, and you enjoy the feeling of falling in love, but once you’re there, either boredom or the old “grass is greener” syndrome sets in. The mind wanders, and with it goes the flesh. And then the toiletries.",
-        "We know you’re not the classic “love ’em and leave ’em” type, at least not in a purely sexual sense. You have too many serious bonding tendencies for that. But even though you’re theoretically looking to settle down, you don’t settle long on one person. “Serial monogamist” is probably something you hear a lot. “Emotionally loose” is another way to put it.",
-        "To the poor guys eating your dust and sniffing your panties, it doesn’t really make much difference. Of course, it’s not really your fault that people get hurt. You have every right to move on when you choose."
+        "Sweet. Dear. Loving. At Gate 18. Final call.",
+        "You are **The Sudden Departure**.",
+        "You've been in a lot of serious relationships. More than a few have ended ugly. Uglily. Whatever. Our guess is that you're a really fantastic girl who doesn't really know what she wants, and you've broken a few hearts as a result. You fall for people easily, and you enjoy the feeling of falling in love, but once you're there, either boredom or the old \"grass is greener\" syndrome sets in. The mind wanders, and with it goes the flesh. And then the toiletries.",
+        "We know you're not the classic \"love 'em and leave 'em\" type, at least not in a purely sexual sense. You have too many serious bonding tendencies for that. But even though you're theoretically looking to settle down, you don't settle long on one person. \"Serial monogamist\" is probably something you hear a lot. \"Emotionally loose\" is another way to put it. To the poor guys eating your dust and sniffing your panties, it doesn't really make much difference. Of course, it's not really your fault that people get hurt. You have every right to move on when you choose."
       ],
       "historic_recommendations": {
         "always_avoid": [
@@ -361,7 +364,8 @@
         ],
         "consider": [
           "RBLMm"
-        ]
+        ],
+        "consider_note": "someone just like you"
       }
     },
     {
