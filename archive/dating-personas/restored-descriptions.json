@@ -459,7 +459,9 @@
           "RBLMm"
         ],
         "consider_note": "someone just like you"
-      }
+      },
+      "artwork_file": "/persona-assets/RBLMf.gif",
+      "artwork_source": "research/Admin drop/RBLMf.gif"
     },
     {
       "key": "RBSDm",

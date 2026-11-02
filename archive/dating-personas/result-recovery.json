@@ -190,19 +190,13 @@
         "key": "RBLMf",
         "name": "The Sudden Departure",
         "art": {
-          "type": "image_crop",
-          "url": "/persona-assets/sudden-departure.jpg",
+          "type": "image",
+          "url": "/persona-assets/RBLMf.gif",
           "source_dimensions": [
-            576,
-            465
+            250,
+            442
           ],
-          "crop_rect": [
-            13,
-            1,
-            196,
-            381
-          ],
-          "quality": "screenshot_original"
+          "quality": "original_gif"
         }
       },
       "always_avoid": [],
@@ -757,19 +751,14 @@
       "name": "The Sudden Departure",
       "text_status": "transcribed",
       "primary_art": {
-        "type": "image_crop",
-        "url": "/persona-assets/sudden-departure.jpg",
+        "type": "image",
+        "url": "/persona-assets/RBLMf.gif",
         "source_dimensions": [
-          576,
-          465
+          250,
+          442
         ],
-        "crop_rect": [
-          16,
-          0,
-          200,
-          350
-        ],
-        "quality": "screenshot_original"
+        "quality": "original_gif",
+        "source": "research/Admin drop/RBLMf.gif"
       },
       "exact_opposite": {
         "key": "DGSDf",
