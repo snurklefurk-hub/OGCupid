@@ -664,7 +664,7 @@
       "code": "DBSM",
       "group": "man",
       "name": "The 5-Night Stand",
-      "text_status": "missing",
+      "text_status": "partial",
       "primary_art": {
         "type": "image",
         "url": "/persona-assets/DBSMm.gif",
@@ -709,7 +709,10 @@
         "archive_url": "https://web.archive.org/web/20080205211917/http://www.okcupid.com:80/personality?type=DBSM&o=1&g=1",
         "verified_from_capture": true
       },
-      "recommendations_source": "https://web.archive.org/web/20080205211917/http://www.okcupid.com:80/personality?type=DBSM&o=1&g=1"
+      "recommendations_source": "https://web.archive.org/web/20080205211917/http://www.okcupid.com:80/personality?type=DBSM&o=1&g=1",
+      "description_source": "https://www.ilxor.com/ILX/ThreadSelectedControllerServlet?action=showall&boardid=40&threadid=29797",
+      "description_excerpt": "Compassionate, loving, and understanding, but only for one business week",
+      "description_excerpt_status": "opening fragment only; full original wording linked in historical_guidance.archive_url"
     },
     {
       "key": "DBSMf",
