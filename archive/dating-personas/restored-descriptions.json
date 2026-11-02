@@ -169,7 +169,9 @@
         "These facts indicate people are often intimidated by you. They also fall for you, hard. You have a distant, composed allure that many find irresistible. If only more of them lived up to your standards.",
         "You were probably the last among your friends to have sex. And the first to pretend that you’re pregnant. LOL. Though you’re inclined to use sex as weapon, at least it’s not as one of mass destruction. You’re choosier than most about your partners. A supportive relationship is what you’re really after. Whether you know it or not, you need something steady & long-term. And soothing."
       ],
-      "text_source": "User-supplied original result text"
+      "text_source": "User-supplied original result text",
+      "artwork_file": "/persona-assets/DBLDf.gif",
+      "artwork_source": "research/Admin drop/dbldf.gif"
     },
     {
       "key": "DBLMm",
@@ -241,7 +243,10 @@
         "consider": [
           "RGSMm"
         ]
-      }
+      },
+      "artwork_file": "/persona-assets/DBSDf.png",
+      "artwork_source": "research/Admin drop/images.png",
+      "artwork_provenance": "Original source unknown; assigned to The Nymph by explicit user instruction"
     },
     {
       "key": "DBSMm",
