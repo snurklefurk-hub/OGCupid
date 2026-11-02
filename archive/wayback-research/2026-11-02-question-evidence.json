@@ -1,0 +1,104 @@
+{
+  "generated_date": "2026-11-02",
+  "status": "Partial questionnaire evidence only; no full original question set or scoring weights recovered",
+  "archive_checks": [
+    {
+      "capture_url": "https://web.archive.org/web/20051009185554/http://www.okcupid.com/oktest3",
+      "version": "2005",
+      "form_method": "POST",
+      "radio_inputs": 0,
+      "result": "Landing page only"
+    },
+    {
+      "capture_url": "https://web.archive.org/web/20080107023332/http://www.okcupid.com/online.dating.persona.test",
+      "version": "2008",
+      "form_method": "POST",
+      "radio_inputs": 0,
+      "result": "Replaying original start form returned landing page, not question page"
+    },
+    {
+      "capture_url": "https://web.archive.org/web/20151019064217/http://www.okcupid.com/the-dating-persona-test",
+      "version": "2015",
+      "form_method": "POST",
+      "radio_inputs": 0,
+      "result": "Later route also only preserves landing form"
+    }
+  ],
+  "unsuccessful_url_lookups": [
+    "http://www.okcupid.com/online.dating.persona.test?page=2",
+    "http://www.okcupid.com/online.dating.persona.test?next-page=2",
+    "http://www.okcupid.com/oktest3?page=2"
+  ],
+  "questions": [
+    {
+      "id": "parent_interruption",
+      "reported_wording": "Who would you rather be caught masturbating in front of?",
+      "reported_context": "A December 2007 test taker discusses choosing a parent. Another contemporary thread describes the alternatives as mother or father.",
+      "source": "https://www.recoveryourlife.com/forum/archive/index.php/t-27153.html",
+      "source_date": "2007-12-12",
+      "answer_options_status": "Not recovered from official form",
+      "confidence": "Direct test-taker quotation, not official form verification"
+    },
+    {
+      "id": "sailboat",
+      "reported_wording": "Does living on a sailboat sound like a good idea?",
+      "source": "https://thebitterlemon.com/2015/10/14/dating-outside-your-type/",
+      "source_date": "2015-10-14",
+      "answer_options_status": "Author reports a positive answer; complete option list unknown",
+      "confidence": "Direct test-taker quotation; may reflect a later version"
+    },
+    {
+      "id": "sexual_experience",
+      "reported_wording": "Have you done a lot of kinky sh*t?",
+      "source": "https://thebitterlemon.com/2015/10/14/dating-outside-your-type/",
+      "source_date": "2015-10-14",
+      "answer_options_status": "Not recovered",
+      "confidence": "Direct test-taker quotation with author's censored spelling; may reflect a later version"
+    },
+    {
+      "id": "relationship_exit",
+      "reported_wording": "Do you ever start a relationship already knowing you want out?",
+      "source": "https://www.tapatalk.com/groups/l_anon/the-dating-persona-test-t3567723-s120.html",
+      "source_date": "2016-10-15",
+      "answer_options_status": "Poster reports an affirmative answer; complete options unknown",
+      "confidence": "Direct test-taker quotation; may reflect a later version"
+    },
+    {
+      "id": "logical_contrapositive",
+      "topic_summary": "Whether A implying B entails that not-B implies not-A.",
+      "answer_options_summary": [
+        "Affirmative",
+        "Negative",
+        "Uncertain",
+        "Uncertain and irritated by the question"
+      ],
+      "source": "https://www.tapatalk.com/groups/l_anon/the-dating-persona-test-t3567723-s90.html",
+      "source_date": "2016-08-27",
+      "answer_options_status": "All four choices are reproduced in the forum; summarized here",
+      "confidence": "Direct test-taker transcription of question and options; not official form verification"
+    }
+  ],
+  "additional_topic_leads": [
+    {
+      "topic": "A question concerning STDs",
+      "source": "https://forums.civfanatics.com/threads/the-online-dating-persona-test.205252/",
+      "status": "Topic mentioned; exact wording not recovered"
+    },
+    {
+      "topic": "A question concerning death",
+      "source": "https://www.tapatalk.com/groups/l_anon/the-dating-persona-test-t3567723-s90.html",
+      "status": "Topic mentioned; exact wording not recovered"
+    }
+  ],
+  "limitations": [
+    "Do not treat these five fragments as a complete question bank.",
+    "Do not infer scoring weights or original answer-to-axis mappings from the fragments.",
+    "Versions differ: the evidence spans 2007–2016, while archived entry forms inspected are from 2005, 2008, and 2015.",
+    "The site's current 28-question reconstruction was not replaced."
+  ],
+  "next_searches": [
+    "Look for archived POST captures of the original question steps when CDX enumeration is available.",
+    "Search screenshots and discussion posts using the newly recovered question phrases.",
+    "Trace the earlier TheSpark Match Test as a separate version, keeping source and date distinctions explicit."
+  ]
+}
