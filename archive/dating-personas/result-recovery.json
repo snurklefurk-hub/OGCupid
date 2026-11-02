@@ -156,18 +156,19 @@
       "text_status": "missing",
       "primary_art": {
         "type": "image_crop",
-        "url": "/persona-assets/sudden-departure.jpg",
+        "url": "/persona-assets/deliberate-personas.webp",
         "source_dimensions": [
-          576,
-          465
+          639,
+          474
         ],
         "crop_rect": [
-          453,
-          244,
-          107,
-          134
+          329,
+          8,
+          67,
+          99
         ],
-        "quality": "low_resolution_opposite_thumbnail"
+        "quality": "screenshot_original",
+        "source": "research/Admin drop/Dating-column-OkCupid-photo-640x474.webp"
       },
       "exact_opposite": {
         "key": "RBLMf",
@@ -200,18 +201,19 @@
       "text_status": "missing",
       "primary_art": {
         "type": "image_crop",
-        "url": "/persona-assets/manchild.webp",
+        "url": "/persona-assets/deliberate-personas.webp",
         "source_dimensions": [
-          514,
-          630
+          639,
+          474
         ],
         "crop_rect": [
-          375,
-          67,
-          82,
-          117
+          21,
+          129,
+          66,
+          99
         ],
-        "quality": "low_resolution_opposite_thumbnail"
+        "quality": "screenshot_original",
+        "source": "research/Admin drop/Dating-column-OkCupid-photo-640x474.webp"
       },
       "exact_opposite": {
         "key": "RBLDm",
@@ -242,7 +244,22 @@
       "group": "woman",
       "name": "The Dirty Little Secret",
       "text_status": "transcribed",
-      "primary_art": null,
+      "primary_art": {
+        "type": "image_crop",
+        "url": "/persona-assets/deliberate-personas.webp",
+        "source_dimensions": [
+          639,
+          474
+        ],
+        "crop_rect": [
+          329,
+          129,
+          67,
+          99
+        ],
+        "quality": "screenshot_original",
+        "source": "research/Admin drop/Dating-column-OkCupid-photo-640x474.webp"
+      },
       "exact_opposite": {
         "key": "RBLDf",
         "name": "The Wild Rose",
@@ -559,18 +576,18 @@
         "name": "The Bachelor",
         "art": {
           "type": "image_crop",
-          "url": "/persona-assets/manchild.webp",
+          "url": "/persona-assets/deliberate-personas.webp",
           "source_dimensions": [
-            514,
-            630
+            639,
+            474
           ],
           "crop_rect": [
-            375,
-            67,
-            82,
-            117
+            21,
+            129,
+            66,
+            99
           ],
-          "quality": "low_resolution_opposite_thumbnail"
+          "quality": "screenshot_original"
         }
       },
       "always_avoid": [
@@ -591,7 +608,21 @@
       "exact_opposite": {
         "key": "DGSMf",
         "name": "The Dirty Little Secret",
-        "art": null
+        "art": {
+          "type": "image_crop",
+          "url": "/persona-assets/deliberate-personas.webp",
+          "source_dimensions": [
+            639,
+            474
+          ],
+          "crop_rect": [
+            329,
+            129,
+            67,
+            99
+          ],
+          "quality": "screenshot_original"
+        }
       },
       "always_avoid": [],
       "consider": [],
@@ -690,18 +721,18 @@
         "name": "The Intern",
         "art": {
           "type": "image_crop",
-          "url": "/persona-assets/sudden-departure.jpg",
+          "url": "/persona-assets/deliberate-personas.webp",
           "source_dimensions": [
-            576,
-            465
+            639,
+            474
           ],
           "crop_rect": [
-            453,
-            244,
-            107,
-            134
+            329,
+            8,
+            67,
+            99
           ],
-          "quality": "low_resolution_opposite_thumbnail"
+          "quality": "screenshot_original"
         }
       },
       "always_avoid": [
