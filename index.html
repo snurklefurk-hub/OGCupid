@@ -187,13 +187,17 @@
     .persona-catalog-entry[data-recovery-status="complete"]::after,
     #persona-result[data-recovery-status="complete"]::after,
     .persona-catalog-entry[data-recovery-status="text-missing"]::after,
-    #persona-result[data-recovery-status="text-missing"]::after{
+    #persona-result[data-recovery-status="text-missing"]::after,
+    .persona-catalog-entry[data-recovery-status="text-empty"]::after,
+    #persona-result[data-recovery-status="text-empty"]::after{
       content:"";position:absolute;top:0;bottom:0;right:0;width:5px;pointer-events:none
     }
     .persona-catalog-entry[data-recovery-status="complete"]::after,
     #persona-result[data-recovery-status="complete"]::after{background:#27934a}
     .persona-catalog-entry[data-recovery-status="text-missing"]::after,
     #persona-result[data-recovery-status="text-missing"]::after{background:#e8b82c}
+    .persona-catalog-entry[data-recovery-status="text-empty"]::after,
+    #persona-result[data-recovery-status="text-empty"]::after{background:#d64242}
     .persona-catalog-entry[data-recovery-status]::after{top:-2px;right:-2px;bottom:-2px}
     .persona-status-key{font-size:12px;color:#665f72;line-height:1.5;margin:-8px 0 16px}
     .persona-catalog-entry:hover,.persona-catalog-entry:focus-visible{border-color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
@@ -604,7 +608,7 @@ header .wordmark{flex-shrink:0}
             <div class="persona-content" id="persona-catalog" hidden>
               <h3>ALL 32 DATING PERSONAS</h3>
               <p class="persona-catalog-intro">Got a favorite? Pick a persona below to read their result.</p>
-              <p class="persona-status-key">Green: complete text and good original art. Yellow: missing text. No stripe: text complete, better art needed.</p>
+              <p class="persona-status-key">Green: complete text. Yellow: some text missing. Red: all text missing.</p>
               <button type="button" class="persona-btn persona-btn-alt" id="persona-catalog-back">&#x2190; BACK</button>
               <div class="persona-catalog-grid" id="persona-catalog-grid" aria-label="Browse all 32 personas"></div>
             </div>
@@ -810,8 +814,12 @@ header .wordmark{flex-shrink:0}
     const textComplete=descriptionComplete&&hasConsider&&hasAvoid;
     const artwork=historicalArtwork[key];
     const goodArtwork=artAvailable!==false&&Boolean(artwork&&artwork.quality==="good");
-    const state=!textComplete?"text-missing":goodArtwork?"complete":"art-needed";
-    return {state,descriptionComplete,hasConsider,hasAvoid,textComplete,goodArtwork};
+    const partialDescription=partialHistoricWriteups[key];
+    const hasAnyText=descriptionComplete
+      ||Boolean(Array.isArray(partialDescription)&&partialDescription.some(function(text){return String(text).trim().length>0;}))
+      ||Boolean(quote.trim())||hasConsider||hasAvoid;
+    const state=!hasAnyText?"text-empty":!textComplete?"text-missing":goodArtwork?"complete":"art-needed";
+    return {state,descriptionComplete,hasConsider,hasAvoid,textComplete,goodArtwork,hasAnyText};
   }
   function markPersonaRecovery(element,type,gender,artAvailable){
     const status=personaRecovery(type,gender,artAvailable);
@@ -819,6 +827,8 @@ header .wordmark{flex-shrink:0}
     element.dataset.recoveryKey=type+gender;
     const label=status.state==="complete"
       ?"Complete: good-resolution original artwork, full description, and recovered ALWAYS AVOID / CONSIDER guidance."
+      :status.state==="text-empty"
+        ?"No original description, ALWAYS AVOID, or CONSIDER text recovered."
       :status.state==="text-missing"
         ?"Incomplete text: "+[
           !status.descriptionComplete?"description":null,
