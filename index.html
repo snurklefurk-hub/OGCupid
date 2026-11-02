@@ -409,6 +409,8 @@ header .wordmark{flex-shrink:0}
     .persona-opposite-art p{margin:0;font-size:13px;line-height:1.6}
     .persona-relationship-notes{border-left:4px solid var(--rose);padding:5px 0 5px 14px;margin:13px 0 0;background:#fff5f6}
     .persona-relationship-notes p{font-size:13px;line-height:1.5;margin:6px 10px}
+    .persona-archive-status{border:2px dashed #b6a7bd;background:#fff9dc;color:#5f5366;padding:9px 11px;margin:14px 0 0;font-size:12px;line-height:1.45;font-weight:800}
+    .persona-archive-status[hidden]{display:none}
 
     .persona-opposite-art .persona-original-sprite{width:107px;max-width:107px;flex:0 0 107px;aspect-ratio:100/220;border:1px solid #d1cbdc}
 </style>
@@ -556,6 +558,7 @@ header .wordmark{flex-shrink:0}
                   <p class="persona-compare" id="persona-opposite"></p>
                   <div class="persona-opposite-art" id="persona-opposite-art" hidden></div>
                   <div class="persona-relationship-notes" id="persona-relationship-notes" hidden></div>
+                  <p class="persona-archive-status" id="persona-archive-status" hidden></p>
                 </div>
               </div>
               <div class="persona-actions">
@@ -1036,6 +1039,18 @@ header .wordmark{flex-shrink:0}
         relationArea.appendChild(row);
       }
     }
+    const archiveStatus=$("persona-archive-status");
+    const textIsComplete=Boolean(originalWriteups[resultKey]);
+    const textIsPartial=Boolean(partialHistoricWriteups[resultKey]);
+    const recommendation=observedHistoricRecommendations[resultKey];
+    const recommendationIsComplete=Boolean(exactQuote)||(recommendation&&Array.isArray(recommendation.consider)&&Array.isArray(recommendation.avoid));
+    const archiveGaps=[];
+    if(!textIsComplete) archiveGaps.push(textIsPartial?"the original description is only partially recovered":"the original description is not yet recovered");
+    if(!recommendationIsComplete) archiveGaps.push("the original ALWAYS AVOID and CONSIDER guidance is not yet recovered");
+    archiveStatus.hidden=archiveGaps.length===0;
+    archiveStatus.textContent=archiveGaps.length
+      ?"ARCHIVE NOTE — INCOMPLETE: "+archiveGaps.join("; ")+". Everything above is the recovered text or the current fallback copy; we will replace the fallback as soon as the archival wording is found."
+      :"ARCHIVE VERIFIED: recovered original description plus ALWAYS AVOID / CONSIDER guidance.";
     $("persona-score-detail").textContent=scores?"Your directional scores: "+sides.map(function(s,i){return s.description+": "+scores[i];}).join(" \u00b7 ")+". Positive means the first trait; negative means the second.":"This is a shared result link; no answers or scores were stored with it.";
     $("persona-share-status").textContent="";
     show("result");
