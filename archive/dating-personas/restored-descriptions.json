@@ -2,8 +2,8 @@
   "schema_version": 2,
   "collection": "Classic OkCupid Dating Persona Test",
   "total": 32,
-  "transcribed": 23,
-  "missing": 8,
+  "transcribed": 24,
+  "missing": 7,
   "records": [
     {
       "key": "DGLDm",
@@ -97,8 +97,15 @@
       "code": "DGSD",
       "result_group": "woman",
       "original_name": "The Intern",
-      "text_status": "missing",
-      "original_text_paragraphs": null
+      "text_status": "transcribed",
+      "original_text_paragraphs": [
+        "Capable. Trustworthy. Carnal. The Intern.",
+        "From our experience, Interns are nice girls who would really, really like us to come on to them. They, like you, must be looking for sex, preferably from someone good-looking and successful. So... what are you doing later? Oh, okay, cool. Well, maybe next time? Okay, okay, jeez.",
+        "The thing is, you’re a little bit quiet, so men think you’re waiting for them to start things. You do like sex a lot, they’re right about that, but few of them realize you’re a genuinely thoughtful person.",
+        "You’re choosy, not wanting to get mixed up with just anyone. Girls can get away with this kind of selectiveness for some reason. Most guys have to take whatever’s lying around, passed out.",
+        "You’re not necessarily looking for a steady relationship right now; that’s cool. Be careful to avoid people trying to tie you down to anything other than bedposts."
+      ],
+      "text_source": "User-supplied original result text"
     },
     {
       "key": "DGSMm",

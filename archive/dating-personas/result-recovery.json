@@ -155,7 +155,7 @@
       "code": "DGSD",
       "group": "woman",
       "name": "The Intern",
-      "text_status": "missing",
+      "text_status": "transcribed",
       "primary_art": {
         "type": "image_crop",
         "url": "/persona-assets/deliberate-personas.webp",
@@ -193,7 +193,8 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false
+      "recommendations_observed": false,
+      "text_source": "User-supplied original result text"
     },
     {
       "key": "DGSMm",
