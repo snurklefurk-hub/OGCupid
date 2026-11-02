@@ -854,6 +854,7 @@ header .wordmark{flex-shrink:0}
   // Historical artwork references are loaded only when available; fallback portraits remain
   // visible when vintage hosts refuse requests. Source URLs are from 2006-2011 public archives.
   const historicalArtwork = {
+    "DGSD-f": {url:"/persona-assets/intern-restored.png"},
     // Recovered classic OkCupid persona badges from the archived MBTI forum mirror.
     // Only mappings with a surviving forum image and a locally saved GIF are listed.
     "DGLD-m": {url:"https://2img.net/h/akcdn.okccdn.com/graphics/persons/DGLDm.gif"},
@@ -909,7 +910,7 @@ header .wordmark{flex-shrink:0}
   function displayPersonaPortrait(type, selectedStyle){
     const holder=$("persona-portrait");holder.replaceChildren();
     const key=type+"-"+selectedStyle;
-    if(historicCrops[key]){
+    if(historicCrops[key]&&key!=="DGSD-f"){
       holder.appendChild(historicCropElement(historicCrops[key],"Character illustration: "+archetypes[type][selectedStyle][0]));
       return;
     }
