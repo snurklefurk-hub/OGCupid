@@ -74,12 +74,19 @@
       "exact_opposite": {
         "key": "RBSDm",
         "name": "The Last Man on Earth",
-        "art": null
+        "art": null,
+        "traits": "Random Brutal Sex Dreamer"
       },
       "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false,
-      "text_source": "User-supplied original result text"
+      "consider": [
+        "DGLMf"
+      ],
+      "recommendations_observed": true,
+      "text_source": "User-supplied original result text",
+      "recommendations_source": "User-supplied original result guidance",
+      "consider_note": "someone just like you",
+      "recommendations_status": "partial",
+      "always_avoid_status": "unrecovered"
     },
     {
       "key": "DGLMf",

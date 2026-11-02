@@ -53,7 +53,15 @@
         "It’s possible that behind it all, you’re a bit of a male slut. Your best friends know that in relationships you’re fundamentally sex-driven. You’re a safe, reliable guy, who does get laid. In a lot of ways, you’re like a well-worn, comfortable pair of socks. Did you ever jack off into one of those? All the time.",
         "Your ideal mate is NOT a nut-job. She is giving and loving, like you, but also experienced."
       ],
-      "text_source": "User-supplied original result text"
+      "text_source": "User-supplied original result text",
+      "recommendations_source": "User-supplied original result guidance",
+      "historic_recommendations": {
+        "consider": [
+          "DGLMf"
+        ],
+        "consider_note": "someone just like you",
+        "always_avoid_status": "unrecovered"
+      }
     },
     {
       "key": "DGLMf",
