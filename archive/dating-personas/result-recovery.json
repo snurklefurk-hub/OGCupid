@@ -310,7 +310,16 @@
       "group": "woman",
       "name": "The Battleaxe",
       "text_status": "missing",
-      "primary_art": null,
+      "primary_art": {
+        "type": "image",
+        "url": "/persona-assets/battleaxe.avif",
+        "source_dimensions": [
+          1300,
+          872
+        ],
+        "quality": "user_supplied_original",
+        "source": "research/Admin drop/battleaxe.avif"
+      },
       "exact_opposite": {
         "key": "RGSDf",
         "name": "The Nurse",
@@ -727,7 +736,7 @@
       "code": "RBSD",
       "group": "woman",
       "name": "Half-Cocked",
-      "text_status": "missing",
+      "text_status": "transcribed",
       "primary_art": null,
       "exact_opposite": {
         "key": "DGLMf",
@@ -736,7 +745,8 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false
+      "recommendations_observed": false,
+      "text_source": "User-supplied original result text"
     },
     {
       "key": "RBSMm",

@@ -2,8 +2,8 @@
   "schema_version": 2,
   "collection": "Classic OkCupid Dating Persona Test",
   "total": 32,
-  "transcribed": 21,
-  "missing": 10,
+  "transcribed": 22,
+  "missing": 9,
   "records": [
     {
       "key": "DGLDm",
@@ -389,8 +389,14 @@
       "code": "RBSD",
       "result_group": "woman",
       "original_name": "Half-Cocked",
-      "text_status": "missing",
-      "original_text_paragraphs": null
+      "text_status": "transcribed",
+      "original_text_paragraphs": [
+        "Fiery. Hungry. Blatant. Sexual. Christ. You are **Half-Cocked**.",
+        "There's a lot of wild lust inside you, banging around, that much is obvious. There's also a lot of untamed emotion. When either escapes, look out. One minute you're completely together, the next you're a howling gale of hormones and opinions.",
+        "Outside relationships, your intense, mercurial personality makes you a charmer. You can be fiercely devoted, and it's likely that many of your friends will be friends-for-life. Of course, your enemies are likewise certain and zealous, especially your exes and their therapists.",
+        "You will find the right person. In the short term, he's someone virile who won't sweat your imperfections. In the long term, he will be someone mature and caring who will grow to love them."
+      ],
+      "text_source": "User-supplied original result text"
     },
     {
       "key": "RBSMm",
