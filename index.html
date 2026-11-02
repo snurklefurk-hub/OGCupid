@@ -440,6 +440,13 @@ header .wordmark{flex-shrink:0}
     .persona-relationship-notes{border-left:4px solid var(--rose);padding:5px 0 5px 14px;margin:13px 0 0;background:#fff5f6}
     .persona-relationship-notes p{font-size:13px;line-height:1.5;margin:6px 10px}
     .persona-archive-link{display:inline-flex;align-items:center;text-decoration:none;font-size:13px}
+    .persona-source-viewer{margin:24px 0 0;border:3px solid var(--ink);background:#f5f0ff;padding:17px 18px 20px;box-shadow:4px 4px 0 var(--ink)}
+    .persona-source-viewer[hidden]{display:none}
+    .persona-source-viewer h4{font:900 22px/1.1 Impact,"Arial Black",sans-serif;text-transform:uppercase;margin:2px 0 9px}
+    .persona-source-viewer p{font-size:13px;line-height:1.5;margin:7px 0 12px}
+    .persona-source-frame{width:100%;height:850px;border:2px solid #aaa1bf;display:block;background:white}
+    .persona-source-link{color:var(--blue);font-weight:900}
+    @media(max-width:650px){.persona-source-viewer{padding:13px 10px}.persona-source-frame{height:640px}}
     .persona-archive-status{border:2px dashed #b6a7bd;background:#fff9dc;color:#5f5366;padding:9px 11px;margin:14px 0 0;font-size:12px;line-height:1.45;font-weight:800}
     .persona-archive-status[hidden]{display:none}
 
@@ -593,13 +600,20 @@ header .wordmark{flex-shrink:0}
                 </div>
               </div>
               <div class="persona-actions">
+                 <button class="persona-btn persona-btn-alt" type="button" id="persona-show-source" aria-controls="persona-source-viewer" aria-expanded="false">SHOW ORIGINAL 2008 PAGE ↓</button>
                  <a class="persona-btn persona-btn-alt persona-archive-link" id="persona-archive-link" href="#" target="_blank" rel="noopener noreferrer">READ THE ORIGINAL 2008 PAGE ↗</a>
                 <button class="persona-btn" type="button" id="persona-share">COPY MY RESULT LINK &#x2197;</button>
                 <button class="persona-btn persona-btn-alt" type="button" id="persona-switch">SWITCH MAN / WOMAN RESULT</button>
                 <button class="persona-btn persona-btn-alt" type="button" id="persona-retake">&#x21BA; RETAKE THE TEST</button>
                 <button class="persona-btn persona-btn-alt" type="button" id="persona-see-all-result">SEE ALL 32 RESULTS &#x2197;</button>
               </div>
-              <p class="persona-small" id="persona-share-status" role="status" aria-live="polite"></p>
+              <section class="persona-source-viewer" id="persona-source-viewer" aria-label="Complete historical dating persona result" hidden>
+                 <h4>THE ORIGINAL RESULT, STRAIGHT FROM 2008.</h4>
+                 <p>This is the actual archived page from the Internet Archive, shown here inside the quiz. Scroll inside to read. The result is loaded from Wayback, not rewritten or hosted by OG Cupid.</p>
+                 <iframe class="persona-source-frame" id="persona-source-frame" title="Original 2008 dating persona result" loading="lazy" referrerpolicy="no-referrer" sandbox="allow-same-origin allow-scripts allow-popups"></iframe>
+                 <p>If Wayback blocks embedded viewing, <a id="persona-source-fallback" class="persona-source-link" href="#" target="_blank" rel="noopener noreferrer">open the complete original in a new tab</a>.</p>
+               </section>
+               <p class="persona-small" id="persona-share-status" role="status" aria-live="polite"></p>
               <details class="persona-how">
                 <summary>How were my scores calculated?</summary>
                 <p>Seven original statements measure each of four dimensions. Answers are weighted -2, -1, +1 or +2, with reverse-worded statements counted in the opposite direction. Positive scores map to the first letter of each pair; negative scores map to the second. On a zero score, the majority direction breaks the tie. The result is one of 16 codes, each with two selectable classic character names. This is an entertainment quiz and its scoring has not been validated scientifically.</p>
@@ -993,6 +1007,18 @@ header .wordmark{flex-shrink:0}
       }
     }));
   }
+  function setHistoricalSourceVisible(visible,url){
+    const viewer=$("persona-source-viewer"),frame=$("persona-source-frame"),button=$("persona-show-source");
+    const show=Boolean(visible&&url);
+    viewer.hidden=!show;
+    button.hidden=!url;
+    button.setAttribute("aria-expanded",String(show));
+    button.textContent=show?"HIDE ORIGINAL 2008 PAGE ↑":"SHOW ORIGINAL 2008 PAGE ↓";
+    if(show){
+      if(frame.getAttribute("src")!==url)frame.src=url;
+      frame.title="Original 2008 OkCupid dating persona result: "+archetypes[code][style][0];
+    }else frame.removeAttribute("src");
+  }
   function renderResult(){
     const data=archetypes[code];if(!data)return;
     const chosen=data[style];
@@ -1067,6 +1093,10 @@ header .wordmark{flex-shrink:0}
     const sourceLink=$("persona-archive-link");
     sourceLink.hidden=!guidance;
     if(guidance)sourceLink.href=guidance.source;
+    const sourceFallback=$("persona-source-fallback");
+    if(guidance)sourceFallback.href=guidance.source;
+    // Show complete Wayback captures inside results that lack full local transcripts.
+    setHistoricalSourceVisible(Boolean(guidance&&!originalWriteups[resultKey]),guidance&&guidance.source);
     const archiveStatus=$("persona-archive-status");
     const recovery=personaRecovery(code,style);
     const textIsComplete=recovery.descriptionComplete;
@@ -1079,7 +1109,7 @@ header .wordmark{flex-shrink:0}
     if(!hasConsiderGuidance) archiveGaps.push("the original CONSIDER guidance is not yet recovered");
     archiveStatus.hidden=archiveGaps.length===0;
     archiveStatus.textContent=archiveGaps.length
-      ?"ARCHIVE NOTE — INCOMPLETE TRANSCRIPTION: "+archiveGaps.join("; ")+". Open READ THE ORIGINAL 2008 PAGE for the full historical text, not a substitute or reconstruction."
+      ?"THE ORIGINAL 2008 RESULT IS OPEN BELOW. "+archiveGaps.join("; ")+". The complete Wayback capture is embedded in this quiz; open the source in a new tab if the embedded page doesn't load."
       :"ARCHIVE VERIFIED: transcribed original description and recovered 2008 ALWAYS AVOID / CONSIDER guidance. Source link available above.";
     $("persona-score-detail").textContent=scores?"Your directional scores: "+sides.map(function(s,i){return s.description+": "+scores[i];}).join(" \u00b7 ")+". Positive means the first trait; negative means the second.":"This is a shared result link; no answers or scores were stored with it.";
     $("persona-share-status").textContent="";
@@ -1111,6 +1141,12 @@ header .wordmark{flex-shrink:0}
     const scored=scoreTest();code=scored.code;scores=scored.sum;renderResult();$("quiz").scrollIntoView({behavior:"smooth"});
   });
   $("persona-switch").addEventListener("click",function(){style=style==="m"?"f":"m";renderResult();});
+  $("persona-show-source").addEventListener("click",function(){
+    const url=historicalGuidance[code+style]&&historicalGuidance[code+style].source;
+    const next=$("persona-source-viewer").hidden;
+    setHistoricalSourceVisible(next,url);
+    if(next)$("persona-source-viewer").scrollIntoView({behavior:"smooth",block:"nearest"});
+  });
   $("persona-retake").addEventListener("click",function(){for(let i=0;i<answers.length;i++)answers[i]=null;page=0;code=null;scores=null;show("intro");});
   $("persona-see-all-intro").addEventListener("click",function(){openCatalog("intro");});
   $("persona-see-all-result").addEventListener("click",function(){openCatalog("result");});
