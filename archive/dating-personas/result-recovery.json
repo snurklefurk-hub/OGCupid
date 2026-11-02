@@ -78,7 +78,8 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false
+      "recommendations_observed": false,
+      "text_source": "User-supplied original result text"
     },
     {
       "key": "DGLMf",
@@ -477,11 +478,19 @@
       "exact_opposite": {
         "key": "DBSDf",
         "name": "The Nymph",
-        "art": null
+        "art": null,
+        "traits": "Deliberate Brutal Sex Dreamer"
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false
+      "always_avoid": [
+        "DBLMm"
+      ],
+      "consider": [
+        "RGLMm",
+        "RGSMm",
+        "RGLDm"
+      ],
+      "recommendations_observed": true,
+      "recommendations_source": "User-supplied original result guidance"
     },
     {
       "key": "RGSDm",

@@ -52,7 +52,8 @@
         "Steady & mature. You are The Gentleman. For anyone looking for an even-keeled, considerate lover, you’re their man. You’re sophisticated. You know what you want both in a relationship and outside of it. You have a substantial romantic side, and you’re experienced enough sexually to handle yourself in that arena, too. Your future relationships will be long-lasting; you’re classic “marrying material,” a prize in the eyes of many.",
         "It’s possible that behind it all, you’re a bit of a male slut. Your best friends know that in relationships you’re fundamentally sex-driven. You’re a safe, reliable guy, who does get laid. In a lot of ways, you’re like a well-worn, comfortable pair of socks. Did you ever jack off into one of those? All the time.",
         "Your ideal mate is NOT a nut-job. She is giving and loving, like you, but also experienced."
-      ]
+      ],
+      "text_source": "User-supplied original result text"
     },
     {
       "key": "DGLMf",
@@ -249,7 +250,18 @@
       ],
       "artwork_file": "original-artwork/three-persona-screenshot-sprite.webp",
       "sprite_panel": 1,
-      "source_upload": "image(4).png"
+      "source_upload": "image(4).png",
+      "historic_recommendations": {
+        "always_avoid": [
+          "DBLMm"
+        ],
+        "consider": [
+          "RGLMm",
+          "RGSMm",
+          "RGLDm"
+        ]
+      },
+      "recommendations_source": "User-supplied original result guidance"
     },
     {
       "key": "RGSDm",
