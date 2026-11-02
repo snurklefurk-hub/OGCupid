@@ -766,6 +766,7 @@ header .wordmark{flex-shrink:0}
   const historicCrops={"DGLD-A":["slow-dancer.png",497,605,126,100,277,385],"RBLM-A":["vapor-trail.webp",640,474,0,0,192,224],"RBLM-B":["sudden-departure.jpg",576,465,13,1,196,381],"RBLD-A":["manchild.webp",514,630,74,77,169,368],"DGSD-A":["vapor-trail.webp",640,474,513,104,107,117],"DGSD-B":["sudden-departure.jpg",576,465,453,244,107,134],"DGSM-A":["manchild.webp",514,630,375,67,82,117]};
   const partialHistoricWriteups={"RBLM-A":["Here today, gone today. You are The Vapor Trail. Are you in a relationship now? What about now?","Vapor Trails can be highly charismatic people--unpredictable, confident, and magnetic. You're experienced. You know how to handle yourself in a relationship, and many people appreciate that. Many people, all in a row.","Vapor Trails especially need a girl who will laugh at their jokes. They're also the most likely male type to be haunted by serious regret."],"RBLD-A":["Hopeful. Awkward. Soft-headed. Fire intrigues you. You are The Manchild.","Okay, Manchildren have some good qualities. They can be unpredictable, brash, magnetic—and therefore highly charismatic."]};
   const observedHistoricRecommendations={"RBLM-A":{"consider":["RBLM-B"],"avoid":["DGSD-B","DGLM-B"]},"RBLM-B":{"consider":["RBLM-A"],"avoid":["DGSD-A","DGLM-A"]},"RBLD-A":{"consider":["RBLM-B"],"avoid":["DGSM-B"]}};
+  const exactHistoricalRecommendationQuotes={"DGLM-B":"ALWAYS AVOID: **The False Messiah**, **The 5-Night Stand**, **The Vapor Trail**, **The Bachelor**\n\nCONSIDER: **The Gentleman**, someone just like you."};
   const recoveredImages=Object.assign(Object.create(null),{"RBSM-B":true,"RGLM-B":true,"RGSM-B":true,"DGLD-A":true,"RBLM-A":true,"RBLM-B":true,"RBLD-A":true,"DGSD-A":true,"DGSD-B":true,"DGSM-A":true}); // verified locally embedded screenshot originals
   const unavailableImages=Object.create(null);
   let catalogOrigin="intro";
@@ -1022,8 +1023,20 @@ header .wordmark{flex-shrink:0}
     }
     const relationArea=$("persona-relationship-notes");
     const relation=observedHistoricRecommendations[resultKey];
-    relationArea.replaceChildren();relationArea.hidden=!relation;
-    if(relation){
+    const exactQuote=exactHistoricalRecommendationQuotes[resultKey];
+    relationArea.replaceChildren();relationArea.hidden=!relation&&!exactQuote;
+    if(exactQuote){
+      for(const line of exactQuote.split("\n\n")){
+        const row=document.createElement("p");
+        for(const token of line.split(/(\*\*[^*]+\*\*)/g)){
+          if(token.startsWith("**")&&token.endsWith("**")){
+            const strong=document.createElement("strong");
+            strong.textContent=token.slice(2,-2);row.appendChild(strong);
+          }else row.appendChild(document.createTextNode(token));
+        }
+        relationArea.appendChild(row);
+      }
+    }else if(relation){
       for(const [title,items] of [["CONSIDER",relation.consider],["ALWAYS AVOID",relation.avoid]]){
         const row=document.createElement("p");
         const heading=document.createElement("strong");heading.textContent=title+": ";row.appendChild(heading);

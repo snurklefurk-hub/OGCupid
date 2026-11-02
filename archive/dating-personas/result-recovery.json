@@ -3,7 +3,7 @@
   "description": "32 persona records; original artwork from historical screenshots including low-res opposite thumbnails; recommendation lists observed only when screenshot evidence exists. Empty unobserved lists mean unknown.",
   "date": "2026-11-01",
   "art_recovered": 10,
-  "recommendations_observed": 3,
+  "recommendations_observed": 4,
   "results": [
     {
       "key": "DGLD-A",
@@ -95,11 +95,19 @@
         "name": "Half-Cocked",
         "art": null
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "always_avoid": [
+        "DBLM-A",
+        "DBSM-A",
+        "RBLM-A",
+        "DGSM-A"
+      ],
+      "consider": [
+        "DGLM-A"
+      ],
+      "recommendations_observed": true,
+      "recommendations_source": "user-supplied verbatim quote",
+      "notes": "Also recommends \"someone just like you\" verbatim.",
+      "recommendations_exact_quote": "ALWAYS AVOID: **The False Messiah**, **The 5-Night Stand**, **The Vapor Trail**, **The Bachelor**\n\nCONSIDER: **The Gentleman**, someone just like you."
     },
     {
       "key": "DGSD-A",

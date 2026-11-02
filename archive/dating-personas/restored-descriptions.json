@@ -72,7 +72,20 @@
       ],
       "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
       "transcription_method": "forum_transcription",
-      "original_artwork_status": "not_locally_recovered"
+      "original_artwork_status": "not_locally_recovered",
+      "historic_recommendations": {
+        "always_avoid": [
+          "DBLM-A",
+          "DBSM-A",
+          "RBLM-A",
+          "DGSM-A"
+        ],
+        "consider": [
+          "DGLM-A"
+        ],
+        "exact_quote": "ALWAYS AVOID: **The False Messiah**, **The 5-Night Stand**, **The Vapor Trail**, **The Bachelor**\n\nCONSIDER: **The Gentleman**, someone just like you.",
+        "source": "user-supplied verbatim quote"
+      }
     },
     {
       "key": "DGSD-A",
