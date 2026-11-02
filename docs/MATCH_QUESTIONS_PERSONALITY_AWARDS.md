@@ -21,7 +21,7 @@ For every question that **both** profiles answered:
 - Compute B's points from A independently.
 - Sum each person's earned points and divide by that person's total importance weight over shared answered questions.
 - The displayed Match percentage is the geometric mean of the two directional success rates, rounded to the nearest integer.
-- With no positive importance weight for a direction, the prototype falls back to exact-answer agreement for that direction.
+- If one direction assigns zero importance to every shared question, that direction is treated as neutral (100%), rather than secretly using answers it declared irrelevant. If both directions have zero weight, Match is unavailable.
 - `Friend` is the percentage of shared questions on which the two people chose the same answer. `Conflict` is the percentage of shared questions on which at least one person's acceptable-answer set rejects the other's selected answer.
 - Unanswered questions are not scored as rejections. The number of shared questions is always displayed. The preview does not implement a Bayesian confidence adjustment or minimum-match threshold.
 
