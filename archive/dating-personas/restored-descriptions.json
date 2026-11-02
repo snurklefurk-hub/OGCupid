@@ -164,14 +164,24 @@
       "original_name": "The Priss",
       "text_status": "transcribed",
       "original_text_paragraphs": [
-        "Mature. Responsible. Aristocratic. Excuse me. The Priss.",
-        "Prisses are the smartest of all female types. You’re highly perceptive, and confident in your judgements. You’d take brutal honesty over superficiality any time—your friends always know where they stand with you. You’re completely unfake. Don’t tell me that’s not a word. You’re also excellent at redirecting internal negative energy.",
+        "Mature. Responsible. Aristocratic. *Excuse* me. **The Priss**.",
+        "Prisses are the smartest of all female types. You’re highly perceptive, and confident in your judgements. You’d take brutal honesty over superficiality any time–your friends always know where they stand with you. You’re completely unfake. Don’t tell me that’s not a word. You’re also *excellent* at redirecting internal negative energy.",
         "These facts indicate people are often intimidated by you. They also fall for you, hard. You have a distant, composed allure that many find irresistible. If only more of them lived up to your standards.",
         "You were probably the last among your friends to have sex. And the first to pretend that you’re pregnant. LOL. Though you’re inclined to use sex as weapon, at least it’s not as one of mass destruction. You’re choosier than most about your partners. A supportive relationship is what you’re really after. Whether you know it or not, you need something steady & long-term. And soothing."
       ],
       "text_source": "User-supplied original result text",
       "artwork_file": "/persona-assets/DBLDf.gif",
-      "artwork_source": "research/Admin drop/dbldf.gif"
+      "artwork_source": "research/Admin drop/dbldf.gif",
+      "recommendations_source": "User-supplied original result guidance",
+      "historic_recommendations": {
+        "always_avoid": [
+          "RGSMm",
+          "RGLMm"
+        ],
+        "consider": [
+          "RBLDm"
+        ]
+      }
     },
     {
       "key": "DBLMm",
@@ -385,9 +395,10 @@
         "In the meantime, the men you share yourself with actually respect you. Like them, you enjoy sex for its own sake and don’t need any other validation for pleasure than pleasure itself. Hopefully, you have the good sense to blow off anyone who thinks less of you for that. Usually, this is the part of the description where we offer some life-correcting advice, but honestly, we can’t think of anything about you we’d change.",
         "Keep on fucking, partner."
       ],
-      "artwork_file": "original-artwork/three-persona-screenshot-sprite.webp",
+      "artwork_file": "/persona-assets/RGSMf_thumb.gif",
       "sprite_panel": 2,
-      "source_upload": "image(5).png"
+      "source_upload": "image(5).png",
+      "artwork_source": "https://strawberrymilkmama.files.wordpress.com/2008/01/rgsmf_thumb.gif?w=500"
     },
     {
       "key": "RBLDm",

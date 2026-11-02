@@ -316,16 +316,28 @@
         "key": "RGSMf",
         "name": "The Playstation",
         "art": {
-          "type": "image_sprite",
-          "sprite_index": 2,
-          "quality": "screenshot_crop"
-        }
+          "type": "image",
+          "url": "/persona-assets/RGSMf_thumb.gif",
+          "source_dimensions": [
+            101,
+            150
+          ],
+          "quality": "original_thumbnail",
+          "source": "https://strawberrymilkmama.files.wordpress.com/2008/01/rgsmf_thumb.gif?w=500"
+        },
+        "traits": "Random Gentle Sex Master"
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false,
+      "always_avoid": [
+        "RGSMm",
+        "RGLMm"
+      ],
+      "consider": [
+        "RBLDm"
+      ],
+      "recommendations_observed": true,
       "text_source": "User-supplied original result text",
-      "art_recovery_status": "Original-format GIF supplied in admin drop"
+      "art_recovery_status": "Original-format GIF supplied in admin drop",
+      "recommendations_source": "User-supplied original result guidance"
     },
     {
       "key": "DBLMm",
@@ -616,9 +628,14 @@
       "name": "The Playstation",
       "text_status": "transcribed",
       "primary_art": {
-        "type": "image_sprite",
-        "sprite_index": 2,
-        "quality": "screenshot_crop"
+        "type": "image",
+        "url": "/persona-assets/RGSMf_thumb.gif",
+        "source_dimensions": [
+          101,
+          150
+        ],
+        "quality": "original_thumbnail",
+        "source": "https://strawberrymilkmama.files.wordpress.com/2008/01/rgsmf_thumb.gif?w=500"
       },
       "exact_opposite": {
         "key": "DBLDf",
