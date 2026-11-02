@@ -1,0 +1,21 @@
+{
+  "question": "What is your position on hunting?",
+  "response_options": [
+    "I approve of hunting for food and sport.",
+    "I approve of hunting for food only.",
+    "I do not approve of hunting at all."
+  ],
+  "respondent_answer": "one radio choice",
+  "acceptable_partner_answers": "multiple checkboxes",
+  "importance": [
+    "Irrelevant",
+    "A little important",
+    "Somewhat important",
+    "Very important",
+    "Mandatory"
+  ],
+  "answer_privately_option": true,
+  "optional_written_explanation": true,
+  "source": "admin input/OGCupid/questions/okcqs.png",
+  "status": "manually transcribed from screenshot; one historical question, not the original question bank"
+}
