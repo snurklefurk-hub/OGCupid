@@ -26,7 +26,17 @@
       "exact_opposite": {
         "key": "RBSMm",
         "name": "The Hornivore",
-        "art": null
+        "art": {
+          "type": "image",
+          "url": "/persona-assets/RBSMm.gif",
+          "source_dimensions": [
+            250,
+            381
+          ],
+          "quality": "original_gif",
+          "source": "https://cdn.okccdn.com/graphics/persons/RBSMm.gif",
+          "provenance_status": "Recovered directly from OkCupid CDN in browser"
+        }
       },
       "always_avoid": [
         "DBLMf"
@@ -144,19 +154,15 @@
         "key": "RBLMm",
         "name": "The Vapor Trail",
         "art": {
-          "type": "image_crop",
-          "url": "/persona-assets/vapor-trail.webp",
+          "type": "image",
+          "url": "/persona-assets/RBLMm.gif",
           "source_dimensions": [
-            640,
-            474
+            250,
+            290
           ],
-          "crop_rect": [
-            0,
-            0,
-            192,
-            224
-          ],
-          "quality": "screenshot_original"
+          "quality": "original_gif",
+          "source": "https://cdn.okccdn.com/graphics/persons/RBLMm.gif",
+          "provenance_status": "Recovered directly from OkCupid CDN in browser"
         }
       },
       "always_avoid": [],
@@ -171,20 +177,15 @@
       "name": "The Intern",
       "text_status": "transcribed",
       "primary_art": {
-        "type": "image_crop",
-        "url": "/persona-assets/deliberate-personas.webp",
+        "type": "image",
+        "url": "/persona-assets/DGSDf.gif",
         "source_dimensions": [
-          639,
-          474
+          250,
+          315
         ],
-        "crop_rect": [
-          329,
-          8,
-          67,
-          99
-        ],
-        "quality": "screenshot_original",
-        "source": "research/Admin drop/Dating-column-OkCupid-photo-640x474.webp"
+        "quality": "original_gif",
+        "source": "https://cdn.okccdn.com/graphics/persons/DGSDf.gif",
+        "provenance_status": "Recovered directly from OkCupid CDN in browser"
       },
       "exact_opposite": {
         "key": "RBLMf",
@@ -202,7 +203,8 @@
       "always_avoid": [],
       "consider": [],
       "recommendations_observed": false,
-      "text_source": "User-supplied original result text"
+      "text_source": "User-supplied original result text",
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
     },
     {
       "key": "DGSMm",
@@ -211,20 +213,15 @@
       "name": "The Bachelor",
       "text_status": "missing",
       "primary_art": {
-        "type": "image_crop",
-        "url": "/persona-assets/deliberate-personas.webp",
+        "type": "image",
+        "url": "/persona-assets/DGSMm.gif",
         "source_dimensions": [
-          639,
-          474
+          210,
+          450
         ],
-        "crop_rect": [
-          21,
-          129,
-          66,
-          99
-        ],
-        "quality": "screenshot_original",
-        "source": "research/Admin drop/Dating-column-OkCupid-photo-640x474.webp"
+        "quality": "original_gif",
+        "source": "https://cdn.okccdn.com/graphics/persons/DGSMm.gif",
+        "provenance_status": "Recovered directly from OkCupid CDN in browser"
       },
       "exact_opposite": {
         "key": "RBLDm",
@@ -247,7 +244,8 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false
+      "recommendations_observed": false,
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
     },
     {
       "key": "DGSMf",
@@ -256,20 +254,15 @@
       "name": "The Dirty Little Secret",
       "text_status": "transcribed",
       "primary_art": {
-        "type": "image_crop",
-        "url": "/persona-assets/deliberate-personas.webp",
+        "type": "image",
+        "url": "/persona-assets/DGSMf.gif",
         "source_dimensions": [
-          639,
-          474
+          250,
+          374
         ],
-        "crop_rect": [
-          329,
-          129,
-          67,
-          99
-        ],
-        "quality": "screenshot_original",
-        "source": "research/Admin drop/Dating-column-OkCupid-photo-640x474.webp"
+        "quality": "original_gif",
+        "source": "https://cdn.okccdn.com/graphics/persons/DGSMf.gif",
+        "provenance_status": "Recovered directly from OkCupid CDN in browser"
       },
       "exact_opposite": {
         "key": "RBLDf",
@@ -278,7 +271,8 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false
+      "recommendations_observed": false,
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
     },
     {
       "key": "DBLDm",
@@ -286,15 +280,36 @@
       "group": "man",
       "name": "The Mixed Messenger",
       "text_status": "transcribed",
-      "primary_art": null,
+      "primary_art": {
+        "type": "image",
+        "url": "/persona-assets/DBLDm.gif",
+        "source_dimensions": [
+          250,
+          313
+        ],
+        "quality": "original_gif",
+        "source": "https://cdn.okccdn.com/graphics/persons/DBLDm.gif",
+        "provenance_status": "Recovered directly from OkCupid CDN in browser"
+      },
       "exact_opposite": {
         "key": "RGSMm",
         "name": "The Playboy",
-        "art": null
+        "art": {
+          "type": "image",
+          "url": "/persona-assets/RGSMm.gif",
+          "source_dimensions": [
+            250,
+            341
+          ],
+          "quality": "original_gif",
+          "source": "https://cdn.okccdn.com/graphics/persons/RGSMm.gif",
+          "provenance_status": "Recovered directly from OkCupid CDN in browser"
+        }
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false
+      "recommendations_observed": false,
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
     },
     {
       "key": "DBLDf",
@@ -317,13 +332,14 @@
         "name": "The Playstation",
         "art": {
           "type": "image",
-          "url": "/persona-assets/RGSMf_thumb.gif",
+          "url": "/persona-assets/RGSMf.gif",
           "source_dimensions": [
-            101,
-            150
+            250,
+            372
           ],
-          "quality": "original_thumbnail",
-          "source": "https://strawberrymilkmama.files.wordpress.com/2008/01/rgsmf_thumb.gif?w=500"
+          "quality": "original_gif",
+          "source": "https://cdn.okccdn.com/graphics/persons/RGSMf.gif",
+          "provenance_status": "Recovered directly from OkCupid CDN in browser"
         },
         "traits": "Random Gentle Sex Master"
       },
@@ -345,7 +361,17 @@
       "group": "man",
       "name": "The False Messiah",
       "text_status": "transcribed",
-      "primary_art": null,
+      "primary_art": {
+        "type": "image",
+        "url": "/persona-assets/DBLMm.gif",
+        "source_dimensions": [
+          250,
+          330
+        ],
+        "quality": "original_gif",
+        "source": "https://cdn.okccdn.com/graphics/persons/DBLMm.gif",
+        "provenance_status": "Recovered directly from OkCupid CDN in browser"
+      },
       "exact_opposite": {
         "key": "RGSDm",
         "name": "The Poolboy",
@@ -353,7 +379,8 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false
+      "recommendations_observed": false,
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
     },
     {
       "key": "DBLMf",
@@ -363,18 +390,29 @@
       "text_status": "transcribed",
       "primary_art": {
         "type": "image",
-        "url": "/persona-assets/battleaxe.avif",
+        "url": "/persona-assets/DBLMf.gif",
         "source_dimensions": [
-          1300,
-          872
+          250,
+          280
         ],
-        "quality": "user_supplied_original",
-        "source": "research/Admin drop/battleaxe.avif"
+        "quality": "original_gif",
+        "source": "https://cdn.okccdn.com/graphics/persons/DBLMf.gif",
+        "provenance_status": "Recovered directly from OkCupid CDN in browser"
       },
       "exact_opposite": {
         "key": "RGSDf",
         "name": "The Nurse",
-        "art": null,
+        "art": {
+          "type": "image",
+          "url": "/persona-assets/RGSDf.gif",
+          "source_dimensions": [
+            160,
+            484
+          ],
+          "quality": "original_gif",
+          "source": "https://cdn.okccdn.com/graphics/persons/RGSDf.gif",
+          "provenance_status": "Recovered directly from OkCupid CDN in browser"
+        },
         "traits": "Random Gentle Sex Dreamer",
         "original_art_url": "http://panther.is0.okcupid.com/graphics/persons/RGSDf_thumb.gif",
         "art_recovery_status": "Source URL unavailable; original thumbnail not recovered"
@@ -388,7 +426,8 @@
       "recommendations_observed": true,
       "text_source": "User-supplied original result text",
       "recommendations_source": "User-supplied original result guidance",
-      "consider_note": "someone just like you"
+      "consider_note": "someone just like you",
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
     },
     {
       "key": "DBSDm",
@@ -414,22 +453,28 @@
       "text_status": "transcribed",
       "primary_art": {
         "type": "image",
-        "url": "/persona-assets/DBSDf.png",
+        "url": "/persona-assets/DBSDf.gif",
         "source_dimensions": [
           250,
           411
         ],
-        "quality": "user_supplied_native_resolution",
-        "source": "research/Admin drop/images.png",
-        "provenance_status": "Original source unknown; assigned to The Nymph by explicit user instruction"
+        "quality": "original_gif",
+        "source": "https://cdn.okccdn.com/graphics/persons/DBSDf.gif",
+        "provenance_status": "Recovered directly from OkCupid CDN in browser"
       },
       "exact_opposite": {
         "key": "RGLMf",
         "name": "The Peach",
         "art": {
-          "type": "image_sprite",
-          "sprite_index": 1,
-          "quality": "screenshot_crop"
+          "type": "image",
+          "url": "/persona-assets/RGLMf.gif",
+          "source_dimensions": [
+            250,
+            435
+          ],
+          "quality": "original_gif",
+          "source": "https://cdn.okccdn.com/graphics/persons/RGLMf.gif",
+          "provenance_status": "Recovered directly from OkCupid CDN in browser"
         },
         "traits": "Random Gentle Love Master"
       },
@@ -443,7 +488,8 @@
       "text_source": "User-supplied original result text",
       "recommendations_source": "User-supplied original result guidance",
       "original_art_url": "http://akcdn.okccdn.com/graphics/persons/DBSDf.gif",
-      "art_recovery_status": "User-supplied candidate accepted for The Nymph by explicit user instruction; original source unverified"
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN",
+      "artwork_verification_note": "Recovered GIF pixels exactly match the user-supplied images.png candidate."
     },
     {
       "key": "DBSMm",
@@ -451,15 +497,36 @@
       "group": "man",
       "name": "The 5-Night Stand",
       "text_status": "missing",
-      "primary_art": null,
+      "primary_art": {
+        "type": "image",
+        "url": "/persona-assets/DBSMm.gif",
+        "source_dimensions": [
+          250,
+          326
+        ],
+        "quality": "original_gif",
+        "source": "https://cdn.okccdn.com/graphics/persons/DBSMm.gif",
+        "provenance_status": "Recovered directly from OkCupid CDN in browser"
+      },
       "exact_opposite": {
         "key": "RGLDm",
         "name": "The Boy Next Door",
-        "art": null
+        "art": {
+          "type": "image",
+          "url": "/persona-assets/RGLDm.gif",
+          "source_dimensions": [
+            250,
+            344
+          ],
+          "quality": "original_gif",
+          "source": "https://cdn.okccdn.com/graphics/persons/RGLDm.gif",
+          "provenance_status": "Recovered directly from OkCupid CDN in browser"
+        }
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false
+      "recommendations_observed": false,
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
     },
     {
       "key": "DBSMf",
@@ -467,7 +534,17 @@
       "group": "woman",
       "name": "The Stiletto",
       "text_status": "missing",
-      "primary_art": null,
+      "primary_art": {
+        "type": "image",
+        "url": "/persona-assets/DBSMf.gif",
+        "source_dimensions": [
+          250,
+          315
+        ],
+        "quality": "original_gif",
+        "source": "https://cdn.okccdn.com/graphics/persons/DBSMf.gif",
+        "provenance_status": "Recovered directly from OkCupid CDN in browser"
+      },
       "exact_opposite": {
         "key": "RGLDf",
         "name": "The Window Shopper",
@@ -475,7 +552,8 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false
+      "recommendations_observed": false,
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
     },
     {
       "key": "RGLDm",
@@ -483,11 +561,31 @@
       "group": "man",
       "name": "The Boy Next Door",
       "text_status": "transcribed",
-      "primary_art": null,
+      "primary_art": {
+        "type": "image",
+        "url": "/persona-assets/RGLDm.gif",
+        "source_dimensions": [
+          250,
+          344
+        ],
+        "quality": "original_gif",
+        "source": "https://cdn.okccdn.com/graphics/persons/RGLDm.gif",
+        "provenance_status": "Recovered directly from OkCupid CDN in browser"
+      },
       "exact_opposite": {
         "key": "DBSMm",
         "name": "The 5-Night Stand",
-        "art": null,
+        "art": {
+          "type": "image",
+          "url": "/persona-assets/DBSMm.gif",
+          "source_dimensions": [
+            250,
+            326
+          ],
+          "quality": "original_gif",
+          "source": "https://cdn.okccdn.com/graphics/persons/DBSMm.gif",
+          "provenance_status": "Recovered directly from OkCupid CDN in browser"
+        },
         "traits": "Deliberate Brutal Sex Master",
         "original_art_url": "http://panther.is0.okcupid.com/graphics/persons/DBSMm_thumb.gif",
         "art_recovery_status": "Source URL unavailable; original thumbnail not recovered"
@@ -500,7 +598,8 @@
         "RGLMf"
       ],
       "recommendations_observed": true,
-      "recommendations_source": "User-supplied original result guidance"
+      "recommendations_source": "User-supplied original result guidance",
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
     },
     {
       "key": "RGLDf",
@@ -512,7 +611,17 @@
       "exact_opposite": {
         "key": "DBSMf",
         "name": "The Stiletto",
-        "art": null
+        "art": {
+          "type": "image",
+          "url": "/persona-assets/DBSMf.gif",
+          "source_dimensions": [
+            250,
+            315
+          ],
+          "quality": "original_gif",
+          "source": "https://cdn.okccdn.com/graphics/persons/DBSMf.gif",
+          "provenance_status": "Recovered directly from OkCupid CDN in browser"
+        }
       },
       "always_avoid": [],
       "consider": [],
@@ -541,23 +650,29 @@
       "name": "The Peach",
       "text_status": "transcribed",
       "primary_art": {
-        "type": "image_sprite",
-        "sprite_index": 1,
-        "quality": "screenshot_crop"
+        "type": "image",
+        "url": "/persona-assets/RGLMf.gif",
+        "source_dimensions": [
+          250,
+          435
+        ],
+        "quality": "original_gif",
+        "source": "https://cdn.okccdn.com/graphics/persons/RGLMf.gif",
+        "provenance_status": "Recovered directly from OkCupid CDN in browser"
       },
       "exact_opposite": {
         "key": "DBSDf",
         "name": "The Nymph",
         "art": {
           "type": "image",
-          "url": "/persona-assets/DBSDf.png",
+          "url": "/persona-assets/DBSDf.gif",
           "source_dimensions": [
             250,
             411
           ],
-          "quality": "user_supplied_native_resolution",
-          "source": "research/Admin drop/images.png",
-          "provenance_status": "Original source unknown; assigned to The Nymph by explicit user instruction"
+          "quality": "original_gif",
+          "source": "https://cdn.okccdn.com/graphics/persons/DBSDf.gif",
+          "provenance_status": "Recovered directly from OkCupid CDN in browser"
         },
         "traits": "Deliberate Brutal Sex Dreamer"
       },
@@ -570,7 +685,8 @@
         "RGLDm"
       ],
       "recommendations_observed": true,
-      "recommendations_source": "User-supplied original result guidance"
+      "recommendations_source": "User-supplied original result guidance",
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
     },
     {
       "key": "RGSDm",
@@ -582,7 +698,17 @@
       "exact_opposite": {
         "key": "DBLMm",
         "name": "The False Messiah",
-        "art": null
+        "art": {
+          "type": "image",
+          "url": "/persona-assets/DBLMm.gif",
+          "source_dimensions": [
+            250,
+            330
+          ],
+          "quality": "original_gif",
+          "source": "https://cdn.okccdn.com/graphics/persons/DBLMm.gif",
+          "provenance_status": "Recovered directly from OkCupid CDN in browser"
+        }
       },
       "always_avoid": [],
       "consider": [],
@@ -594,16 +720,37 @@
       "group": "woman",
       "name": "The Nurse",
       "text_status": "transcribed",
-      "primary_art": null,
+      "primary_art": {
+        "type": "image",
+        "url": "/persona-assets/RGSDf.gif",
+        "source_dimensions": [
+          160,
+          484
+        ],
+        "quality": "original_gif",
+        "source": "https://cdn.okccdn.com/graphics/persons/RGSDf.gif",
+        "provenance_status": "Recovered directly from OkCupid CDN in browser"
+      },
       "exact_opposite": {
         "key": "DBLMf",
         "name": "The Battleaxe",
-        "art": null
+        "art": {
+          "type": "image",
+          "url": "/persona-assets/DBLMf.gif",
+          "source_dimensions": [
+            250,
+            280
+          ],
+          "quality": "original_gif",
+          "source": "https://cdn.okccdn.com/graphics/persons/DBLMf.gif",
+          "provenance_status": "Recovered directly from OkCupid CDN in browser"
+        }
       },
       "always_avoid": [],
       "consider": [],
       "recommendations_observed": false,
-      "text_source": "User-supplied original result text"
+      "text_source": "User-supplied original result text",
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
     },
     {
       "key": "RGSMm",
@@ -611,15 +758,36 @@
       "group": "man",
       "name": "The Playboy",
       "text_status": "transcribed",
-      "primary_art": null,
+      "primary_art": {
+        "type": "image",
+        "url": "/persona-assets/RGSMm.gif",
+        "source_dimensions": [
+          250,
+          341
+        ],
+        "quality": "original_gif",
+        "source": "https://cdn.okccdn.com/graphics/persons/RGSMm.gif",
+        "provenance_status": "Recovered directly from OkCupid CDN in browser"
+      },
       "exact_opposite": {
         "key": "DBLDm",
         "name": "The Mixed Messenger",
-        "art": null
+        "art": {
+          "type": "image",
+          "url": "/persona-assets/DBLDm.gif",
+          "source_dimensions": [
+            250,
+            313
+          ],
+          "quality": "original_gif",
+          "source": "https://cdn.okccdn.com/graphics/persons/DBLDm.gif",
+          "provenance_status": "Recovered directly from OkCupid CDN in browser"
+        }
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false
+      "recommendations_observed": false,
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
     },
     {
       "key": "RGSMf",
@@ -629,13 +797,14 @@
       "text_status": "transcribed",
       "primary_art": {
         "type": "image",
-        "url": "/persona-assets/RGSMf_thumb.gif",
+        "url": "/persona-assets/RGSMf.gif",
         "source_dimensions": [
-          101,
-          150
+          250,
+          372
         ],
-        "quality": "original_thumbnail",
-        "source": "https://strawberrymilkmama.files.wordpress.com/2008/01/rgsmf_thumb.gif?w=500"
+        "quality": "original_gif",
+        "source": "https://cdn.okccdn.com/graphics/persons/RGSMf.gif",
+        "provenance_status": "Recovered directly from OkCupid CDN in browser"
       },
       "exact_opposite": {
         "key": "DBLDf",
@@ -653,7 +822,8 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false
+      "recommendations_observed": false,
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
     },
     {
       "key": "RBLDm",
@@ -680,19 +850,15 @@
         "key": "DGSMm",
         "name": "The Bachelor",
         "art": {
-          "type": "image_crop",
-          "url": "/persona-assets/deliberate-personas.webp",
+          "type": "image",
+          "url": "/persona-assets/DGSMm.gif",
           "source_dimensions": [
-            639,
-            474
+            210,
+            450
           ],
-          "crop_rect": [
-            21,
-            129,
-            66,
-            99
-          ],
-          "quality": "screenshot_original"
+          "quality": "original_gif",
+          "source": "https://cdn.okccdn.com/graphics/persons/DGSMm.gif",
+          "provenance_status": "Recovered directly from OkCupid CDN in browser"
         }
       },
       "always_avoid": [
@@ -714,19 +880,15 @@
         "key": "DGSMf",
         "name": "The Dirty Little Secret",
         "art": {
-          "type": "image_crop",
-          "url": "/persona-assets/deliberate-personas.webp",
+          "type": "image",
+          "url": "/persona-assets/DGSMf.gif",
           "source_dimensions": [
-            639,
-            474
+            250,
+            374
           ],
-          "crop_rect": [
-            329,
-            129,
-            67,
-            99
-          ],
-          "quality": "screenshot_original"
+          "quality": "original_gif",
+          "source": "https://cdn.okccdn.com/graphics/persons/DGSMf.gif",
+          "provenance_status": "Recovered directly from OkCupid CDN in browser"
         }
       },
       "always_avoid": [],
@@ -740,19 +902,15 @@
       "name": "The Vapor Trail",
       "text_status": "transcribed",
       "primary_art": {
-        "type": "image_crop",
-        "url": "/persona-assets/vapor-trail.webp",
+        "type": "image",
+        "url": "/persona-assets/RBLMm.gif",
         "source_dimensions": [
-          640,
-          474
+          250,
+          290
         ],
-        "crop_rect": [
-          0,
-          2,
-          192,
-          220
-        ],
-        "quality": "screenshot_original"
+        "quality": "original_gif",
+        "source": "https://cdn.okccdn.com/graphics/persons/RBLMm.gif",
+        "provenance_status": "Recovered directly from OkCupid CDN in browser"
       },
       "exact_opposite": {
         "key": "DGSDm",
@@ -798,7 +956,8 @@
           "alt": "Positive feelings over time: her feelings rise while yours fall.",
           "quality": "screenshot_original"
         }
-      ]
+      ],
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
     },
     {
       "key": "RBLMf",
@@ -820,19 +979,15 @@
         "key": "DGSDf",
         "name": "The Intern",
         "art": {
-          "type": "image_crop",
-          "url": "/persona-assets/deliberate-personas.webp",
+          "type": "image",
+          "url": "/persona-assets/DGSDf.gif",
           "source_dimensions": [
-            639,
-            474
+            250,
+            315
           ],
-          "crop_rect": [
-            329,
-            8,
-            67,
-            99
-          ],
-          "quality": "screenshot_original"
+          "quality": "original_gif",
+          "source": "https://cdn.okccdn.com/graphics/persons/DGSDf.gif",
+          "provenance_status": "Recovered directly from OkCupid CDN in browser"
         }
       },
       "always_avoid": [
@@ -891,7 +1046,17 @@
       "group": "man",
       "name": "The Hornivore",
       "text_status": "transcribed",
-      "primary_art": null,
+      "primary_art": {
+        "type": "image",
+        "url": "/persona-assets/RBSMm.gif",
+        "source_dimensions": [
+          250,
+          381
+        ],
+        "quality": "original_gif",
+        "source": "https://cdn.okccdn.com/graphics/persons/RBSMm.gif",
+        "provenance_status": "Recovered directly from OkCupid CDN in browser"
+      },
       "exact_opposite": {
         "key": "DGLDm",
         "name": "The Slow Dancer",
@@ -913,7 +1078,8 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false
+      "recommendations_observed": false,
+      "art_recovery_status": "Original GIF recovered directly from OkCupid CDN"
     },
     {
       "key": "RBSMf",

@@ -124,7 +124,10 @@
         "You’re choosy, not wanting to get mixed up with just anyone. Girls can get away with this kind of selectiveness for some reason. Most guys have to take whatever’s lying around, passed out.",
         "You’re not necessarily looking for a steady relationship right now; that’s cool. Be careful to avoid people trying to tie you down to anything other than bedposts."
       ],
-      "text_source": "User-supplied original result text"
+      "text_source": "User-supplied original result text",
+      "artwork_file": "/persona-assets/DGSDf.gif",
+      "artwork_source": "https://cdn.okccdn.com/graphics/persons/DGSDf.gif",
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
     },
     {
       "key": "DGSMm",
@@ -132,7 +135,10 @@
       "result_group": "man",
       "original_name": "The Bachelor",
       "text_status": "missing",
-      "original_text_paragraphs": null
+      "original_text_paragraphs": null,
+      "artwork_file": "/persona-assets/DGSMm.gif",
+      "artwork_source": "https://cdn.okccdn.com/graphics/persons/DGSMm.gif",
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
     },
     {
       "key": "DGSMf",
@@ -143,7 +149,10 @@
       "original_text_paragraphs": [
         "Innocent but fundamentally sexual, like the word “finger”. You are the Dirty Little Secret. Few women have the confidence for sex mastery, and among nice girls, like you, it’s almost unheard of. So congratulations. You’ve had plenty of adventures, but you’ve remained a kind, thoughtful person. Your friends appreciate your exploits. They even live vicariously through you. You seek pleasure, but you’re not irresponsible. You are organized and cautious, and you choose your lovers wisely.",
         "One, you don’t like dirtbags. And two, you like to maintain control. Or at least lose it selectively. You might notice that older men single you out. They have an eye for your sensual nature. Take it as a compliment. You enjoy making people happy, and it’s inevitable that many guys will fall harder for you than you for them. You’re not completely comfortable in a serious, long-term relationship right now. Our guess is that the key to extended happiness will be finding a responsible, but kinky, mate."
-      ]
+      ],
+      "artwork_file": "/persona-assets/DGSMf.gif",
+      "artwork_source": "https://cdn.okccdn.com/graphics/persons/DGSMf.gif",
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
     },
     {
       "key": "DBLDm",
@@ -155,7 +164,10 @@
         "Just...take...the...fucking...flower...darling. The Mixed Messenger apologizes again.",
         "You're looking for love, but you'll always maintain your independence. You're prepared for a real commitment, but it's also likely that you're ambitious, which creates a certain romantic tension and ambivalence within you. So although you can be very affectionate to someone, you are also capable of pulling some dubious shit.",
         "In a relationship, you're usually the emotional leader. With your friends, you're a little bit more part of the pack. You're well-liked but you're not the uninhibited type, so the spotlight's often on someone else. In both social and romantic situations, however, you almost always get what you want. Influencing people is something you do very well."
-      ]
+      ],
+      "artwork_file": "/persona-assets/DBLDm.gif",
+      "artwork_source": "https://cdn.okccdn.com/graphics/persons/DBLDm.gif",
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
     },
     {
       "key": "DBLDf",
@@ -194,7 +206,10 @@
         "You’re usually a very kind person, and conscientious, too. Socially, you’re a leader, and your friends and associates look up to you. In intimate relationships, you’re a capable, responsive, and experienced lover. Outside the box, however, you run into trouble.",
         "Girls fall hard for you, but you’re much more ambivalent about them. The beginnings of your relationships are unusually intense, making it all the rougher on her when they end. At first, using all your accumulated tricks of the trade, you ladle on the affection. But once she’s all covered in soup, you withhold the true napkins of commitment. What’s that all about? We should’ve called you the False Waiter.",
         "You’re looking for Love. But history tells us you struggle to settle down and accept it. There’s a deep streak of carnality within you. And while you’ll never be a predator, you’ll always fight the urge to roam free. You like to plan things out, so plan this: find someone who can indulge your selfish side, has a healthy sexual appetite, and doesn’t mind uncertainty."
-      ]
+      ],
+      "artwork_file": "/persona-assets/DBLMm.gif",
+      "artwork_source": "https://cdn.okccdn.com/graphics/persons/DBLMm.gif",
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
     },
     {
       "key": "DBLMf",
@@ -218,7 +233,10 @@
           "DBLMm"
         ],
         "consider_note": "someone just like you"
-      }
+      },
+      "artwork_file": "/persona-assets/DBLMf.gif",
+      "artwork_source": "https://cdn.okccdn.com/graphics/persons/DBLMf.gif",
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
     },
     {
       "key": "DBSDm",
@@ -254,9 +272,9 @@
           "RGSMm"
         ]
       },
-      "artwork_file": "/persona-assets/DBSDf.png",
-      "artwork_source": "research/Admin drop/images.png",
-      "artwork_provenance": "Original source unknown; assigned to The Nymph by explicit user instruction"
+      "artwork_file": "/persona-assets/DBSDf.gif",
+      "artwork_source": "https://cdn.okccdn.com/graphics/persons/DBSDf.gif",
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
     },
     {
       "key": "DBSMm",
@@ -264,7 +282,10 @@
       "result_group": "man",
       "original_name": "The 5-Night Stand",
       "text_status": "missing",
-      "original_text_paragraphs": null
+      "original_text_paragraphs": null,
+      "artwork_file": "/persona-assets/DBSMm.gif",
+      "artwork_source": "https://cdn.okccdn.com/graphics/persons/DBSMm.gif",
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
     },
     {
       "key": "DBSMf",
@@ -272,7 +293,10 @@
       "result_group": "woman",
       "original_name": "The Stiletto",
       "text_status": "missing",
-      "original_text_paragraphs": null
+      "original_text_paragraphs": null,
+      "artwork_file": "/persona-assets/DBSMf.gif",
+      "artwork_source": "https://cdn.okccdn.com/graphics/persons/DBSMf.gif",
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
     },
     {
       "key": "RGLDm",
@@ -294,7 +318,10 @@
           "DGLMf",
           "RGLMf"
         ]
-      }
+      },
+      "artwork_file": "/persona-assets/RGLDm.gif",
+      "artwork_source": "https://cdn.okccdn.com/graphics/persons/RGLDm.gif",
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
     },
     {
       "key": "RGLDf",
@@ -332,7 +359,7 @@
         "You are a fun flirt and an instant sweetheart, but our guess is you’re becoming more selective about long-term love. It’s getting tougher for you to become permanently attached; and a guy who’s in a different place emotionally might misunderstand your early enthusiasm. You can wreck someone simply by enjoying him.",
         "Your ideal mate is adventurous and giving, like you. But not overly intense."
       ],
-      "artwork_file": "original-artwork/three-persona-screenshot-sprite.webp",
+      "artwork_file": "/persona-assets/RGLMf.gif",
       "sprite_panel": 1,
       "source_upload": "image(4).png",
       "historic_recommendations": {
@@ -345,7 +372,9 @@
           "RGLDm"
         ]
       },
-      "recommendations_source": "User-supplied original result guidance"
+      "recommendations_source": "User-supplied original result guidance",
+      "artwork_source": "https://cdn.okccdn.com/graphics/persons/RGLMf.gif",
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
     },
     {
       "key": "RGSDm",
@@ -367,7 +396,10 @@
         "If only they knew the reason...the fact is, you spend WAY more time fantasizing than the average girl. While your friends lean desperately towards love, you’re chemically biased towards anti-love: sex. You’d never date someone you didn’t find immediately kissable.",
         "To maximize satisfaction, you should find someone carefree and sexual, just like you. Avoid Brutal types at all costs. A final bit of advice: experience doesn’t matter. You didn’t qualify as a Master, and your perfect match need not either."
       ],
-      "text_source": "User-supplied original result text"
+      "text_source": "User-supplied original result text",
+      "artwork_file": "/persona-assets/RGSDf.gif",
+      "artwork_source": "https://cdn.okccdn.com/graphics/persons/RGSDf.gif",
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
     },
     {
       "key": "RGSMm",
@@ -380,7 +412,10 @@
         "You’re spontaneous, and your energy is highly contagious. Guys therefore find you fun to be around, and girls find you compelling. You have lots of sex, and you manage it all without seeming cheap or being hurtful. Well done. You probably know karate, too.",
         "It’s obvious to us, and probably everyone else, that you’re after physical rather than emotional relationships, but you’re straight up with potential partners. And if a girl you want isn’t into something casual, it’s no big deal. You move on. BEFORE sleeping with her. Usually. At least you try to. Such control is rare.",
         "If you’re feeling unfulfilled, maybe you should raise your standards. New conquests will only be satisfying if there’s a possibility of rejection."
-      ]
+      ],
+      "artwork_file": "/persona-assets/RGSMm.gif",
+      "artwork_source": "https://cdn.okccdn.com/graphics/persons/RGSMm.gif",
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
     },
     {
       "key": "RGSMf",
@@ -395,10 +430,11 @@
         "In the meantime, the men you share yourself with actually respect you. Like them, you enjoy sex for its own sake and don’t need any other validation for pleasure than pleasure itself. Hopefully, you have the good sense to blow off anyone who thinks less of you for that. Usually, this is the part of the description where we offer some life-correcting advice, but honestly, we can’t think of anything about you we’d change.",
         "Keep on fucking, partner."
       ],
-      "artwork_file": "/persona-assets/RGSMf_thumb.gif",
+      "artwork_file": "/persona-assets/RGSMf.gif",
       "sprite_panel": 2,
       "source_upload": "image(5).png",
-      "artwork_source": "https://strawberrymilkmama.files.wordpress.com/2008/01/rgsmf_thumb.gif?w=500"
+      "artwork_source": "https://cdn.okccdn.com/graphics/persons/RGSMf.gif",
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
     },
     {
       "key": "RBLDm",
@@ -452,7 +488,10 @@
         "consider": [
           "RBLMf"
         ]
-      }
+      },
+      "artwork_file": "/persona-assets/RBLMm.gif",
+      "artwork_source": "https://cdn.okccdn.com/graphics/persons/RBLMm.gif",
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
     },
     {
       "key": "RBLMf",
@@ -528,7 +567,10 @@
       "original_text_paragraphs": [
         "Don’t ever marry, you’re The Hornivore. Roaming, sexual, subhuman. The Hornivores (you) are some of the most screwed up and naughty beings in the Universe. And their numbers are growing, mostly due to skipped or misused contraception. You care not. There’s one thing you want, one sole need. Half manly, half bestial, you act on instinct, and animal charisma smoothes the way. It’s unlikely you’re driven by much other than your own selfish, orgasmic requirements.",
         "Your appearance and personality have evolved for the hunt. Ass beckons, you oblige. For the record, you can happily bang all personality types, however your match percentages might be low with the kinder, more sensible people of the world, purely because they all wish to avoid you. Good luck to them."
-      ]
+      ],
+      "artwork_file": "/persona-assets/RBSMm.gif",
+      "artwork_source": "https://cdn.okccdn.com/graphics/persons/RBSMm.gif",
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
     },
     {
       "key": "RBSMf",
