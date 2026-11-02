@@ -1,9 +1,9 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "description": "Dating Persona character text, art and relationship details.",
   "results": [
     {
-      "key": "DGLD-A",
+      "key": "DGLDm",
       "code": "DGLD",
       "group": "man",
       "name": "The Slow Dancer",
@@ -24,7 +24,7 @@
         "quality": "screenshot_original"
       },
       "exact_opposite": {
-        "key": "RBSM-A",
+        "key": "RBSMm",
         "name": "The Hornivore",
         "art": null
       },
@@ -33,14 +33,18 @@
       "recommendations_observed": false
     },
     {
-      "key": "DGLD-B",
+      "key": "DGLDf",
       "code": "DGLD",
       "group": "woman",
       "name": "The Sonnet",
       "text_status": "transcribed",
-      "primary_art": null,
+      "primary_art": {
+        "type": "linked_image",
+        "url": "https://www.infjs.com/proxy.php?image=http%3A%2F%2Fcdn.okcimg.com%2Fgraphics%2Fpersons%2FDGLDf.gif&hash=ade1e138817dd48a1626b68665d4dd53",
+        "fallback_url": "https://lh3.googleusercontent.com/blogger_img_proxy/AEn0k_syBTo21-0pfOkaqZJrkWs_YtVe5MLNe_sLspJ184QvHIrd8IwWHDaKOFRUYB9IX2AW3A5erMfQnAzZTFdZM57s6xZXqIn5Qus6RK-wp3gVCP-EeSg=s0-d"
+      },
       "exact_opposite": {
-        "key": "RBSM-B",
+        "key": "RBSMf",
         "name": "Genghis Khunt",
         "art": {
           "type": "image_sprite",
@@ -48,19 +52,27 @@
           "quality": "screenshot_crop"
         }
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false
+      "always_avoid": [
+        "DBSMm",
+        "DBLMm",
+        "RBSMm",
+        "RBSDm"
+      ],
+      "consider": [
+        "RGLMm"
+      ],
+      "recommendations_observed": true,
+      "recommendations_exact_quote": "Always avoid: The 5-Night Stand (DBSM), The False Messiah (DBLM), The Hornivore (RBSM), The Last Man on Earth (RBSD)\n\nConsider: The Loverboy (RGLM)"
     },
     {
-      "key": "DGLM-A",
+      "key": "DGLMm",
       "code": "DGLM",
       "group": "man",
       "name": "The Gentleman",
       "text_status": "transcribed",
       "primary_art": null,
       "exact_opposite": {
-        "key": "RBSD-A",
+        "key": "RBSDm",
         "name": "The Last Man on Earth",
         "art": null
       },
@@ -69,31 +81,31 @@
       "recommendations_observed": false
     },
     {
-      "key": "DGLM-B",
+      "key": "DGLMf",
       "code": "DGLM",
       "group": "woman",
       "name": "The Maid of Honor",
       "text_status": "transcribed",
       "primary_art": null,
       "exact_opposite": {
-        "key": "RBSD-B",
+        "key": "RBSDf",
         "name": "Half-Cocked",
         "art": null
       },
       "always_avoid": [
-        "DBLM-A",
-        "DBSM-A",
-        "RBLM-A",
-        "DGSM-A"
+        "DBLMm",
+        "DBSMm",
+        "RBLMm",
+        "DGSMm"
       ],
       "consider": [
-        "DGLM-A"
+        "DGLMm"
       ],
       "recommendations_observed": true,
       "recommendations_exact_quote": "ALWAYS AVOID: **The False Messiah**, **The 5-Night Stand**, **The Vapor Trail**, **The Bachelor**\n\nCONSIDER: **The Gentleman**, someone just like you."
     },
     {
-      "key": "DGSD-A",
+      "key": "DGSDm",
       "code": "DGSD",
       "group": "man",
       "name": "The Backrubber",
@@ -114,7 +126,7 @@
         "quality": "low_resolution_opposite_thumbnail"
       },
       "exact_opposite": {
-        "key": "RBLM-A",
+        "key": "RBLMm",
         "name": "The Vapor Trail",
         "art": {
           "type": "image_crop",
@@ -137,7 +149,7 @@
       "recommendations_observed": false
     },
     {
-      "key": "DGSD-B",
+      "key": "DGSDf",
       "code": "DGSD",
       "group": "woman",
       "name": "The Intern",
@@ -158,7 +170,7 @@
         "quality": "low_resolution_opposite_thumbnail"
       },
       "exact_opposite": {
-        "key": "RBLM-B",
+        "key": "RBLMf",
         "name": "The Sudden Departure",
         "art": {
           "type": "image_crop",
@@ -181,7 +193,7 @@
       "recommendations_observed": false
     },
     {
-      "key": "DGSM-A",
+      "key": "DGSMm",
       "code": "DGSM",
       "group": "man",
       "name": "The Bachelor",
@@ -202,7 +214,7 @@
         "quality": "low_resolution_opposite_thumbnail"
       },
       "exact_opposite": {
-        "key": "RBLD-A",
+        "key": "RBLDm",
         "name": "The Manchild",
         "art": {
           "type": "image_crop",
@@ -225,14 +237,14 @@
       "recommendations_observed": false
     },
     {
-      "key": "DGSM-B",
+      "key": "DGSMf",
       "code": "DGSM",
       "group": "woman",
       "name": "The Dirty Little Secret",
       "text_status": "transcribed",
       "primary_art": null,
       "exact_opposite": {
-        "key": "RBLD-B",
+        "key": "RBLDf",
         "name": "The Wild Rose",
         "art": null
       },
@@ -241,14 +253,14 @@
       "recommendations_observed": false
     },
     {
-      "key": "DBLD-A",
+      "key": "DBLDm",
       "code": "DBLD",
       "group": "man",
       "name": "The Mixed Messenger",
       "text_status": "transcribed",
       "primary_art": null,
       "exact_opposite": {
-        "key": "RGSM-A",
+        "key": "RGSMm",
         "name": "The Playboy",
         "art": null
       },
@@ -257,14 +269,14 @@
       "recommendations_observed": false
     },
     {
-      "key": "DBLD-B",
+      "key": "DBLDf",
       "code": "DBLD",
       "group": "woman",
       "name": "The Priss",
       "text_status": "missing",
       "primary_art": null,
       "exact_opposite": {
-        "key": "RGSM-B",
+        "key": "RGSMf",
         "name": "The Playstation",
         "art": {
           "type": "image_sprite",
@@ -277,14 +289,14 @@
       "recommendations_observed": false
     },
     {
-      "key": "DBLM-A",
+      "key": "DBLMm",
       "code": "DBLM",
       "group": "man",
       "name": "The False Messiah",
       "text_status": "transcribed",
       "primary_art": null,
       "exact_opposite": {
-        "key": "RGSD-A",
+        "key": "RGSDm",
         "name": "The Poolboy",
         "art": null
       },
@@ -293,14 +305,14 @@
       "recommendations_observed": false
     },
     {
-      "key": "DBLM-B",
+      "key": "DBLMf",
       "code": "DBLM",
       "group": "woman",
       "name": "The Battleaxe",
       "text_status": "missing",
       "primary_art": null,
       "exact_opposite": {
-        "key": "RGSD-B",
+        "key": "RGSDf",
         "name": "The Nurse",
         "art": null
       },
@@ -309,14 +321,14 @@
       "recommendations_observed": false
     },
     {
-      "key": "DBSD-A",
+      "key": "DBSDm",
       "code": "DBSD",
       "group": "man",
       "name": "The Billy Goat",
       "text_status": "transcribed",
       "primary_art": null,
       "exact_opposite": {
-        "key": "RGLM-A",
+        "key": "RGLMm",
         "name": "The Loverboy",
         "art": null
       },
@@ -325,14 +337,14 @@
       "recommendations_observed": false
     },
     {
-      "key": "DBSD-B",
+      "key": "DBSDf",
       "code": "DBSD",
       "group": "woman",
       "name": "The Nymph",
       "text_status": "transcribed",
       "primary_art": null,
       "exact_opposite": {
-        "key": "RGLM-B",
+        "key": "RGLMf",
         "name": "The Peach",
         "art": {
           "type": "image_sprite",
@@ -345,14 +357,14 @@
       "recommendations_observed": false
     },
     {
-      "key": "DBSM-A",
+      "key": "DBSMm",
       "code": "DBSM",
       "group": "man",
       "name": "The 5-Night Stand",
       "text_status": "missing",
       "primary_art": null,
       "exact_opposite": {
-        "key": "RGLD-A",
+        "key": "RGLDm",
         "name": "The Boy Next Door",
         "art": null
       },
@@ -361,14 +373,14 @@
       "recommendations_observed": false
     },
     {
-      "key": "DBSM-B",
+      "key": "DBSMf",
       "code": "DBSM",
       "group": "woman",
       "name": "The Stiletto",
       "text_status": "missing",
       "primary_art": null,
       "exact_opposite": {
-        "key": "RGLD-B",
+        "key": "RGLDf",
         "name": "The Window Shopper",
         "art": null
       },
@@ -377,14 +389,14 @@
       "recommendations_observed": false
     },
     {
-      "key": "RGLD-A",
+      "key": "RGLDm",
       "code": "RGLD",
       "group": "man",
       "name": "The Boy Next Door",
       "text_status": "transcribed",
       "primary_art": null,
       "exact_opposite": {
-        "key": "DBSM-A",
+        "key": "DBSMm",
         "name": "The 5-Night Stand",
         "art": null
       },
@@ -393,14 +405,14 @@
       "recommendations_observed": false
     },
     {
-      "key": "RGLD-B",
+      "key": "RGLDf",
       "code": "RGLD",
       "group": "woman",
       "name": "The Window Shopper",
       "text_status": "transcribed",
       "primary_art": null,
       "exact_opposite": {
-        "key": "DBSM-B",
+        "key": "DBSMf",
         "name": "The Stiletto",
         "art": null
       },
@@ -409,14 +421,14 @@
       "recommendations_observed": false
     },
     {
-      "key": "RGLM-A",
+      "key": "RGLMm",
       "code": "RGLM",
       "group": "man",
       "name": "The Loverboy",
       "text_status": "transcribed",
       "primary_art": null,
       "exact_opposite": {
-        "key": "DBSD-A",
+        "key": "DBSDm",
         "name": "The Billy Goat",
         "art": null
       },
@@ -425,7 +437,7 @@
       "recommendations_observed": false
     },
     {
-      "key": "RGLM-B",
+      "key": "RGLMf",
       "code": "RGLM",
       "group": "woman",
       "name": "The Peach",
@@ -436,7 +448,7 @@
         "quality": "screenshot_crop"
       },
       "exact_opposite": {
-        "key": "DBSD-B",
+        "key": "DBSDf",
         "name": "The Nymph",
         "art": null
       },
@@ -445,14 +457,14 @@
       "recommendations_observed": false
     },
     {
-      "key": "RGSD-A",
+      "key": "RGSDm",
       "code": "RGSD",
       "group": "man",
       "name": "The Poolboy",
       "text_status": "missing",
       "primary_art": null,
       "exact_opposite": {
-        "key": "DBLM-A",
+        "key": "DBLMm",
         "name": "The False Messiah",
         "art": null
       },
@@ -461,14 +473,14 @@
       "recommendations_observed": false
     },
     {
-      "key": "RGSD-B",
+      "key": "RGSDf",
       "code": "RGSD",
       "group": "woman",
       "name": "The Nurse",
       "text_status": "missing",
       "primary_art": null,
       "exact_opposite": {
-        "key": "DBLM-B",
+        "key": "DBLMf",
         "name": "The Battleaxe",
         "art": null
       },
@@ -477,14 +489,14 @@
       "recommendations_observed": false
     },
     {
-      "key": "RGSM-A",
+      "key": "RGSMm",
       "code": "RGSM",
       "group": "man",
       "name": "The Playboy",
       "text_status": "transcribed",
       "primary_art": null,
       "exact_opposite": {
-        "key": "DBLD-A",
+        "key": "DBLDm",
         "name": "The Mixed Messenger",
         "art": null
       },
@@ -493,7 +505,7 @@
       "recommendations_observed": false
     },
     {
-      "key": "RGSM-B",
+      "key": "RGSMf",
       "code": "RGSM",
       "group": "woman",
       "name": "The Playstation",
@@ -504,7 +516,7 @@
         "quality": "screenshot_crop"
       },
       "exact_opposite": {
-        "key": "DBLD-B",
+        "key": "DBLDf",
         "name": "The Priss",
         "art": null
       },
@@ -513,7 +525,7 @@
       "recommendations_observed": false
     },
     {
-      "key": "RBLD-A",
+      "key": "RBLDm",
       "code": "RBLD",
       "group": "man",
       "name": "The Manchild",
@@ -534,7 +546,7 @@
         "quality": "screenshot_original"
       },
       "exact_opposite": {
-        "key": "DGSM-A",
+        "key": "DGSMm",
         "name": "The Bachelor",
         "art": {
           "type": "image_crop",
@@ -553,22 +565,22 @@
         }
       },
       "always_avoid": [
-        "DGSM-B"
+        "DGSMf"
       ],
       "consider": [
-        "RBLM-B"
+        "RBLMf"
       ],
       "recommendations_observed": true
     },
     {
-      "key": "RBLD-B",
+      "key": "RBLDf",
       "code": "RBLD",
       "group": "woman",
       "name": "The Wild Rose",
       "text_status": "transcribed",
       "primary_art": null,
       "exact_opposite": {
-        "key": "DGSM-B",
+        "key": "DGSMf",
         "name": "The Dirty Little Secret",
         "art": null
       },
@@ -577,7 +589,7 @@
       "recommendations_observed": false
     },
     {
-      "key": "RBLM-A",
+      "key": "RBLMm",
       "code": "RBLM",
       "group": "man",
       "name": "The Vapor Trail",
@@ -598,7 +610,7 @@
         "quality": "screenshot_original"
       },
       "exact_opposite": {
-        "key": "DGSD-A",
+        "key": "DGSDm",
         "name": "The Backrubber",
         "art": {
           "type": "image_crop",
@@ -617,16 +629,16 @@
         }
       },
       "always_avoid": [
-        "DGSD-B",
-        "DGLM-B"
+        "DGSDf",
+        "DGLMf"
       ],
       "consider": [
-        "RBLM-B"
+        "RBLMf"
       ],
       "recommendations_observed": true
     },
     {
-      "key": "RBLM-B",
+      "key": "RBLMf",
       "code": "RBLM",
       "group": "woman",
       "name": "The Sudden Departure",
@@ -647,7 +659,7 @@
         "quality": "screenshot_original"
       },
       "exact_opposite": {
-        "key": "DGSD-B",
+        "key": "DGSDf",
         "name": "The Intern",
         "art": {
           "type": "image_crop",
@@ -666,23 +678,23 @@
         }
       },
       "always_avoid": [
-        "DGSD-A",
-        "DGLM-A"
+        "DGSDm",
+        "DGLMm"
       ],
       "consider": [
-        "RBLM-A"
+        "RBLMm"
       ],
       "recommendations_observed": true
     },
     {
-      "key": "RBSD-A",
+      "key": "RBSDm",
       "code": "RBSD",
       "group": "man",
       "name": "The Last Man on Earth",
       "text_status": "missing",
       "primary_art": null,
       "exact_opposite": {
-        "key": "DGLM-A",
+        "key": "DGLMm",
         "name": "The Gentleman",
         "art": null
       },
@@ -691,14 +703,14 @@
       "recommendations_observed": false
     },
     {
-      "key": "RBSD-B",
+      "key": "RBSDf",
       "code": "RBSD",
       "group": "woman",
       "name": "Half-Cocked",
       "text_status": "missing",
       "primary_art": null,
       "exact_opposite": {
-        "key": "DGLM-B",
+        "key": "DGLMf",
         "name": "The Maid of Honor",
         "art": null
       },
@@ -707,14 +719,14 @@
       "recommendations_observed": false
     },
     {
-      "key": "RBSM-A",
+      "key": "RBSMm",
       "code": "RBSM",
       "group": "man",
       "name": "The Hornivore",
       "text_status": "transcribed",
       "primary_art": null,
       "exact_opposite": {
-        "key": "DGLD-A",
+        "key": "DGLDm",
         "name": "The Slow Dancer",
         "art": {
           "type": "image_crop",
@@ -737,7 +749,7 @@
       "recommendations_observed": false
     },
     {
-      "key": "RBSM-B",
+      "key": "RBSMf",
       "code": "RBSM",
       "group": "woman",
       "name": "Genghis Khunt",
@@ -748,7 +760,7 @@
         "quality": "screenshot_crop"
       },
       "exact_opposite": {
-        "key": "DGLD-B",
+        "key": "DGLDf",
         "name": "The Sonnet",
         "art": null
       },

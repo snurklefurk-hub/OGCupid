@@ -1,12 +1,12 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "collection": "Classic OkCupid Dating Persona Test",
   "total": 32,
   "transcribed": 19,
   "missing": 11,
   "records": [
     {
-      "key": "DGLD-A",
+      "key": "DGLDm",
       "code": "DGLD",
       "result_group": "man",
       "original_name": "The Slow Dancer",
@@ -18,20 +18,32 @@
       ]
     },
     {
-      "key": "DGLD-B",
+      "key": "DGLDf",
       "code": "DGLD",
       "result_group": "woman",
       "original_name": "The Sonnet",
       "text_status": "transcribed",
       "original_text_paragraphs": [
-        "Romantic, hopeful, and composed. You are the Sonnet. Get it? Composed?",
-        "Sonnets want Love and have high ideals about it. They’re conscientious people, caring & careful. You yourself have deep convictions, and you devote a lot of thought to romance and what it should be. This will frighten away most potential mates, but that’s okay, because you’re very choosy with your affections anyway. You’d absolutely refuse to date someone dumber than you, for instance.",
-        "Lovers who share your idealized perspective, or who are at least willing to totally throw themselves into a relationship, will be very, very happy with you. And you with them. You’re already selfless and compassionate, and with the right partner, there’s no doubt you can be sensual, even adventurously so.",
+        "Romantic, hopeful, and composed. You are the **Sonnet**. Get it? Composed?",
+        "Sonnets want Love and have high ideals about it. They're conscientious people, caring & careful. You yourself have deep convictions, and you devote a lot of thought to romance and what it should be. This will frighten away most potential mates, but that's okay, because you're very choosy with your affections anyway. You'd absolutely refuse to date someone dumber than you, for instance.",
+        "Lovers who share your idealized perspective, or who are at least willing to totally throw themselves into a relationship, will be very, very happy with you. And you with them. You're already selfless and compassionate, and with the right partner, there's no doubt you can be sensual, even adventurously so.",
         "You probably have lots of female friends, and they have a special soft spot for you. Babies do, too, at the tippy-top of their baby skulls."
-      ]
+      ],
+      "historic_recommendations": {
+        "always_avoid": [
+          "DBSMm",
+          "DBLMm",
+          "RBSMm",
+          "RBSDm"
+        ],
+        "consider": [
+          "RGLMm"
+        ],
+        "exact_quote": "Always avoid: The 5-Night Stand (DBSM), The False Messiah (DBLM), The Hornivore (RBSM), The Last Man on Earth (RBSD)\n\nConsider: The Loverboy (RGLM)"
+      }
     },
     {
-      "key": "DGLM-A",
+      "key": "DGLMm",
       "code": "DGLM",
       "result_group": "man",
       "original_name": "The Gentleman",
@@ -43,7 +55,7 @@
       ]
     },
     {
-      "key": "DGLM-B",
+      "key": "DGLMf",
       "code": "DGLM",
       "result_group": "woman",
       "original_name": "The Maid of Honor",
@@ -54,19 +66,19 @@
       ],
       "historic_recommendations": {
         "always_avoid": [
-          "DBLM-A",
-          "DBSM-A",
-          "RBLM-A",
-          "DGSM-A"
+          "DBLMm",
+          "DBSMm",
+          "RBLMm",
+          "DGSMm"
         ],
         "consider": [
-          "DGLM-A"
+          "DGLMm"
         ],
         "exact_quote": "ALWAYS AVOID: **The False Messiah**, **The 5-Night Stand**, **The Vapor Trail**, **The Bachelor**\n\nCONSIDER: **The Gentleman**, someone just like you."
       }
     },
     {
-      "key": "DGSD-A",
+      "key": "DGSDm",
       "code": "DGSD",
       "result_group": "man",
       "original_name": "The Backrubber",
@@ -74,7 +86,7 @@
       "original_text_paragraphs": null
     },
     {
-      "key": "DGSD-B",
+      "key": "DGSDf",
       "code": "DGSD",
       "result_group": "woman",
       "original_name": "The Intern",
@@ -82,7 +94,7 @@
       "original_text_paragraphs": null
     },
     {
-      "key": "DGSM-A",
+      "key": "DGSMm",
       "code": "DGSM",
       "result_group": "man",
       "original_name": "The Bachelor",
@@ -90,7 +102,7 @@
       "original_text_paragraphs": null
     },
     {
-      "key": "DGSM-B",
+      "key": "DGSMf",
       "code": "DGSM",
       "result_group": "woman",
       "original_name": "The Dirty Little Secret",
@@ -101,7 +113,7 @@
       ]
     },
     {
-      "key": "DBLD-A",
+      "key": "DBLDm",
       "code": "DBLD",
       "result_group": "man",
       "original_name": "The Mixed Messenger",
@@ -113,7 +125,7 @@
       ]
     },
     {
-      "key": "DBLD-B",
+      "key": "DBLDf",
       "code": "DBLD",
       "result_group": "woman",
       "original_name": "The Priss",
@@ -121,7 +133,7 @@
       "original_text_paragraphs": null
     },
     {
-      "key": "DBLM-A",
+      "key": "DBLMm",
       "code": "DBLM",
       "result_group": "man",
       "original_name": "The False Messiah",
@@ -134,7 +146,7 @@
       ]
     },
     {
-      "key": "DBLM-B",
+      "key": "DBLMf",
       "code": "DBLM",
       "result_group": "woman",
       "original_name": "The Battleaxe",
@@ -142,7 +154,7 @@
       "original_text_paragraphs": null
     },
     {
-      "key": "DBSD-A",
+      "key": "DBSDm",
       "code": "DBSD",
       "result_group": "man",
       "original_name": "The Billy Goat",
@@ -154,7 +166,7 @@
       ]
     },
     {
-      "key": "DBSD-B",
+      "key": "DBSDf",
       "code": "DBSD",
       "result_group": "woman",
       "original_name": "The Nymph",
@@ -166,7 +178,7 @@
       ]
     },
     {
-      "key": "DBSM-A",
+      "key": "DBSMm",
       "code": "DBSM",
       "result_group": "man",
       "original_name": "The 5-Night Stand",
@@ -174,7 +186,7 @@
       "original_text_paragraphs": null
     },
     {
-      "key": "DBSM-B",
+      "key": "DBSMf",
       "code": "DBSM",
       "result_group": "woman",
       "original_name": "The Stiletto",
@@ -182,7 +194,7 @@
       "original_text_paragraphs": null
     },
     {
-      "key": "RGLD-A",
+      "key": "RGLDm",
       "code": "RGLD",
       "result_group": "man",
       "original_name": "The Boy Next Door",
@@ -194,7 +206,7 @@
       ]
     },
     {
-      "key": "RGLD-B",
+      "key": "RGLDf",
       "code": "RGLD",
       "result_group": "woman",
       "original_name": "The Window Shopper",
@@ -207,7 +219,7 @@
       ]
     },
     {
-      "key": "RGLM-A",
+      "key": "RGLMm",
       "code": "RGLM",
       "result_group": "man",
       "original_name": "The Loverboy",
@@ -218,7 +230,7 @@
       ]
     },
     {
-      "key": "RGLM-B",
+      "key": "RGLMf",
       "code": "RGLM",
       "result_group": "woman",
       "original_name": "The Peach",
@@ -234,7 +246,7 @@
       "source_upload": "image(4).png"
     },
     {
-      "key": "RGSD-A",
+      "key": "RGSDm",
       "code": "RGSD",
       "result_group": "man",
       "original_name": "The Poolboy",
@@ -242,7 +254,7 @@
       "original_text_paragraphs": null
     },
     {
-      "key": "RGSD-B",
+      "key": "RGSDf",
       "code": "RGSD",
       "result_group": "woman",
       "original_name": "The Nurse",
@@ -250,7 +262,7 @@
       "original_text_paragraphs": null
     },
     {
-      "key": "RGSM-A",
+      "key": "RGSMm",
       "code": "RGSM",
       "result_group": "man",
       "original_name": "The Playboy",
@@ -263,7 +275,7 @@
       ]
     },
     {
-      "key": "RGSM-B",
+      "key": "RGSMf",
       "code": "RGSM",
       "result_group": "woman",
       "original_name": "The Playstation",
@@ -280,7 +292,7 @@
       "source_upload": "image(5).png"
     },
     {
-      "key": "RBLD-A",
+      "key": "RBLDm",
       "code": "RBLD",
       "result_group": "man",
       "original_name": "The Manchild",
@@ -291,15 +303,15 @@
       ],
       "historic_recommendations": {
         "always_avoid": [
-          "DGSM-B"
+          "DGSMf"
         ],
         "consider": [
-          "RBLM-B"
+          "RBLMf"
         ]
       }
     },
     {
-      "key": "RBLD-B",
+      "key": "RBLDf",
       "code": "RBLD",
       "result_group": "woman",
       "original_name": "The Wild Rose",
@@ -310,7 +322,7 @@
       ]
     },
     {
-      "key": "RBLM-A",
+      "key": "RBLMm",
       "code": "RBLM",
       "result_group": "man",
       "original_name": "The Vapor Trail",
@@ -322,16 +334,16 @@
       ],
       "historic_recommendations": {
         "always_avoid": [
-          "DGSD-B",
-          "DGLM-B"
+          "DGSDf",
+          "DGLMf"
         ],
         "consider": [
-          "RBLM-B"
+          "RBLMf"
         ]
       }
     },
     {
-      "key": "RBLM-B",
+      "key": "RBLMf",
       "code": "RBLM",
       "result_group": "woman",
       "original_name": "The Sudden Departure",
@@ -344,16 +356,16 @@
       ],
       "historic_recommendations": {
         "always_avoid": [
-          "DGSD-A",
-          "DGLM-A"
+          "DGSDm",
+          "DGLMm"
         ],
         "consider": [
-          "RBLM-A"
+          "RBLMm"
         ]
       }
     },
     {
-      "key": "RBSD-A",
+      "key": "RBSDm",
       "code": "RBSD",
       "result_group": "man",
       "original_name": "The Last Man on Earth",
@@ -361,7 +373,7 @@
       "original_text_paragraphs": null
     },
     {
-      "key": "RBSD-B",
+      "key": "RBSDf",
       "code": "RBSD",
       "result_group": "woman",
       "original_name": "Half-Cocked",
@@ -369,7 +381,7 @@
       "original_text_paragraphs": null
     },
     {
-      "key": "RBSM-A",
+      "key": "RBSMm",
       "code": "RBSM",
       "result_group": "man",
       "original_name": "The Hornivore",
@@ -380,7 +392,7 @@
       ]
     },
     {
-      "key": "RBSM-B",
+      "key": "RBSMf",
       "code": "RBSM",
       "result_group": "woman",
       "original_name": "Genghis Khunt",
