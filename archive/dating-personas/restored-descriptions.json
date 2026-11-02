@@ -4,7 +4,7 @@
   "disclaimer": "Historical preservation and screenshot/forum transcription; independent project, no affiliation",
   "total": 32,
   "transcribed": 18,
-  "missing": 14,
+  "missing": 12,
   "records": [
     {
       "key": "DGLD-A",
@@ -19,7 +19,9 @@
       ],
       "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
       "transcription_method": "forum_transcription",
-      "original_artwork_status": "not_locally_recovered"
+      "original_artwork_status": "historic_screenshot_in_admin_input",
+      "original_artwork_path": "admin input/OGCupid/ij7AdbE.png",
+      "original_artwork_note": "Authentic illustration visible within historical result screenshot; standalone source file not recovered."
     },
     {
       "key": "DGLD-B",
@@ -341,11 +343,17 @@
       "code": "RBLD",
       "result_group": "man",
       "original_name": "The Manchild",
-      "text_status": "missing",
-      "original_text_paragraphs": null,
-      "text_source": null,
-      "transcription_method": null,
-      "original_artwork_status": "not_locally_recovered"
+      "text_status": "partial",
+      "original_text_paragraphs": [
+        "Hopeful. Awkward. Soft-headed. Fire intrigues you. You are The Manchild.",
+        "Okay, Manchildren have some good qualities. They can be unpredictable, brash, magnetic—and therefore highly charismatic."
+      ],
+      "text_source": "admin input/OGCupid/my-clue-to-quit-okcupid-v0-O9XQX4osEaN37P-Qt_ivOul8aJVXJpIN8AUD2ZZLlv0.webp",
+      "transcription_method": "partial_transcription_from_result_screenshot",
+      "original_artwork_status": "historic_screenshot_in_admin_input",
+      "original_artwork_path": "admin input/OGCupid/my-clue-to-quit-okcupid-v0-O9XQX4osEaN37P-Qt_ivOul8aJVXJpIN8AUD2ZZLlv0.webp",
+      "original_artwork_note": "Authentic illustration visible within historical result screenshot; standalone source file not recovered.",
+      "transcription_note": "Only short clearly visible sections transcribed. Lower body text too small for reliable complete transcription."
     },
     {
       "key": "RBLD-B",
@@ -366,11 +374,18 @@
       "code": "RBLM",
       "result_group": "man",
       "original_name": "The Vapor Trail",
-      "text_status": "missing",
-      "original_text_paragraphs": null,
-      "text_source": null,
-      "transcription_method": null,
-      "original_artwork_status": "not_locally_recovered"
+      "text_status": "partial",
+      "original_text_paragraphs": [
+        "Here today, gone today. You are The Vapor Trail. Are you in a relationship now? What about now?",
+        "Vapor Trails can be highly charismatic people--unpredictable, confident, and magnetic. You're experienced. You know how to handle yourself in a relationship, and many people appreciate that. Many people, all in a row.",
+        "Vapor Trails especially need a girl who will laugh at their jokes. They're also the most likely male type to be haunted by serious regret."
+      ],
+      "text_source": "admin input/OGCupid/for-elder-millennials-okcupid-schizoid-personality-type-v0-5y9hxs53vldg1.webp",
+      "transcription_method": "partial_transcription_from_result_screenshot",
+      "original_artwork_status": "historic_screenshot_in_admin_input",
+      "original_artwork_path": "admin input/OGCupid/for-elder-millennials-okcupid-schizoid-personality-type-v0-5y9hxs53vldg1.webp",
+      "original_artwork_note": "Authentic illustration visible within historical result screenshot; standalone source file not recovered.",
+      "transcription_note": "Partial excerpt; screenshot contains more text, graph and matching recommendations. Verify wording before declaring a full transcription."
     },
     {
       "key": "RBLM-B",
@@ -386,7 +401,9 @@
       ],
       "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
       "transcription_method": "forum_transcription",
-      "original_artwork_status": "not_locally_recovered"
+      "original_artwork_status": "historic_screenshot_in_admin_input",
+      "original_artwork_path": "admin input/OGCupid/images.jpg",
+      "original_artwork_note": "Authentic illustration visible within historical result screenshot; standalone source file not recovered."
     },
     {
       "key": "RBSD-A",
@@ -444,5 +461,6 @@
       "sprite_panel": 0,
       "source_upload": "image(3).png"
     }
-  ]
+  ],
+  "partial": 2
 }
