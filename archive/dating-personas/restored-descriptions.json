@@ -17,7 +17,7 @@
         "While you're not exactly the life of the party, you do thrive in small groups of smart people. Your circle of friends is extra tight and it's HIGHLY likely they're just like you. You appreciate symmetry in relationships."
       ],
       "text_source": "User-supplied original result text",
-      "recommendations_source": "User-supplied original result guidance",
+      "recommendations_source": "https://web.archive.org/web/20080121172821/http://www.okcupid.com:80/personality?type=DGLD&g=1&o=1",
       "historic_recommendations": {
         "always_avoid": [
           "DBLMf"
@@ -25,7 +25,12 @@
         "consider": [
           "DGLMf",
           "DGLDf"
-        ]
+        ],
+        "always_avoid_text": "The Battleaxe (DBLM)",
+        "consider_text": "The Maid of Honor (DGLM), The Sonnet (DGLD)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080121172821/http://www.okcupid.com:80/personality?type=DGLD&g=1&o=1",
+        "verified_from_capture": true
       }
     },
     {
@@ -50,8 +55,14 @@
         "consider": [
           "RGLMm"
         ],
-        "exact_quote": "Always avoid: The 5-Night Stand (DBSM), The False Messiah (DBLM), The Hornivore (RBSM), The Last Man on Earth (RBSD)\n\nConsider: The Loverboy (RGLM)"
-      }
+        "exact_quote": "Always avoid: The 5-Night Stand (DBSM), The False Messiah (DBLM), The Hornivore (RBSM), The Last Man on Earth (RBSD)\n\nConsider: The Loverboy (RGLM)",
+        "always_avoid_text": "The 5-Night Stand (DBSM), The False Messiah (DBLM), The Hornivore (RBSM), The Last Man on Earth (RBSD)",
+        "consider_text": "The Loverboy (RGLM)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080119195137/http://www.okcupid.com:80/personality?type=DGLD&o=1&g=2",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080119195137/http://www.okcupid.com:80/personality?type=DGLD&o=1&g=2"
     },
     {
       "key": "DGLMm",
@@ -65,13 +76,23 @@
         "Your ideal mate is NOT a nut-job. She is giving and loving, like you, but also experienced."
       ],
       "text_source": "User-supplied original result text",
-      "recommendations_source": "User-supplied original result guidance",
+      "recommendations_source": "https://web.archive.org/web/20080117220913/http://www.okcupid.com:80/personality?type=DGLM&g=1&o=1",
       "historic_recommendations": {
         "consider": [
           "DGLMf"
         ],
         "consider_note": "someone just like you",
-        "always_avoid_status": "unrecovered"
+        "always_avoid_status": "unrecovered",
+        "always_avoid": [
+          "DBLMf"
+        ],
+        "always_avoid_text": "The Battleaxe (DBLM)",
+        "consider_text": "The Maid of Honor (DGLM), someone just like you.",
+        "unmapped_guidance_notes": [
+          "someone just like you."
+        ],
+        "source_capture_url": "https://web.archive.org/web/20080117220913/http://www.okcupid.com:80/personality?type=DGLM&g=1&o=1",
+        "verified_from_capture": true
       }
     },
     {
@@ -94,8 +115,16 @@
         "consider": [
           "DGLMm"
         ],
-        "exact_quote": "ALWAYS AVOID: **The False Messiah**, **The 5-Night Stand**, **The Vapor Trail**, **The Bachelor**\n\nCONSIDER: **The Gentleman**, someone just like you."
-      }
+        "exact_quote": "ALWAYS AVOID: **The False Messiah**, **The 5-Night Stand**, **The Vapor Trail**, **The Bachelor**\n\nCONSIDER: **The Gentleman**, someone just like you.",
+        "always_avoid_text": "The False Messiah (DBLM), The 5-Night Stand (DBSM), The Vapor Trail (RBLM), The Bachelor (DGSM)",
+        "consider_text": "The Gentleman (DGLM), someone just like you.",
+        "unmapped_guidance_notes": [
+          "someone just like you."
+        ],
+        "source_capture_url": "https://web.archive.org/web/20080205210303/http://www.okcupid.com:80/personality?type=DGLM&o=1&g=2",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205210303/http://www.okcupid.com:80/personality?type=DGLM&o=1&g=2"
     },
     {
       "key": "DGSDm",
@@ -109,7 +138,21 @@
         "Your indirect approach is not some evil trickery, but rather a result of your open mind. You’d enjoy either love or sex, but the latter definitely doesn’t require the former. While you are responsible and ambitious, you absolutely DON’T have uptight views on relationships. So ultimately, you just enjoy a woman, and let things take their course. If she wants you, great. If not, that’s fine too.",
         "Though you’re not thinking too much about Love at this point in your life, odds are, when the time comes, you’ll be very happy settling down. Your ideal mate is gentle and horny, just like you."
       ],
-      "text_source": "User-supplied original result text"
+      "text_source": "User-supplied original result text",
+      "historic_recommendations": {
+        "always_avoid": [
+          "RGLMf"
+        ],
+        "consider": [
+          "RGSMf"
+        ],
+        "always_avoid_text": "The Peach (RGLM)",
+        "consider_text": "The Playstation (RGSM)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080117233847/http://www.okcupid.com:80/personality?type=DGSD&o=1&g=1",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080117233847/http://www.okcupid.com:80/personality?type=DGSD&o=1&g=1"
     },
     {
       "key": "DGSDf",
@@ -127,7 +170,22 @@
       "text_source": "User-supplied original result text",
       "artwork_file": "/persona-assets/DGSDf.gif",
       "artwork_source": "https://cdn.okccdn.com/graphics/persons/DGSDf.gif",
-      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser",
+      "historic_recommendations": {
+        "always_avoid": [
+          "DBLMm",
+          "RBLMm"
+        ],
+        "consider": [
+          "DGSMm"
+        ],
+        "always_avoid_text": "The False Messiah (DBLM), The Vapor Trail (RBLM)",
+        "consider_text": "The Bachelor (DGSM)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080205211315/http://www.okcupid.com:80/personality?type=DGSD&o=1&g=2",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205211315/http://www.okcupid.com:80/personality?type=DGSD&o=1&g=2"
     },
     {
       "key": "DGSMm",
@@ -138,7 +196,22 @@
       "original_text_paragraphs": null,
       "artwork_file": "/persona-assets/DGSMm.gif",
       "artwork_source": "https://cdn.okccdn.com/graphics/persons/DGSMm.gif",
-      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser",
+      "historic_recommendations": {
+        "always_avoid": [
+          "RBLDf"
+        ],
+        "consider": [
+          "DGSMf",
+          "DGSDf"
+        ],
+        "always_avoid_text": "The Wild Rose (RBLD)",
+        "consider_text": "The Dirty Little Secret (DGSM), The Intern (DGSD)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080117003021/http://www.okcupid.com:80/personality?type=DGSM&g=1&o=1",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080117003021/http://www.okcupid.com:80/personality?type=DGSM&g=1&o=1"
     },
     {
       "key": "DGSMf",
@@ -152,7 +225,24 @@
       ],
       "artwork_file": "/persona-assets/DGSMf.gif",
       "artwork_source": "https://cdn.okccdn.com/graphics/persons/DGSMf.gif",
-      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser",
+      "historic_recommendations": {
+        "always_avoid": [
+          "RBSMm",
+          "RBLDm",
+          "RBSDm"
+        ],
+        "consider": [
+          "DGSMm",
+          "DGSDm"
+        ],
+        "always_avoid_text": "The Hornivore (RBSM), The Manchild (RBLD), The Last Man on Earth (RBSD)",
+        "consider_text": "The Bachelor (DGSM), The Backrubber (DGSD)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080205211928/http://www.okcupid.com:80/personality?type=DGSM&o=1&g=2",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205211928/http://www.okcupid.com:80/personality?type=DGSM&o=1&g=2"
     },
     {
       "key": "DBLDm",
@@ -167,7 +257,22 @@
       ],
       "artwork_file": "/persona-assets/DBLDm.gif",
       "artwork_source": "https://cdn.okccdn.com/graphics/persons/DBLDm.gif",
-      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser",
+      "historic_recommendations": {
+        "always_avoid": [
+          "RGSMf",
+          "RGLMf"
+        ],
+        "consider": [
+          "DBLDf"
+        ],
+        "always_avoid_text": "The Playstation (RGSM), The Peach (RGLM)",
+        "consider_text": "The Priss (DBLD)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080118122902/http://www.okcupid.com:80/personality?type=DBLD&g=1&o=1",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080118122902/http://www.okcupid.com:80/personality?type=DBLD&g=1&o=1"
     },
     {
       "key": "DBLDf",
@@ -184,7 +289,7 @@
       "text_source": "User-supplied original result text",
       "artwork_file": "/persona-assets/DBLDf.gif",
       "artwork_source": "research/Admin drop/dbldf.gif",
-      "recommendations_source": "User-supplied original result guidance",
+      "recommendations_source": "https://web.archive.org/web/20080119211518/http://www.okcupid.com:80/personality?type=DBLD&g=2&o=1",
       "historic_recommendations": {
         "always_avoid": [
           "RGSMm",
@@ -192,7 +297,12 @@
         ],
         "consider": [
           "RBLDm"
-        ]
+        ],
+        "always_avoid_text": "The Playboy (RGSM), The Loverboy (RGLM)",
+        "consider_text": "The Manchild (RBLD)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080119211518/http://www.okcupid.com:80/personality?type=DBLD&g=2&o=1",
+        "verified_from_capture": true
       }
     },
     {
@@ -209,7 +319,24 @@
       ],
       "artwork_file": "/persona-assets/DBLMm.gif",
       "artwork_source": "https://cdn.okccdn.com/graphics/persons/DBLMm.gif",
-      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser",
+      "historic_recommendations": {
+        "always_avoid": [
+          "DGLDf",
+          "RGLDf"
+        ],
+        "consider": [
+          "DBSMf",
+          "RGLMf",
+          "DBSDf"
+        ],
+        "always_avoid_text": "The Sonnet (DGLD), The Window Shopper (RGLD)",
+        "consider_text": "The Stiletto (DBSM), The Peach (RGLM), The Nymph (DBSD)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080205211912/http://www.okcupid.com:80/personality?type=DBLM&o=1&g=1",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205211912/http://www.okcupid.com:80/personality?type=DBLM&o=1&g=1"
     },
     {
       "key": "DBLMf",
@@ -224,7 +351,7 @@
         "Remarkably, you don't mind the same from your men. You've experience enough to take whatever you dish out. Overall, you're a very good person and a capable lover, and when the time comes you'll make a fine divorcee."
       ],
       "text_source": "User-supplied original result text",
-      "recommendations_source": "User-supplied original result guidance",
+      "recommendations_source": "https://web.archive.org/web/20080119124603/http://www.okcupid.com:80/personality?type=DBLM&g=2&o=1",
       "historic_recommendations": {
         "always_avoid": [
           "RGSDm"
@@ -232,7 +359,14 @@
         "consider": [
           "DBLMm"
         ],
-        "consider_note": "someone just like you"
+        "consider_note": "someone just like you",
+        "always_avoid_text": "The Poolboy (RGSD)",
+        "consider_text": "The False Messiah (DBLM), someone just like you.",
+        "unmapped_guidance_notes": [
+          "someone just like you."
+        ],
+        "source_capture_url": "https://web.archive.org/web/20080119124603/http://www.okcupid.com:80/personality?type=DBLM&g=2&o=1",
+        "verified_from_capture": true
       },
       "artwork_file": "/persona-assets/DBLMf.gif",
       "artwork_source": "https://cdn.okccdn.com/graphics/persons/DBLMf.gif",
@@ -248,7 +382,23 @@
         "Horny. Stubborn. Kinda cute. Slightly immature. And often found on rough terrain. You are The Billy Goat. You’re lusty, but typically monogamous, and all in all you’re a pretty good boyfriend. In fact, you enjoy relationships, if mostly for the sex and physical companionship. You’d do or say almost anything to get together with someone, but that’s not necessarily a bad thing. You’re sensitive, you have a certain boyish charm, and you’re eager.",
         "Therefore you probably attract girls who are serious about romance. But few who get close to you realize how unready for total commitment you are. People fall for you. Meanwhile, you maintain your emotional distance, and there goes another box of tissues. You’re perfectly capable of a long-haul relationship, but, right now, dating someone primarily means having a consistent, available, preferably not-too-chatty, hookup. You’re a careful, methodical person, and you work hard at making things work.",
         "It’s just that the type of woman most likely to find your strengths endearing is also the most likely type to find your shortcomings heartbreaking. Someone with a similarly laid-back approach to dating would be perfect for you."
-      ]
+      ],
+      "historic_recommendations": {
+        "always_avoid": [
+          "DBSDf",
+          "DGLDf",
+          "RBLDf"
+        ],
+        "consider": [
+          "RGSMf"
+        ],
+        "always_avoid_text": "The Nymph (DBSD), The Sonnet (DGLD), The Wild Rose (RBLD)",
+        "consider_text": "The Playstation (RGSM)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080117160326/http://www.okcupid.com:80/personality?type=DBSD&g=1&o=1",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080117160326/http://www.okcupid.com:80/personality?type=DBSD&g=1&o=1"
     },
     {
       "key": "DBSDf",
@@ -263,14 +413,19 @@
         "When you do feel comfortable with someone, though, your torrid sexual appetite will make him very happy. Your cautious nature is also a big asset in a long-term relationship. It might take longer for love to establish itself, but when it does, it’s all the stronger."
       ],
       "text_source": "User-supplied original result text",
-      "recommendations_source": "User-supplied original result guidance",
+      "recommendations_source": "https://web.archive.org/web/20080121002427/http://www.okcupid.com:80/personality?type=DBSD&o=1&g=2",
       "historic_recommendations": {
         "always_avoid": [
           "DBLMm"
         ],
         "consider": [
           "RGSMm"
-        ]
+        ],
+        "always_avoid_text": "The False Messiah (DBLM)",
+        "consider_text": "The Playboy (RGSM)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080121002427/http://www.okcupid.com:80/personality?type=DBSD&o=1&g=2",
+        "verified_from_capture": true
       },
       "artwork_file": "/persona-assets/DBSDf.gif",
       "artwork_source": "https://cdn.okccdn.com/graphics/persons/DBSDf.gif",
@@ -285,7 +440,23 @@
       "original_text_paragraphs": null,
       "artwork_file": "/persona-assets/DBSMm.gif",
       "artwork_source": "https://cdn.okccdn.com/graphics/persons/DBSMm.gif",
-      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser",
+      "historic_recommendations": {
+        "always_avoid": [
+          "DBLMf",
+          "RBLMf",
+          "DGSMf"
+        ],
+        "consider": [
+          "DBSMf"
+        ],
+        "always_avoid_text": "The Battleaxe (DBLM), The Sudden Departure (RBLM), The Dirty Little Secret (DGSM)",
+        "consider_text": "The Stiletto (DBSM)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080205211917/http://www.okcupid.com:80/personality?type=DBSM&o=1&g=1",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205211917/http://www.okcupid.com:80/personality?type=DBSM&o=1&g=1"
     },
     {
       "key": "DBSMf",
@@ -296,7 +467,23 @@
       "original_text_paragraphs": null,
       "artwork_file": "/persona-assets/DBSMf.gif",
       "artwork_source": "https://cdn.okccdn.com/graphics/persons/DBSMf.gif",
-      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser",
+      "historic_recommendations": {
+        "always_avoid": [
+          "DGLDm",
+          "RBLDm"
+        ],
+        "consider": [
+          "DBSMm",
+          "DGSMm"
+        ],
+        "always_avoid_text": "The Slow Dancer (DGLD), The Manchild (RBLD)",
+        "consider_text": "The 5-Night Stand (DBSM), The Bachelor (DGSM)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080205211923/http://www.okcupid.com:80/personality?type=DBSM&o=1&g=2",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205211923/http://www.okcupid.com:80/personality?type=DBSM&o=1&g=2"
     },
     {
       "key": "RGLDm",
@@ -309,7 +496,7 @@
         "You enter new relationships unusually hopeful, and the first moments are especially glorious. If you’ve had some things not work out before, so what. On paper, most girls would name the Boy Next Door as their ideal mate. In the real world, however, you’re often passed over for more dangerous or masculine men. You’re the typical “nice guy:” without just a touch of cockiness, you’re doomed with girls. A shoulder to cry on? Okay, sure. But never a penis to hold.",
         "More than any other type, Boys Next Door evolve as they get older. As we said, many find true love, but some fail miserably in the search. These tarnished few grow up to be The Men Next Door, who are creepy as hell, offering back rubs to kids and what not."
       ],
-      "recommendations_source": "User-supplied original result guidance",
+      "recommendations_source": "https://web.archive.org/web/20080205210451/http://www.okcupid.com:80/personality?type=RGLD&o=1&g=1",
       "historic_recommendations": {
         "always_avoid": [
           "DBSDf"
@@ -317,7 +504,12 @@
         "consider": [
           "DGLMf",
           "RGLMf"
-        ]
+        ],
+        "always_avoid_text": "The Nymph (DBSD)",
+        "consider_text": "The Maid of Honor (DGLM), The Peach (RGLM)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080205210451/http://www.okcupid.com:80/personality?type=RGLD&o=1&g=1",
+        "verified_from_capture": true
       },
       "artwork_file": "/persona-assets/RGLDm.gif",
       "artwork_source": "https://cdn.okccdn.com/graphics/persons/RGLDm.gif",
@@ -334,7 +526,23 @@
         "You take love as opportunities come, which can lead to a high-anxiety, but high-flying romantic life. You’re a genuinely sweet person, not saccharine at all, so it’s likely that the relationships that you have had and will have will be happy ones. You’ve had a fair amount of love experience for your age, and there’ll be much more to come.",
         "Part of why we know this is that, of all female types, you are the most prone to sudden, ferocious crushes. Your results indicate that you’re especially capable of obsessing over a guy you just met. Obviously, passion like this makes for an intense existence. It can also make for soul-destroying letdowns.",
         "Your ideal match is someone who’ll love you back with equal fire, and someone you’ve grown to love slowly. A self-involved or pessimistic man is especially bad. Though you’re drawn to them, avoid artists at all costs."
-      ]
+      ],
+      "historic_recommendations": {
+        "always_avoid": [
+          "RBSMm"
+        ],
+        "consider": [
+          "DGLMm",
+          "RGLMm",
+          "RGLDm"
+        ],
+        "always_avoid_text": "The Hornivore (RBSM)",
+        "consider_text": "The Gentleman (DGLM), The Loverboy (RGLM), The Boy Next Door (RGLD)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080205211336/http://www.okcupid.com:80/personality?type=RGLD&o=1&g=2",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205211336/http://www.okcupid.com:80/personality?type=RGLD&o=1&g=2"
     },
     {
       "key": "RGLMm",
@@ -345,7 +553,22 @@
       "original_text_paragraphs": [
         "Well-liked. Well-established. You are The Loverboy. Loverboys thrive in committed, steady relationships—as opposed to, say, Playboys, who want sex without too much attachment. You’ve had many relationships and nearly all of them have been successful. You’re a nice guy, you know the ropes, and even if you can be a little hasty with decisions, most girls think of you as a total catch.",
         "Your hastiness comes off as spontaneity most of the time anyhow, making you especially popular in your circle of friends, too. You know not to make the typical Loverboy mistake of choosing someone who appreciates your good humor and popularity, but who offers nothing in return. You belong with someone outgoing, independent, and creative. Otherwise, you’ll get bored. And then instead of surprising her with flowers or a practical joke, you’ll surprise her by leaving."
-      ]
+      ],
+      "historic_recommendations": {
+        "always_avoid": [
+          "DBSDf"
+        ],
+        "consider": [
+          "RGLDf",
+          "RGLMf"
+        ],
+        "always_avoid_text": "The Nymph (DBSD)",
+        "consider_text": "The Window Shopper (RGLD), The Peach (RGLM)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080205210505/http://www.okcupid.com:80/personality?type=RGLM&o=1&g=1",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205210505/http://www.okcupid.com:80/personality?type=RGLM&o=1&g=1"
     },
     {
       "key": "RGLMf",
@@ -370,9 +593,14 @@
           "RGLMm",
           "RGSMm",
           "RGLDm"
-        ]
+        ],
+        "always_avoid_text": "The False Messiah (DBLM)",
+        "consider_text": "The Loverboy (RGLM), The Playboy (RGSM), The Boy Next Door (RGLD)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080205211939/http://www.okcupid.com:80/personality?type=RGLM&o=1&g=2",
+        "verified_from_capture": true
       },
-      "recommendations_source": "User-supplied original result guidance",
+      "recommendations_source": "https://web.archive.org/web/20080205211939/http://www.okcupid.com:80/personality?type=RGLM&o=1&g=2",
       "artwork_source": "https://cdn.okccdn.com/graphics/persons/RGLMf.gif",
       "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
     },
@@ -382,7 +610,23 @@
       "result_group": "man",
       "original_name": "The Poolboy",
       "text_status": "missing",
-      "original_text_paragraphs": null
+      "original_text_paragraphs": null,
+      "historic_recommendations": {
+        "always_avoid": [
+          "DGSMf",
+          "RGSMf"
+        ],
+        "consider": [
+          "DBLMf",
+          "RGSDf"
+        ],
+        "always_avoid_text": "The Dirty Little Secret (DGSM), The Playstation (RGSM)",
+        "consider_text": "The Battleaxe (DBLM), The Nurse (RGSD)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080128031107/http://www.okcupid.com:80/personality?type=RGSD&g=1&o=1",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080128031107/http://www.okcupid.com:80/personality?type=RGSD&g=1&o=1"
     },
     {
       "key": "RGSDf",
@@ -399,7 +643,23 @@
       "text_source": "User-supplied original result text",
       "artwork_file": "/persona-assets/RGSDf.gif",
       "artwork_source": "https://cdn.okccdn.com/graphics/persons/RGSDf.gif",
-      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser",
+      "historic_recommendations": {
+        "always_avoid": [
+          "DBLMm",
+          "DBSDm"
+        ],
+        "consider": [
+          "RGSDm",
+          "RGSMm"
+        ],
+        "always_avoid_text": "The False Messiah (DBLM), The Billy Goat (DBSD)",
+        "consider_text": "The Poolboy (RGSD), The Playboy (RGSM)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080205210328/http://www.okcupid.com:80/personality?type=RGSD&o=1&g=2",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205210328/http://www.okcupid.com:80/personality?type=RGSD&o=1&g=2"
     },
     {
       "key": "RGSMm",
@@ -415,7 +675,22 @@
       ],
       "artwork_file": "/persona-assets/RGSMm.gif",
       "artwork_source": "https://cdn.okccdn.com/graphics/persons/RGSMm.gif",
-      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser",
+      "historic_recommendations": {
+        "always_avoid": [
+          "RGSMf"
+        ],
+        "consider": [
+          "DGSMf",
+          "RGSDf"
+        ],
+        "always_avoid_text": "The Playstation (RGSM)",
+        "consider_text": "The Dirty Little Secret (DGSM), The Nurse (RGSD)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080117003026/http://www.okcupid.com:80/personality?type=RGSM&g=1&o=1",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080117003026/http://www.okcupid.com:80/personality?type=RGSM&g=1&o=1"
     },
     {
       "key": "RGSMf",
@@ -434,7 +709,21 @@
       "sprite_panel": 2,
       "source_upload": "image(5).png",
       "artwork_source": "https://cdn.okccdn.com/graphics/persons/RGSMf.gif",
-      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser",
+      "historic_recommendations": {
+        "always_avoid": [
+          "DBLDm"
+        ],
+        "consider": [],
+        "always_avoid_text": "The Mixed Messenger (DBLD)",
+        "consider_text": "Anyone else",
+        "unmapped_guidance_notes": [
+          "Anyone else"
+        ],
+        "source_capture_url": "https://web.archive.org/web/20080205211341/http://www.okcupid.com:80/personality?type=RGSM&o=1&g=2",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205211341/http://www.okcupid.com:80/personality?type=RGSM&o=1&g=2"
     },
     {
       "key": "RBLDm",
@@ -452,8 +741,14 @@
         ],
         "consider": [
           "RBLMf"
-        ]
-      }
+        ],
+        "always_avoid_text": "The Dirty Little Secret (DGSM)",
+        "consider_text": "The Sudden Departure (RBLM)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080205211320/http://www.okcupid.com:80/personality?type=RBLD&o=1&g=1",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205211320/http://www.okcupid.com:80/personality?type=RBLD&o=1&g=1"
     },
     {
       "key": "RBLDf",
@@ -464,7 +759,21 @@
       "original_text_paragraphs": [
         "Colorful, but unpicked. You are The Wild Rose. Prone to bouts of cynicism, sarcasm, and thorns, you excite a certain kind of man. Hoping to gather you up, he flirts and winks and asks you out, ultimately professing his love. Then you make him bleed. Why? Because you’re the rare, independent, self-sufficient kind of woman who does want love, but not from a weakling. You don’t seem to take yourself too seriously, and that’s refreshing. You aren’t uptight; you don’t over-plan.",
         "Romance-wise, sex isn’t a top priority—a true relationship would be preferable. For your age, you haven’t had a lot of bonafide love experience, though, and this kind of gets to core of the issue. You’re very selective. The problem is them, not you, right? You have lofty standards that few measure up to. You’re out there all right, but not to be picked up by just anyone."
-      ]
+      ],
+      "historic_recommendations": {
+        "always_avoid": [
+          "DGSMm"
+        ],
+        "consider": [
+          "RBLMm"
+        ],
+        "always_avoid_text": "The Bachelor (DGSM)",
+        "consider_text": "The Vapor Trail (RBLM)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080205211325/http://www.okcupid.com:80/personality?type=RBLD&o=1&g=2",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205211325/http://www.okcupid.com:80/personality?type=RBLD&o=1&g=2"
     },
     {
       "key": "RBLMm",
@@ -487,11 +796,17 @@
         ],
         "consider": [
           "RBLMf"
-        ]
+        ],
+        "always_avoid_text": "The Intern (DGSD), The Maid of Honor (DGLM)",
+        "consider_text": "The Sudden Departure (RBLM)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080117084714/http://www.okcupid.com:80/personality?type=RBLM&o=1&g=1",
+        "verified_from_capture": true
       },
       "artwork_file": "/persona-assets/RBLMm.gif",
       "artwork_source": "https://cdn.okccdn.com/graphics/persons/RBLMm.gif",
-      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser",
+      "recommendations_source": "https://web.archive.org/web/20080117084714/http://www.okcupid.com:80/personality?type=RBLM&o=1&g=1"
     },
     {
       "key": "RBLMf",
@@ -513,10 +828,18 @@
         "consider": [
           "RBLMm"
         ],
-        "consider_note": "someone just like you"
+        "consider_note": "someone just like you",
+        "always_avoid_text": "The Backrubber (DGSD), The Gentleman (DGLM)",
+        "consider_text": "The Vapor Trail (RBLM), someone just like you",
+        "unmapped_guidance_notes": [
+          "someone just like you"
+        ],
+        "source_capture_url": "https://web.archive.org/web/20080205211331/http://www.okcupid.com:80/personality?type=RBLM&o=1&g=2",
+        "verified_from_capture": true
       },
       "artwork_file": "/persona-assets/RBLMf.gif",
-      "artwork_source": "research/Admin drop/RBLMf.gif"
+      "artwork_source": "research/Admin drop/RBLMf.gif",
+      "recommendations_source": "https://web.archive.org/web/20080205211331/http://www.okcupid.com:80/personality?type=RBLM&o=1&g=2"
     },
     {
       "key": "RBSDm",
@@ -532,7 +855,22 @@
         "To top things off, when you do find your way into a relationship, you tend to be a dick somewhere down the line and fuck it all up.",
         "There’s a small, but negligible, chance we’re wrong. In any case, your friends find your shit hilarious. There’s nothing cooler than a dude reducing himself to human rubble."
       ],
-      "text_source": "User-supplied original result text"
+      "text_source": "User-supplied original result text",
+      "historic_recommendations": {
+        "always_avoid": [
+          "DGLDf"
+        ],
+        "consider": [
+          "RBSDf",
+          "DBSDf"
+        ],
+        "always_avoid_text": "The Sonnet (DGLD)",
+        "consider_text": "Half-Cocked (RBSD), The Nymph (DBSD)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080205211934/http://www.okcupid.com:80/personality?type=RBSD&o=1&g=1",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205211934/http://www.okcupid.com:80/personality?type=RBSD&o=1&g=1"
     },
     {
       "key": "RBSDf",
@@ -547,7 +885,7 @@
         "You will find the right person. In the short term, he's someone virile who won't sweat your imperfections. In the long term, he will be someone mature and caring who will grow to love them."
       ],
       "text_source": "User-supplied original result text",
-      "recommendations_source": "User-supplied guidance, converted to male equivalents at user request",
+      "recommendations_source": "https://web.archive.org/web/20080205210441/http://www.okcupid.com:80/personality?type=RBSD&o=1&g=2",
       "historic_recommendations": {
         "consider": [
           "RGSMm",
@@ -555,7 +893,12 @@
         ],
         "always_avoid": [
           "DGLDm"
-        ]
+        ],
+        "always_avoid_text": "The Slow Dancer (DGLD)",
+        "consider_text": "The Playboy (RGSM), The Billy Goat (DBSD)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080205210441/http://www.okcupid.com:80/personality?type=RBSD&o=1&g=2",
+        "verified_from_capture": true
       }
     },
     {
@@ -570,7 +913,23 @@
       ],
       "artwork_file": "/persona-assets/RBSMm.gif",
       "artwork_source": "https://cdn.okccdn.com/graphics/persons/RBSMm.gif",
-      "artwork_provenance": "Recovered directly from OkCupid CDN in browser"
+      "artwork_provenance": "Recovered directly from OkCupid CDN in browser",
+      "historic_recommendations": {
+        "always_avoid": [
+          "RBSMf",
+          "DGLDf"
+        ],
+        "consider": [
+          "RBSDf",
+          "RBSMf"
+        ],
+        "always_avoid_text": "Genghis Khunt (RBSM), The Sonnet (DGLD)",
+        "consider_text": "Half-Cocked (RBSD), Genghis Khunt (RBSM)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080205210313/http://www.okcupid.com:80/personality?type=RBSM&o=1&g=1",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080205210313/http://www.okcupid.com:80/personality?type=RBSM&o=1&g=1"
     },
     {
       "key": "RBSMf",
@@ -587,7 +946,23 @@
       ],
       "artwork_file": "original-artwork/three-persona-screenshot-sprite.webp",
       "sprite_panel": 0,
-      "source_upload": "image(3).png"
+      "source_upload": "image(3).png",
+      "historic_recommendations": {
+        "always_avoid": [
+          "DGLDm"
+        ],
+        "consider": [
+          "DBSMm",
+          "RBSMm",
+          "RGSMm"
+        ],
+        "always_avoid_text": "The Slow Dancer (DGLD)",
+        "consider_text": "The 5-Night Stand (DBSM), The Hornivore (RBSM), The Playboy (RGSM)",
+        "unmapped_guidance_notes": [],
+        "source_capture_url": "https://web.archive.org/web/20080119124608/http://www.okcupid.com:80/personality?type=RBSM&o=1&g=2",
+        "verified_from_capture": true
+      },
+      "recommendations_source": "https://web.archive.org/web/20080119124608/http://www.okcupid.com:80/personality?type=RBSM&o=1&g=2"
     }
   ],
   "partial": 2
