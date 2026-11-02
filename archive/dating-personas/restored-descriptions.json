@@ -3,7 +3,7 @@
   "collection": "Classic OkCupid Dating Persona Test",
   "total": 32,
   "transcribed": 27,
-  "missing": 4,
+  "missing": 3,
   "records": [
     {
       "key": "DGLDm",
@@ -436,8 +436,10 @@
       "code": "DBSM",
       "result_group": "man",
       "original_name": "The 5-Night Stand",
-      "text_status": "missing",
-      "original_text_paragraphs": null,
+      "text_status": "partial",
+      "original_text_paragraphs": [
+        "Compassionate, loving, and understanding, but only for one business week"
+      ],
       "artwork_file": "/persona-assets/DBSMm.gif",
       "artwork_source": "https://cdn.okccdn.com/graphics/persons/DBSMm.gif",
       "artwork_provenance": "Recovered directly from OkCupid CDN in browser",
@@ -456,7 +458,8 @@
         "source_capture_url": "https://web.archive.org/web/20080205211917/http://www.okcupid.com:80/personality?type=DBSM&o=1&g=1",
         "verified_from_capture": true
       },
-      "recommendations_source": "https://web.archive.org/web/20080205211917/http://www.okcupid.com:80/personality?type=DBSM&o=1&g=1"
+      "recommendations_source": "https://web.archive.org/web/20080205211917/http://www.okcupid.com:80/personality?type=DBSM&o=1&g=1",
+      "text_source": "Historical excerpt quoted by a test taker, 24 May 2004; https://www.ilxor.com/ILX/ThreadSelectedControllerServlet?action=showall&boardid=40&threadid=29797; remainder accessible at 2008 archive source"
     },
     {
       "key": "DBSMf",
