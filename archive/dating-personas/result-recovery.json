@@ -1,9 +1,6 @@
 {
   "schema_version": 1,
-  "description": "32 persona records; original artwork from historical screenshots including low-res opposite thumbnails; recommendation lists observed only when screenshot evidence exists. Empty unobserved lists mean unknown.",
-  "date": "2026-11-01",
-  "art_recovered": 10,
-  "recommendations_observed": 4,
+  "description": "Dating Persona character text, art and relationship details.",
   "results": [
     {
       "key": "DGLD-A",
@@ -11,11 +8,9 @@
       "group": "man",
       "name": "The Slow Dancer",
       "text_status": "transcribed",
-      "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
       "primary_art": {
-        "type": "historical_screenshot_crop",
+        "type": "image_crop",
         "url": "/persona-assets/slow-dancer.png",
-        "source": "admin input/OGCupid/ij7AdbE.png",
         "source_dimensions": [
           497,
           605
@@ -35,9 +30,7 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "DGLD-B",
@@ -45,23 +38,19 @@
       "group": "woman",
       "name": "The Sonnet",
       "text_status": "transcribed",
-      "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
       "primary_art": null,
       "exact_opposite": {
         "key": "RBSM-B",
         "name": "Genghis Khunt",
         "art": {
-          "type": "historical_screenshot_sprite",
-          "source": "archive/dating-personas/original-artwork/three-persona-screenshot-sprite.webp",
+          "type": "image_sprite",
           "sprite_index": 0,
           "quality": "screenshot_crop"
         }
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "DGLM-A",
@@ -69,7 +58,6 @@
       "group": "man",
       "name": "The Gentleman",
       "text_status": "transcribed",
-      "text_source": "User-supplied period text in OG Cupid chat; also referenced in Reddit thread",
       "primary_art": null,
       "exact_opposite": {
         "key": "RBSD-A",
@@ -78,9 +66,7 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "DGLM-B",
@@ -88,7 +74,6 @@
       "group": "woman",
       "name": "The Maid of Honor",
       "text_status": "transcribed",
-      "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
       "primary_art": null,
       "exact_opposite": {
         "key": "RBSD-B",
@@ -105,8 +90,6 @@
         "DGLM-A"
       ],
       "recommendations_observed": true,
-      "recommendations_source": "user-supplied verbatim quote",
-      "notes": "Also recommends \"someone just like you\" verbatim.",
       "recommendations_exact_quote": "ALWAYS AVOID: **The False Messiah**, **The 5-Night Stand**, **The Vapor Trail**, **The Bachelor**\n\nCONSIDER: **The Gentleman**, someone just like you."
     },
     {
@@ -115,11 +98,9 @@
       "group": "man",
       "name": "The Backrubber",
       "text_status": "missing",
-      "text_source": null,
       "primary_art": {
-        "type": "historical_screenshot_crop",
+        "type": "image_crop",
         "url": "/persona-assets/vapor-trail.webp",
-        "source": "admin input/OGCupid/for-elder-millennials-okcupid-schizoid-personality-type-v0-5y9hxs53vldg1.webp",
         "source_dimensions": [
           640,
           474
@@ -136,9 +117,8 @@
         "key": "RBLM-A",
         "name": "The Vapor Trail",
         "art": {
-          "type": "historical_screenshot_crop",
+          "type": "image_crop",
           "url": "/persona-assets/vapor-trail.webp",
-          "source": "admin input/OGCupid/for-elder-millennials-okcupid-schizoid-personality-type-v0-5y9hxs53vldg1.webp",
           "source_dimensions": [
             640,
             474
@@ -154,9 +134,7 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "DGSD-B",
@@ -164,11 +142,9 @@
       "group": "woman",
       "name": "The Intern",
       "text_status": "missing",
-      "text_source": null,
       "primary_art": {
-        "type": "historical_screenshot_crop",
+        "type": "image_crop",
         "url": "/persona-assets/sudden-departure.jpg",
-        "source": "admin input/OGCupid/images.jpg",
         "source_dimensions": [
           576,
           465
@@ -185,9 +161,8 @@
         "key": "RBLM-B",
         "name": "The Sudden Departure",
         "art": {
-          "type": "historical_screenshot_crop",
+          "type": "image_crop",
           "url": "/persona-assets/sudden-departure.jpg",
-          "source": "admin input/OGCupid/images.jpg",
           "source_dimensions": [
             576,
             465
@@ -203,9 +178,7 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "DGSM-A",
@@ -213,11 +186,9 @@
       "group": "man",
       "name": "The Bachelor",
       "text_status": "missing",
-      "text_source": null,
       "primary_art": {
-        "type": "historical_screenshot_crop",
+        "type": "image_crop",
         "url": "/persona-assets/manchild.webp",
-        "source": "admin input/OGCupid/my-clue-to-quit-okcupid-v0-O9XQX4osEaN37P-Qt_ivOul8aJVXJpIN8AUD2ZZLlv0.webp",
         "source_dimensions": [
           514,
           630
@@ -234,9 +205,8 @@
         "key": "RBLD-A",
         "name": "The Manchild",
         "art": {
-          "type": "historical_screenshot_crop",
+          "type": "image_crop",
           "url": "/persona-assets/manchild.webp",
-          "source": "admin input/OGCupid/my-clue-to-quit-okcupid-v0-O9XQX4osEaN37P-Qt_ivOul8aJVXJpIN8AUD2ZZLlv0.webp",
           "source_dimensions": [
             514,
             630
@@ -252,9 +222,7 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "DGSM-B",
@@ -262,7 +230,6 @@
       "group": "woman",
       "name": "The Dirty Little Secret",
       "text_status": "transcribed",
-      "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
       "primary_art": null,
       "exact_opposite": {
         "key": "RBLD-B",
@@ -271,17 +238,14 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "DBLD-A",
       "code": "DBLD",
       "group": "man",
       "name": "The Mixed Messenger",
-      "text_status": "missing",
-      "text_source": null,
+      "text_status": "transcribed",
       "primary_art": null,
       "exact_opposite": {
         "key": "RGSM-A",
@@ -290,9 +254,7 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "DBLD-B",
@@ -300,23 +262,19 @@
       "group": "woman",
       "name": "The Priss",
       "text_status": "missing",
-      "text_source": null,
       "primary_art": null,
       "exact_opposite": {
         "key": "RGSM-B",
         "name": "The Playstation",
         "art": {
-          "type": "historical_screenshot_sprite",
-          "source": "archive/dating-personas/original-artwork/three-persona-screenshot-sprite.webp",
+          "type": "image_sprite",
           "sprite_index": 2,
           "quality": "screenshot_crop"
         }
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "DBLM-A",
@@ -324,7 +282,6 @@
       "group": "man",
       "name": "The False Messiah",
       "text_status": "transcribed",
-      "text_source": "User-supplied period text in OG Cupid chat; also referenced in Reddit thread",
       "primary_art": null,
       "exact_opposite": {
         "key": "RGSD-A",
@@ -333,9 +290,7 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "DBLM-B",
@@ -343,7 +298,6 @@
       "group": "woman",
       "name": "The Battleaxe",
       "text_status": "missing",
-      "text_source": null,
       "primary_art": null,
       "exact_opposite": {
         "key": "RGSD-B",
@@ -352,9 +306,7 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "DBSD-A",
@@ -362,7 +314,6 @@
       "group": "man",
       "name": "The Billy Goat",
       "text_status": "transcribed",
-      "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
       "primary_art": null,
       "exact_opposite": {
         "key": "RGLM-A",
@@ -371,9 +322,7 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "DBSD-B",
@@ -381,23 +330,19 @@
       "group": "woman",
       "name": "The Nymph",
       "text_status": "transcribed",
-      "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
       "primary_art": null,
       "exact_opposite": {
         "key": "RGLM-B",
         "name": "The Peach",
         "art": {
-          "type": "historical_screenshot_sprite",
-          "source": "archive/dating-personas/original-artwork/three-persona-screenshot-sprite.webp",
+          "type": "image_sprite",
           "sprite_index": 1,
           "quality": "screenshot_crop"
         }
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "DBSM-A",
@@ -405,7 +350,6 @@
       "group": "man",
       "name": "The 5-Night Stand",
       "text_status": "missing",
-      "text_source": null,
       "primary_art": null,
       "exact_opposite": {
         "key": "RGLD-A",
@@ -414,9 +358,7 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "DBSM-B",
@@ -424,7 +366,6 @@
       "group": "woman",
       "name": "The Stiletto",
       "text_status": "missing",
-      "text_source": null,
       "primary_art": null,
       "exact_opposite": {
         "key": "RGLD-B",
@@ -433,9 +374,7 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "RGLD-A",
@@ -443,7 +382,6 @@
       "group": "man",
       "name": "The Boy Next Door",
       "text_status": "transcribed",
-      "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
       "primary_art": null,
       "exact_opposite": {
         "key": "DBSM-A",
@@ -452,9 +390,7 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "RGLD-B",
@@ -462,7 +398,6 @@
       "group": "woman",
       "name": "The Window Shopper",
       "text_status": "transcribed",
-      "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
       "primary_art": null,
       "exact_opposite": {
         "key": "DBSM-B",
@@ -471,9 +406,7 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "RGLM-A",
@@ -481,7 +414,6 @@
       "group": "man",
       "name": "The Loverboy",
       "text_status": "transcribed",
-      "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
       "primary_art": null,
       "exact_opposite": {
         "key": "DBSD-A",
@@ -490,9 +422,7 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "RGLM-B",
@@ -500,10 +430,8 @@
       "group": "woman",
       "name": "The Peach",
       "text_status": "transcribed",
-      "text_source": "User-supplied full historical result screenshot",
       "primary_art": {
-        "type": "historical_screenshot_sprite",
-        "source": "archive/dating-personas/original-artwork/three-persona-screenshot-sprite.webp",
+        "type": "image_sprite",
         "sprite_index": 1,
         "quality": "screenshot_crop"
       },
@@ -514,9 +442,7 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "RGSD-A",
@@ -524,7 +450,6 @@
       "group": "man",
       "name": "The Poolboy",
       "text_status": "missing",
-      "text_source": null,
       "primary_art": null,
       "exact_opposite": {
         "key": "DBLM-A",
@@ -533,9 +458,7 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "RGSD-B",
@@ -543,7 +466,6 @@
       "group": "woman",
       "name": "The Nurse",
       "text_status": "missing",
-      "text_source": null,
       "primary_art": null,
       "exact_opposite": {
         "key": "DBLM-B",
@@ -552,9 +474,7 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "RGSM-A",
@@ -562,7 +482,6 @@
       "group": "man",
       "name": "The Playboy",
       "text_status": "transcribed",
-      "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
       "primary_art": null,
       "exact_opposite": {
         "key": "DBLD-A",
@@ -571,9 +490,7 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "RGSM-B",
@@ -581,10 +498,8 @@
       "group": "woman",
       "name": "The Playstation",
       "text_status": "transcribed",
-      "text_source": "User-supplied full historical result screenshot",
       "primary_art": {
-        "type": "historical_screenshot_sprite",
-        "source": "archive/dating-personas/original-artwork/three-persona-screenshot-sprite.webp",
+        "type": "image_sprite",
         "sprite_index": 2,
         "quality": "screenshot_crop"
       },
@@ -595,9 +510,7 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "RBLD-A",
@@ -605,11 +518,9 @@
       "group": "man",
       "name": "The Manchild",
       "text_status": "partial",
-      "text_source": "admin input/OGCupid/my-clue-to-quit-okcupid-v0-O9XQX4osEaN37P-Qt_ivOul8aJVXJpIN8AUD2ZZLlv0.webp",
       "primary_art": {
-        "type": "historical_screenshot_crop",
+        "type": "image_crop",
         "url": "/persona-assets/manchild.webp",
-        "source": "admin input/OGCupid/my-clue-to-quit-okcupid-v0-O9XQX4osEaN37P-Qt_ivOul8aJVXJpIN8AUD2ZZLlv0.webp",
         "source_dimensions": [
           514,
           630
@@ -626,9 +537,8 @@
         "key": "DGSM-A",
         "name": "The Bachelor",
         "art": {
-          "type": "historical_screenshot_crop",
+          "type": "image_crop",
           "url": "/persona-assets/manchild.webp",
-          "source": "admin input/OGCupid/my-clue-to-quit-okcupid-v0-O9XQX4osEaN37P-Qt_ivOul8aJVXJpIN8AUD2ZZLlv0.webp",
           "source_dimensions": [
             514,
             630
@@ -648,9 +558,7 @@
       "consider": [
         "RBLM-B"
       ],
-      "recommendations_observed": true,
-      "recommendations_source": "admin input/OGCupid/my-clue-to-quit-okcupid-v0-O9XQX4osEaN37P-Qt_ivOul8aJVXJpIN8AUD2ZZLlv0.webp",
-      "notes": null
+      "recommendations_observed": true
     },
     {
       "key": "RBLD-B",
@@ -658,7 +566,6 @@
       "group": "woman",
       "name": "The Wild Rose",
       "text_status": "transcribed",
-      "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
       "primary_art": null,
       "exact_opposite": {
         "key": "DGSM-B",
@@ -667,9 +574,7 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "RBLM-A",
@@ -677,11 +582,9 @@
       "group": "man",
       "name": "The Vapor Trail",
       "text_status": "partial",
-      "text_source": "admin input/OGCupid/for-elder-millennials-okcupid-schizoid-personality-type-v0-5y9hxs53vldg1.webp",
       "primary_art": {
-        "type": "historical_screenshot_crop",
+        "type": "image_crop",
         "url": "/persona-assets/vapor-trail.webp",
-        "source": "admin input/OGCupid/for-elder-millennials-okcupid-schizoid-personality-type-v0-5y9hxs53vldg1.webp",
         "source_dimensions": [
           640,
           474
@@ -698,9 +601,8 @@
         "key": "DGSD-A",
         "name": "The Backrubber",
         "art": {
-          "type": "historical_screenshot_crop",
+          "type": "image_crop",
           "url": "/persona-assets/vapor-trail.webp",
-          "source": "admin input/OGCupid/for-elder-millennials-okcupid-schizoid-personality-type-v0-5y9hxs53vldg1.webp",
           "source_dimensions": [
             640,
             474
@@ -721,9 +623,7 @@
       "consider": [
         "RBLM-B"
       ],
-      "recommendations_observed": true,
-      "recommendations_source": "admin input/OGCupid/for-elder-millennials-okcupid-schizoid-personality-type-v0-5y9hxs53vldg1.webp",
-      "notes": null
+      "recommendations_observed": true
     },
     {
       "key": "RBLM-B",
@@ -731,11 +631,9 @@
       "group": "woman",
       "name": "The Sudden Departure",
       "text_status": "transcribed",
-      "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
       "primary_art": {
-        "type": "historical_screenshot_crop",
+        "type": "image_crop",
         "url": "/persona-assets/sudden-departure.jpg",
-        "source": "admin input/OGCupid/images.jpg",
         "source_dimensions": [
           576,
           465
@@ -752,9 +650,8 @@
         "key": "DGSD-B",
         "name": "The Intern",
         "art": {
-          "type": "historical_screenshot_crop",
+          "type": "image_crop",
           "url": "/persona-assets/sudden-departure.jpg",
-          "source": "admin input/OGCupid/images.jpg",
           "source_dimensions": [
             576,
             465
@@ -775,9 +672,7 @@
       "consider": [
         "RBLM-A"
       ],
-      "recommendations_observed": true,
-      "recommendations_source": "admin input/OGCupid/images.jpg",
-      "notes": "Screenshot also says 'someone just like you', not a separately coded result"
+      "recommendations_observed": true
     },
     {
       "key": "RBSD-A",
@@ -785,7 +680,6 @@
       "group": "man",
       "name": "The Last Man on Earth",
       "text_status": "missing",
-      "text_source": null,
       "primary_art": null,
       "exact_opposite": {
         "key": "DGLM-A",
@@ -794,9 +688,7 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "RBSD-B",
@@ -804,7 +696,6 @@
       "group": "woman",
       "name": "Half-Cocked",
       "text_status": "missing",
-      "text_source": null,
       "primary_art": null,
       "exact_opposite": {
         "key": "DGLM-B",
@@ -813,9 +704,7 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "RBSM-A",
@@ -823,15 +712,13 @@
       "group": "man",
       "name": "The Hornivore",
       "text_status": "transcribed",
-      "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
       "primary_art": null,
       "exact_opposite": {
         "key": "DGLD-A",
         "name": "The Slow Dancer",
         "art": {
-          "type": "historical_screenshot_crop",
+          "type": "image_crop",
           "url": "/persona-assets/slow-dancer.png",
-          "source": "admin input/OGCupid/ij7AdbE.png",
           "source_dimensions": [
             497,
             605
@@ -847,9 +734,7 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     },
     {
       "key": "RBSM-B",
@@ -857,10 +742,8 @@
       "group": "woman",
       "name": "Genghis Khunt",
       "text_status": "transcribed",
-      "text_source": "User-supplied full historical result screenshot",
       "primary_art": {
-        "type": "historical_screenshot_sprite",
-        "source": "archive/dating-personas/original-artwork/three-persona-screenshot-sprite.webp",
+        "type": "image_sprite",
         "sprite_index": 0,
         "quality": "screenshot_crop"
       },
@@ -871,9 +754,7 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false,
-      "recommendations_source": null,
-      "notes": null
+      "recommendations_observed": false
     }
   ]
 }
