@@ -427,11 +427,20 @@
       "exact_opposite": {
         "key": "DBSMm",
         "name": "The 5-Night Stand",
-        "art": null
+        "art": null,
+        "traits": "Deliberate Brutal Sex Master",
+        "original_art_url": "http://panther.is0.okcupid.com/graphics/persons/DBSMm_thumb.gif",
+        "art_recovery_status": "Source URL unavailable; original thumbnail not recovered"
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false
+      "always_avoid": [
+        "DBSDf"
+      ],
+      "consider": [
+        "DGLMf",
+        "RGLMf"
+      ],
+      "recommendations_observed": true,
+      "recommendations_source": "User-supplied original result guidance"
     },
     {
       "key": "RGLDf",

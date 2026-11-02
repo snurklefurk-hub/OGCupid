@@ -217,7 +217,17 @@
         "Kind, yearning, playful, you are The Boy Next Door. You’re looking for real Love, a lot like girls do. It might not be manly, but it’s sweet. We think the next three years will be very exciting and fruitful ones for you. Your spontaneous, creative side makes you a charming date, and we think you have a horny side just waiting to shine. Or glisten, rather.",
         "You enter new relationships unusually hopeful, and the first moments are especially glorious. If you’ve had some things not work out before, so what. On paper, most girls would name the Boy Next Door as their ideal mate. In the real world, however, you’re often passed over for more dangerous or masculine men. You’re the typical “nice guy:” without just a touch of cockiness, you’re doomed with girls. A shoulder to cry on? Okay, sure. But never a penis to hold.",
         "More than any other type, Boys Next Door evolve as they get older. As we said, many find true love, but some fail miserably in the search. These tarnished few grow up to be The Men Next Door, who are creepy as hell, offering back rubs to kids and what not."
-      ]
+      ],
+      "recommendations_source": "User-supplied original result guidance",
+      "historic_recommendations": {
+        "always_avoid": [
+          "DBSDf"
+        ],
+        "consider": [
+          "DGLMf",
+          "RGLMf"
+        ]
+      }
     },
     {
       "key": "RGLDf",
