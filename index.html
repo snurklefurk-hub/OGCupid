@@ -182,7 +182,20 @@
 
     .persona-archive-buttons{display:flex;gap:11px;flex-wrap:wrap;margin:15px 0}
     .persona-catalog-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
-    .persona-catalog-entry{display:flex;align-items:center;gap:12px;background:#f8f6ff;border:2px solid #b9b3d0;padding:11px 12px;text-align:left;color:var(--ink);cursor:pointer;font:inherit;min-width:0}
+    .persona-catalog-entry{position:relative;display:flex;align-items:center;gap:12px;background:#f8f6ff;border:2px solid #b9b3d0;padding:11px 12px;text-align:left;color:var(--ink);cursor:pointer;font:inherit;min-width:0}
+    #persona-result{position:relative}
+    .persona-catalog-entry[data-recovery-status="complete"]::after,
+    #persona-result[data-recovery-status="complete"]::after,
+    .persona-catalog-entry[data-recovery-status="text-missing"]::after,
+    #persona-result[data-recovery-status="text-missing"]::after{
+      content:"";position:absolute;top:0;bottom:0;right:0;width:5px;pointer-events:none
+    }
+    .persona-catalog-entry[data-recovery-status="complete"]::after,
+    #persona-result[data-recovery-status="complete"]::after{background:#27934a}
+    .persona-catalog-entry[data-recovery-status="text-missing"]::after,
+    #persona-result[data-recovery-status="text-missing"]::after{background:#e8b82c}
+    .persona-catalog-entry[data-recovery-status]::after{top:-2px;right:-2px;bottom:-2px}
+    .persona-status-key{font-size:12px;color:#665f72;line-height:1.5;margin:-8px 0 16px}
     .persona-catalog-entry:hover,.persona-catalog-entry:focus-visible{border-color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
     .persona-catalog-thumb{display:flex;align-items:center;justify-content:center;flex:0 0 64px;width:64px;height:76px;overflow:hidden;border:1px solid #d5cfdb;background:#fff}
     .persona-catalog-label{min-width:0}
@@ -591,6 +604,7 @@ header .wordmark{flex-shrink:0}
             <div class="persona-content" id="persona-catalog" hidden>
               <h3>ALL 32 DATING PERSONAS</h3>
               <p class="persona-catalog-intro">Got a favorite? Pick a persona below to read their result.</p>
+              <p class="persona-status-key">Green: complete text and good original art. Yellow: missing text. No stripe: text complete, better art needed.</p>
               <button type="button" class="persona-btn persona-btn-alt" id="persona-catalog-back">&#x2190; BACK</button>
               <div class="persona-catalog-grid" id="persona-catalog-grid" aria-label="Browse all 32 personas"></div>
             </div>
@@ -787,6 +801,33 @@ header .wordmark{flex-shrink:0}
       el.appendChild(p);
     });
   }
+  function personaRecovery(type,gender,artAvailable){
+    const key=type+gender,quote=exactHistoricalRecommendationQuotes[key]||"";
+    const recommendation=observedHistoricRecommendations[key];
+    const descriptionComplete=Boolean(originalWriteups[key]&&originalWriteups[key].length);
+    const hasConsider=Boolean(recommendation&&Array.isArray(recommendation.consider))||/CONSIDER:/i.test(quote);
+    const hasAvoid=Boolean(recommendation&&Array.isArray(recommendation.avoid))||/ALWAYS AVOID:/i.test(quote);
+    const textComplete=descriptionComplete&&hasConsider&&hasAvoid;
+    const artwork=historicalArtwork[key];
+    const goodArtwork=artAvailable!==false&&Boolean(artwork&&artwork.quality==="good");
+    const state=!textComplete?"text-missing":goodArtwork?"complete":"art-needed";
+    return {state,descriptionComplete,hasConsider,hasAvoid,textComplete,goodArtwork};
+  }
+  function markPersonaRecovery(element,type,gender,artAvailable){
+    const status=personaRecovery(type,gender,artAvailable);
+    element.dataset.recoveryStatus=status.state;
+    element.dataset.recoveryKey=type+gender;
+    const label=status.state==="complete"
+      ?"Complete: good-resolution original artwork, full description, and recovered ALWAYS AVOID / CONSIDER guidance."
+      :status.state==="text-missing"
+        ?"Incomplete text: "+[
+          !status.descriptionComplete?"description":null,
+          !status.hasAvoid?"ALWAYS AVOID":null,
+          !status.hasConsider?"CONSIDER":null
+        ].filter(Boolean).join(", ")+"."
+        :"Text complete; good-resolution original artwork still needed.";
+    element.title=label;element.setAttribute("aria-description",label);
+  }
   function openCatalog(origin){
     catalogOrigin=origin;
     const grid=$("persona-catalog-grid");
@@ -796,6 +837,7 @@ header .wordmark{flex-shrink:0}
           const item=archetypes[type],button=document.createElement("button");
           button.type="button";button.className="persona-catalog-entry";
           button.dataset.type=type;button.dataset.gender=gender;
+          markPersonaRecovery(button,type,gender);
           const name=document.createElement("span");
           name.className="persona-catalog-name";name.textContent=item[gender][0];
           const codeLabel=document.createElement("span");
@@ -803,7 +845,7 @@ header .wordmark{flex-shrink:0}
           codeLabel.textContent=type+gender+" · "+(gender==="m"?"MAN":"WOMAN");
           const thumb=document.createElement("span");
           thumb.className="persona-catalog-thumb";thumb.setAttribute("aria-hidden","true");
-          thumb.appendChild(personaArtwork(type,gender));
+          thumb.appendChild(personaArtwork(type,gender,function(){markPersonaRecovery(button,type,gender,false);}));
           const label=document.createElement("span");label.className="persona-catalog-label";
           label.appendChild(name);label.appendChild(codeLabel);
           button.appendChild(thumb);button.appendChild(label);grid.appendChild(button);
@@ -869,7 +911,7 @@ header .wordmark{flex-shrink:0}
     return {code:code,sum:sum};
   }
   // Only recovered original artwork is listed. Missing art uses one neutral placeholder.
-  const historicalArtwork={"DBSDm":{"url":"/persona-assets/DBSDm.gif"},"DGLDf":{"url":"/persona-assets/DGLDf.gif"},"DGLDm":{"url":"/persona-assets/DGLDm.gif"},"DGLMf":{"url":"/persona-assets/DGLMf.gif"},"DGLMm":{"url":"/persona-assets/DGLMm.gif"},"DGSDm":{"url":"/persona-assets/DGSDm.gif"},"RBLDf":{"url":"/persona-assets/RBLDf.gif"},"RBLDm":{"url":"/persona-assets/RBLDm.gif"},"RBSDf":{"url":"/persona-assets/RBSDf.gif"},"RBSDm":{"url":"/persona-assets/RBSDm.gif"},"RBSMf":{"url":"/persona-assets/RBSMf.gif"},"RGLDf":{"url":"/persona-assets/RGLDf.gif"},"RGLMm":{"url":"/persona-assets/RGLMm.gif"},"RGSDm":{"url":"/persona-assets/RGSDm.gif"},"DBLMf":{"url":"/persona-assets/battleaxe.avif"}};
+  const historicalArtwork={"DBSDm":{"url":"/persona-assets/DBSDm.gif","quality":"good"},"DGLDf":{"url":"/persona-assets/DGLDf.gif","quality":"good"},"DGLDm":{"url":"/persona-assets/DGLDm.gif","quality":"good"},"DGLMf":{"url":"/persona-assets/DGLMf.gif","quality":"good"},"DGLMm":{"url":"/persona-assets/DGLMm.gif","quality":"good"},"DGSDm":{"url":"/persona-assets/DGSDm.gif","quality":"good"},"RBLDf":{"url":"/persona-assets/RBLDf.gif","quality":"good"},"RBLDm":{"url":"/persona-assets/RBLDm.gif","quality":"good"},"RBSDf":{"url":"/persona-assets/RBSDf.gif","quality":"good"},"RBSDm":{"url":"/persona-assets/RBSDm.gif","quality":"good"},"RBSMf":{"url":"/persona-assets/RBSMf.gif","quality":"good"},"RGLDf":{"url":"/persona-assets/RGLDf.gif","quality":"good"},"RGLMm":{"url":"/persona-assets/RGLMm.gif","quality":"good"},"RGSDm":{"url":"/persona-assets/RGSDm.gif","quality":"good"},"DBLMf":{"url":"/persona-assets/battleaxe.avif","quality":"good"}};
   // Three recovered original illustrations cropped from user-supplied historical screenshots.
   // Single small sprite is embedded so it cannot fail because a 2006 image host vanished.
   const recoveredPersonaSprite="data:image/webp;base64,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";
@@ -908,7 +950,7 @@ header .wordmark{flex-shrink:0}
     svg.appendChild(background);svg.appendChild(head);svg.appendChild(shoulders);
     return svg;
   }
-  function personaArtwork(type,gender){
+  function personaArtwork(type,gender,onUnavailable){
     const key=type+gender,entry=historicalArtwork[key];
     const crop=entry?null:historicCrops[key];
     const frame=document.createElement("span");
@@ -917,7 +959,7 @@ header .wordmark{flex-shrink:0}
     if(!entry&&!crop)return frame;
     if(crop){
       const panel=historicCropElement(crop,"Original OkCupid illustration: "+archetypes[type][gender][0]);
-      panel.children[0].addEventListener("error",function(){frame.replaceChildren(featurelessArtwork());});
+      panel.children[0].addEventListener("error",function(){frame.replaceChildren(featurelessArtwork());if(onUnavailable)onUnavailable();});
       frame.replaceChildren(panel);
       return frame;
     }
@@ -934,12 +976,17 @@ header .wordmark{flex-shrink:0}
         frame.replaceChildren(panel);
       }else frame.replaceChildren(artwork);
     };
-    artwork.onerror=function(){frame.replaceChildren(featurelessArtwork());};
+    artwork.onerror=function(){frame.replaceChildren(featurelessArtwork());if(onUnavailable)onUnavailable();};
     artwork.src=entry.url;
     return frame;
   }
   function displayPersonaPortrait(type,selectedStyle){
-    $("persona-portrait").replaceChildren(personaArtwork(type,selectedStyle));
+    markPersonaRecovery($("persona-result"),type,selectedStyle);
+    $("persona-portrait").replaceChildren(personaArtwork(type,selectedStyle,function(){
+      if($("persona-result").dataset.recoveryKey===type+selectedStyle){
+        markPersonaRecovery($("persona-result"),type,selectedStyle,false);
+      }
+    }));
   }
   function renderResult(){
     const data=archetypes[code];if(!data)return;
@@ -1024,11 +1071,11 @@ header .wordmark{flex-shrink:0}
       }
     }
     const archiveStatus=$("persona-archive-status");
-    const textIsComplete=Boolean(originalWriteups[resultKey]);
+    const recovery=personaRecovery(code,style);
+    const textIsComplete=recovery.descriptionComplete;
     const textIsPartial=Boolean(partialHistoricWriteups[resultKey]);
-    const recommendation=observedHistoricRecommendations[resultKey];
-    const hasConsiderGuidance=Boolean(recommendation&&Array.isArray(recommendation.consider))||/CONSIDER:/i.test(exactQuote||"");
-    const hasAvoidGuidance=Boolean(recommendation&&Array.isArray(recommendation.avoid))||/ALWAYS AVOID:/i.test(exactQuote||"");
+    const hasConsiderGuidance=recovery.hasConsider;
+    const hasAvoidGuidance=recovery.hasAvoid;
     const archiveGaps=[];
     if(!textIsComplete) archiveGaps.push(textIsPartial?"the original description is only partially recovered":"the original description is not yet recovered");
     if(!hasAvoidGuidance) archiveGaps.push("the original ALWAYS AVOID guidance is not yet recovered");
