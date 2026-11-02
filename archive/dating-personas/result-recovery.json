@@ -109,7 +109,7 @@
       "code": "DGSD",
       "group": "man",
       "name": "The Backrubber",
-      "text_status": "missing",
+      "text_status": "transcribed",
       "primary_art": {
         "type": "image_crop",
         "url": "/persona-assets/vapor-trail.webp",
@@ -146,7 +146,8 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false
+      "recommendations_observed": false,
+      "text_source": "User-supplied original result text"
     },
     {
       "key": "DGSDf",
