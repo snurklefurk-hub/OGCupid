@@ -829,10 +829,16 @@
         "name": "The Maid of Honor",
         "art": null
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false,
-      "text_source": "User-supplied original result text"
+      "always_avoid": [
+        "DGLDm"
+      ],
+      "consider": [
+        "RGSMm",
+        "DBSDm"
+      ],
+      "recommendations_observed": true,
+      "text_source": "User-supplied original result text",
+      "recommendations_source": "User-supplied guidance, converted to male equivalents at user request"
     },
     {
       "key": "RBSMm",
