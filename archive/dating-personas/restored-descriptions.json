@@ -2,8 +2,8 @@
   "schema_version": 2,
   "collection": "Classic OkCupid Dating Persona Test",
   "total": 32,
-  "transcribed": 25,
-  "missing": 6,
+  "transcribed": 26,
+  "missing": 5,
   "records": [
     {
       "key": "DGLDm",
@@ -162,8 +162,14 @@
       "code": "DBLD",
       "result_group": "woman",
       "original_name": "The Priss",
-      "text_status": "missing",
-      "original_text_paragraphs": null
+      "text_status": "transcribed",
+      "original_text_paragraphs": [
+        "Mature. Responsible. Aristocratic. Excuse me. The Priss.",
+        "Prisses are the smartest of all female types. You’re highly perceptive, and confident in your judgements. You’d take brutal honesty over superficiality any time—your friends always know where they stand with you. You’re completely unfake. Don’t tell me that’s not a word. You’re also excellent at redirecting internal negative energy.",
+        "These facts indicate people are often intimidated by you. They also fall for you, hard. You have a distant, composed allure that many find irresistible. If only more of them lived up to your standards.",
+        "You were probably the last among your friends to have sex. And the first to pretend that you’re pregnant. LOL. Though you’re inclined to use sex as weapon, at least it’s not as one of mass destruction. You’re choosier than most about your partners. A supportive relationship is what you’re really after. Whether you know it or not, you need something steady & long-term. And soothing."
+      ],
+      "text_source": "User-supplied original result text"
     },
     {
       "key": "DBLMm",
