@@ -2,7 +2,7 @@
   "schema_version": 2,
   "collection": "Classic OkCupid Dating Persona Test",
   "total": 32,
-  "transcribed": 27,
+  "transcribed": 28,
   "missing": 3,
   "records": [
     {
@@ -733,10 +733,13 @@
       "code": "RBLD",
       "result_group": "man",
       "original_name": "The Manchild",
-      "text_status": "partial",
+      "text_status": "transcribed",
       "original_text_paragraphs": [
-        "Hopeful. Awkward. Soft-headed. Fire intrigues you. You are The Manchild.",
-        "Okay, Manchildren have some good qualities. They can be unpredictable, brash, magnetic—and therefore highly charismatic."
+        "Hopeful. Awkward. Soft-headed. Fire intrigues you. You are **The Manchild**.",
+        "Okay, Manchildren have some good qualities. They can be unpredictable, brash, magnetic—and therefore highly charismatic. Particularly, you're passionate and are often a hell of a lot of fun.",
+        "But we'd like you to consider not using OkCupid. You can be unthinking and hurtful, and we think you LIKE seeing bad things happen. You've had a moderate number of relationships, but broken a disproportionate number of hearts. In total, you mean well, but don't really have it together.",
+        "It's up to you, of course, whether to continue dating. There are plenty of women out there who do deserve you. But you've heard our advice.",
+        "*If you stay ...*"
       ],
       "historic_recommendations": {
         "always_avoid": [
@@ -751,7 +754,8 @@
         "source_capture_url": "https://web.archive.org/web/20080205211320/http://www.okcupid.com:80/personality?type=RBLD&o=1&g=1",
         "verified_from_capture": true
       },
-      "recommendations_source": "https://web.archive.org/web/20080205211320/http://www.okcupid.com:80/personality?type=RBLD&o=1&g=1"
+      "recommendations_source": "https://web.archive.org/web/20080205211320/http://www.okcupid.com:80/personality?type=RBLD&o=1&g=1",
+      "text_source": "User-provided Admin drop/v5EltHk.jpeg; complete visible description"
     },
     {
       "key": "RBLDf",
@@ -968,5 +972,5 @@
       "recommendations_source": "https://web.archive.org/web/20080119124608/http://www.okcupid.com:80/personality?type=RBSM&o=1&g=2"
     }
   ],
-  "partial": 2
+  "partial": 1
 }

@@ -1133,7 +1133,7 @@
       "code": "RBLD",
       "group": "man",
       "name": "The Manchild",
-      "text_status": "partial",
+      "text_status": "transcribed",
       "primary_art": {
         "type": "image_crop",
         "url": "/persona-assets/manchild.webp",
@@ -1179,7 +1179,8 @@
         "archive_url": "https://web.archive.org/web/20080205211320/http://www.okcupid.com:80/personality?type=RBLD&o=1&g=1",
         "verified_from_capture": true
       },
-      "recommendations_source": "https://web.archive.org/web/20080205211320/http://www.okcupid.com:80/personality?type=RBLD&o=1&g=1"
+      "recommendations_source": "https://web.archive.org/web/20080205211320/http://www.okcupid.com:80/personality?type=RBLD&o=1&g=1",
+      "text_source": "User-provided Admin drop/v5EltHk.jpeg; complete visible description"
     },
     {
       "key": "RBLDf",
