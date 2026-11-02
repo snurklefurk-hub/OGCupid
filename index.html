@@ -400,6 +400,15 @@ header .wordmark{flex-shrink:0}
  .different-intro>p{margin:14px 0 0;max-width:540px}
 }
 @media(max-width:540px){.different-grid{grid-template-columns:1fr}.different-grid .different-card{min-height:0}}
+
+    /* Compact original artwork recovered from opposite-result thumbnails and screenshot crops. */
+    .persona-historical-crop{display:block;width:100%;height:auto;background:#fff;max-width:100%;image-rendering:auto}
+    .persona-opposite-art{border:2px solid #aaa4c1;background:#f4f1ff;margin:11px 0 0;padding:12px;display:flex;gap:15px;align-items:center;max-width:430px}
+    .persona-opposite-art[hidden],.persona-relationship-notes[hidden]{display:none}
+    .persona-opposite-art .persona-historical-crop{width:107px;height:auto;max-height:145px;flex:0 0 107px;border:1px solid #d1cbdc}
+    .persona-opposite-art p{margin:0;font-size:13px;line-height:1.6}
+    .persona-relationship-notes{border-left:4px solid var(--rose);padding:5px 0 5px 14px;margin:13px 0 0;background:#fff5f6}
+    .persona-relationship-notes p{font-size:13px;line-height:1.5;margin:6px 10px}
 </style>
 </head>
 <body>
@@ -545,6 +554,8 @@ header .wordmark{flex-shrink:0}
                   <div class="persona-catalog-flags"><span class="persona-archive-flag" id="persona-art-flag">ORIGINAL IMAGE MISSING</span><span class="persona-archive-flag" id="persona-text-flag">ORIGINAL TEXT MISSING</span></div>
                   <div class="persona-traits" id="persona-traits"></div>
                   <p class="persona-compare" id="persona-opposite"></p>
+                  <div class="persona-opposite-art" id="persona-opposite-art" hidden></div>
+                  <div class="persona-relationship-notes" id="persona-relationship-notes" hidden></div>
                 </div>
               </div>
               <div class="persona-actions">
@@ -749,7 +760,13 @@ header .wordmark{flex-shrink:0}
     originalWriteupMeta[key]={status:"FOUND",source:"https://imgur.com/a/ORHpIDj"};
   }
   const historicalTextLeads={"DGSD-A":["https://forums.anandtech.com/threads/okcupid-take-this-test-about-you-and-love-accurate.1334430/page-2","2004 result"],"DGSD-B":["https://talksfu.ca/forum/discussion/5507/which-one-are-you","historical forum result"],"DGSM-A":["https://www.ilxor.com/ILX/ThreadSelectedControllerServlet?action=showall&boardid=40&threadid=29797","2004 forum result"],"DBLD-A":["https://forums.anandtech.com/threads/okcupid-take-this-test-about-you-and-love-accurate.1334430/page-3","2004 result"],"DBLD-B":["https://bay-bay.blogspot.com/2004/04/","2004 personal blog"],"DBLM-B":["https://www.dance-forums.com/threads/the-famous-okcupid-test.10761/page-2","historical result"],"DBSM-A":["https://forums.anandtech.com/threads/the-32-type-dating-personality-test.1862067/","2006 result"],"DBSM-B":["https://www.sixtwentysevenblog.com/2008/10/stiletto.html","2008 blog result"],"RGSD-A":["https://www.ilxor.com/ILX/ThreadSelectedControllerServlet?action=showall&boardid=40&threadid=29797","2004 result"],"RGSD-B":["https://www.ilxor.com/ILX/ThreadSelectedControllerServlet?action=showall&boardid=40&threadid=29797","historical mention; full text not verified"],"RBLD-A":["https://www.ilxor.com/ILX/ThreadSelectedControllerServlet?action=showall&boardid=40&threadid=29797","2004 result"],"RBLM-A":["https://forums.anandtech.com/threads/the-32-type-dating-personality-test.1862067/","2006 result"],"RBSD-A":["https://forums.anandtech.com/threads/okcupid-take-this-test-about-you-and-love-accurate.1334430/","2004 result"],"RBSD-B":["https://forums.ohtori.nu/viewtopic0a22.html?id=846&p=3","2007 result"]};
-  const recoveredImages=Object.assign(Object.create(null),{"RBSM-B":true,"RGLM-B":true,"RGSM-B":true}); // verified locally embedded screenshot originals
+  // Historical screenshots are shipped unchanged under /public/persona-assets/.
+  // Each entry: filename, source width/height, and the portrait crop x/y/w/h.
+  // The three exact-opposite mini-thumbnails are intentionally preserved despite low resolution.
+  const historicCrops={"DGLD-A":["slow-dancer.png",497,605,126,100,277,385],"RBLM-A":["vapor-trail.webp",640,474,0,0,192,224],"RBLM-B":["sudden-departure.jpg",576,465,13,1,196,381],"RBLD-A":["manchild.webp",514,630,74,77,169,368],"DGSD-A":["vapor-trail.webp",640,474,513,104,107,117],"DGSD-B":["sudden-departure.jpg",576,465,453,244,107,134],"DGSM-A":["manchild.webp",514,630,375,67,82,117]};
+  const partialHistoricWriteups={"RBLM-A":["Here today, gone today. You are The Vapor Trail. Are you in a relationship now? What about now?","Vapor Trails can be highly charismatic people--unpredictable, confident, and magnetic. You're experienced. You know how to handle yourself in a relationship, and many people appreciate that. Many people, all in a row.","Vapor Trails especially need a girl who will laugh at their jokes. They're also the most likely male type to be haunted by serious regret."],"RBLD-A":["Hopeful. Awkward. Soft-headed. Fire intrigues you. You are The Manchild.","Okay, Manchildren have some good qualities. They can be unpredictable, brash, magnetic—and therefore highly charismatic."]};
+  const observedHistoricRecommendations={"RBLM-A":{"consider":["RBLM-B"],"avoid":["DGSD-B","DGLM-B"]},"RBLM-B":{"consider":["RBLM-A"],"avoid":["DGSD-A","DGLM-A"]},"RBLD-A":{"consider":["RBLM-B"],"avoid":["DGSM-B"]}};
+  const recoveredImages=Object.assign(Object.create(null),{"RBSM-B":true,"RGLM-B":true,"RGSM-B":true,"DGLD-A":true,"RBLM-A":true,"RBLM-B":true,"RBLD-A":true,"DGSD-A":true,"DGSD-B":true,"DGSM-A":true}); // verified locally embedded screenshot originals
   const unavailableImages=Object.create(null);
   let catalogOrigin="intro";
   function flag(el, kind, status){
@@ -771,10 +788,10 @@ header .wordmark{flex-shrink:0}
         const img=document.createElement("span"),copy=document.createElement("span");
         img.dataset.imageKey=key;
         flag(img,"IMAGE",recoveredImages[key]?"FOUND":unavailableImages[key]?"MISSING":historicalArtwork[key]?"UNVERIFIED":"MISSING");
-        flag(copy,"TEXT",originalWriteupMeta[key]?originalWriteupMeta[key].status:"MISSING");
+        flag(copy,"TEXT",originalWriteupMeta[key]?originalWriteupMeta[key].status:partialHistoricWriteups[key]?"PARTIAL":"MISSING");
         flags.appendChild(img);flags.appendChild(copy);
         button.appendChild(name);button.appendChild(typeName);button.appendChild(flags);
-        if(!originalWriteups[key]&&historicalTextLeads[key]){
+        if(!originalWriteups[key]&&!partialHistoricWriteups[key]&&historicalTextLeads[key]){
           const research=document.createElement("span");research.className="persona-catalog-code";
           research.textContent="HISTORICAL SOURCE LEAD · ORIGINAL WRITEUP NOT YET RESTORED";
           button.appendChild(research);
@@ -867,52 +884,61 @@ header .wordmark{flex-shrink:0}
     historicalArtwork[key]={url:recoveredPersonaSprite,spriteIndex:index,source:"https://imgur.com/a/ORHpIDj"};
   }
   let portraitRenderSequence=0;
+  function historicCropElement(entry,label){
+    const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+    const rect=entry.slice(3);
+    svg.setAttribute("viewBox",rect.join(" "));
+    svg.setAttribute("width",String(rect[2]));svg.setAttribute("height",String(rect[3]));
+    svg.setAttribute("role","img");svg.setAttribute("aria-label",label);
+    svg.classList.add("persona-historical-crop");
+    const image=document.createElementNS("http://www.w3.org/2000/svg","image");
+    image.setAttribute("x","0");image.setAttribute("y","0");
+    image.setAttribute("width",String(entry[1]));image.setAttribute("height",String(entry[2]));
+    image.setAttribute("href","/persona-assets/"+entry[0]);
+    image.setAttribute("preserveAspectRatio","none");
+    svg.appendChild(image);
+    return svg;
+  }
   function displayPersonaPortrait(type, selectedStyle){
-    const holder=$("persona-portrait");
-    holder.replaceChildren();
-    const fallback=document.createElement("div");
-    fallback.innerHTML=portrait(type,selectedStyle);
-    holder.appendChild(fallback);
-    const key=type+"-"+selectedStyle, entry=historicalArtwork[key];
+    const holder=$("persona-portrait");holder.replaceChildren();
+    const key=type+"-"+selectedStyle;
+    if(historicCrops[key]){
+      holder.appendChild(historicCropElement(historicCrops[key],"Original OkCupid character illustration: "+archetypes[type][selectedStyle][0]));
+      const caption=document.createElement("p");caption.className="persona-art-note";
+      caption.textContent=["DGSD-A","DGSD-B","DGSM-A"].includes(key)?"Original artwork recovered as a tiny exact-opposite thumbnail.":"Original character art recovered from a historical test screenshot.";
+      holder.appendChild(caption);
+      flag($("persona-art-flag"),"IMAGE","FOUND");
+      return;
+    }
+    const fallback=document.createElement("div");fallback.innerHTML=portrait(type,selectedStyle);holder.appendChild(fallback);
+    const entry=historicalArtwork[key];
     flag($("persona-art-flag"),"IMAGE",recoveredImages[key]?"FOUND":unavailableImages[key]?"MISSING":entry?"UNVERIFIED":"MISSING");
-    const note=document.createElement("p");
-    note.className="persona-art-note";
-    if(!entry){note.textContent="Original illustration not yet recovered \u2014 OGC placeholder";holder.appendChild(note);return;}
-    note.textContent="Checking historical illustration...";
-    holder.appendChild(note);
+    const note=document.createElement("p");note.className="persona-art-note";
+    if(!entry){note.textContent="Character illustration pending";holder.appendChild(note);return;}
+    note.textContent="Checking historical illustration...";holder.appendChild(note);
     const thisRender=++portraitRenderSequence;
-    const old=new Image();
-    old.alt="Historical OkCupid Dating Persona illustration for "+archetypes[type][selectedStyle][0];
-    old.decoding="async";
-    old.referrerPolicy="no-referrer";
+    const old=new Image();old.alt="Historic Dating Persona illustration for "+archetypes[type][selectedStyle][0];
+    old.decoding="async";old.referrerPolicy="no-referrer";
     old.onload=function(){
-      if(thisRender!==portraitRenderSequence || !holder.isConnected)return;
+      if(thisRender!==portraitRenderSequence||!holder.isConnected)return;
       if(typeof entry.spriteIndex==="number"){
-        const figure=document.createElement("div");
-        figure.className="persona-original-sprite";
+        const figure=document.createElement("div");figure.className="persona-original-sprite";
         figure.style.backgroundImage="url('"+entry.url+"')";
         figure.style.backgroundPosition=["0% 0%","50% 0%","100% 0%"][entry.spriteIndex];
         figure.setAttribute("role","img");
         figure.setAttribute("aria-label","Recovered original illustration: "+archetypes[type][selectedStyle][0]);
         fallback.replaceChildren(figure);
-      }else{
-        fallback.replaceChildren(old);
-      }
-      recoveredImages[key]=true;
-      flag($("persona-art-flag"),"IMAGE","FOUND");
+      }else fallback.replaceChildren(old);
+      recoveredImages[key]=true;flag($("persona-art-flag"),"IMAGE","FOUND");
       document.querySelectorAll("[data-image-key]").forEach(function(node){if(node.dataset.imageKey===key)flag(node,"IMAGE","FOUND");});
-      const credit=document.createElement("a");
-      credit.href=entry.source;credit.target="_blank";credit.rel="noopener noreferrer";
-      credit.textContent="Original OkCupid artwork \u00b7 archived source \u2197";
-      note.replaceChildren(credit);
+      const credit=document.createElement("a");credit.href=entry.source;credit.target="_blank";credit.rel="noopener noreferrer";
+      credit.textContent="Historical artwork source";note.replaceChildren(credit);
     };
     old.onerror=function(){
-      if(thisRender===portraitRenderSequence){
-        unavailableImages[key]=true;
-        note.textContent="Historical image unavailable \u2014 OGC placeholder";
-        flag($("persona-art-flag"),"IMAGE","MISSING");
-        document.querySelectorAll("[data-image-key]").forEach(function(node){if(node.dataset.imageKey===key)flag(node,"IMAGE","MISSING");});
-      }
+      if(thisRender!==portraitRenderSequence)return;
+      unavailableImages[key]=true;note.textContent="Historical image unavailable";
+      flag($("persona-art-flag"),"IMAGE","MISSING");
+      document.querySelectorAll("[data-image-key]").forEach(function(node){if(node.dataset.imageKey===key)flag(node,"IMAGE","MISSING");});
     };
     old.src=entry.url;
   }
@@ -951,19 +977,22 @@ header .wordmark{flex-shrink:0}
     $("persona-code").textContent=code.split("").map(function(c,i){
       return sides[i].labels[sides[i].code.indexOf(c)];
     }).join(" \u00b7 ")+" ("+code+")";
-    const original=originalWriteups[code+"-"+style];
+    const resultKey=code+"-"+style;
+    const original=originalWriteups[resultKey]||partialHistoricWriteups[resultKey];
     $("persona-story").hidden=Boolean(original);
     $("persona-flavor").hidden=Boolean(original);
     $("persona-original-copy").hidden=!original;
     if(original)paragraphs($("persona-original-copy"),original);
-    const meta=originalWriteupMeta[code+"-"+style];
+    const meta=originalWriteupMeta[resultKey]||(partialHistoricWriteups[resultKey]?{
+      status:"PARTIAL",source:"https://github.com/snurklefurk-hub/OGCupid/tree/main/admin%20input/OGCupid"
+    }:null);
     const sourceNote=$("persona-original-source");
     const lead=historicalTextLeads[code+"-"+style];
     sourceNote.hidden=!meta&&!lead;
     sourceNote.replaceChildren();
     if(meta||lead){
       const label=document.createElement("span");
-      label.textContent=meta?"Restored original result text. ":"ORIGINAL TEXT MISSING — the text shown here is an OG Cupid reconstruction. A historical source has been located but not yet transcribed. ";
+      label.textContent=meta?(meta.status==="PARTIAL"?"Recovered portion of the historical result. ":"Restored original result text. "):"The historical writeup has not been recovered; here is our new interpretation. ";
       const source=document.createElement("a");
       source.href=meta?meta.source:lead[0];source.target="_blank";source.rel="noopener noreferrer";
       source.textContent=meta?"View original text source":"View historical source lead";
@@ -971,7 +1000,7 @@ header .wordmark{flex-shrink:0}
     }
     $("persona-story").textContent=data.story;
     $("persona-flavor").textContent=chosen[1];
-    flag($("persona-text-flag"),"TEXT",originalWriteupMeta[code+"-"+style]?originalWriteupMeta[code+"-"+style].status:"MISSING");
+    flag($("persona-text-flag"),"TEXT",meta?meta.status:"MISSING");
     portraitRenderSequence++;
     displayPersonaPortrait(code,style);
     const traitHolder=$("persona-traits");traitHolder.replaceChildren();
@@ -979,7 +1008,30 @@ header .wordmark{flex-shrink:0}
       const span=document.createElement("span");span.textContent=sides[i].labels[sides[i].code.indexOf(c)];traitHolder.appendChild(span);
     });
     const inverse=code.split("").map(function(c,i){return sides[i].code[1-sides[i].code.indexOf(c)];}).join("");
-    $("persona-opposite").textContent="Your opposite on all four scales: "+inverse+" \u2014 "+archetypes[inverse][style][0]+". Different isn't worse. It just makes for a very interesting conversation.";
+    $("persona-opposite").textContent="Your exact opposite: "+archetypes[inverse][style][0]+" ("+inverse+").";
+    const oppositeKey=inverse+"-"+style, oppositeArt=$("persona-opposite-art");
+    oppositeArt.replaceChildren();oppositeArt.hidden=!historicCrops[oppositeKey];
+    if(historicCrops[oppositeKey]){
+      const illustration=historicCropElement(historicCrops[oppositeKey],"Historical character art: "+archetypes[inverse][style][0]);
+      oppositeArt.appendChild(illustration);
+      const caption=document.createElement("p");
+      caption.innerHTML="<strong>YOUR EXACT OPPOSITE</strong>";
+      const name=document.createElement("span");name.textContent=archetypes[inverse][style][0];
+      caption.appendChild(document.createElement("br"));caption.appendChild(name);
+      oppositeArt.appendChild(caption);
+    }
+    const relationArea=$("persona-relationship-notes");
+    const relation=observedHistoricRecommendations[resultKey];
+    relationArea.replaceChildren();relationArea.hidden=!relation;
+    if(relation){
+      for(const [title,items] of [["CONSIDER",relation.consider],["ALWAYS AVOID",relation.avoid]]){
+        const row=document.createElement("p");
+        const heading=document.createElement("strong");heading.textContent=title+": ";row.appendChild(heading);
+        const names=items.map(function(k){return archetypes[k.slice(0,4)][k.slice(-1)][0];});
+        row.appendChild(document.createTextNode(names.join(", ")));
+        relationArea.appendChild(row);
+      }
+    }
     $("persona-score-detail").textContent=scores?"Your directional scores: "+sides.map(function(s,i){return s.description+": "+scores[i];}).join(" \u00b7 ")+". Positive means the first trait; negative means the second.":"This is a shared result link; no answers or scores were stored with it.";
     $("persona-share-status").textContent="";
     show("result");
