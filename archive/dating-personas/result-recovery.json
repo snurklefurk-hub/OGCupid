@@ -404,11 +404,20 @@
           "type": "image_sprite",
           "sprite_index": 1,
           "quality": "screenshot_crop"
-        }
+        },
+        "traits": "Random Gentle Love Master"
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false
+      "always_avoid": [
+        "DBLMm"
+      ],
+      "consider": [
+        "RGSMm"
+      ],
+      "recommendations_observed": true,
+      "text_source": "User-supplied original result text",
+      "recommendations_source": "User-supplied original result guidance",
+      "original_art_url": "http://akcdn.okccdn.com/graphics/persons/DBSDf.gif",
+      "art_recovery_status": "Original URL denied access; mirror returns placeholder. Original artwork not recovered."
     },
     {
       "key": "DBSMm",
@@ -548,7 +557,7 @@
       "code": "RGSD",
       "group": "woman",
       "name": "The Nurse",
-      "text_status": "missing",
+      "text_status": "transcribed",
       "primary_art": null,
       "exact_opposite": {
         "key": "DBLMf",
@@ -557,7 +566,8 @@
       },
       "always_avoid": [],
       "consider": [],
-      "recommendations_observed": false
+      "recommendations_observed": false,
+      "text_source": "User-supplied original result text"
     },
     {
       "key": "RGSMm",

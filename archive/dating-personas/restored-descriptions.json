@@ -2,8 +2,8 @@
   "schema_version": 2,
   "collection": "Classic OkCupid Dating Persona Test",
   "total": 32,
-  "transcribed": 26,
-  "missing": 5,
+  "transcribed": 27,
+  "missing": 4,
   "records": [
     {
       "key": "DGLDm",
@@ -227,10 +227,21 @@
       "original_name": "The Nymph",
       "text_status": "transcribed",
       "original_text_paragraphs": [
-        "Sly. Sensual. Guarded. Different somehow. You are The Nymph. It appears like you’re looking for a fling or a casual sexual relationship, but it’s not that simple. You’re a hungry but also very careful person, and this generates a certain amount of sexual tension within you and in your relationships. In other aspects of life, you get what you want. In relationships, that’s not always the case. It’s possible you intimidate potential lovers.",
-        "Most likely, though, you’re a little closed off—therefore mysterious—and, naturally, people find that difficult to get with. Maybe it’s just part of your selection process, though. You’ve been in enough relationships to know to expose yourself slowly. When you do feel comfortable with someone, though, your torrid sexual appetite will make her very happy. Your cautious nature is also a big asset in a long-term relationship.",
-        "It might take longer for love to establish itself, but when it does, it’s all the stronger."
-      ]
+        "Sly. Sensual. Guarded. Different somehow. You are The Nymph.",
+        "It appears like you’re looking for a fling or a casual sexual relationship, but it’s not that simple. You’re a hungry but also very careful person, and this generates a certain amount of sexual tension within you and in your relationships. In other aspects of life, you get what you want. In relationships, that’s not always the case.",
+        "It’s possible you intimidate potential lovers. Most likely, though, you’re a little closed off—therefore mysterious—and, naturally, people find that difficult to get with. Maybe it’s just part of your selection process, though. You’ve been in enough relationships to know to expose yourself slowly.",
+        "When you do feel comfortable with someone, though, your torrid sexual appetite will make him very happy. Your cautious nature is also a big asset in a long-term relationship. It might take longer for love to establish itself, but when it does, it’s all the stronger."
+      ],
+      "text_source": "User-supplied original result text",
+      "recommendations_source": "User-supplied original result guidance",
+      "historic_recommendations": {
+        "always_avoid": [
+          "DBLMm"
+        ],
+        "consider": [
+          "RGSMm"
+        ]
+      }
     },
     {
       "key": "DBSMm",
@@ -334,8 +345,14 @@
       "code": "RGSD",
       "result_group": "woman",
       "original_name": "The Nurse",
-      "text_status": "missing",
-      "original_text_paragraphs": null
+      "text_status": "transcribed",
+      "original_text_paragraphs": [
+        "Friendly and eager. Sexy in white. You are The Nurse.",
+        "Like your male counterpart, The Poolboy, you’re a fun and goofy, but giving, friend. You believe that life and love should be taken with a grain of salt. We’ll bet you smile a lot, which people find contagious.",
+        "If only they knew the reason...the fact is, you spend WAY more time fantasizing than the average girl. While your friends lean desperately towards love, you’re chemically biased towards anti-love: sex. You’d never date someone you didn’t find immediately kissable.",
+        "To maximize satisfaction, you should find someone carefree and sexual, just like you. Avoid Brutal types at all costs. A final bit of advice: experience doesn’t matter. You didn’t qualify as a Master, and your perfect match need not either."
+      ],
+      "text_source": "User-supplied original result text"
     },
     {
       "key": "RGSMm",
