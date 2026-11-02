@@ -1,0 +1,871 @@
+{
+  "schema_version": 1,
+  "description": "32 persona records; original artwork from historical screenshots including low-res opposite thumbnails; recommendation lists observed only when screenshot evidence exists. Empty unobserved lists mean unknown.",
+  "date": "2026-11-01",
+  "art_recovered": 10,
+  "recommendations_observed": 3,
+  "results": [
+    {
+      "key": "DGLD-A",
+      "code": "DGLD",
+      "group": "man",
+      "name": "The Slow Dancer",
+      "text_status": "transcribed",
+      "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
+      "primary_art": {
+        "type": "historical_screenshot_crop",
+        "url": "/persona-assets/slow-dancer.png",
+        "source": "admin input/OGCupid/ij7AdbE.png",
+        "source_dimensions": [
+          497,
+          605
+        ],
+        "crop_rect": [
+          126,
+          100,
+          277,
+          385
+        ],
+        "quality": "screenshot_original"
+      },
+      "exact_opposite": {
+        "key": "RBSM-A",
+        "name": "The Hornivore",
+        "art": null
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "DGLD-B",
+      "code": "DGLD",
+      "group": "woman",
+      "name": "The Sonnet",
+      "text_status": "transcribed",
+      "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
+      "primary_art": null,
+      "exact_opposite": {
+        "key": "RBSM-B",
+        "name": "Genghis Khunt",
+        "art": {
+          "type": "historical_screenshot_sprite",
+          "source": "archive/dating-personas/original-artwork/three-persona-screenshot-sprite.webp",
+          "sprite_index": 0,
+          "quality": "screenshot_crop"
+        }
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "DGLM-A",
+      "code": "DGLM",
+      "group": "man",
+      "name": "The Gentleman",
+      "text_status": "transcribed",
+      "text_source": "User-supplied period text in OG Cupid chat; also referenced in Reddit thread",
+      "primary_art": null,
+      "exact_opposite": {
+        "key": "RBSD-A",
+        "name": "The Last Man on Earth",
+        "art": null
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "DGLM-B",
+      "code": "DGLM",
+      "group": "woman",
+      "name": "The Maid of Honor",
+      "text_status": "transcribed",
+      "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
+      "primary_art": null,
+      "exact_opposite": {
+        "key": "RBSD-B",
+        "name": "Half-Cocked",
+        "art": null
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "DGSD-A",
+      "code": "DGSD",
+      "group": "man",
+      "name": "The Backrubber",
+      "text_status": "missing",
+      "text_source": null,
+      "primary_art": {
+        "type": "historical_screenshot_crop",
+        "url": "/persona-assets/vapor-trail.webp",
+        "source": "admin input/OGCupid/for-elder-millennials-okcupid-schizoid-personality-type-v0-5y9hxs53vldg1.webp",
+        "source_dimensions": [
+          640,
+          474
+        ],
+        "crop_rect": [
+          513,
+          104,
+          107,
+          117
+        ],
+        "quality": "low_resolution_opposite_thumbnail"
+      },
+      "exact_opposite": {
+        "key": "RBLM-A",
+        "name": "The Vapor Trail",
+        "art": {
+          "type": "historical_screenshot_crop",
+          "url": "/persona-assets/vapor-trail.webp",
+          "source": "admin input/OGCupid/for-elder-millennials-okcupid-schizoid-personality-type-v0-5y9hxs53vldg1.webp",
+          "source_dimensions": [
+            640,
+            474
+          ],
+          "crop_rect": [
+            0,
+            0,
+            192,
+            224
+          ],
+          "quality": "screenshot_original"
+        }
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "DGSD-B",
+      "code": "DGSD",
+      "group": "woman",
+      "name": "The Intern",
+      "text_status": "missing",
+      "text_source": null,
+      "primary_art": {
+        "type": "historical_screenshot_crop",
+        "url": "/persona-assets/sudden-departure.jpg",
+        "source": "admin input/OGCupid/images.jpg",
+        "source_dimensions": [
+          576,
+          465
+        ],
+        "crop_rect": [
+          453,
+          244,
+          107,
+          134
+        ],
+        "quality": "low_resolution_opposite_thumbnail"
+      },
+      "exact_opposite": {
+        "key": "RBLM-B",
+        "name": "The Sudden Departure",
+        "art": {
+          "type": "historical_screenshot_crop",
+          "url": "/persona-assets/sudden-departure.jpg",
+          "source": "admin input/OGCupid/images.jpg",
+          "source_dimensions": [
+            576,
+            465
+          ],
+          "crop_rect": [
+            13,
+            1,
+            196,
+            381
+          ],
+          "quality": "screenshot_original"
+        }
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "DGSM-A",
+      "code": "DGSM",
+      "group": "man",
+      "name": "The Bachelor",
+      "text_status": "missing",
+      "text_source": null,
+      "primary_art": {
+        "type": "historical_screenshot_crop",
+        "url": "/persona-assets/manchild.webp",
+        "source": "admin input/OGCupid/my-clue-to-quit-okcupid-v0-O9XQX4osEaN37P-Qt_ivOul8aJVXJpIN8AUD2ZZLlv0.webp",
+        "source_dimensions": [
+          514,
+          630
+        ],
+        "crop_rect": [
+          375,
+          67,
+          82,
+          117
+        ],
+        "quality": "low_resolution_opposite_thumbnail"
+      },
+      "exact_opposite": {
+        "key": "RBLD-A",
+        "name": "The Manchild",
+        "art": {
+          "type": "historical_screenshot_crop",
+          "url": "/persona-assets/manchild.webp",
+          "source": "admin input/OGCupid/my-clue-to-quit-okcupid-v0-O9XQX4osEaN37P-Qt_ivOul8aJVXJpIN8AUD2ZZLlv0.webp",
+          "source_dimensions": [
+            514,
+            630
+          ],
+          "crop_rect": [
+            74,
+            77,
+            169,
+            368
+          ],
+          "quality": "screenshot_original"
+        }
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "DGSM-B",
+      "code": "DGSM",
+      "group": "woman",
+      "name": "The Dirty Little Secret",
+      "text_status": "transcribed",
+      "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
+      "primary_art": null,
+      "exact_opposite": {
+        "key": "RBLD-B",
+        "name": "The Wild Rose",
+        "art": null
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "DBLD-A",
+      "code": "DBLD",
+      "group": "man",
+      "name": "The Mixed Messenger",
+      "text_status": "missing",
+      "text_source": null,
+      "primary_art": null,
+      "exact_opposite": {
+        "key": "RGSM-A",
+        "name": "The Playboy",
+        "art": null
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "DBLD-B",
+      "code": "DBLD",
+      "group": "woman",
+      "name": "The Priss",
+      "text_status": "missing",
+      "text_source": null,
+      "primary_art": null,
+      "exact_opposite": {
+        "key": "RGSM-B",
+        "name": "The Playstation",
+        "art": {
+          "type": "historical_screenshot_sprite",
+          "source": "archive/dating-personas/original-artwork/three-persona-screenshot-sprite.webp",
+          "sprite_index": 2,
+          "quality": "screenshot_crop"
+        }
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "DBLM-A",
+      "code": "DBLM",
+      "group": "man",
+      "name": "The False Messiah",
+      "text_status": "transcribed",
+      "text_source": "User-supplied period text in OG Cupid chat; also referenced in Reddit thread",
+      "primary_art": null,
+      "exact_opposite": {
+        "key": "RGSD-A",
+        "name": "The Poolboy",
+        "art": null
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "DBLM-B",
+      "code": "DBLM",
+      "group": "woman",
+      "name": "The Battleaxe",
+      "text_status": "missing",
+      "text_source": null,
+      "primary_art": null,
+      "exact_opposite": {
+        "key": "RGSD-B",
+        "name": "The Nurse",
+        "art": null
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "DBSD-A",
+      "code": "DBSD",
+      "group": "man",
+      "name": "The Billy Goat",
+      "text_status": "transcribed",
+      "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
+      "primary_art": null,
+      "exact_opposite": {
+        "key": "RGLM-A",
+        "name": "The Loverboy",
+        "art": null
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "DBSD-B",
+      "code": "DBSD",
+      "group": "woman",
+      "name": "The Nymph",
+      "text_status": "transcribed",
+      "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
+      "primary_art": null,
+      "exact_opposite": {
+        "key": "RGLM-B",
+        "name": "The Peach",
+        "art": {
+          "type": "historical_screenshot_sprite",
+          "source": "archive/dating-personas/original-artwork/three-persona-screenshot-sprite.webp",
+          "sprite_index": 1,
+          "quality": "screenshot_crop"
+        }
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "DBSM-A",
+      "code": "DBSM",
+      "group": "man",
+      "name": "The 5-Night Stand",
+      "text_status": "missing",
+      "text_source": null,
+      "primary_art": null,
+      "exact_opposite": {
+        "key": "RGLD-A",
+        "name": "The Boy Next Door",
+        "art": null
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "DBSM-B",
+      "code": "DBSM",
+      "group": "woman",
+      "name": "The Stiletto",
+      "text_status": "missing",
+      "text_source": null,
+      "primary_art": null,
+      "exact_opposite": {
+        "key": "RGLD-B",
+        "name": "The Window Shopper",
+        "art": null
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "RGLD-A",
+      "code": "RGLD",
+      "group": "man",
+      "name": "The Boy Next Door",
+      "text_status": "transcribed",
+      "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
+      "primary_art": null,
+      "exact_opposite": {
+        "key": "DBSM-A",
+        "name": "The 5-Night Stand",
+        "art": null
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "RGLD-B",
+      "code": "RGLD",
+      "group": "woman",
+      "name": "The Window Shopper",
+      "text_status": "transcribed",
+      "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
+      "primary_art": null,
+      "exact_opposite": {
+        "key": "DBSM-B",
+        "name": "The Stiletto",
+        "art": null
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "RGLM-A",
+      "code": "RGLM",
+      "group": "man",
+      "name": "The Loverboy",
+      "text_status": "transcribed",
+      "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
+      "primary_art": null,
+      "exact_opposite": {
+        "key": "DBSD-A",
+        "name": "The Billy Goat",
+        "art": null
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "RGLM-B",
+      "code": "RGLM",
+      "group": "woman",
+      "name": "The Peach",
+      "text_status": "transcribed",
+      "text_source": "User-supplied full historical result screenshot",
+      "primary_art": {
+        "type": "historical_screenshot_sprite",
+        "source": "archive/dating-personas/original-artwork/three-persona-screenshot-sprite.webp",
+        "sprite_index": 1,
+        "quality": "screenshot_crop"
+      },
+      "exact_opposite": {
+        "key": "DBSD-B",
+        "name": "The Nymph",
+        "art": null
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "RGSD-A",
+      "code": "RGSD",
+      "group": "man",
+      "name": "The Poolboy",
+      "text_status": "missing",
+      "text_source": null,
+      "primary_art": null,
+      "exact_opposite": {
+        "key": "DBLM-A",
+        "name": "The False Messiah",
+        "art": null
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "RGSD-B",
+      "code": "RGSD",
+      "group": "woman",
+      "name": "The Nurse",
+      "text_status": "missing",
+      "text_source": null,
+      "primary_art": null,
+      "exact_opposite": {
+        "key": "DBLM-B",
+        "name": "The Battleaxe",
+        "art": null
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "RGSM-A",
+      "code": "RGSM",
+      "group": "man",
+      "name": "The Playboy",
+      "text_status": "transcribed",
+      "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
+      "primary_art": null,
+      "exact_opposite": {
+        "key": "DBLD-A",
+        "name": "The Mixed Messenger",
+        "art": null
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "RGSM-B",
+      "code": "RGSM",
+      "group": "woman",
+      "name": "The Playstation",
+      "text_status": "transcribed",
+      "text_source": "User-supplied full historical result screenshot",
+      "primary_art": {
+        "type": "historical_screenshot_sprite",
+        "source": "archive/dating-personas/original-artwork/three-persona-screenshot-sprite.webp",
+        "sprite_index": 2,
+        "quality": "screenshot_crop"
+      },
+      "exact_opposite": {
+        "key": "DBLD-B",
+        "name": "The Priss",
+        "art": null
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "RBLD-A",
+      "code": "RBLD",
+      "group": "man",
+      "name": "The Manchild",
+      "text_status": "partial",
+      "text_source": "admin input/OGCupid/my-clue-to-quit-okcupid-v0-O9XQX4osEaN37P-Qt_ivOul8aJVXJpIN8AUD2ZZLlv0.webp",
+      "primary_art": {
+        "type": "historical_screenshot_crop",
+        "url": "/persona-assets/manchild.webp",
+        "source": "admin input/OGCupid/my-clue-to-quit-okcupid-v0-O9XQX4osEaN37P-Qt_ivOul8aJVXJpIN8AUD2ZZLlv0.webp",
+        "source_dimensions": [
+          514,
+          630
+        ],
+        "crop_rect": [
+          74,
+          77,
+          169,
+          368
+        ],
+        "quality": "screenshot_original"
+      },
+      "exact_opposite": {
+        "key": "DGSM-A",
+        "name": "The Bachelor",
+        "art": {
+          "type": "historical_screenshot_crop",
+          "url": "/persona-assets/manchild.webp",
+          "source": "admin input/OGCupid/my-clue-to-quit-okcupid-v0-O9XQX4osEaN37P-Qt_ivOul8aJVXJpIN8AUD2ZZLlv0.webp",
+          "source_dimensions": [
+            514,
+            630
+          ],
+          "crop_rect": [
+            375,
+            67,
+            82,
+            117
+          ],
+          "quality": "low_resolution_opposite_thumbnail"
+        }
+      },
+      "always_avoid": [
+        "DGSM-B"
+      ],
+      "consider": [
+        "RBLM-B"
+      ],
+      "recommendations_observed": true,
+      "recommendations_source": "admin input/OGCupid/my-clue-to-quit-okcupid-v0-O9XQX4osEaN37P-Qt_ivOul8aJVXJpIN8AUD2ZZLlv0.webp",
+      "notes": null
+    },
+    {
+      "key": "RBLD-B",
+      "code": "RBLD",
+      "group": "woman",
+      "name": "The Wild Rose",
+      "text_status": "transcribed",
+      "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
+      "primary_art": null,
+      "exact_opposite": {
+        "key": "DGSM-B",
+        "name": "The Dirty Little Secret",
+        "art": null
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "RBLM-A",
+      "code": "RBLM",
+      "group": "man",
+      "name": "The Vapor Trail",
+      "text_status": "partial",
+      "text_source": "admin input/OGCupid/for-elder-millennials-okcupid-schizoid-personality-type-v0-5y9hxs53vldg1.webp",
+      "primary_art": {
+        "type": "historical_screenshot_crop",
+        "url": "/persona-assets/vapor-trail.webp",
+        "source": "admin input/OGCupid/for-elder-millennials-okcupid-schizoid-personality-type-v0-5y9hxs53vldg1.webp",
+        "source_dimensions": [
+          640,
+          474
+        ],
+        "crop_rect": [
+          0,
+          0,
+          192,
+          224
+        ],
+        "quality": "screenshot_original"
+      },
+      "exact_opposite": {
+        "key": "DGSD-A",
+        "name": "The Backrubber",
+        "art": {
+          "type": "historical_screenshot_crop",
+          "url": "/persona-assets/vapor-trail.webp",
+          "source": "admin input/OGCupid/for-elder-millennials-okcupid-schizoid-personality-type-v0-5y9hxs53vldg1.webp",
+          "source_dimensions": [
+            640,
+            474
+          ],
+          "crop_rect": [
+            513,
+            104,
+            107,
+            117
+          ],
+          "quality": "low_resolution_opposite_thumbnail"
+        }
+      },
+      "always_avoid": [
+        "DGSD-B",
+        "DGLM-B"
+      ],
+      "consider": [
+        "RBLM-B"
+      ],
+      "recommendations_observed": true,
+      "recommendations_source": "admin input/OGCupid/for-elder-millennials-okcupid-schizoid-personality-type-v0-5y9hxs53vldg1.webp",
+      "notes": null
+    },
+    {
+      "key": "RBLM-B",
+      "code": "RBLM",
+      "group": "woman",
+      "name": "The Sudden Departure",
+      "text_status": "transcribed",
+      "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
+      "primary_art": {
+        "type": "historical_screenshot_crop",
+        "url": "/persona-assets/sudden-departure.jpg",
+        "source": "admin input/OGCupid/images.jpg",
+        "source_dimensions": [
+          576,
+          465
+        ],
+        "crop_rect": [
+          13,
+          1,
+          196,
+          381
+        ],
+        "quality": "screenshot_original"
+      },
+      "exact_opposite": {
+        "key": "DGSD-B",
+        "name": "The Intern",
+        "art": {
+          "type": "historical_screenshot_crop",
+          "url": "/persona-assets/sudden-departure.jpg",
+          "source": "admin input/OGCupid/images.jpg",
+          "source_dimensions": [
+            576,
+            465
+          ],
+          "crop_rect": [
+            453,
+            244,
+            107,
+            134
+          ],
+          "quality": "low_resolution_opposite_thumbnail"
+        }
+      },
+      "always_avoid": [
+        "DGSD-A",
+        "DGLM-A"
+      ],
+      "consider": [
+        "RBLM-A"
+      ],
+      "recommendations_observed": true,
+      "recommendations_source": "admin input/OGCupid/images.jpg",
+      "notes": "Screenshot also says 'someone just like you', not a separately coded result"
+    },
+    {
+      "key": "RBSD-A",
+      "code": "RBSD",
+      "group": "man",
+      "name": "The Last Man on Earth",
+      "text_status": "missing",
+      "text_source": null,
+      "primary_art": null,
+      "exact_opposite": {
+        "key": "DGLM-A",
+        "name": "The Gentleman",
+        "art": null
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "RBSD-B",
+      "code": "RBSD",
+      "group": "woman",
+      "name": "Half-Cocked",
+      "text_status": "missing",
+      "text_source": null,
+      "primary_art": null,
+      "exact_opposite": {
+        "key": "DGLM-B",
+        "name": "The Maid of Honor",
+        "art": null
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "RBSM-A",
+      "code": "RBSM",
+      "group": "man",
+      "name": "The Hornivore",
+      "text_status": "transcribed",
+      "text_source": "https://www.reddit.com/r/OkCupid/comments/4bwkcw/retro_take_the_okc_dating_persona_test/",
+      "primary_art": null,
+      "exact_opposite": {
+        "key": "DGLD-A",
+        "name": "The Slow Dancer",
+        "art": {
+          "type": "historical_screenshot_crop",
+          "url": "/persona-assets/slow-dancer.png",
+          "source": "admin input/OGCupid/ij7AdbE.png",
+          "source_dimensions": [
+            497,
+            605
+          ],
+          "crop_rect": [
+            126,
+            100,
+            277,
+            385
+          ],
+          "quality": "screenshot_original"
+        }
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    },
+    {
+      "key": "RBSM-B",
+      "code": "RBSM",
+      "group": "woman",
+      "name": "Genghis Khunt",
+      "text_status": "transcribed",
+      "text_source": "User-supplied full historical result screenshot",
+      "primary_art": {
+        "type": "historical_screenshot_sprite",
+        "source": "archive/dating-personas/original-artwork/three-persona-screenshot-sprite.webp",
+        "sprite_index": 0,
+        "quality": "screenshot_crop"
+      },
+      "exact_opposite": {
+        "key": "DGLD-B",
+        "name": "The Sonnet",
+        "art": null
+      },
+      "always_avoid": [],
+      "consider": [],
+      "recommendations_observed": false,
+      "recommendations_source": null,
+      "notes": null
+    }
+  ]
+}

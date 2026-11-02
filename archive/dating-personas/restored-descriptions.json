@@ -21,7 +21,13 @@
       "transcription_method": "forum_transcription",
       "original_artwork_status": "historic_screenshot_in_admin_input",
       "original_artwork_path": "admin input/OGCupid/ij7AdbE.png",
-      "original_artwork_note": "Authentic illustration visible within historical result screenshot; standalone source file not recovered."
+      "original_artwork_note": "Authentic illustration visible within historical result screenshot; standalone source file not recovered.",
+      "original_artwork_crop_rect": [
+        126,
+        100,
+        277,
+        385
+      ]
     },
     {
       "key": "DGLD-B",
@@ -77,7 +83,15 @@
       "original_text_paragraphs": null,
       "text_source": null,
       "transcription_method": null,
-      "original_artwork_status": "not_locally_recovered"
+      "original_artwork_status": "low_resolution_opposite_thumbnail",
+      "original_artwork_path": "admin input/OGCupid/for-elder-millennials-okcupid-schizoid-personality-type-v0-5y9hxs53vldg1.webp",
+      "original_artwork_crop_rect": [
+        513,
+        104,
+        107,
+        117
+      ],
+      "original_artwork_note": "Original illustration appears as low-resolution exact-opposite thumbnail in another result screenshot."
     },
     {
       "key": "DGSD-B",
@@ -88,7 +102,15 @@
       "original_text_paragraphs": null,
       "text_source": null,
       "transcription_method": null,
-      "original_artwork_status": "not_locally_recovered"
+      "original_artwork_status": "low_resolution_opposite_thumbnail",
+      "original_artwork_path": "admin input/OGCupid/images.jpg",
+      "original_artwork_crop_rect": [
+        453,
+        244,
+        107,
+        134
+      ],
+      "original_artwork_note": "Original illustration appears as low-resolution exact-opposite thumbnail in another result screenshot."
     },
     {
       "key": "DGSM-A",
@@ -99,7 +121,15 @@
       "original_text_paragraphs": null,
       "text_source": null,
       "transcription_method": null,
-      "original_artwork_status": "not_locally_recovered"
+      "original_artwork_status": "low_resolution_opposite_thumbnail",
+      "original_artwork_path": "admin input/OGCupid/my-clue-to-quit-okcupid-v0-O9XQX4osEaN37P-Qt_ivOul8aJVXJpIN8AUD2ZZLlv0.webp",
+      "original_artwork_crop_rect": [
+        375,
+        67,
+        82,
+        117
+      ],
+      "original_artwork_note": "Original illustration appears as low-resolution exact-opposite thumbnail in another result screenshot."
     },
     {
       "key": "DGSM-B",
@@ -353,7 +383,23 @@
       "original_artwork_status": "historic_screenshot_in_admin_input",
       "original_artwork_path": "admin input/OGCupid/my-clue-to-quit-okcupid-v0-O9XQX4osEaN37P-Qt_ivOul8aJVXJpIN8AUD2ZZLlv0.webp",
       "original_artwork_note": "Authentic illustration visible within historical result screenshot; standalone source file not recovered.",
-      "transcription_note": "Only short clearly visible sections transcribed. Lower body text too small for reliable complete transcription."
+      "transcription_note": "Only short clearly visible sections transcribed. Lower body text too small for reliable complete transcription.",
+      "original_artwork_crop_rect": [
+        74,
+        77,
+        169,
+        368
+      ],
+      "historic_recommendations": {
+        "always_avoid": [
+          "DGSM-B"
+        ],
+        "consider": [
+          "RBLM-B"
+        ],
+        "source": "admin input/OGCupid/my-clue-to-quit-okcupid-v0-O9XQX4osEaN37P-Qt_ivOul8aJVXJpIN8AUD2ZZLlv0.webp",
+        "notes": null
+      }
     },
     {
       "key": "RBLD-B",
@@ -385,7 +431,24 @@
       "original_artwork_status": "historic_screenshot_in_admin_input",
       "original_artwork_path": "admin input/OGCupid/for-elder-millennials-okcupid-schizoid-personality-type-v0-5y9hxs53vldg1.webp",
       "original_artwork_note": "Authentic illustration visible within historical result screenshot; standalone source file not recovered.",
-      "transcription_note": "Partial excerpt; screenshot contains more text, graph and matching recommendations. Verify wording before declaring a full transcription."
+      "transcription_note": "Partial excerpt; screenshot contains more text, graph and matching recommendations. Verify wording before declaring a full transcription.",
+      "original_artwork_crop_rect": [
+        0,
+        0,
+        192,
+        224
+      ],
+      "historic_recommendations": {
+        "always_avoid": [
+          "DGSD-B",
+          "DGLM-B"
+        ],
+        "consider": [
+          "RBLM-B"
+        ],
+        "source": "admin input/OGCupid/for-elder-millennials-okcupid-schizoid-personality-type-v0-5y9hxs53vldg1.webp",
+        "notes": null
+      }
     },
     {
       "key": "RBLM-B",
@@ -403,7 +466,24 @@
       "transcription_method": "forum_transcription",
       "original_artwork_status": "historic_screenshot_in_admin_input",
       "original_artwork_path": "admin input/OGCupid/images.jpg",
-      "original_artwork_note": "Authentic illustration visible within historical result screenshot; standalone source file not recovered."
+      "original_artwork_note": "Authentic illustration visible within historical result screenshot; standalone source file not recovered.",
+      "original_artwork_crop_rect": [
+        13,
+        1,
+        196,
+        381
+      ],
+      "historic_recommendations": {
+        "always_avoid": [
+          "DGSD-A",
+          "DGLM-A"
+        ],
+        "consider": [
+          "RBLM-A"
+        ],
+        "source": "admin input/OGCupid/images.jpg",
+        "notes": "Screenshot also says 'someone just like you', not a separately coded result"
+      }
     },
     {
       "key": "RBSD-A",
