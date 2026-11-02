@@ -12,10 +12,21 @@
       "original_name": "The Slow Dancer",
       "text_status": "transcribed",
       "original_text_paragraphs": [
-        "Steady, reliable, and cradling her tenderly. Take a deep breath, and let it out real easy...you are The Slow Dancer",
-        "Your focus is love, not sex, and for your age, you have average experience. But you’re a great, thoughtful guy, and your love life improves every year. There’s also a powerful elimination process working in your favor: most Playboy types get stuck raising unwanted kids before you even begin settling down. The women left over will be hot and yours. Your ideal woman is someone intimate, intelligent, and very supportive.",
-        "While you’re not exactly the life of the party, you do thrive in small groups of smart people. Your circle of friends is extra tight and it’s HIGHLY likely they’re just like you. You appreciate symmetry in relationships."
-      ]
+        "Steady, reliable, and cradling her tenderly. Take a deep breath, and let it out real easy...you are The Slow Dancer.",
+        "Your focus is love, not sex, and for your age, you have average experience. But you're a great, thoughtful guy, and your love life improves every year. There's also a powerful elimination process working in your favor: most Playboy types get stuck raising unwanted kids *before* you even begin settling down. The women left over will be hot and yours. Your **ideal woman** is someone intimate, intelligent, and very supportive.",
+        "While you're not exactly the life of the party, you do thrive in small groups of smart people. Your circle of friends is extra tight and it's HIGHLY likely they're just like you. You appreciate symmetry in relationships."
+      ],
+      "text_source": "User-supplied original result text",
+      "recommendations_source": "User-supplied original result guidance",
+      "historic_recommendations": {
+        "always_avoid": [
+          "DBLMf"
+        ],
+        "consider": [
+          "DGLMf",
+          "DGLDf"
+        ]
+      }
     },
     {
       "key": "DGLDf",

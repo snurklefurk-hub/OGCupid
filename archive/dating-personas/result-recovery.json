@@ -28,9 +28,16 @@
         "name": "The Hornivore",
         "art": null
       },
-      "always_avoid": [],
-      "consider": [],
-      "recommendations_observed": false
+      "always_avoid": [
+        "DBLMf"
+      ],
+      "consider": [
+        "DGLMf",
+        "DGLDf"
+      ],
+      "recommendations_observed": true,
+      "text_source": "User-supplied original result text",
+      "recommendations_source": "User-supplied original result guidance"
     },
     {
       "key": "DGLDf",
