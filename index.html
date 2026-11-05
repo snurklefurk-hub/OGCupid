@@ -453,7 +453,16 @@ header .wordmark{flex-shrink:0}
     .persona-opposite-art .persona-original-sprite{width:107px;max-width:107px;flex:0 0 107px;aspect-ratio:100/220;border:1px solid #d1cbdc}
 .hero-ogtrends{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;max-width:900px;margin:27px auto 0;text-align:left;text-transform:none;letter-spacing:normal}.hero-ogtrends a{display:flex;flex-direction:column;justify-content:center;gap:7px;min-height:96px;padding:15px 17px;background:#fffdf6;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);color:var(--ink);text-decoration:none;transition:transform .15s,box-shadow .15s}.hero-ogtrends a:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}.hero-ogtrends a:focus-visible{outline:3px solid var(--rose);outline-offset:3px}.hero-ogtrends span{font:900 10px/1.3 "Trebuchet MS",Verdana,sans-serif;letter-spacing:1px;color:#6f5377}.hero-ogtrends strong{font:900 17px/1.2 "Trebuchet MS",Verdana,sans-serif}.hero-ogtrends a:nth-child(2){background:#effaf2}.hero-ogtrends a:nth-child(3){background:#fff2d6}@media(max-width:760px){.hero-ogtrends{grid-template-columns:1fr;max-width:460px}.hero-ogtrends a{min-height:74px}}
 </style>
-<style>.hero-ogtrends{grid-template-columns:120px repeat(3,minmax(0,1fr));max-width:1040px}.blog-invitation{align-self:center;font:900 16px/1.3 "Trebuchet MS",sans-serif;text-transform:lowercase}.blog-invitation b{display:block;font-size:32px}.hero-ogtrends a:nth-of-type(2){background:#effaf2}.hero-ogtrends a:nth-of-type(3){background:#fff2d6}@media(max-width:760px){.hero-ogtrends{grid-template-columns:1fr;max-width:460px}.blog-invitation b{display:inline-block;transform:rotate(90deg);margin-left:8px}}</style></head>
+<style>
+.hero-ogtrends{position:relative;grid-template-columns:repeat(3,minmax(0,1fr));max-width:900px;width:calc(100% - 190px);margin:35px auto 0}
+.hero-ogtrends .blog-invitation{position:absolute;right:calc(100% + 15px);top:4px;width:82px;color:var(--ink);transform:rotate(-9deg);text-align:center;pointer-events:none}
+.hero-ogtrends .blog-invitation span{font:900 15px/1.15 "Trebuchet MS",Verdana,sans-serif;letter-spacing:0;color:var(--ink);text-transform:lowercase}
+.hero-ogtrends .blog-invitation em{font:900 28px/1.1 Impact,"Arial Black",sans-serif;font-style:normal;color:var(--rose);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
+.blog-invitation svg{display:block;width:80px;height:58px;margin:-2px 0 0 10px}
+.hero-ogtrends a:nth-of-type(2){background:#effaf2}.hero-ogtrends a:nth-of-type(3){background:#fff2d6}
+@media(max-width:1000px){.hero-ogtrends{width:100%;margin-top:95px}.hero-ogtrends .blog-invitation{right:auto;left:12px;top:-78px;width:145px;display:flex;align-items:center;transform:rotate(-7deg)}.blog-invitation svg{width:65px;height:55px;transform:rotate(40deg);margin:18px 0 0 5px}}
+@media(max-width:760px){.hero-ogtrends{grid-template-columns:1fr;max-width:460px}}
+</style></head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
   <div class="wrap">
@@ -477,7 +486,7 @@ header .wordmark{flex-shrink:0}
   <p class="manifesto-kicker">THE OG CUPID MANIFESTO</p>
   <h1 id="hero-title">ONLINE DATING IS DEAD BECAUSE IT SUCKS.<strong>IT DOESN'T HAVE TO.</strong></h1>
   <p class="manifesto-promise">AND WE'RE GONNA PROVE IT. &#x2665;</p>
-  <nav class="hero-ogtrends" aria-label="Read OgTrends articles"><div class="blog-invitation">read the blog <b aria-hidden="true">→</b></div>
+  <nav class="hero-ogtrends" aria-label="Read OgTrends articles"><div class="blog-invitation"><span>read the<br><em>blog!</em></span><svg viewBox="0 0 90 65" aria-hidden="true"><path d="M8 8 C3 44 40 58 77 36 M61 33 L79 35 L71 51" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     <a href="/ogtrends/zero/"><span>00 / FROM THE FOUNDER</span><strong>OgTrends #0: The Big Idea</strong></a>
     <a href="/ogtrends/perfect-profile/"><span>01 / PROFILE SCIENCE</span><strong>The Perfect Dating Profile</strong></a>
     <a href="/ogtrends/references/"><span>02 / COMMUNITY &amp; TRUST</span><strong>Your Ex Has Entered the Chat</strong></a>
