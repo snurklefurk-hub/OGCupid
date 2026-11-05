@@ -54,3 +54,10 @@ details{border:2px solid #a69dac;margin:14px 0;background:#fff}summary{padding:1
 .research-figure .fig-caption a{font-weight:800}
 @media(max-width:760px){.research-figure{padding:18px 14px;box-shadow:5px 5px 0 var(--ink)}.research-figure .chart-row{grid-template-columns:105px minmax(0,1fr) 53px;gap:8px}.research-figure .chart-label{font-size:11px}.research-figure .chart-value{font-size:19px}.research-figure .chart-track{height:26px}}
 @media(max-width:400px){.research-figure .chart-row{grid-template-columns:100px minmax(0,1fr) 49px;gap:5px}.period-flag{font-size:8px}}
+
+/* OgTrends editorial: restored personal voice and stronger breathing room */
+.prose h2{scroll-margin-top:20px}
+.prose .rule{background:#d9f4e4;padding:20px 24px;margin:35px 0 43px;box-shadow:4px 4px 0 var(--ink);font-weight:900;line-height:1.55}
+.research-figure{break-inside:avoid}
+.research-figure .fig-caption{max-width:780px}
+@media(max-width:760px){.prose .rule{padding:16px;margin:28px 0 34px;box-shadow:3px 3px 0 var(--ink)}}
