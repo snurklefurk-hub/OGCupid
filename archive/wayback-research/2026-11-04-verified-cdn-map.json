@@ -1,0 +1,631 @@
+{
+  "verified_date": "2026-11-04",
+  "method": "Exact paths from previously recovered Wayback stylesheet references mapped to cdn.okccdn.com. Each current URL navigated in browser and checked for decoded image natural dimensions. No guessed filenames.",
+  "summary": {
+    "tested": 55,
+    "decoded": 54,
+    "missing": 1
+  },
+  "wayback": {
+    "cdx": "Still displays Temporarily Offline",
+    "replay": "2008 and 2009 quiz landing captures load",
+    "new_question_files": 0
+  },
+  "additional_verified_image": {
+    "original_host": "is-test.okcimg.com",
+    "url": "https://cdn.okccdn.com/_img/layout2/icon_nopic_40x40.png",
+    "dimensions": [
+      40,
+      40
+    ]
+  },
+  "missing_scripts_and_styles": [
+    "https://cdn.okccdn.com/js/prototype-1.5.0.js",
+    "https://cdn.okccdn.com/lang/en/version/2.3.60.001/main_buffer.css",
+    "https://cdn.okccdn.com/okcontent/css/main_buffer.css"
+  ],
+  "assets": [
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/bkg_mytests_staffpromo.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/bkg_mytests_staffpromo.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/bkg_mytests_staffpromo.png",
+      "status": "image_decoded",
+      "dimensions": [
+        660,
+        400
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/clip_mytests_staffpromo.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/clip_mytests_staffpromo.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/clip_mytests_staffpromo.png",
+      "status": "image_decoded",
+      "dimensions": [
+        660,
+        6
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/bkg_mytests.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/bkg_mytests.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/bkg_mytests.png",
+      "status": "image_decoded",
+      "dimensions": [
+        660,
+        80
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/clip_mytests_top.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/clip_mytests_top.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/clip_mytests_top.png",
+      "status": "image_decoded",
+      "dimensions": [
+        660,
+        7
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/clip_mytests_bot.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/clip_mytests_bot.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/clip_mytests_bot.png",
+      "status": "image_decoded",
+      "dimensions": [
+        660,
+        7
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/clip_tests_testwrap_top.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/clip_tests_testwrap_top.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/clip_tests_testwrap_top.png",
+      "status": "image_decoded",
+      "dimensions": [
+        888,
+        10
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/clip_tests_testwrap_top_ie6.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/clip_tests_testwrap_top_ie6.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/clip_tests_testwrap_top_ie6.png",
+      "status": "image_decoded",
+      "dimensions": [
+        888,
+        10
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/clip_tests_testwrap_bot.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/clip_tests_testwrap_bot.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/clip_tests_testwrap_bot.png",
+      "status": "image_decoded",
+      "dimensions": [
+        888,
+        10
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/clip_tests_testwrap_bot_ie6.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/clip_tests_testwrap_bot_ie6.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/clip_tests_testwrap_bot_ie6.png",
+      "status": "image_decoded",
+      "dimensions": [
+        888,
+        10
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/bkg_tests_testwrap.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/bkg_tests_testwrap.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/bkg_tests_testwrap.png",
+      "status": "image_decoded",
+      "dimensions": [
+        888,
+        39
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/bkg_tests_testwrap_ie6.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/bkg_tests_testwrap_ie6.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/bkg_tests_testwrap_ie6.png",
+      "status": "image_decoded",
+      "dimensions": [
+        888,
+        39
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/bkg_tests_testcontent.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/bkg_tests_testcontent.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/bkg_tests_testcontent.png",
+      "status": "image_decoded",
+      "dimensions": [
+        50,
+        1407
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/bkg_tests_testcontent_header.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/bkg_tests_testcontent_header.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/bkg_tests_testcontent_header.png",
+      "status": "image_decoded",
+      "dimensions": [
+        876,
+        31
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/clip_tests_testbody_top.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/clip_tests_testbody_top.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/clip_tests_testbody_top.png",
+      "status": "image_decoded",
+      "dimensions": [
+        585,
+        11
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/clip_tests_testbody_bot.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/clip_tests_testbody_bot.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/clip_tests_testbody_bot.png",
+      "status": "image_decoded",
+      "dimensions": [
+        585,
+        11
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/bkg_tests_testbody.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/bkg_tests_testbody.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/bkg_tests_testbody.png",
+      "status": "image_decoded",
+      "dimensions": [
+        585,
+        99
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/bkg_tests_testbody_head.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/bkg_tests_testbody_head.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/bkg_tests_testbody_head.png",
+      "status": "image_decoded",
+      "dimensions": [
+        573,
+        69
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/btn_tests_nextpage.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/btn_tests_nextpage.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/btn_tests_nextpage.png",
+      "status": "image_decoded",
+      "dimensions": [
+        110,
+        34
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/btn_tests_finish.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/btn_tests_finish.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/btn_tests_finish.png",
+      "status": "image_decoded",
+      "dimensions": [
+        110,
+        34
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/buttons/btn_gray_small.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/buttons/btn_gray_small.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/buttons/btn_gray_small.png",
+      "status": "image_decoded",
+      "dimensions": [
+        82,
+        20
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/bkg_tests_guestmatch.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/bkg_tests_guestmatch.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/bkg_tests_guestmatch.png",
+      "status": "image_decoded",
+      "dimensions": [
+        240,
+        171
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/btn_tests_guestmatch.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/btn_tests_guestmatch.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/btn_tests_guestmatch.png",
+      "status": "image_decoded",
+      "dimensions": [
+        100,
+        27
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/bkg_tests_rightcol_head.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/bkg_tests_rightcol_head.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/bkg_tests_rightcol_head.png",
+      "status": "image_decoded",
+      "dimensions": [
+        254,
+        41
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/bkg_tests_rightcol.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/bkg_tests_rightcol.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/bkg_tests_rightcol.png",
+      "status": "image_decoded",
+      "dimensions": [
+        254,
+        1800
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/clip_tests_rightcol.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/clip_tests_rightcol.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/clip_tests_rightcol.png",
+      "status": "image_decoded",
+      "dimensions": [
+        254,
+        9
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/bkg_tests_bottominfo.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/bkg_tests_bottominfo.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/bkg_tests_bottominfo.png",
+      "status": "image_decoded",
+      "dimensions": [
+        275,
+        399
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/clip_tests_bottominfo.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/clip_tests_bottominfo.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/clip_tests_bottominfo.png",
+      "status": "image_decoded",
+      "dimensions": [
+        275,
+        8
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/bkg_tests_catheader.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/bkg_tests_catheader.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/bkg_tests_catheader.png",
+      "status": "image_decoded",
+      "dimensions": [
+        549,
+        37
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/bkg_autotest_blueround.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/bkg_autotest_blueround.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/bkg_autotest_blueround.png",
+      "status": "image_decoded",
+      "dimensions": [
+        660,
+        46
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/bkg_autotest_greyround.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/bkg_autotest_greyround.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/bkg_autotest_greyround.png",
+      "status": "image_decoded",
+      "dimensions": [
+        660,
+        400
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/clip_autotest_greyround.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/clip_autotest_greyround.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/clip_autotest_greyround.png",
+      "status": "image_decoded",
+      "dimensions": [
+        660,
+        6
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/buttons/btn_maroon_small.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/buttons/btn_maroon_small.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/buttons/btn_maroon_small.png",
+      "status": "image_decoded",
+      "dimensions": [
+        94,
+        22
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/bkg_autotest_main.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/bkg_autotest_main.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/bkg_autotest_main.png",
+      "status": "image_decoded",
+      "dimensions": [
+        660,
+        151
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/clip_autotest_main_top.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/clip_autotest_main_top.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/clip_autotest_main_top.png",
+      "status": "image_decoded",
+      "dimensions": [
+        660,
+        8
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/clip_autotest_main_bot.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/clip_autotest_main_bot.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/clip_autotest_main_bot.png",
+      "status": "image_decoded",
+      "dimensions": [
+        660,
+        8
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/bkg_autotest_colhead.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/bkg_autotest_colhead.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/bkg_autotest_colhead.png",
+      "status": "image_decoded",
+      "dimensions": [
+        307,
+        30
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/bkg_autotest_listhead.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/bkg_autotest_listhead.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/bkg_autotest_listhead.png",
+      "status": "image_decoded",
+      "dimensions": [
+        630,
+        30
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/bkg_stafftest_forward.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/bkg_stafftest_forward.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/bkg_stafftest_forward.png",
+      "status": "image_decoded",
+      "dimensions": [
+        750,
+        600
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/clip_stafftest_forward.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/clip_stafftest_forward.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/clip_stafftest_forward.png",
+      "status": "image_decoded",
+      "dimensions": [
+        750,
+        6
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/bkg_stafftest_small.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/bkg_stafftest_small.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/bkg_stafftest_small.png",
+      "status": "image_decoded",
+      "dimensions": [
+        547,
+        600
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/clip_stafftest_small.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/clip_stafftest_small.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/clip_stafftest_small.png",
+      "status": "image_decoded",
+      "dimensions": [
+        547,
+        6
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/btn_autotest_findit.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/btn_autotest_findit.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/btn_autotest_findit.png",
+      "status": "image_decoded",
+      "dimensions": [
+        94,
+        22
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/other/bkg_660_blueround.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/other/bkg_660_blueround.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/other/bkg_660_blueround.png",
+      "status": "image_decoded",
+      "dimensions": [
+        660,
+        46
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/tests/bkg_660header.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/tests/bkg_660header.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/tests/bkg_660header.png",
+      "status": "image_decoded",
+      "dimensions": [
+        660,
+        30
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/other/bkg_660_greyround.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/other/bkg_660_greyround.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/other/bkg_660_greyround.png",
+      "status": "image_decoded",
+      "dimensions": [
+        660,
+        400
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/3.2.3/tests1.css",
+      "archive_url": "https://web.archive.org/web/20071213022326im_/http://panther.is2.okcimg.com/_img/layout2/other/clip_660_greyround.png",
+      "original_url": "http://panther.is2.okcimg.com/_img/layout2/other/clip_660_greyround.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/other/clip_660_greyround.png",
+      "status": "image_decoded",
+      "dimensions": [
+        660,
+        6
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/1.1.4/static1.css",
+      "archive_url": "https://web.archive.org/web/20071213022302im_/http://panther.is1.okcimg.com/_img/layout2/static/login_promo.png",
+      "original_url": "http://panther.is1.okcimg.com/_img/layout2/static/login_promo.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/static/login_promo.png",
+      "status": "image_decoded",
+      "dimensions": [
+        520,
+        36
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/1.1.4/static1.css",
+      "archive_url": "https://web.archive.org/web/20071213022302im_/http://panther.is1.okcimg.com/_img/layout2/static/bkg_sidebar_bluebox.png",
+      "original_url": "http://panther.is1.okcimg.com/_img/layout2/static/bkg_sidebar_bluebox.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/static/bkg_sidebar_bluebox.png",
+      "status": "image_decoded",
+      "dimensions": [
+        166,
+        412
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/1.1.4/static1.css",
+      "archive_url": "https://web.archive.org/web/20071213022302im_/http://panther.is1.okcimg.com/_img/layout2/static/btn_sidebar_signup.png",
+      "original_url": "http://panther.is1.okcimg.com/_img/layout2/static/btn_sidebar_signup.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/static/btn_sidebar_signup.png",
+      "status": "image_decoded",
+      "dimensions": [
+        130,
+        27
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/1.1.4/static1.css",
+      "archive_url": "https://web.archive.org/web/20071213022302im_/http://panther.is1.okcimg.com/_img/layout2/splashpage/bkg_loginpage.jpg",
+      "original_url": "http://panther.is1.okcimg.com/_img/layout2/splashpage/bkg_loginpage.jpg",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/splashpage/bkg_loginpage.jpg",
+      "status": "image_decoded",
+      "dimensions": [
+        910,
+        538
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/1.1.4/static1.css",
+      "archive_url": "https://web.archive.org/web/20071213022302im_/http://panther.is1.okcimg.com/_img/layout2/splashpage/bkg_username.png",
+      "original_url": "http://panther.is1.okcimg.com/_img/layout2/splashpage/bkg_username.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/splashpage/bkg_username.png",
+      "status": "image_decoded",
+      "dimensions": [
+        203,
+        73
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/1.1.4/static1.css",
+      "archive_url": "https://web.archive.org/web/20071213022302im_/http://panther.is1.okcimg.com/_img/layout2/splashpage/bkg_username_ie6.png",
+      "original_url": "http://panther.is1.okcimg.com/_img/layout2/splashpage/bkg_username_ie6.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/splashpage/bkg_username_ie6.png",
+      "status": "image_decoded",
+      "dimensions": [
+        203,
+        73
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/1.1.4/static1.css",
+      "archive_url": "https://web.archive.org/web/20071213022302im_/http://panther.is1.okcimg.com/_img/layout2/splashpage/bkg_form.png",
+      "original_url": "http://panther.is1.okcimg.com/_img/layout2/splashpage/bkg_form.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/splashpage/bkg_form.png",
+      "status": "image_decoded",
+      "dimensions": [
+        389,
+        213
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/1.1.4/static1.css",
+      "archive_url": "https://web.archive.org/web/20071213022302im_/http://panther.is1.okcimg.com/_img/layout2/splashpage/bkg_form_ie6.png",
+      "original_url": "http://panther.is1.okcimg.com/_img/layout2/splashpage/bkg_form_ie6.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout2/splashpage/bkg_form_ie6.png",
+      "status": "image_decoded",
+      "dimensions": [
+        389,
+        213
+      ]
+    },
+    {
+      "source_stylesheet": "https://web.archive.org/web/20080107023332cs_/http://www.okcupid.com/lang/en/version/1.1.4/static1.css",
+      "archive_url": "https://web.archive.org/web/20071213022302im_/http://panther.is1.okcimg.com/_img/layout/dot.png",
+      "original_url": "http://panther.is1.okcimg.com/_img/layout/dot.png",
+      "current_url": "https://cdn.okccdn.com/_img/layout/dot.png",
+      "status": "404_NoSuchKey",
+      "dimensions": null
+    }
+  ]
+}
