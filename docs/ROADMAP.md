@@ -13,7 +13,7 @@ This is a **discussion-first outline**, not a commitment to ship on particular d
 - Specify profile fields, completion gate and account settings.
 - Design compatibility question schema, scoring approach and explainability.
 - Decide how 'last online' is calculated and shown safely.
-- Define membership, $2.99 entry payment, recurring billing and earned permanent OG status.
+- Define membership, $3 OG Status payment, ongoing eligibility and renewal rules.
 - Write moderation, consent, age restriction, reporting and privacy requirements.
 
 ## Phase 2 — Website MVP (initial target)
@@ -39,6 +39,6 @@ This is a **discussion-first outline**, not a commitment to ship on particular d
 - Expansion of earned OG pathways after the criteria are agreed.
 
 ## Deliberately not yet specified
-- OG Status qualification thresholds: **revisit later**.
+- OG Status thresholds are stated in OgTrends #0; implementation details and exceptions: **revisit before launch**.
 - Technology choices: select after working through product/user flows.
 - Feature release dates: do not promise them before scope and effort are known.

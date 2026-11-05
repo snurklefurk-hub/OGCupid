@@ -43,13 +43,10 @@ Modern swipe-style dating apps often make profiles feel interchangeable and redu
 - Explore a separate 'profile last updated' indicator, but it is not yet committed.
 
 ### Membership and OG Status
-- Initial proposal: everybody pays **$2.99 for the first month**.
-- A recurring monthly fee for non-OG members is being considered; **final price undecided**.
-- Members can earn **permanent OG Status as early as day one** by building an outstanding profile and contributing meaningfully to the community.
-- OG Status permanently waives future monthly membership fees.
-- Community participation may be evaluated monthly or every two months, but **never as required daily/weekly streaks**.
-- Inactivity alone does not cancel earned OG Status.
-- **Detailed qualification criteria deferred** for later design; avoid automated judgments of social desirability, invasive monitoring of messages, popularity rankings, or pressure to respond.
+- OG Status costs **$3** to obtain. It provides unlimited messaging and exclusive features such as writing references.
+- Without OG Status, a member must take the Dating Persona Test, answer 250 match questions, and complete a full profile with pictures. They may message an OG member who messaged first or initiate when the match percentage exceeds 95%.
+- To keep OG Status without paying again, a member must meet those profile, quiz, and question requirements; either respond to 25% of messages received or receive responses to 25% of messages sent; and send or receive four messages per month.
+- The founder's stated intent is to cover hosting while helping members meet offline. Detailed billing, renewal, measurement, moderation, and accessibility rules remain to be worked out before implementation.
 
 ### Platform
 - Website-only launch; desktop-focused but usable and accessible on mobile browsers.
@@ -67,8 +64,8 @@ Modern swipe-style dating apps often make profiles feel interchangeable and redu
 - Actual brand name and trademark clearance.
 - Tech stack, hosting, architecture, database.
 - Profile completion/quality criteria and inclusive accessibility rules.
-- OG Status earning criteria and review/appeal process.
-- Actual post-first-month subscription price and cancellation/refund logic.
+- OG Status measurement, renewal, and review/appeal process.
+- OG Status renewal price and cancellation/refund logic.
 - How granular last-seen activity appears, and safety exceptions.
 - Community structure and moderation policies.
 - Exact beta features, launch market, and rollout timeline.
@@ -76,7 +73,7 @@ Modern swipe-style dating apps often make profiles feel interchangeable and redu
 ## Design guardrails
 
 - No payment-for-ranking or artificial scarcity.
-- No streak incentives that force compulsory social interaction.
+- Monthly OG Status message activity has been proposed; its measurement and consequences need explicit product rules.
 - No pretending dormant accounts are online.
 - No copying another service's source code, protected assets, or personal data.
 - No launch without safety, privacy, abuse reporting and age-appropriate access rules.
