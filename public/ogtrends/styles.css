@@ -37,3 +37,20 @@ details{border:2px solid #a69dac;margin:14px 0;background:#fff}summary{padding:1
 @media(max-width:760px){.wrap{margin:12px auto 28px;padding:0 9px}.site{box-shadow:5px 5px 0 var(--ink)}header{padding:16px;gap:13px}.brand{font-size:24px}.mast{padding:29px 22px 29px}.main{padding:25px 22px 35px}.subtitle{font-size:18px}.cards,.examples{grid-template-columns:1fr}.chart-row{grid-template-columns:112px 1fr 57px;gap:7px}.chart-label{font-size:11px}.chart-value{font-size:16px}.figure{padding:15px}.stats{grid-template-columns:1fr 1fr}.byline{font-size:11px}.prose p{font-size:16px}}
 @media(max-width:430px){.stats{grid-template-columns:1fr}.brand{font-size:22px}nav{gap:13px;font-size:11px}.top-ticker{font-size:9px}.chart-row{grid-template-columns:98px 1fr 51px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.card{transition:none}}
+
+/* OgTrends original research graphics: high contrast, responsive bars, clear source footnotes */
+.research-figure{position:relative;background:linear-gradient(135deg,#fffef8 0%,#fff2d2 100%);border-width:3px;box-shadow:8px 8px 0 var(--ink);padding:25px 28px 24px;margin:35px 0 44px}
+.research-figure:nth-of-type(odd){background:linear-gradient(135deg,#f6f2ff 0%,#e5fff0 100%)}
+.viz-head{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.period-flag{display:inline-flex;align-items:center;padding:5px 9px;background:var(--ink);color:#fff;font-size:9px;letter-spacing:1px;line-height:1.35;font-weight:900}
+.research-figure h2{font-size:clamp(23px,3vw,33px)!important;margin:0 0 23px!important}
+.research-figure .chart-row{grid-template-columns:minmax(118px,180px) minmax(0,1fr) 67px;gap:14px;margin:16px 0}
+.research-figure .chart-label{font-size:13px;line-height:1.3}
+.research-figure .chart-track{height:32px;background:repeating-linear-gradient(90deg,#ece5db 0,#ece5db calc(20% - 1px),#dbd4ce 20%);border:1px solid #c8bfce;position:relative;overflow:hidden;border-radius:3px}
+.research-figure .chart-bar{position:relative;min-width:2px;background:linear-gradient(90deg,#454bc7,#8883e2);box-shadow:inset 0 -4px 0 #00000020}
+.research-figure .chart-bar.coral{background:linear-gradient(90deg,#de426a,#ff9c7b)}
+.research-figure .chart-value{font:900 23px/1.2 Impact,"Arial Black",sans-serif;letter-spacing:.3px}
+.research-figure .fig-caption{font-size:12px;line-height:1.7;border-top:2px dashed #c7bdd1;padding-top:15px;margin-top:20px}
+.research-figure .fig-caption a{font-weight:800}
+@media(max-width:760px){.research-figure{padding:18px 14px;box-shadow:5px 5px 0 var(--ink)}.research-figure .chart-row{grid-template-columns:105px minmax(0,1fr) 53px;gap:8px}.research-figure .chart-label{font-size:11px}.research-figure .chart-value{font-size:19px}.research-figure .chart-track{height:26px}}
+@media(max-width:400px){.research-figure .chart-row{grid-template-columns:100px minmax(0,1fr) 49px;gap:5px}.period-flag{font-size:8px}}
