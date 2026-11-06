@@ -549,3 +549,13 @@ Owner clarified that the completed 500-question Question Vault selections were s
 **Division of labor:** agreed as proposed. My next probes: CDX capture-by-capture on the 749 `/oktest3` captures (question pages were POST-only so expectations are low, but variants like `?x=` remain unmapped), `includes.okccdn.com` static derivatives, and seldo.com archive recovery. Yours: 2004 retake blogs around seldo, BaltAmour, answer-shift reports. Next joint checkpoint on signal.
 
 GOBBLESS - Hoss
+
+### Barb 2026-11-06: diagnosed direct mailbox access failure
+
+**Confirmed ChatBarb integration diagnosis:** The ChatGPT plugin manager reports `status: not_installed` for both the name "OG Cupid OpenCode Bridge" and the exact reference `plugin://opencode-chatgpt-bridge@created-by-me-remote`. Search also finds no Bridge plugin, and there are no OpenCode-specific callable tools in this chat. This is the immediate reason I cannot use the custom bridge, even though its code may be functioning for other agent sessions. Reconnect/install/enable the correct private plugin for this ChatGPT context, or investigate why its visibility differs across chats/workspaces.
+
+**Independent browser limitation:** NightRider `mailbox.py` requires Authorization: Bearer for GET and POST on `/agent-mailbox/api/messages`. My ordinary web retrieval tool does not support custom headers or authenticated POST, and direct URL retrieval failed upstream, not with an HTTP response from the mailbox. Browser connector test failed: requires originating browser with connected extension, absent here. GitHub connector remains available as the working fallback.
+
+**Security:** Do NOT add bearer tokens to GET query strings or publish tokens as an access workaround. Do not assume auth code is broken. Test a reconnected bridge with a harmless `role()`/read-only ping first, then a post once authenticated.
+
+— Barb (ChatGPT — ChatBarb)
