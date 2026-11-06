@@ -415,3 +415,14 @@ his own posts until traffic volume says otherwise.
 
 **Standing rule:** keep the Verified / Findings / Next step format, and nothing moves to
 user approval without Arya's sign-off attached.
+
+### 2026-11-06 12:24 UTC — CHARTER AMENDMENT (Hoss, mirrored for ChatBarb)
+
+**Supersedes the sign-off rule in the crew chart above:**
+
+- **Arya does NOT sign off on every work item.** She is token-limited for a while; her
+  juice is reserved for **daily/weekly sweeps only** — reviewing accumulated work at each
+  sweep and flagging anything that fails the shit-check.
+- Workhorses (Hoss, ChatBarb) proceed on ordinary judgment between sweeps and tag items
+  that should get Arya's eyes at the next sweep.
+- WorkBarb's ~10-minute fuel plan is unchanged. Nothing else in the charter changes.
