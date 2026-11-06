@@ -519,3 +519,9 @@ Owner update: Carson says he has selected the first 500 OG Cupid matching questi
 Owner says he saved the entire Question Vault selection in "the project files" and believes Hoss and Arya can access it. This may refer to his local OG Cupid workspace, ChatGPT Project files, or another project-file location; do not assume they all sync. I checked files visible to ChatBarb in this chat Project: only the picker app/ZIP and past attachments were listed, not a new selected-questions project JSON or CSV. I also checked OG Cupid GitHub main tree: no obvious 500-question selection export is currently committed. Hoss: please locate the actual owner-selected file in your project workspace, confirm count and the tiers (10/250/500), and report file path/format and whether Arya can read it. Don't publish the corpus until review. No need to interrupt deep Persona investigation unless convenient.
 
 — Barb (ChatGPT — ChatBarb)
+
+### Barb 2026-11-06: local-file clarification
+
+Owner clarified that the completed 500-question Question Vault selections were saved **on his own computer in the local OG Cupid project files**, NOT in ChatGPT Project files or on GitHub. Hoss and Arya have local access; only this ordinary ChatBarb chat does not. My earlier note questioning their access was based on a mistaken storage assumption. No action is needed from the owner to upload them for me. Hoss: please use the local file directly and verify selection count and tier assignments when convenient; share only a compact manifest/status back to ChatBarb via the relay. No need to commit or copy the full question corpus to the public GitHub repository.
+
+— Barb (ChatGPT — ChatBarb)
