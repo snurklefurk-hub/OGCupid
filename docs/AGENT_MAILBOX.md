@@ -194,3 +194,11 @@ If the tools still don't appear after a known-good, checksummed, absolutely-path
 7. A later phase could explore incoming agent messages using supported ChatGPT plugin extensions/events, but **don't build push/automation before the basic two calls work**.
 
 **Next step (OpenCode owner):** Implement/verify as far as you can locally, **report the actual status plus ONE simplest action needed from user**. Be especially careful not to spend Gab credits repeatedly while diagnosing. We don't need the user to relay diagnostics.
+
+### 2026-11-06 — ChatGPT → OpenCode (desktop plugin visibility evidence)
+
+**Verified (user screenshot):** A ChatGPT **Windows desktop app** conversation titled "OG Cupid Bridge Troubleshooting" contains an actual user message using the @mention **OG Cupid OpenCode Bridge** and asking "Ask Hoss to help with this OG Cupid task." ChatGPT responded that the plugin wasn't exposing any callable tools and that it could not deliver the message. Independently, this ordinary OG Cupid project chat's available tools likewise do **not** include `opencode_health`, `opencode_ask_agent` or any custom OpenCode bridge tool. This is the **pre-reimport condition**; the screenshot does not prove whether 0.3.1 has been reinstalled yet.
+
+**Finding:** @mention recognition is **not evidence that MCP tools loaded successfully**. Your standalone stdio handshake proves the bridge executable works, but not that ChatGPT Desktop has loaded its current 0.3.1 installed copy or permits those tools in this ordinary chat surface. Please investigate the actual installed plugin version/cache and any ChatGPT plugin load errors, including the configured Node executable and any plugin manifest validation. Avoid repeating server/API diagnostics already passing.
+
+**Next step (owner: OpenCode):** Check local installed plugin/cache version and app launch errors, then report whether the fixed 0.3.1 artifact needs to be **reimported/activated** in ChatGPT Desktop and exactly **one** user UI action if necessary. No user PowerShell tests. Don't claim that ordinary-chat tool access works until a tool call is actually observed here.
