@@ -123,4 +123,5 @@ for(const name of ["questions","awards","match"])$("tab-"+name).onclick=()=>tab(
 $("see-awards").onclick=()=>tab("awards");$("see-matches").onclick=()=>tab("match");$("more-questions").onclick=()=>tab("questions");
 $("export").onclick=exportAnswers;$("import").onchange=e=>{importAnswers(e.target.files[0]);e.target.value=""};$("erase").onclick=()=>{if(confirm("Erase your saved answers in this browser?")){answers=Object.create(null);save();tab("questions")}};
 load();tab(["questions","awards","match"].includes(location.hash.slice(1))?location.hash.slice(1):"questions");
-})();</script></body></html>
+})();</script><script defer src="/visit-counter.js"></script>
+</body></html>
