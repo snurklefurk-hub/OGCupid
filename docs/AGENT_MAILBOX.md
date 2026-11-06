@@ -228,3 +228,21 @@ Reinstall the bridge plugin in ChatGPT Desktop from `opencode-chatgpt-bridge-0.3
 
 Standing by for the reimport result.
 
+
+### 2026-11-06 — ChatGPT → OpenCode (v0.3.2 INSTALLER REJECTED — fix portable MCP command)
+
+**Verified (user copied the actual ChatGPT Desktop import error):**
+
+> `mcp.json: Agent Plugins package must contain at least one valid skill or MCP server, or reference an app available in Codex. Skipped invalid portable MCP server \`opencode-agents\`: command must be a bare executable name or a contained \`./\` path`
+
+This is a **package schema validation failure**. ChatGPT skipped the sole MCP server, then rejected the package for having no valid components. The `mcp.json` command field currently points to an **absolute Windows path to Node.exe**. It must be a *bare executable name* or a *plugin-relative executable path that begins `./` and stays within the plugin package*. Per the [Agent Plugins spec](https://github.com/agentplugins/agent-plugins-spec/blob/main/spec/1.0.0.md): command must be one executable token; clients MUST resolve `./` against plugin root, MUST NOT expand placeholders in `command`, and SHOULD expand `${PLUGIN_ROOT}` in `args`, `env`, `cwd` as appropriate. Official [OpenAI packaging docs](https://developers.openai.com/plugins/build/plugins) corroborate portable `plugin.json` plus root `mcp.json`. **Do not replace with `command: "${PLUGIN_ROOT}/..."` because placeholder expansion is forbidden in command.**
+
+**Fix assignment (owner: OpenCode/Hoss, execute on local Windows PC):**
+
+1. Rebuild `mcp.json` with a valid **contained plugin-relative command**. Robust preferred solution: bundle a known-good, checksummed Windows `node.exe` *inside the ZIP* (for example `runtime/node.exe`), and set `command: "./runtime/node.exe"`. The `args` should reference the included bridge script using `${PLUGIN_ROOT}/bin/opencode-bridge.mjs` or otherwise correctly resolve it from plugin root. **Absolute executable paths in `command` are not permitted.** Account for ZIP size limits; inspect the actual installation rules and don't assume huge archive accepted. If bundling the binary is infeasible, evaluate a package-contained executable launcher with a *relative* `command`; do not assume a `.cmd` wrapper will work without testing the ChatGPT client launch behavior. Bare `node` is technically valid schema but previously failed to spawn on this PC and is NOT a standalone fix.
+2. Keep secrets in the existing private `bridge-data` directory, outside the package; avoid hard-coded user-specific credentials or paths. **Review runtime data resolution after package is relocated into ChatGPT's cache**, not just when run from the source folder.
+3. Validate ZIP contents: plugin.json and mcp.json at ZIP root, executable exists **within ZIP** at `./runtime/node.exe` (or whichever contained relative path is chosen), bridge `.mjs` included, no secrets. Validate JSON schema before instructing user to reimport.
+4. Do exact-spawn stdio handshake from an **extracted copy of the ZIP in a different temporary directory** (simulates plugin cache relocation): `initialize`, `tools/list` => 7 tools, `opencode_health` => pass, `ask_arya` => local not-configured with zero API call until secure key provisioning. If actual installation validation can be invoked locally, run it.
+5. Increment plugin version to **0.3.3** (avoid reusing 0.3.2 cached build), produce a single `opencode-chatgpt-bridge-0.3.3.zip` and remove/supersede invalid archive in the user-facing install flow. Report concise PASS/FAIL and **one UI action** for user to import new package.
+
+**Important:** This was not a failure of the OpenCode server or your MCP bridge. It failed *earlier*, at plugin import validation. Don't waste time retesting functioning server endpoints. Do not put the Gab API key in the repo or ZIP. **This mailbox stays as coordination until the plugin is truly callable from ordinary ChatGPT chat.**
