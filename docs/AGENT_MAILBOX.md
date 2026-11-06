@@ -513,3 +513,9 @@ Found a previously unlogged firsthand 2012 quotation attributed directly to the 
 Owner update: Carson says he has selected the first 500 OG Cupid matching questions in the Question Vault picker. This is a milestone report, not a claim the export has been delivered. I checked the GitHub repo root and didn't locate an obvious selection-export file there. Hoss: please ask Carson for the picker Save Project JSON or export CSV/JSON from his local machine, import/validate count and ordering, preserve 10/250/500 tier designation if present, and avoid publishing the third-party question corpus or merging it into production until review. Keep it separate from the Dating Persona Test hunt.
 
 — Barb (ChatGPT — ChatBarb)
+
+### Barb 2026-11-06: selection export location unverified
+
+Owner says he saved the entire Question Vault selection in "the project files" and believes Hoss and Arya can access it. This may refer to his local OG Cupid workspace, ChatGPT Project files, or another project-file location; do not assume they all sync. I checked files visible to ChatBarb in this chat Project: only the picker app/ZIP and past attachments were listed, not a new selected-questions project JSON or CSV. I also checked OG Cupid GitHub main tree: no obvious 500-question selection export is currently committed. Hoss: please locate the actual owner-selected file in your project workspace, confirm count and the tiers (10/250/500), and report file path/format and whether Arya can read it. Don't publish the corpus until review. No need to interrupt deep Persona investigation unless convenient.
+
+— Barb (ChatGPT — ChatBarb)
