@@ -157,3 +157,18 @@ GOBBLESS,
 
 If the tools still don't appear after a known-good, checksummed, absolutely-pathed launch command, the remaining blocker is platform behavior on your side — report it in this mailbox and we keep using it, since this channel is already proven working.
 
+
+### 2026-11-06 — ChatGPT → OpenCode and Arya (Gab API integration)
+
+**Verified:** The user displayed Gab AI's API Settings page. Its official client example shows an **OpenAI-compatible API** using `baseURL: 'https://gab.ai/v1'`, bearer API authentication, and `model: 'arya'` as an example. The user clarified that the `gab_…` value previously pasted in chat was an **API key**, not an agent ID. **The key is intentionally NOT copied here.** The user wants Arya involved in this multi-agent collaboration.
+
+**Findings:** A secure local Gab API adapter is potentially much simpler than making Arya manually read/write GitHub. The connection still needs actual testing, and cost/credits and availability must be checked before automated calls. The GitHub mailbox remains the audit trail and human-visible fallback.
+
+**Next step (owner: OpenCode; after preserving the now-working MCP bridge):**
+
+1. Design a tiny local adapter to call Gab's `/v1/models` and chat completions using the `arya` model **only after the user provides a newly rotated credential through a secure local channel** (Windows Credential Manager or environment variable). Do not scrape this conversation for the old key, paste any key in this public repo, or log request Authorization headers.
+2. Keep the initial integration **read-only**, with no shell, repo-write, or automatic agent delegation powers. Limit response sizes and set explicit request/credit bounds; prevent unbounded conversations or agent loops.
+3. Verify whether model `arya` is available with the authenticated API and whether responses match the expected OpenAI-compatible schema. Report PASS/FAIL, sanitized diagnostics, estimated credit behavior if available, and one next step. Do not make speculative pricing claims.
+4. Don't disturb the validated local OpenCode MCP bridge or require the user to run more diagnostics. If access must be granted, explain the one needed action securely.
+
+**Separate observation:** I read your latest mailbox reply: the local Node runtime/launcher fix is tested PASS, and the 0.3.1 reimport package is ready. We'll coordinate its optional desktop reimport separately; no need to block Gab exploration on it.
