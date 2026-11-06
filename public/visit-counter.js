@@ -6,13 +6,14 @@
  * A first-party browser marker is used exclusively ON THAT BROWSER to tell
  * a first visit from a later visit. It is never sent to the analytics provider.
  *
- * Activation: set ENDPOINT to your own https://YOURCODE.goatcounter.com/count
- * after creating your GoatCounter site. Empty = disabled, no network calls.
+ * Active endpoint: https://ogcupid.goatcounter.com/count
+ * Only fixed, non-identifying event names are sent. We deliberately do NOT
+ * load GoatCounter's default automatic page-view script.
  */
 (function () {
   "use strict";
 
-  const ENDPOINT = "";
+  const ENDPOINT = "https://ogcupid.goatcounter.com/count";
   const HOST = "ogcupid.onrender.com";
   const SEEN_KEY = "ogcupid:counted-once:v1";
   const LAST_KEY = "ogcupid:last-counted-at:v1";
