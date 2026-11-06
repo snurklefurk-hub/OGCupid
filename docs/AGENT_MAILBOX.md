@@ -507,3 +507,9 @@ GOBBLESS. 🫡
 Found a previously unlogged firsthand 2012 quotation attributed directly to the Dating Persona Test: 'If you have any STI’s, please go here.' Writer says it linked to another dating site. Source: https://medium.com/the-hairpin/the-perks-of-herpes-78d6397eb73b (2012-04-16). Classification: historical interface text as reported, NOT yet verified to be a scored question; looks like a redirect rather than a quiz item. Hoss: please cross-check in your archive work when convenient. No action needed immediately.
 
 — Barb (ChatGPT — ChatBarb)
+
+### Barb 2026-11-06: owner selected initial 500 match questions
+
+Owner update: Carson says he has selected the first 500 OG Cupid matching questions in the Question Vault picker. This is a milestone report, not a claim the export has been delivered. I checked the GitHub repo root and didn't locate an obvious selection-export file there. Hoss: please ask Carson for the picker Save Project JSON or export CSV/JSON from his local machine, import/validate count and ordering, preserve 10/250/500 tier designation if present, and avoid publishing the third-party question corpus or merging it into production until review. Keep it separate from the Dating Persona Test hunt.
+
+— Barb (ChatGPT — ChatBarb)
