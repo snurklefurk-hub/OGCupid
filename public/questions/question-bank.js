@@ -1,0 +1,7312 @@
+/* Owner-curated questions. Only the 410 selected questions are published. */
+window.OGCQuestionBank = {
+  "version": 1,
+  "questions": [
+    {
+      "id": "vault-5",
+      "sourceId": "5",
+      "tier": 50,
+      "topic": "Politics",
+      "prompt": "Do you think prescription drugs should be more accessible?",
+      "options": [
+        "Absolutely",
+        "Not really"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-6",
+      "sourceId": "6",
+      "tier": 50,
+      "topic": "Attraction",
+      "prompt": "Tattoos?",
+      "options": [
+        "Turn on",
+        "Turn off"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-7",
+      "sourceId": "7",
+      "tier": 250,
+      "topic": "Politics",
+      "prompt": "Are you concerned about rising sea levels?",
+      "options": [
+        "Yes!",
+        "Not really"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-13",
+      "sourceId": "13",
+      "tier": 250,
+      "topic": "Food & drink",
+      "prompt": "Do you create your own recipes or follow recipes?",
+      "options": [
+        "I like to go rogue",
+        "Depends",
+        "Always follow!"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-14",
+      "sourceId": "14",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "Do you enjoy cooking dates?",
+      "options": [
+        "Yes, they’re my favorite!",
+        "Sometimes",
+        "No, I don’t like making my food"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-16",
+      "sourceId": "16",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "How do you feel about cooking with a partner?",
+      "options": [
+        "Love it!",
+        "Not my favorite"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-21",
+      "sourceId": "21",
+      "tier": 250,
+      "topic": "Politics",
+      "prompt": "If a brand shares your political values does it influence how you feel about it?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-29",
+      "sourceId": "29",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "Shower sex?",
+      "options": [
+        "Yes please",
+        "No thank you"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-36",
+      "sourceId": "36",
+      "tier": 100,
+      "topic": "Culture",
+      "prompt": "Do you feel entertainers should be held accountable for jokes they made many years ago?",
+      "options": [
+        "Yes, they should be held accountable",
+        "No, if the jokes were funny then- it’s fine"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-38",
+      "sourceId": "38",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "Do you enjoy foreplay or sex more?",
+      "options": [
+        "Foreplay",
+        "Sex"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-48",
+      "sourceId": "48",
+      "tier": 100,
+      "topic": "Dating & relationships",
+      "prompt": "Is a soulmate worth waiting for?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-50",
+      "sourceId": "50",
+      "tier": 100,
+      "topic": "Smoking, drinking & substances",
+      "prompt": "Do you vape/use e-cigs?",
+      "options": [
+        "Yes, regularly",
+        "Occasionally, when I can’t smoke a cigarette",
+        "No, but I’m interested",
+        "No, never"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-54",
+      "sourceId": "54",
+      "tier": 250,
+      "topic": "Politics",
+      "prompt": "Do you feel there needs to be prison reform in the U.S.?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-57",
+      "sourceId": "57",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "How do you feel when you see people getting engaged on your social media?",
+      "options": [
+        "Good for them!",
+        "Honestly, a little jealous"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-59",
+      "sourceId": "59",
+      "tier": 250,
+      "topic": "Politics",
+      "prompt": "Does the US need stricter gun control?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-62",
+      "sourceId": "62",
+      "tier": 250,
+      "topic": "Personality",
+      "prompt": "Do you like to argue?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-73",
+      "sourceId": "73",
+      "tier": 250,
+      "topic": "Culture",
+      "prompt": "How often do you check social media?",
+      "options": [
+        "Too often",
+        "A healthy amount",
+        "Barely at all",
+        "I don’t use social media"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-75",
+      "sourceId": "75",
+      "tier": 250,
+      "topic": "Culture",
+      "prompt": "Can you separate an artist/entertainer’s bad behavior from their art?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-83",
+      "sourceId": "83",
+      "tier": 250,
+      "topic": "Lifestyle",
+      "prompt": "Do you have any clothing/accessories with the American flag printed on it?",
+      "options": [
+        "Yes, I wear them all the time",
+        "Yes, but I only wear them on certain holidays",
+        "Yes, but they’re ironic",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-103",
+      "sourceId": "103",
+      "tier": 250,
+      "topic": "Lifestyle",
+      "prompt": "Do you fold underwear?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-104",
+      "sourceId": "104",
+      "tier": 50,
+      "topic": "Social life",
+      "prompt": "How often do you speak to your parents?",
+      "options": [
+        "At least once a week",
+        "At least once a month",
+        "Only on special occasions",
+        "I don’t"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-106",
+      "sourceId": "106",
+      "tier": 250,
+      "topic": "Health",
+      "prompt": "Do you meditate?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-108",
+      "sourceId": "108",
+      "tier": 50,
+      "topic": "Dating & relationships",
+      "prompt": "Would you be open to a long-distance relationship?",
+      "options": [
+        "Yes, for the right person we can make it work",
+        "It depends on how far away they are",
+        "No, I can’t do long distance"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-109",
+      "sourceId": "109",
+      "tier": 250,
+      "topic": "Commitment & family",
+      "prompt": "Would you live with a partner before marriage?",
+      "options": [
+        "Yes",
+        "Only if we were engaged",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-111",
+      "sourceId": "111",
+      "tier": 50,
+      "topic": "Dating & relationships",
+      "prompt": "How would you feel if your partner earned more money than you?",
+      "options": [
+        "Jealous",
+        "Indifferent",
+        "Inferior",
+        "Thrilled"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-113",
+      "sourceId": "113",
+      "tier": 250,
+      "topic": "Religion & beliefs",
+      "prompt": "Is it important to you that your partner practices the same religion as you?",
+      "options": [
+        "Yes",
+        "No, I don’t mind if we practice different religion",
+        "It depends on their religion",
+        "No, I don’t practice a religion"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-115",
+      "sourceId": "115",
+      "tier": 250,
+      "topic": "Politics",
+      "prompt": "Freedom of the press is…",
+      "options": [
+        "Important",
+        "Not important"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-117",
+      "sourceId": "117",
+      "tier": 100,
+      "topic": "Politics",
+      "prompt": "Do you prefer that your date shares your political views?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-119",
+      "sourceId": "119",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "Best first date?",
+      "options": [
+        "Coffee",
+        "Something cultural or activity based",
+        "Drinks",
+        "Dinner"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-121",
+      "sourceId": "121",
+      "tier": 50,
+      "topic": "Lifestyle",
+      "prompt": "Do you have any tattoos?",
+      "options": [
+        "I have 1 or more big tattoos",
+        "I have at least one.",
+        "I have 1 or more little tattoos",
+        "I have no tattoos"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-122",
+      "sourceId": "122",
+      "tier": 100,
+      "topic": "Health",
+      "prompt": "When you are sleeping, do you prefer:",
+      "options": [
+        "A cold room",
+        "A cool room",
+        "A warm room",
+        "A hot room"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-124",
+      "sourceId": "124",
+      "tier": 50,
+      "topic": "Personality",
+      "prompt": "Which of the following has the biggest influence on your behavior?",
+      "options": [
+        "Reason, Observation, Empiricism, Trial-And-Error.",
+        "Tradition, Faith, Upbringing, Heritage.",
+        "Emotion, Intuition, Instinct."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-125",
+      "sourceId": "125",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "Is foreplay necessary for good sex?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-130",
+      "sourceId": "130",
+      "tier": 100,
+      "topic": "Work & ambition",
+      "prompt": "Do you feel comfortable in an educational or academic environment?",
+      "options": [
+        "I love it; I’d possibly make teaching a career",
+        "Yes, but sixteen to twenty years is enough for me",
+        "I can tolerate it, it’s just a means to an end",
+        "Get me as far from school as possible. Now!"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-132",
+      "sourceId": "132",
+      "tier": 250,
+      "topic": "Work & ambition",
+      "prompt": "Would you date someone who was in considerable debt?",
+      "options": [
+        "Yes, it’s not a problem for me",
+        "Yes, if I thought the debt were justified",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-134",
+      "sourceId": "134",
+      "tier": 100,
+      "topic": "Dating & relationships",
+      "prompt": "Are the holidays a romantic time of year?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-138",
+      "sourceId": "138",
+      "tier": 250,
+      "topic": "Personality",
+      "prompt": "Do you make New Year’s resolutions?",
+      "options": [
+        "Yes, and I keep them",
+        "Yes, but they’re out the window by February",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-141",
+      "sourceId": "141",
+      "tier": 250,
+      "topic": "Ethics",
+      "prompt": "Do you generally smile at little kids who cross your path?",
+      "options": [
+        "Yes",
+        "No",
+        "Only if no one is looking"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-143",
+      "sourceId": "143",
+      "tier": 100,
+      "topic": "Commitment & family",
+      "prompt": "Would you ideally like to be married within the next 3 years?",
+      "options": [
+        "Yes",
+        "No",
+        "I’m already married"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-144",
+      "sourceId": "144",
+      "tier": 10,
+      "topic": "Commitment & family",
+      "prompt": "Are you ready to settle down and get married right now?",
+      "options": [
+        "Absolutely",
+        "No way",
+        "Get married yes, settle down no",
+        "Get married no, settle down yes"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-146",
+      "sourceId": "146",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "Are you upset when your partner flirts with someone else?",
+      "options": [
+        "Yes, they shouldn’t be doing that",
+        "No, it’s human nature"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-148",
+      "sourceId": "148",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "How important do you think it is for people who are dating to share the same home country?",
+      "options": [
+        "Very important",
+        "Somewhat important",
+        "Not important at all",
+        "It can actually be better if they don’t"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-150",
+      "sourceId": "150",
+      "tier": 100,
+      "topic": "Dating & relationships",
+      "prompt": "Do you think answering yes or no questions will help you find your soulmate?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-151",
+      "sourceId": "151",
+      "tier": 100,
+      "topic": "Social life",
+      "prompt": "Is it easier for you to talk to people online or in person?",
+      "options": [
+        "Online",
+        "In person"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-152",
+      "sourceId": "152",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "Should partners know one another’s passwords?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-156",
+      "sourceId": "156",
+      "tier": 50,
+      "topic": "Personality",
+      "prompt": "Do you ask to speak to the manager when you’re displeased with your service?",
+      "options": [
+        "Without question",
+        "Not my style",
+        "Only if the situation is dire"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-158",
+      "sourceId": "158",
+      "tier": 100,
+      "topic": "Work & ambition",
+      "prompt": "Do you need a college degree to be successful?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-159",
+      "sourceId": "159",
+      "tier": 100,
+      "topic": "Culture",
+      "prompt": "Would you cosplay at Comic-Con?",
+      "options": [
+        "Yes",
+        "No",
+        "I’ve done it before!"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-160",
+      "sourceId": "160",
+      "tier": 100,
+      "topic": "Culture",
+      "prompt": "iPhone or Android?",
+      "options": [
+        "Android forever",
+        "iPhone—blue bubbles only",
+        "Still rocking that flip phone"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-163",
+      "sourceId": "163",
+      "tier": 50,
+      "topic": "Dating & relationships",
+      "prompt": "Have you fallen head over heels before?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-166",
+      "sourceId": "166",
+      "tier": 250,
+      "topic": "Politics",
+      "prompt": "If someone you loved was banned from entering your country, what would you do?",
+      "options": [
+        "Go to their country",
+        "Fight to help them come to your country",
+        "Never see them in person"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-169",
+      "sourceId": "169",
+      "tier": 100,
+      "topic": "Personality",
+      "prompt": "Do you have faith in humanity?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-171",
+      "sourceId": "171",
+      "tier": 250,
+      "topic": "Politics",
+      "prompt": "Would you ever run for office?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-172",
+      "sourceId": "172",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "Are you into PDA?",
+      "options": [
+        "Oh yeah",
+        "Not so much",
+        "As long as I don’t have to watch it"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-174",
+      "sourceId": "174",
+      "tier": 250,
+      "topic": "Health",
+      "prompt": "Therapy?",
+      "options": [
+        "Necessary",
+        "Good for some people",
+        "Not for me",
+        "Total BS"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-175",
+      "sourceId": "175",
+      "tier": 100,
+      "topic": "Culture",
+      "prompt": "Are you an avid reader?",
+      "options": [
+        "I read regularly",
+        "I read on occasion",
+        "I rarley read"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-176",
+      "sourceId": "176",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "What do you think is the best way to connect with someone you’re interested in?",
+      "options": [
+        "Talking",
+        "Doing an activity together",
+        "Having sex"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-178",
+      "sourceId": "178",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "If you see an attractive stranger (offline), do you introduce yourself?",
+      "options": [
+        "Yes, usually",
+        "Yes, but only in certain settings (bars, clubs)",
+        "Once in a while",
+        "Never"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-179",
+      "sourceId": "179",
+      "tier": 250,
+      "topic": "Smoking, drinking & substances",
+      "prompt": "Getting high on a date:",
+      "options": [
+        "sounds like fun",
+        "is not for me"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-180",
+      "sourceId": "180",
+      "tier": 100,
+      "topic": "Dating & relationships",
+      "prompt": "Being romantically approached by a stranger is:",
+      "options": [
+        "Usually more annoying than nice",
+        "Usually more nice than annoying"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-182",
+      "sourceId": "182",
+      "tier": 100,
+      "topic": "Dating & relationships",
+      "prompt": "What’s the best part of dating?",
+      "options": [
+        "The anticipation",
+        "The actual dates",
+        "The sex",
+        "Having someone to take as your plus-one"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-193",
+      "sourceId": "193",
+      "tier": 100,
+      "topic": "Culture",
+      "prompt": "Do you turn your phone off at the movies?",
+      "options": [
+        "Of course, I’m not a monster",
+        "I put it on silent or airplane mode",
+        "No, but I put it away",
+        "No, I still use it"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-196",
+      "sourceId": "196",
+      "tier": 250,
+      "topic": "Culture",
+      "prompt": "How often do you take selfies?",
+      "options": [
+        "Daily",
+        "A few times a week",
+        "Occasionally",
+        "Never"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-200",
+      "sourceId": "200",
+      "tier": 50,
+      "topic": "Sex & intimacy",
+      "prompt": "Are sex and intimacy the same thing?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-201",
+      "sourceId": "201",
+      "tier": 50,
+      "topic": "Sex & intimacy",
+      "prompt": "What’s your opinion of the phrase “making love” when it refers to sex?",
+      "options": [
+        "It’s beautiful.",
+        "It’s hokey and overly sentimental.",
+        "It refers to a very specific kind of sex.",
+        "It’s no better or worse than any other."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-202",
+      "sourceId": "202",
+      "tier": 250,
+      "topic": "Ethics",
+      "prompt": "How much do you usually tip a server who did a fine job?",
+      "options": [
+        "Around 10% or less",
+        "10-15%",
+        "15-20%",
+        "Over 20%"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-203",
+      "sourceId": "203",
+      "tier": 250,
+      "topic": "Food & drink",
+      "prompt": "When you go out for dinner, which best describes the type of establishments you visit the most?",
+      "options": [
+        "Fast Food.",
+        "Casual Dining.",
+        "Fine Dining."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-204",
+      "sourceId": "204",
+      "tier": 100,
+      "topic": "Sex & intimacy",
+      "prompt": "What do you think of the prospect of having sexual intercourse while wearing some type of costume(fur-suit, sci-fi costume, clown suit, whatever).",
+      "options": [
+        "Yes way",
+        "No way"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-205",
+      "sourceId": "205",
+      "tier": 50,
+      "topic": "Culture",
+      "prompt": "Which would you prefer your ideal match to be more into?",
+      "options": [
+        "Sports",
+        "Books",
+        "Music",
+        "Movies"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-209",
+      "sourceId": "209",
+      "tier": 10,
+      "topic": "Work & ambition",
+      "prompt": "Should engineers be required to take humanities classes?",
+      "options": [
+        "Yes, it’s an essential part of curriculum",
+        "Why not? It’s an easy grade",
+        "No, it’s a waste of time"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-210",
+      "sourceId": "210",
+      "tier": 50,
+      "topic": "Religion & beliefs",
+      "prompt": "How often do you go to a place of worship?",
+      "options": [
+        "On a regular basis",
+        "Only on certain occasions",
+        "Rarely",
+        "Never"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-211",
+      "sourceId": "211",
+      "tier": 50,
+      "topic": "Culture",
+      "prompt": "Are you a good trivia team member?",
+      "options": [
+        "You bet",
+        "Only for certain topics",
+        "No, please help me",
+        "I hate trivia"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-213",
+      "sourceId": "213",
+      "tier": 100,
+      "topic": "Personality",
+      "prompt": "How much have your values changed since you were 16?",
+      "options": [
+        "A lot",
+        "A little",
+        "Not much",
+        "Not at all"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-215",
+      "sourceId": "215",
+      "tier": 250,
+      "topic": "Culture",
+      "prompt": "Do you think celebrities should share their political opinions?",
+      "options": [
+        "No, they should stick to their area of expertise",
+        "Yes, they are citizens too"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-216",
+      "sourceId": "216",
+      "tier": 250,
+      "topic": "Food & drink",
+      "prompt": "Would you rather cook your own food or order takeout?",
+      "options": [
+        "Cook it myself",
+        "Order takeout"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-217",
+      "sourceId": "217",
+      "tier": 250,
+      "topic": "Smoking, drinking & substances",
+      "prompt": "Do you like using party drugs like MDMA/molly?",
+      "options": [
+        "Yes",
+        "Yes, but rarely",
+        "Nope, not at all"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-218",
+      "sourceId": "218",
+      "tier": 100,
+      "topic": "Dating & relationships",
+      "prompt": "What is the longest you’ve traveled to meet up with someone from a dating app?",
+      "options": [
+        "Less than an hour",
+        "Between one and five hours",
+        "More than five hours",
+        "I’ve never met up with someone from a dating app"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-219",
+      "sourceId": "219",
+      "tier": 50,
+      "topic": "Dating & relationships",
+      "prompt": "Can you tell from someone’s dating profile whether or not you’ll get along in real life?",
+      "options": [
+        "Yes, usually",
+        "About half the time",
+        "No, usually",
+        "I don’t know"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-220",
+      "sourceId": "220",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "Have you ever owned sex toys?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-221",
+      "sourceId": "221",
+      "tier": 50,
+      "topic": "Sex & intimacy",
+      "prompt": "Which is better: sex without sleeping together or sleeping together without sex?",
+      "options": [
+        "Sex",
+        "Sleeping"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-222",
+      "sourceId": "222",
+      "tier": 100,
+      "topic": "Lifestyle",
+      "prompt": "Do you hope to move around a lot?",
+      "options": [
+        "Yes, I’d like to live in many places",
+        "No, I’m ready to put down roots",
+        "I might move once or twice"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-226",
+      "sourceId": "226",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "Are you turned on by feet?",
+      "options": [
+        "Absolutely, I have a foot fetish",
+        "Sure, feet can be sexy sometimes",
+        "Nope"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-228",
+      "sourceId": "228",
+      "tier": 100,
+      "topic": "Dating & relationships",
+      "prompt": "Have you ever had a friend with benefits?",
+      "options": [
+        "Yes, I’ve had several",
+        "Yes, I’ve had one or two",
+        "No, I keep my friends and relationships separate"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-230",
+      "sourceId": "230",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "How important is it for you to help give your partner an orgasm?",
+      "options": [
+        "Very important",
+        "Somewhat important, but it’s not everything",
+        "Not very important"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-232",
+      "sourceId": "232",
+      "tier": 100,
+      "topic": "Sex & intimacy",
+      "prompt": "How do you feel about golden showers?",
+      "options": [
+        "They’re a turn on",
+        "Maybe, I could be convinced",
+        "Not for me, I’m a germaphobe",
+        "Can’t, I might run for office one day"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-234",
+      "sourceId": "234",
+      "tier": 50,
+      "topic": "Dating & relationships",
+      "prompt": "Would you introduce someone you’ve started seeing casually to your friends?",
+      "options": [
+        "Yes",
+        "No, I like to keep my dating life private",
+        "Maybe, it depends on the person"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-235",
+      "sourceId": "235",
+      "tier": 250,
+      "topic": "Politics",
+      "prompt": "Should there be stricter laws regulating harassment/bullying online?",
+      "options": [
+        "Yes",
+        "No, we have a right to free speech",
+        "I don’t know"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-236",
+      "sourceId": "236",
+      "tier": 50,
+      "topic": "Dating & relationships",
+      "prompt": "After you stop seeing someone romantically, do you stay friends with them on social media?",
+      "options": [
+        "No, I like to have a clean break",
+        "Yes, I don’t mind staying connected"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-237",
+      "sourceId": "237",
+      "tier": 250,
+      "topic": "Attraction",
+      "prompt": "Do you think big is beautiful?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-238",
+      "sourceId": "238",
+      "tier": 250,
+      "topic": "Politics",
+      "prompt": "Should bathrooms be gender neutral?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-239",
+      "sourceId": "239",
+      "tier": 100,
+      "topic": "Politics",
+      "prompt": "Is mansplaining a thing?",
+      "options": [
+        "Yes, and it’s awful",
+        "Yes, but it’s not a big deal",
+        "Nope, not a thing"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-241",
+      "sourceId": "241",
+      "tier": 100,
+      "topic": "Politics",
+      "prompt": "Would you consider yourself a feminist?",
+      "options": [
+        "Yes",
+        "No",
+        "To some extent"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-243",
+      "sourceId": "243",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "How long after you’ve started dating someone do you follow them on social media?",
+      "options": [
+        "Before we’ve met in person",
+        "After the first couple of dates",
+        "Not until we’re in a relationship",
+        "I’m not into social media"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-244",
+      "sourceId": "244",
+      "tier": 100,
+      "topic": "Culture",
+      "prompt": "Do you need a creative outlet (to play an instrument, paint, write, etc)?",
+      "options": [
+        "Yes, I need a way to express myself",
+        "Sometimes, but I could live without it",
+        "I’m fine without one"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-245",
+      "sourceId": "245",
+      "tier": 100,
+      "topic": "Dating & relationships",
+      "prompt": "Do you ever ghost someone (cut off contact without warning) after meeting in person?",
+      "options": [
+        "No, never",
+        "Sometimes I might",
+        "Yes, it’s just easier"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-246",
+      "sourceId": "246",
+      "tier": 100,
+      "topic": "Politics",
+      "prompt": "Did you vote in the last election?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-248",
+      "sourceId": "248",
+      "tier": 100,
+      "topic": "Dating & relationships",
+      "prompt": "Are you texty before you meet someone from a dating app in person?",
+      "options": [
+        "Yes, it’s a good way to get to know someone",
+        "Minimally, just to make plans",
+        "No, I’d rather meet in person first"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-251",
+      "sourceId": "251",
+      "tier": 100,
+      "topic": "Work & ambition",
+      "prompt": "Do you have student debt?",
+      "options": [
+        "Yes, I’ll be paying it off until I die",
+        "Yes, but it’s manageable",
+        "No, I paid it off",
+        "No, I never had it"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-253",
+      "sourceId": "253",
+      "tier": 50,
+      "topic": "Attraction",
+      "prompt": "Are traditional gender roles important in a romantic relationship?",
+      "options": [
+        "Yes",
+        "No, they’re outdated"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-254",
+      "sourceId": "254",
+      "tier": 100,
+      "topic": "Personality",
+      "prompt": "Are you flaky (i.e. cancel plans at the last minute)?",
+      "options": [
+        "No, I take my commitments very seriously",
+        "Sometimes I cancel, but I give advanced notice",
+        "Sometimes I cancel at the last minute",
+        "Honestly, I flake a lot"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-256",
+      "sourceId": "256",
+      "tier": 250,
+      "topic": "Politics",
+      "prompt": "Should we be fighting to close the gender wage gap?",
+      "options": [
+        "Definitely, it’s ridiculous there’s a discrepancy",
+        "It’s not top priority",
+        "What wage gap?",
+        "I don’t care"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-257",
+      "sourceId": "257",
+      "tier": 50,
+      "topic": "Dating & relationships",
+      "prompt": "Are you open to a casual relationship (i.e. more than a hookup, less than a significant other)?",
+      "options": [
+        "Yes, I’m open to casual",
+        "Yes, but only if my partner were reliable",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-259",
+      "sourceId": "259",
+      "tier": 50,
+      "topic": "Dating & relationships",
+      "prompt": "Swipe culture in dating apps?",
+      "options": [
+        "Makes dating easy",
+        "I don’t love it but I tolerate it",
+        "I dislike it"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-261",
+      "sourceId": "261",
+      "tier": 100,
+      "topic": "Politics",
+      "prompt": "Is climate change real?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-262",
+      "sourceId": "262",
+      "tier": 100,
+      "topic": "Dating & relationships",
+      "prompt": "Which is more important right now?",
+      "options": [
+        "Advancing in my career",
+        "Finding a relationship"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-263",
+      "sourceId": "263",
+      "tier": 250,
+      "topic": "Politics",
+      "prompt": "Should abortion be legal?",
+      "options": [
+        "Absolutely",
+        "Absolutely not",
+        "Sometimes, it depends"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-265",
+      "sourceId": "265",
+      "tier": 100,
+      "topic": "Dating & relationships",
+      "prompt": "Would you consider being part of a throuple (a three person couple)?",
+      "options": [
+        "Absolutely",
+        "Maybe, I could be convinced",
+        "Absolutely not"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-267",
+      "sourceId": "267",
+      "tier": 100,
+      "topic": "Dating & relationships",
+      "prompt": "Do you ever Skype/call/video chat a date you met online before meeting up in person?",
+      "options": [
+        "Yes, I prefer to chat digitally before meeting",
+        "Sometimes",
+        "Maybe, if someone asked me to",
+        "Never"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-269",
+      "sourceId": "269",
+      "tier": 100,
+      "topic": "Sex & intimacy",
+      "prompt": "Say you’ve started seeing someone you really like. As far as you’re concerned, how long will it take before you have sex?",
+      "options": [
+        "1-2 dates",
+        "3-5 dates",
+        "6 or more dates",
+        "Only after the wedding"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-270",
+      "sourceId": "270",
+      "tier": 100,
+      "topic": "Lifestyle",
+      "prompt": "My hair is usually…",
+      "options": [
+        "Very well groomed.",
+        "Given a good combing.",
+        "Intentionally unruly or unkempt.",
+        "Left untouched."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-271",
+      "sourceId": "271",
+      "tier": 250,
+      "topic": "Culture",
+      "prompt": "Have you ever cosplayed? (Dressed up as a comic/anime character)",
+      "options": [
+        "Yes",
+        "No, and I wouldn’t be interested",
+        "No, but it sounds cool"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-272",
+      "sourceId": "272",
+      "tier": 50,
+      "topic": "Dating & relationships",
+      "prompt": "Is it a requirement that you communicate every day with your significant other (via phone, text, in person, whatever)?",
+      "options": [
+        "Yes, no matter what",
+        "Yes, unless otherwise specified",
+        "No, it’s not necessary",
+        "No, I’d prefer not to communicate daily"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-4"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-274",
+      "sourceId": "274",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "Would receiving a massage from someone, whom you find very attractive, arouse you sexually?",
+      "options": [
+        "Yes.",
+        "No.",
+        "I’m not sure."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-275",
+      "sourceId": "275",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "Regardless of future plans, what’s more interesting to you right now?",
+      "options": [
+        "Sex",
+        "Love"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-277",
+      "sourceId": "277",
+      "tier": 100,
+      "topic": "Sex & intimacy",
+      "prompt": "In terms of sex, how experienced would your ideal mate be (with people other than you)?",
+      "options": [
+        "Innocent (virgin)",
+        "Slightly experienced",
+        "Moderately experienced",
+        "Very experienced"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-278",
+      "sourceId": "278",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "If you had a sexual fantasy that you know your partner is turned off by, would you bring it up anyway or keep it to yourself?",
+      "options": [
+        "I’d bring it up anyway.",
+        "I’d keep it to myself."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-279",
+      "sourceId": "279",
+      "tier": 100,
+      "topic": "Politics",
+      "prompt": "Do you enjoy discussing politics?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-280",
+      "sourceId": "280",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "Do you prefer hardcore or softcore when it comes to your porn?",
+      "options": [
+        "Hard!",
+        "Soft!",
+        "Both!",
+        "I don’t like porn"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-282",
+      "sourceId": "282",
+      "tier": 250,
+      "topic": "Commitment & family",
+      "prompt": "If you were to get married, would you want your partner to change his or her last name to yours?",
+      "options": [
+        "Yes.",
+        "No.",
+        "I would want them to make their own decision."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-284",
+      "sourceId": "284",
+      "tier": 250,
+      "topic": "Food & drink",
+      "prompt": "Do you like the taste of beer?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-285",
+      "sourceId": "285",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "Would you consider having a relationship with someone who is married, but no longer has sex with their spouse?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-286",
+      "sourceId": "286",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "Are you squeamish about sharing food or beverages with the person you’re dating?",
+      "options": [
+        "Yes",
+        "No",
+        "Only at first"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-287",
+      "sourceId": "287",
+      "tier": 100,
+      "topic": "Dating & relationships",
+      "prompt": "Do you like holding hands?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-289",
+      "sourceId": "289",
+      "tier": 100,
+      "topic": "Politics",
+      "prompt": "How important is voting to you?",
+      "options": [
+        "Extremely important",
+        "Very important",
+        "Not so important",
+        "Not at all important"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-292",
+      "sourceId": "292",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "How often do you masturbate?",
+      "options": [
+        "Once a day or more",
+        "A few times a week",
+        "A few times a month",
+        "A few times a year or less"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-295",
+      "sourceId": "295",
+      "tier": 100,
+      "topic": "Personality",
+      "prompt": "Which is worse: being too much of a dreamer or too cynical?",
+      "options": [
+        "too much of a dreamer",
+        "too cynical"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-296",
+      "sourceId": "296",
+      "tier": 250,
+      "topic": "Lifestyle",
+      "prompt": "Do you own any sexy underwear?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-298",
+      "sourceId": "298",
+      "tier": 250,
+      "topic": "Lifestyle",
+      "prompt": "Do you like to burn incense in your home?",
+      "options": [
+        "Yes.",
+        "No.",
+        "I’ve never burnt incense in my home before."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-300",
+      "sourceId": "300",
+      "tier": 100,
+      "topic": "Dating & relationships",
+      "prompt": "If you really clicked with someone online and were meeting them in person, how would you greet them when you met them?",
+      "options": [
+        "Say hi / shake their hand",
+        "Give them a friendly hug",
+        "Give them a kiss on the cheek",
+        "Start making out with them almost immediately"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-302",
+      "sourceId": "302",
+      "tier": 100,
+      "topic": "Health",
+      "prompt": "How often do you have trouble sleeping at night?",
+      "options": [
+        "Always.",
+        "Frequently.",
+        "Rarely.",
+        "Never."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-303",
+      "sourceId": "303",
+      "tier": 100,
+      "topic": "Culture",
+      "prompt": "Do you enjoy watching movies with subtitles?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-304",
+      "sourceId": "304",
+      "tier": 100,
+      "topic": "Social life",
+      "prompt": "Do you like to go clubbing?",
+      "options": [
+        "Yes, I prefer to go alone.",
+        "Yes, I prefer to go with a date.",
+        "Yes, I prefer to go with friends.",
+        "No, I do not like to go clubbing."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-305",
+      "sourceId": "305",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "Would you rather have your dream job or your soul mate for the rest of your life?",
+      "options": [
+        "Dream Job",
+        "Soul Mate"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-307",
+      "sourceId": "307",
+      "tier": 50,
+      "topic": "Politics",
+      "prompt": "Should a business be able to deny service to a customer if they feel a customer’s request conflicts with their religious beliefs?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-309",
+      "sourceId": "309",
+      "tier": 100,
+      "topic": "Politics",
+      "prompt": "Should immigrants be required to learn the official language of the country they are living in?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-310",
+      "sourceId": "310",
+      "tier": 250,
+      "topic": "Politics",
+      "prompt": "Should the government be allowed to use enhanced interrogation techniques when dealing with potential terrorists?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-311",
+      "sourceId": "311",
+      "tier": 100,
+      "topic": "Health",
+      "prompt": "Should the government require children to be vaccinated for preventable diseases?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-312",
+      "sourceId": "312",
+      "tier": 250,
+      "topic": "Politics",
+      "prompt": "______ Lives Matter",
+      "options": [
+        "Black",
+        "All",
+        "I’m not familiar with these movements / no opinion"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-313",
+      "sourceId": "313",
+      "tier": 250,
+      "topic": "Politics",
+      "prompt": "How do you feel about laws which block transgender individuals from using public bathrooms that match their gender identity?",
+      "options": [
+        "They’re discriminatory",
+        "They’re necessary"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-314",
+      "sourceId": "314",
+      "tier": 250,
+      "topic": "Religion & beliefs",
+      "prompt": "Could you date someone with a significant Taoist lean in their outlook on life?",
+      "options": [
+        "Yes, I love the Tao Te Ching.",
+        "Sure, why not?",
+        "No, they’d be too laid back.",
+        "What the hell is Taoism?"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-315",
+      "sourceId": "315",
+      "tier": 50,
+      "topic": "Personality",
+      "prompt": "Regardless of your actual age, do you consider yourself to be an adult?",
+      "options": [
+        "Yes.",
+        "No.",
+        "Only some of the time."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-318",
+      "sourceId": "318",
+      "tier": 100,
+      "topic": "Personality",
+      "prompt": "Are you better with numbers or words?",
+      "options": [
+        "Numbers",
+        "Words",
+        "Both equally"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-319",
+      "sourceId": "319",
+      "tier": 250,
+      "topic": "Food & drink",
+      "prompt": "Are you a beer snob?",
+      "options": [
+        "Yes",
+        "No",
+        "Not usually, but some beers I won’t touch.",
+        "I don’t drink."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-320",
+      "sourceId": "320",
+      "tier": 100,
+      "topic": "Dating & relationships",
+      "prompt": "What is your preferred cuddling position?",
+      "options": [
+        "Big spoon",
+        "Small spoon",
+        "All spoons"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-321",
+      "sourceId": "321",
+      "tier": 250,
+      "topic": "Personality",
+      "prompt": "Which is more important to you: Developing yourself or developing friendships?",
+      "options": [
+        "Self development.",
+        "Developing friendships."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-324",
+      "sourceId": "324",
+      "tier": 100,
+      "topic": "Lifestyle",
+      "prompt": "What style in clothes would you wear most of the time, if you could?",
+      "options": [
+        "Loose and comfortable",
+        "Tight and sexy",
+        "Clean and formal"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-325",
+      "sourceId": "325",
+      "tier": 250,
+      "topic": "Ethics",
+      "prompt": "Do you ever intentionally try to make people angry just to see how they react?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-326",
+      "sourceId": "326",
+      "tier": 250,
+      "topic": "Politics",
+      "prompt": "Taking everything into account, do you think the world is a better place than it was thirty years ago?",
+      "options": [
+        "Yes, it is better now.",
+        "No, it evens out to be about the same.",
+        "No, in fact, it is worse now."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-329",
+      "sourceId": "329",
+      "tier": 250,
+      "topic": "Culture",
+      "prompt": "Imagine that a friend sets you up on a blind date that sounds like a perfect match, except for one problem: the date neither speaks nor understands any languages that you do. This is:",
+      "options": [
+        "A deal breaker. The date gets called off.",
+        "A pretty big issue, but I’d still go on the date.",
+        "Awesome!"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-330",
+      "sourceId": "330",
+      "tier": 250,
+      "topic": "Lifestyle",
+      "prompt": "Motorcycles are…",
+      "options": [
+        "Good transportation / fun.",
+        "Good for others but not for me.",
+        "Bad and should be outlawed.",
+        "Not interesting."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-331",
+      "sourceId": "331",
+      "tier": 250,
+      "topic": "Work & ambition",
+      "prompt": "Do you believe that a major goal of educational systems should be to make people “better members of society”?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-334",
+      "sourceId": "334",
+      "tier": 100,
+      "topic": "Lifestyle",
+      "prompt": "Where would you prefer to live?",
+      "options": [
+        "Big city (urban)",
+        "Suburbs",
+        "Small town",
+        "The country / middle of nowhere"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-335",
+      "sourceId": "335",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "Which makes for a better first date?",
+      "options": [
+        "Coffee and chit-chat",
+        "Drinks and making out"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-336",
+      "sourceId": "336",
+      "tier": 250,
+      "topic": "Politics",
+      "prompt": "Should wealthier people pay higher taxes?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-337",
+      "sourceId": "337",
+      "tier": 250,
+      "topic": "Politics",
+      "prompt": "Do you think humans have enough respect for the Earth’s other species?",
+      "options": [
+        "Yes, too much",
+        "Yes, about right",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-339",
+      "sourceId": "339",
+      "tier": 100,
+      "topic": "Personality",
+      "prompt": "Can you think of someone that you truly hate, not just severely dislike?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-341",
+      "sourceId": "341",
+      "tier": 250,
+      "topic": "Attraction",
+      "prompt": "How important is it that your partner is shaved/groomed downstairs?",
+      "options": [
+        "SHAVE IT ALL OFF!!!!!!",
+        "As long as it is neat I am happy.",
+        "Natural is better!",
+        "I don’t know/ I don’t care"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-342",
+      "sourceId": "342",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "If you found out that your significant other had been in pornographic films, which of the following most closely describes your reaction?",
+      "options": [
+        "Repulsion",
+        "Arousal",
+        "Indifference"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-347",
+      "sourceId": "347",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "Do you believe that it is possible for two previously platonic friends to start having casual sex without affecting other aspects of their relationship?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-348",
+      "sourceId": "348",
+      "tier": 250,
+      "topic": "Religion & beliefs",
+      "prompt": "How do you feel about crystal healing?",
+      "options": [
+        "I think it works.",
+        "I think it’s a load of crap.",
+        "I respect these beliefs, but it’s not for me.",
+        "I’m not sure."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-349",
+      "sourceId": "349",
+      "tier": 250,
+      "topic": "Lifestyle",
+      "prompt": "How often do you wear underwear?",
+      "options": [
+        "Always",
+        "Usually",
+        "Rarely",
+        "Never"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-350",
+      "sourceId": "350",
+      "tier": 100,
+      "topic": "Commitment & family",
+      "prompt": "Would you sign a prenup?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-352",
+      "sourceId": "352",
+      "tier": 50,
+      "topic": "Ethics",
+      "prompt": "Is intoxication ever an acceptable excuse for acting stupid?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-353",
+      "sourceId": "353",
+      "tier": 100,
+      "topic": "Personality",
+      "prompt": "Is it possible for someone to really be ‘too nice’?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-354",
+      "sourceId": "354",
+      "tier": 250,
+      "topic": "Food & drink",
+      "prompt": "How do you take your coffee?",
+      "options": [
+        "Black",
+        "With cream and/or sugar",
+        "Put that coffee down! Coffee is for closers only."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-355",
+      "sourceId": "355",
+      "tier": 250,
+      "topic": "Ethics",
+      "prompt": "Do you have a problem with racist jokes?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-357",
+      "sourceId": "357",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "Do you enjoy giving oral sex?",
+      "options": [
+        "Love it!",
+        "It’s okay.",
+        "Not so much.",
+        "Gross!"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-358",
+      "sourceId": "358",
+      "tier": 250,
+      "topic": "Religion & beliefs",
+      "prompt": "Are spirituality and religion one and the same?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-360",
+      "sourceId": "360",
+      "tier": 100,
+      "topic": "Religion & beliefs",
+      "prompt": "Do you think it is possible for someone to be an Atheist and still have a solid moral framework by which to live?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-362",
+      "sourceId": "362",
+      "tier": 250,
+      "topic": "Culture",
+      "prompt": "It is your first visit to your date’s home. You discover that the decor is dominated by the display of numerous action figures. What is your reaction?",
+      "options": [
+        "Awesome, let’s play!",
+        "Fine, so long as they don’t expect me to play.",
+        "It’s me or the toys.",
+        "Leave and never look back."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-366",
+      "sourceId": "366",
+      "tier": 50,
+      "topic": "Dating & relationships",
+      "prompt": "What’s worse on a first date?",
+      "options": [
+        "No physical attraction",
+        "Nothing to talk about"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-2"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-373",
+      "sourceId": "373",
+      "tier": 250,
+      "topic": "Social life",
+      "prompt": "How much would you enjoy hosting a big, crazy party?",
+      "options": [
+        "A lot",
+        "Not that much",
+        "Not at all"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-375",
+      "sourceId": "375",
+      "tier": 250,
+      "topic": "Social life",
+      "prompt": "What size party would you prefer to attend?",
+      "options": [
+        "Just a few close friends.",
+        "5-20 people.",
+        "20-100 people.",
+        "More than 100 people."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-376",
+      "sourceId": "376",
+      "tier": 250,
+      "topic": "Culture",
+      "prompt": "Improvisational theatre:",
+      "options": [
+        "I improvise!",
+        "I like to watch",
+        "I can take it or leave it",
+        "Please, no"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-377",
+      "sourceId": "377",
+      "tier": 100,
+      "topic": "Work & ambition",
+      "prompt": "Are you currently employed?",
+      "options": [
+        "Yes, I have a fulltime job",
+        "No",
+        "I have a part-time job",
+        "I’m a student"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-378",
+      "sourceId": "378",
+      "tier": 100,
+      "topic": "Culture",
+      "prompt": "How many books do you own?",
+      "options": [
+        "Less than 5",
+        "5-25",
+        "25-50",
+        "50+"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-4"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-379",
+      "sourceId": "379",
+      "tier": 100,
+      "topic": "Personality",
+      "prompt": "Which, on you, is closest to perfection?",
+      "options": [
+        "Your mind",
+        "Your body",
+        "Your wallet",
+        "Your soul"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-380",
+      "sourceId": "380",
+      "tier": 100,
+      "topic": "Health",
+      "prompt": "How often do you brush your teeth?",
+      "options": [
+        "Twice or more a day",
+        "Once a day",
+        "Only on days I feel like it",
+        "Rarely / never"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-381",
+      "sourceId": "381",
+      "tier": 100,
+      "topic": "Personality",
+      "prompt": "Do you cry more than twice a year?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-382",
+      "sourceId": "382",
+      "tier": 100,
+      "topic": "Health",
+      "prompt": "Are you physically strong?",
+      "options": [
+        "Yes, very",
+        "Average",
+        "No, not really"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-383",
+      "sourceId": "383",
+      "tier": 100,
+      "topic": "Health",
+      "prompt": "How important is it to you that your partner takes care of their body (ie: working out, maintaining a healthy and attractive physique)?",
+      "options": [
+        "not important",
+        "somewhat important",
+        "very important",
+        "mandatory"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-384",
+      "sourceId": "384",
+      "tier": 250,
+      "topic": "Personality",
+      "prompt": "Would you say your actions are guided more by your head or your heart?",
+      "options": [
+        "Head",
+        "Heart",
+        "Genitalia"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-385",
+      "sourceId": "385",
+      "tier": 100,
+      "topic": "Work & ambition",
+      "prompt": "Would you date someone who’s smart but achieved nothing in life?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-386",
+      "sourceId": "386",
+      "tier": 250,
+      "topic": "Culture",
+      "prompt": "Do you enjoy Rap/Hip-Hop?",
+      "options": [
+        "Yes",
+        "No",
+        "Some"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-387",
+      "sourceId": "387",
+      "tier": 50,
+      "topic": "Smoking, drinking & substances",
+      "prompt": "If you were really, really drunk, which of the following would you be more likely to do?",
+      "options": [
+        "Kiss someone.",
+        "Hit someone.",
+        "Complain to someone.",
+        "I’m not sure / I’ve never been really drunk."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-390",
+      "sourceId": "390",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "Could you date a stripper?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-392",
+      "sourceId": "392",
+      "tier": 100,
+      "topic": "Attraction",
+      "prompt": "If you had to pick one of the following types for a significant other, which would it be?",
+      "options": [
+        "Wholesome",
+        "A little on the slutty side",
+        "Crazy and colorful",
+        "Dark and mysterious"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-393",
+      "sourceId": "393",
+      "tier": 250,
+      "topic": "Ethics",
+      "prompt": "If a woman burps out loud, that is…",
+      "options": [
+        "Cool",
+        "Uncool"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-395",
+      "sourceId": "395",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "Would you prefer to find someone who will shake your life up or make it more peaceful?",
+      "options": [
+        "Shake it up.",
+        "Make it more peaceful."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-396",
+      "sourceId": "396",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "Are you a Submissive/Bottom or Dominant/Top?",
+      "options": [
+        "Submissive/Bottom",
+        "Dominant/Top",
+        "Switch with a S/B preferance",
+        "Switch with a D/T preferance"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-397",
+      "sourceId": "397",
+      "tier": 50,
+      "topic": "Personality",
+      "prompt": "Do you often make jokes that offend more uptight people?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-401",
+      "sourceId": "401",
+      "tier": 250,
+      "topic": "Health",
+      "prompt": "Do you have all of your teeth?",
+      "options": [
+        "Yes",
+        "No",
+        "Some are replacements, but they look real"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-402",
+      "sourceId": "402",
+      "tier": 250,
+      "topic": "Personality",
+      "prompt": "What is your opinion of sarcasm?",
+      "options": [
+        "I like it or love it",
+        "It’s okay",
+        "Sarcasm is formulaic and lazy"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-406",
+      "sourceId": "406",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "Would you develop a new hobby/cultivate a new interest just to have something in common with your partner?",
+      "options": [
+        "Sure, it’s good to do stuff together",
+        "No, we should maintain our own identities",
+        "Maybe, but only if it seemed cool"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-407",
+      "sourceId": "407",
+      "tier": 100,
+      "topic": "Lifestyle",
+      "prompt": "How tall are you?",
+      "options": [
+        "shorter than 5’6 / 1.67m",
+        "5’6 / 1.67m – 5’9 / 1.75m"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-411",
+      "sourceId": "411",
+      "tier": 100,
+      "topic": "Ethics",
+      "prompt": "You’re riding along in a friend’s car when he or she throws some trash out the window. How might you react?",
+      "options": [
+        "I’d express my clear disapproval.",
+        "I’d make a disapproving sound or joke.",
+        "I wouldn’t really care.",
+        "I’d throw my own trash out the window, too."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-414",
+      "sourceId": "414",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "How much communication is ideal during sex?",
+      "options": [
+        "A lot! It’s all about the talk.",
+        "Just enough to get things right.",
+        "None. Shut up so I can concentrate."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-415",
+      "sourceId": "415",
+      "tier": 250,
+      "topic": "Health",
+      "prompt": "Could you do 25 pushups without stopping?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-418",
+      "sourceId": "418",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "Do you have a fetish that you would like to employ in your next relationship?",
+      "options": [
+        "Yes, and you can find out more on my profile",
+        "Yes, but I’m not saying it out in the open",
+        "Not really / Not sure",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-419",
+      "sourceId": "419",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "Would you allow your partner to decide what you wear to bed?",
+      "options": [
+        "Yes, always.",
+        "Yes, sometimes.",
+        "No, never."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-420",
+      "sourceId": "420",
+      "tier": 100,
+      "topic": "Personality",
+      "prompt": "Is it possible for you to like someone whom you don’t respect?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-421",
+      "sourceId": "421",
+      "tier": 250,
+      "topic": "Culture",
+      "prompt": "Can you name any ballet other than the Nutcracker?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-423",
+      "sourceId": "423",
+      "tier": 250,
+      "topic": "Lifestyle",
+      "prompt": "If something you own breaks, which is closest to your first reaction?",
+      "options": [
+        "Replace it.",
+        "Pay someone to fix it.",
+        "Figure out how to fix it myself.",
+        "Forget about it."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-425",
+      "sourceId": "425",
+      "tier": 250,
+      "topic": "Personality",
+      "prompt": "Are “trendy” and “hip” insults to you?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-428",
+      "sourceId": "428",
+      "tier": 100,
+      "topic": "Dating & relationships",
+      "prompt": "If a blind date used a coupon while paying for dinner, how would you feel?",
+      "options": [
+        "Negative. That’s tacky/cheap.",
+        "Positive. Very sensible.",
+        "I don’t care either way."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-431",
+      "sourceId": "431",
+      "tier": 250,
+      "topic": "Ethics",
+      "prompt": "If someone intentionally damaged your property, would you be more likely to call the police, or to fight them?",
+      "options": [
+        "Call the police",
+        "Fight them"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-432",
+      "sourceId": "432",
+      "tier": 250,
+      "topic": "Personality",
+      "prompt": "Could you date someone with no long-term goals?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-433",
+      "sourceId": "433",
+      "tier": 100,
+      "topic": "Sex & intimacy",
+      "prompt": "Once you’re intimate, how often would you and your significant other have sex?",
+      "options": [
+        "Every day",
+        "About every other day",
+        "Once or twice a week",
+        "A few times a month or less"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-434",
+      "sourceId": "434",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "You’re up against a nearly impossible challenge. Your ideal partner…",
+      "options": [
+        "pushes you hard to succeed",
+        "reminds you to be realistic",
+        "stands back, but comforts you if you fail"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-435",
+      "sourceId": "435",
+      "tier": 10,
+      "topic": "Dating & relationships",
+      "prompt": "If you were involved in a serious relationship, at which of the following points would you begin looking for new potential partners?",
+      "options": [
+        "When the relationship was not going well.",
+        "When I was certain the relationship was ending.",
+        "After the relationship was formally terminated.",
+        "All of the time."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-438",
+      "sourceId": "438",
+      "tier": 50,
+      "topic": "Health",
+      "prompt": "I prefer to sleep…",
+      "options": [
+        "Alone",
+        "With my partner, but apart (not touching)",
+        "Touching my partner",
+        "Embracing / cuddling my partner"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-439",
+      "sourceId": "439",
+      "tier": 100,
+      "topic": "Social life",
+      "prompt": "How important is it for your partner to have many friends?",
+      "options": [
+        "Very Important",
+        "Important",
+        "Somewhat Important",
+        "Not Important"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-440",
+      "sourceId": "440",
+      "tier": 100,
+      "topic": "Personality",
+      "prompt": "Which word describes you better?",
+      "options": [
+        "Private",
+        "Social"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-441",
+      "sourceId": "441",
+      "tier": 100,
+      "topic": "Lifestyle",
+      "prompt": "How often do you wear cologne or perfume?",
+      "options": [
+        "Every day",
+        "3 times a week",
+        "Once or twice a week",
+        "Never"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-442",
+      "sourceId": "442",
+      "tier": 50,
+      "topic": "Attraction",
+      "prompt": "Which characteristic is most attractive in a date?",
+      "options": [
+        "They’re sleek, sophisticated and well-styled",
+        "They’re provocative, daring and unexpected",
+        "They’re sexy in a way I can’t quite pin down"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-443",
+      "sourceId": "443",
+      "tier": 50,
+      "topic": "Commitment & family",
+      "prompt": "Would you date someone who was only interested in a committed, long-term relationship?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-446",
+      "sourceId": "446",
+      "tier": 50,
+      "topic": "Dating & relationships",
+      "prompt": "Is it possible for your partner to reveal too much information?",
+      "options": [
+        "Yes, I prefer a little bit of mystery",
+        "Maybe, I want to know all the important stuff",
+        "No, I want to know everything"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-447",
+      "sourceId": "447",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "Would you buy your partner perfume or cologne as a gift?",
+      "options": [
+        "Yes, a scent I love.",
+        "Yes, a scent that they love.",
+        "No, I wouldn’t give it as a gift."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-448",
+      "sourceId": "448",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "Which is scarier to reveal to a new partner?",
+      "options": [
+        "Your emotions",
+        "Your body",
+        "Both equally"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-451",
+      "sourceId": "451",
+      "tier": 50,
+      "topic": "Lifestyle",
+      "prompt": "How messy are you?",
+      "options": [
+        "I’m very messy",
+        "I’m average",
+        "I’m mostly organized",
+        "I’m compulsively neat"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-453",
+      "sourceId": "453",
+      "tier": 50,
+      "topic": "Health",
+      "prompt": "How are your teeth?",
+      "options": [
+        "Perfect",
+        "Okay",
+        "Kinda Scraggly",
+        "Fucked Up"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-454",
+      "sourceId": "454",
+      "tier": 250,
+      "topic": "Lifestyle",
+      "prompt": "Imagine being all alone in the great outdoors, miles from anyone, with no communication device. Nobody knows where you are.",
+      "options": [
+        "This is something I would like.",
+        "This is something I would avoid."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-455",
+      "sourceId": "455",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "Would you go on a first date to a nude beach?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-456",
+      "sourceId": "456",
+      "tier": 50,
+      "topic": "Dating & relationships",
+      "prompt": "Even if it isn’t your personal style, would you dress accordingly to a partner’s wishes, just to make them happy during an outing?",
+      "options": [
+        "Yes, without question.",
+        "Yes, within reason.",
+        "No."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-458",
+      "sourceId": "458",
+      "tier": 250,
+      "topic": "Health",
+      "prompt": "How many times do you usually hit the snooze button on your alarm clock?",
+      "options": [
+        "Zero. I get up immediately when the alarm sounds",
+        "One or two times",
+        "Three or more times",
+        "I do not usually use an alarm clock to wake up"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-459",
+      "sourceId": "459",
+      "tier": 250,
+      "topic": "Culture",
+      "prompt": "Do you think you have what it takes to be a successful actor or actress?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-460",
+      "sourceId": "460",
+      "tier": 50,
+      "topic": "Commitment & family",
+      "prompt": "How many romantic partners have you lived with?",
+      "options": [
+        "0",
+        "1",
+        "2-3",
+        "4+"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-462",
+      "sourceId": "462",
+      "tier": 50,
+      "topic": "Politics",
+      "prompt": "Do you believe that people should take a parental fitness test before being allowed to reproduce?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-465",
+      "sourceId": "465",
+      "tier": 250,
+      "topic": "Religion & beliefs",
+      "prompt": "Have you ever seen ghosts, spirits, aliens, or witnessed some kind of paranormal activity?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-466",
+      "sourceId": "466",
+      "tier": 50,
+      "topic": "Dating & relationships",
+      "prompt": "Which of the following forms of poetry best resembles what you desire in a relationship?",
+      "options": [
+        "A Sonnet – Controlled, deliberate, and surprising",
+        "A Haiku – Short, simple, and vivid",
+        "An Epic – Long, meandering, and powerful",
+        "Free Verse – Wild, shifting, and confusing"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-467",
+      "sourceId": "467",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "Have your sexual interests become kinkier as you’ve grown older?",
+      "options": [
+        "Yes.",
+        "No, they haven’t changed much.",
+        "No, just the opposite.",
+        "No, I have no sexual interests."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-468",
+      "sourceId": "468",
+      "tier": 50,
+      "topic": "Dating & relationships",
+      "prompt": "Should your mate also become your best friend?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-469",
+      "sourceId": "469",
+      "tier": 50,
+      "topic": "Social life",
+      "prompt": "Did you have a dysfunctional upbringing?",
+      "options": [
+        "Yes, very much so.",
+        "Yes, to some extent.",
+        "No, not at all."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-470",
+      "sourceId": "470",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "Suppose a close friend’s partner is very attractive and thinks you’re attractive, too. If you could enjoy a few hours of sex with them and your friend would never find out about it, would you do it?",
+      "options": [
+        "Yes.",
+        "No."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-472",
+      "sourceId": "472",
+      "tier": 50,
+      "topic": "Dating & relationships",
+      "prompt": "Pick the best date on this list:",
+      "options": [
+        "A really nice restaurant",
+        "A really divey bar",
+        "A day at the beach"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-473",
+      "sourceId": "473",
+      "tier": 50,
+      "topic": "Health",
+      "prompt": "Does your ideal schedule involve staying up very late at night and sleeping during the day?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-474",
+      "sourceId": "474",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "Would you consider dating someone who is much kinkier than you are?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-475",
+      "sourceId": "475",
+      "tier": 250,
+      "topic": "Food & drink",
+      "prompt": "Are you a ‘double dipper’? In other words, do you ever take a bite of food and then dip it back into a shared sauce or dip?",
+      "options": [
+        "Yes, I double dip indiscriminately.",
+        "Yes, but only with family or close friends.",
+        "Yes, but only with a partner.",
+        "No, never."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-476",
+      "sourceId": "476",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "Would you consider attending a clothing-optional costume party where the dress code permits guests to wear nothing more than body paint?",
+      "options": [
+        "Yes, and I’d be wearing little more than paint.",
+        "Yes, but I’d wear a more traditional costume.",
+        "No."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-477",
+      "sourceId": "477",
+      "tier": 50,
+      "topic": "Culture",
+      "prompt": "Which horror movie would you be most likely to survive?",
+      "options": [
+        "Nightmare on Elm Street (I can go without sleep)",
+        "Hellraiser (I don’t care how cool that box is)",
+        "Blair Witch Project (I’d set that forest on fire!)",
+        "This is a stupid question"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-478",
+      "sourceId": "478",
+      "tier": 250,
+      "topic": "Lifestyle",
+      "prompt": "How long does it take you to get ready in the morning?",
+      "options": [
+        "I’m ready when I wake up",
+        "Less than 1 hour",
+        "1 – 2 hours",
+        "2 hours or more"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-479",
+      "sourceId": "479",
+      "tier": 10,
+      "topic": "Dating & relationships",
+      "prompt": "Which one would hurt you more?",
+      "options": [
+        "A lover cheating on you",
+        "A thief stealing from you",
+        "A friend ruining your good name"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-480",
+      "sourceId": "480",
+      "tier": 250,
+      "topic": "Lifestyle",
+      "prompt": "Do you wash your sheets regularly?",
+      "options": [
+        "Yes",
+        "No",
+        "I don’t even use sheets"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-481",
+      "sourceId": "481",
+      "tier": 250,
+      "topic": "Work & ambition",
+      "prompt": "Do you consider yourself financially responsible?",
+      "options": [
+        "Yes, completely.",
+        "Yes, mostly.",
+        "I’m working on it!",
+        "No."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-482",
+      "sourceId": "482",
+      "tier": 250,
+      "topic": "Health",
+      "prompt": "Do you work out a lot?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-483",
+      "sourceId": "483",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "You’ve been on a couple of dates with someone, but you’re not too into them. However, they like you, and keep calling/texting. What do you do?",
+      "options": [
+        "Talk, explain your (lack of) feelings.",
+        "Tell them you’ll call later but then don’t.",
+        "Don’t answer/ignore them."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-484",
+      "sourceId": "484",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "In a relationship communication is key…",
+      "options": [
+        "True; but I don’t call everyday",
+        "True; our lives should be shared",
+        "False; We all need space",
+        "False; Distance makes the heart grow fonder"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-486",
+      "sourceId": "486",
+      "tier": 10,
+      "topic": "Work & ambition",
+      "prompt": "Could you date someone who wasn’t sure what they wanted to do with their life?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-488",
+      "sourceId": "488",
+      "tier": 250,
+      "topic": "Culture",
+      "prompt": "Would you consider dating someone who uses profanity more than not in everyday speech?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-490",
+      "sourceId": "490",
+      "tier": 250,
+      "topic": "What if?",
+      "prompt": "Would you rather be omnipotent (all-powerful) or omniscient (all-knowing)?",
+      "options": [
+        "Omniscient; give me knowledge.",
+        "Omnipotent; give me power."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-492",
+      "sourceId": "492",
+      "tier": 250,
+      "topic": "Lifestyle",
+      "prompt": "Imagine you’re on a date with someone you really like and you decide to go to their place for the first time. Their place turns out to be a pigsty. Your reaction?",
+      "options": [
+        "Goodnight and goodbye.",
+        "Grin and bear it.",
+        "Dive in and start scrubbing.",
+        "I’d feel right at home."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-496",
+      "sourceId": "496",
+      "tier": 250,
+      "topic": "Attraction",
+      "prompt": "Does the idea of being attractive enough to manipulate people appeal to you?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-497",
+      "sourceId": "497",
+      "tier": 250,
+      "topic": "Lifestyle",
+      "prompt": "Do you look better dressed or naked?",
+      "options": [
+        "Dressed",
+        "Naked"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-498",
+      "sourceId": "498",
+      "tier": 250,
+      "topic": "Politics",
+      "prompt": "Would you like to live in a small community where everyone lives and works together, and where all property and possessions are owned collectively?",
+      "options": [
+        "Yes.",
+        "No.",
+        "Perhaps, depending upon the specifics.",
+        "I already do!"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-500",
+      "sourceId": "500",
+      "tier": 250,
+      "topic": "Food & drink",
+      "prompt": "Would you ever eat something out of the trash?",
+      "options": [
+        "Yes",
+        "Maybe (if it’s still good)",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-501",
+      "sourceId": "501",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "What would be more likely to bother you in a relationship?",
+      "options": [
+        "Not enough space",
+        "Not enough affection"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-502",
+      "sourceId": "502",
+      "tier": 10,
+      "topic": "Personality",
+      "prompt": "If you could have brilliant skill at something, would you prefer:",
+      "options": [
+        "Something practical",
+        "Something fun"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-504",
+      "sourceId": "504",
+      "tier": 100,
+      "topic": "Lifestyle",
+      "prompt": "You’ve been dating someone for a few months, and things are going well. Really well. One day they ask you to get matching tattoos. How do you respond?",
+      "options": [
+        "Agree. Why not?",
+        "Agree to get tattoos together, but not matching",
+        "Decline, but suggest something else to do together",
+        "Decline, and reconsider the relationship"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-505",
+      "sourceId": "505",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "Do you enjoy meaningless sex?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-506",
+      "sourceId": "506",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "Imagine that your partner does not enjoy performing oral sex and refuses to ever perform it on you. How disappointed would you be?",
+      "options": [
+        "Extremely disappointed.",
+        "Somewhat disappointed.",
+        "Slightly disappointed.",
+        "Not at all disappointed."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-508",
+      "sourceId": "508",
+      "tier": 250,
+      "topic": "Food & drink",
+      "prompt": "Can you cook?",
+      "options": [
+        "Yes, I’m a culinary genius.",
+        "Yes, with a cook book.",
+        "No, but I try.",
+        "No, there’s always fast food."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-509",
+      "sourceId": "509",
+      "tier": 50,
+      "topic": "Personality",
+      "prompt": "“It’s not that I’m lazy; it’s that I just don’t care.” Does this statement apply to you?",
+      "options": [
+        "Yes",
+        "In groups, think of Daria playing volleyball.",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-510",
+      "sourceId": "510",
+      "tier": 10,
+      "topic": "Dating & relationships",
+      "prompt": "Is it easier to love or to hate?",
+      "options": [
+        "Love",
+        "Hate"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-511",
+      "sourceId": "511",
+      "tier": 250,
+      "topic": "Culture",
+      "prompt": "What do you find most appealing in a television series, movie, or book?",
+      "options": [
+        "Compelling action, drama, or total immersion.",
+        "Having empathy for the characters.",
+        "Underlying message or commentary.",
+        "Creativity by the actors or film makers."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-512",
+      "sourceId": "512",
+      "tier": 250,
+      "topic": "Ethics",
+      "prompt": "Have you ever cheated on an exam?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-513",
+      "sourceId": "513",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "Would you ever date or mess around with a good friend’s ex?",
+      "options": [
+        "Yes, why not?",
+        "No",
+        "Yes, but only with my friend’s permission"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-515",
+      "sourceId": "515",
+      "tier": 250,
+      "topic": "Smoking, drinking & substances",
+      "prompt": "Have you used psychedelic drugs (LSD, mescaline, peyote, etc.) or would you like to?",
+      "options": [
+        "Yes, I have used psychedelic drugs",
+        "No, I have not used them and I would not try them",
+        "No, I have not used them but I would try them"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-516",
+      "sourceId": "516",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "How important is it to you to have your own unique thing (like a weekly girls’ night or guys’ night) that you don’t share with your partner?",
+      "options": [
+        "Very – I need some me time to be happy",
+        "Sort of – I need friends outside of my partner",
+        "Not much – I like sharing stuff with my partner",
+        "I’d prefer not to have exclusive things"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-518",
+      "sourceId": "518",
+      "tier": 250,
+      "topic": "Commitment & family",
+      "prompt": "In an ideal world, who would get the highest priority in your life?",
+      "options": [
+        "My parents.",
+        "My children.",
+        "My significant other.",
+        "Myself."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-519",
+      "sourceId": "519",
+      "tier": 250,
+      "topic": "Culture",
+      "prompt": "Are you a fan of the works of Ayn Rand?",
+      "options": [
+        "Yes, for her philosophy.",
+        "Yes, for their literary value.",
+        "No.",
+        "Who?"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-520",
+      "sourceId": "520",
+      "tier": 250,
+      "topic": "Religion & beliefs",
+      "prompt": "Do trees have souls?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-524",
+      "sourceId": "524",
+      "tier": 250,
+      "topic": "Lifestyle",
+      "prompt": "Which sounds like a more appealing way to spend a year?",
+      "options": [
+        "Travelling the world, working along the way.",
+        "Living in one city with all expenses paid."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-527",
+      "sourceId": "527",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "Is it okay for someone to try and influence their romantic partner’s appearance or clothing?",
+      "options": [
+        "Couples should try to look good for each other",
+        "As long as it’s not extreme and they ask nicely",
+        "They shouldn’t try to change their partner",
+        "Demands create weird power struggles"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-529",
+      "sourceId": "529",
+      "tier": 250,
+      "topic": "Ethics",
+      "prompt": "After dating someone for a while, you finally get to see where they live. They leave you alone to go take a quick shower. Would you snoop?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-530",
+      "sourceId": "530",
+      "tier": 250,
+      "topic": "Lifestyle",
+      "prompt": "On a daily basis, do you spend a lot of time trying to make yourself look good?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-532",
+      "sourceId": "532",
+      "tier": 250,
+      "topic": "Ethics",
+      "prompt": "Have you ever been to prison?",
+      "options": [
+        "Yes",
+        "No",
+        "Just to visit / I was working"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-533",
+      "sourceId": "533",
+      "tier": 250,
+      "topic": "Culture",
+      "prompt": "Cell phones: good or evil?",
+      "options": [
+        "Good",
+        "Evil"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-534",
+      "sourceId": "534",
+      "tier": 250,
+      "topic": "Social life",
+      "prompt": "Would you date someone who states up front that they will never be willing to go dancing?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-535",
+      "sourceId": "535",
+      "tier": 250,
+      "topic": "Culture",
+      "prompt": "Imagine you’re at an art gallery and you see a canvas painted solid red. It is selling for more money than you make in a year. Which of the following would be closest to your reaction?",
+      "options": [
+        "I’d like to know more about its meaning.",
+        "The price is outrageous.",
+        "I could have painted that myself.",
+        "It’s really pleasing to look at."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-537",
+      "sourceId": "537",
+      "tier": 250,
+      "topic": "Ethics",
+      "prompt": "Would you—for any reason—read your mate’s email or pose as them online, without their knowledge and permission?",
+      "options": [
+        "Yes, they shouldn’t be keeping secrets anyway.",
+        "Yes, I’d be too curious not to.",
+        "Only if I suspected them of something.",
+        "No, I’d trust them and that would be invasive."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-538",
+      "sourceId": "538",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "How long do your romantic relationships usually last?",
+      "options": [
+        "0-6 months",
+        "6-12 months",
+        "12+ months",
+        "I’ve never been in a relationship"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-540",
+      "sourceId": "540",
+      "tier": 250,
+      "topic": "Health",
+      "prompt": "Do you feel like you’re still hurting from something that happened to you a long time ago?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-541",
+      "sourceId": "541",
+      "tier": 250,
+      "topic": "Religion & beliefs",
+      "prompt": "Approximately how many hours per week do you dedicate to spiritual activity?",
+      "options": [
+        "Zero.",
+        "One hour or less.",
+        "One to four hours.",
+        "More than four hours."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-542",
+      "sourceId": "542",
+      "tier": 10,
+      "topic": "Personality",
+      "prompt": "For which emotion is self-restraint the most crucial?",
+      "options": [
+        "Anger",
+        "Fear",
+        "Lust",
+        "Jealousy"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-547",
+      "sourceId": "547",
+      "tier": 250,
+      "topic": "Lifestyle",
+      "prompt": "Which of the following could you most easily live without for an entire month?",
+      "options": [
+        "Toothbrush and toothpaste.",
+        "Phone.",
+        "Internet.",
+        "Porn."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-549",
+      "sourceId": "549",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "Someone in an open relationship asks you out on a date. You:",
+      "options": [
+        "Refuse / Aren’t interested in open relationships",
+        "Are hesitant, but would consider it",
+        "Accept / Are open to non-monogamous relationships"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-551",
+      "sourceId": "551",
+      "tier": 250,
+      "topic": "Work & ambition",
+      "prompt": "Do you have (or are you getting) a degree from one of the 8 ivy league universities, MIT, Stanford, Duke, U Chicago, or Caltech?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-552",
+      "sourceId": "552",
+      "tier": 250,
+      "topic": "Culture",
+      "prompt": "Do you find science to be interesting?",
+      "options": [
+        "Yes – Hard Science (Biology, Chemistry, Physics).",
+        "Yes – Social Science (Psychology, Sociology).",
+        "Yes – Both are interesting.",
+        "No – None are interesting."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-553",
+      "sourceId": "553",
+      "tier": 250,
+      "topic": "Commitment & family",
+      "prompt": "Who will be responsible for cooking the meals and cleaning the house? Assume you both work.",
+      "options": [
+        "Me",
+        "My partner",
+        "We will split or take turns",
+        "Not my concern / Don’t care / Other"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-555",
+      "sourceId": "555",
+      "tier": 250,
+      "topic": "Personality",
+      "prompt": "How often do you do things out of spite?",
+      "options": [
+        "Very often.",
+        "Sometimes.",
+        "Rarely.",
+        "Never."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-557",
+      "sourceId": "557",
+      "tier": 250,
+      "topic": "Attraction",
+      "prompt": "Not ideally, but realistically, do you flock to the “bad” boys/girls?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-561",
+      "sourceId": "561",
+      "tier": 250,
+      "topic": "Lifestyle",
+      "prompt": "Would you allow a pet to sleep on your bed?",
+      "options": [
+        "Yes.",
+        "No."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-563",
+      "sourceId": "563",
+      "tier": 250,
+      "topic": "Culture",
+      "prompt": "Would you rather be the performer, in the audience, or behind the scenes?",
+      "options": [
+        "Performer",
+        "Audience",
+        "Behind the scenes"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-564",
+      "sourceId": "564",
+      "tier": 250,
+      "topic": "Culture",
+      "prompt": "How many concerts do you attend a year?",
+      "options": [
+        "8+",
+        "4-7",
+        "1-3",
+        "0, typically"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-565",
+      "sourceId": "565",
+      "tier": 250,
+      "topic": "Ethics",
+      "prompt": "When it comes to right and wrong, which of the following do you think has the greatest impact on your belief system?",
+      "options": [
+        "Religion.",
+        "Family and/or friends.",
+        "Laws.",
+        "Self interest."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-4"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-566",
+      "sourceId": "566",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "Would you date someone who has genital herpes?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-568",
+      "sourceId": "568",
+      "tier": 250,
+      "topic": "Attraction",
+      "prompt": "Other things being equal, would you be more attracted to an artist or a scientist?",
+      "options": [
+        "Artist",
+        "Scientist"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-569",
+      "sourceId": "569",
+      "tier": 250,
+      "topic": "Ethics",
+      "prompt": "Is it more important to you that you are tactful, or truthful?",
+      "options": [
+        "Tactful",
+        "Truthful"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-571",
+      "sourceId": "571",
+      "tier": 250,
+      "topic": "Ethics",
+      "prompt": "If I saw someone do something that deeply offended me or was illegal, I would:",
+      "options": [
+        "Confront the person.",
+        "Do nothing, move on.",
+        "Alert someone with more power.",
+        "Blackmail the offender."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-572",
+      "sourceId": "572",
+      "tier": 250,
+      "topic": "Smoking, drinking & substances",
+      "prompt": "Do you think drug use with your partner can be a romantic activity?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-573",
+      "sourceId": "573",
+      "tier": 250,
+      "topic": "Politics",
+      "prompt": "Is global warming a serious problem?",
+      "options": [
+        "Yes",
+        "No",
+        "I don’t know"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-576",
+      "sourceId": "576",
+      "tier": 250,
+      "topic": "Ethics",
+      "prompt": "Does it bother you when people are late?",
+      "options": [
+        "Yes, always.",
+        "No, never.",
+        "Sometimes, it depends upon the circumstances."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-578",
+      "sourceId": "578",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "Orgasms are clearly the most important part of sex.",
+      "options": [
+        "I agree.",
+        "I disagree."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-579",
+      "sourceId": "579",
+      "tier": 100,
+      "topic": "Attraction",
+      "prompt": "Do you find body hair attractive?",
+      "options": [
+        "Yes",
+        "No",
+        "Depends on where the hair is"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-580",
+      "sourceId": "580",
+      "tier": 250,
+      "topic": "Commitment & family",
+      "prompt": "If you had children, would you be willing to support a significant other who stays home to raise them?",
+      "options": [
+        "Yes.",
+        "No.",
+        "Maybe, depending upon the circumstances."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-583",
+      "sourceId": "583",
+      "tier": 250,
+      "topic": "Ethics",
+      "prompt": "Compassion is:",
+      "options": [
+        "A sign of strength",
+        "A sign of weakness",
+        "Neither"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-585",
+      "sourceId": "585",
+      "tier": 250,
+      "topic": "Attraction",
+      "prompt": "Would dealing face to face with someone with an impediment (nervous facial tic, bad stutter) make you uncomfortable or frustrated?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-586",
+      "sourceId": "586",
+      "tier": 250,
+      "topic": "Ethics",
+      "prompt": "Do you value humility?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-587",
+      "sourceId": "587",
+      "tier": 250,
+      "topic": "Ethics",
+      "prompt": "Do you believe that courteous behavior, such as saying “thank you” or holding a door, is important even when the other person involved does not deserve it?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-588",
+      "sourceId": "588",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "Imagine your otherwise perfect match has one habit that you find to be very unattractive, but it seems that they are trying to keep it private. Do you ask them to stop?",
+      "options": [
+        "Yes.",
+        "No."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-591",
+      "sourceId": "591",
+      "tier": 250,
+      "topic": "Attraction",
+      "prompt": "Are you annoyed by people who are super logical?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-593",
+      "sourceId": "593",
+      "tier": 250,
+      "topic": "Food & drink",
+      "prompt": "Do you prefer to eat organic food?",
+      "options": [
+        "Yes, as much as possible",
+        "I would, but it’s too expensive",
+        "Sometimes, if it’s easy to get",
+        "No / Don’t Care"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-594",
+      "sourceId": "594",
+      "tier": 250,
+      "topic": "Ethics",
+      "prompt": "Do you consider a person’s social class when you interact with them?",
+      "options": [
+        "Yes.",
+        "No."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-595",
+      "sourceId": "595",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "Do you and your ideal significant other enjoy making sarcastic jokes at each other’s expense, knowing that it’s all in good fun?",
+      "options": [
+        "Yes! That’s a personality trait we have to share",
+        "Sometimes, but not too much",
+        "No, sarcasm doesn’t belong in a love relationship",
+        "I can’t dish it out, but I’d take it, I guess"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-598",
+      "sourceId": "598",
+      "tier": 250,
+      "topic": "Culture",
+      "prompt": "Watching cartoons as an adult is…?",
+      "options": [
+        "Pathetic",
+        "Cool",
+        "I don’t care either way / Not sure"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-601",
+      "sourceId": "601",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "Can two people fall in love without ever meeting in person?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-602",
+      "sourceId": "602",
+      "tier": 250,
+      "topic": "Attraction",
+      "prompt": "Which of the following broad gender descriptions are you most attracted to?",
+      "options": [
+        "Femininity.",
+        "Masculinity.",
+        "Androgyny.",
+        "No preference."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-610",
+      "sourceId": "610",
+      "tier": 250,
+      "topic": "Attraction",
+      "prompt": "If you meet someone and they are everything you are looking for, except their body type, do you give them a chance?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-611",
+      "sourceId": "611",
+      "tier": 250,
+      "topic": "Social life",
+      "prompt": "Would you enjoy going to an all night dance party?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-612",
+      "sourceId": "612",
+      "tier": 250,
+      "topic": "Attraction",
+      "prompt": "Is the idea of being kissed in the rain a turn-on or turn-off?",
+      "options": [
+        "On.",
+        "Off."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-616",
+      "sourceId": "616",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "If I saw someone checking out my significant other, I’d feel:",
+      "options": [
+        "flattered / proud",
+        "protective / concerned",
+        "unchanged"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-618",
+      "sourceId": "618",
+      "tier": 250,
+      "topic": "Culture",
+      "prompt": "How do you feel about documentaries?",
+      "options": [
+        "Yay!",
+        "Okay",
+        "NO."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-620",
+      "sourceId": "620",
+      "tier": 250,
+      "topic": "Personality",
+      "prompt": "Which is worse?",
+      "options": [
+        "Someone who is always happy",
+        "Someone who is always sad"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-626",
+      "sourceId": "626",
+      "tier": 250,
+      "topic": "Lifestyle",
+      "prompt": "Can you change a tire on your own?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-627",
+      "sourceId": "627",
+      "tier": 250,
+      "topic": "Commitment & family",
+      "prompt": "How do you feel about kids?",
+      "options": [
+        "Kids are precious—they love me and I love them",
+        "They’re okay, but keep the unruly ones at bay",
+        "How revolting",
+        "I’m indifferent"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-628",
+      "sourceId": "628",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "In terms of relationships, which of these is it the most important to find?",
+      "options": [
+        "Someone for whom you would do anything.",
+        "Someone who turns you on.",
+        "Someone you feel like you’ve known forever.",
+        "Someone with goals similar to yours."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-629",
+      "sourceId": "629",
+      "tier": 250,
+      "topic": "Lifestyle",
+      "prompt": "Would you consider living with a partner who does not want any pets?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-630",
+      "sourceId": "630",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "Would you date someone who was looking for true love – but no sex, at all, ever?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-632",
+      "sourceId": "632",
+      "tier": 100,
+      "topic": "Personality",
+      "prompt": "Is it okay for you to be irrational in making important life decisions?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-635",
+      "sourceId": "635",
+      "tier": 250,
+      "topic": "Health",
+      "prompt": "How frequently do you bathe or shower?",
+      "options": [
+        "At least once a day.",
+        "Usually daily. I skip some.",
+        "A couple times a week.",
+        "Once a week or less."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-637",
+      "sourceId": "637",
+      "tier": 250,
+      "topic": "Culture",
+      "prompt": "Does your partner have to be an active reader?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-638",
+      "sourceId": "638",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "Group sex (with 3 or more people)?:",
+      "options": [
+        "I have tried it.",
+        "It seriously interests me.",
+        "I have little or no interest."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-639",
+      "sourceId": "639",
+      "tier": 100,
+      "topic": "Dating & relationships",
+      "prompt": "Do you think that smarter people are usually capable of deeper love?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-642",
+      "sourceId": "642",
+      "tier": 250,
+      "topic": "Ethics",
+      "prompt": "Would you prefer to be a financial success or to remain true to your principles?",
+      "options": [
+        "Financial success, please.",
+        "I’ll stick with my principles, thanks."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-643",
+      "sourceId": "643",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "Do you believe that regular sex is necessary in maintaining a healthy relationship?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-644",
+      "sourceId": "644",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "Do you think physical love is necessary for happiness in life?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-645",
+      "sourceId": "645",
+      "tier": 250,
+      "topic": "Lifestyle",
+      "prompt": "Do you enjoy outdoor activities such as camping, hiking or fishing?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-646",
+      "sourceId": "646",
+      "tier": 250,
+      "topic": "Culture",
+      "prompt": "Which is closest to your reaction to foul language?",
+      "options": [
+        "It doesn’t bother me at all.",
+        "It’s ok as long as it isn’t every other word.",
+        "It bothers me a little.",
+        "It bothers me a lot."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-3",
+        "option-4"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-648",
+      "sourceId": "648",
+      "tier": 250,
+      "topic": "Commitment & family",
+      "prompt": "Could you date someone who already has children from a previous relationship?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-649",
+      "sourceId": "649",
+      "tier": 250,
+      "topic": "Personality",
+      "prompt": "Which of the following learning approaches would you prefer?",
+      "options": [
+        "Doing and figuring it out myself.",
+        "Watching someone else do it.",
+        "Listening to someone explain how it’s done.",
+        "Reading about how it should be done."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-654",
+      "sourceId": "654",
+      "tier": 50,
+      "topic": "Personality",
+      "prompt": "If you were to die, would whoever goes through your personal belongings be shocked by what they find?",
+      "options": [
+        "Yes.",
+        "No.",
+        "I don’t think porn or abstract poetry is very shocking.",
+        "Maybe a little bit."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-657",
+      "sourceId": "657",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "Overhearing a sexual encounter would make you feel…",
+      "options": [
+        "Aroused",
+        "Annoyed",
+        "Lonely",
+        "Indifferent"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-659",
+      "sourceId": "659",
+      "tier": 250,
+      "topic": "Commitment & family",
+      "prompt": "Would you date a single parent?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-662",
+      "sourceId": "662",
+      "tier": 250,
+      "topic": "Politics",
+      "prompt": "What is more important to humanity:",
+      "options": [
+        "Establishing a Mars Colony",
+        "Uniting all governments into one",
+        "Curing most known diseases",
+        "Eliminating poverty"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-665",
+      "sourceId": "665",
+      "tier": 250,
+      "topic": "Ethics",
+      "prompt": "Does it bother you when someone regularly speaks in a loud voice?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-673",
+      "sourceId": "673",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "Do you think head games are unavoidable, even in the healthiest of relationships?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-678",
+      "sourceId": "678",
+      "tier": 250,
+      "topic": "Work & ambition",
+      "prompt": "I would rather be….",
+      "options": [
+        "Unemployed, broke, but busy doing things I love",
+        "Working 60 hours a week at a job I like",
+        "Working regular hours at a job I hate"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-683",
+      "sourceId": "683",
+      "tier": 10,
+      "topic": "Personality",
+      "prompt": "If you had to name your greatest motivation in life thus far, what would it be?",
+      "options": [
+        "Love",
+        "Wealth",
+        "Expression",
+        "Knowledge"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-686",
+      "sourceId": "686",
+      "tier": 50,
+      "topic": "Personality",
+      "prompt": "Do you typically feel better or worse after a social gathering?",
+      "options": [
+        "Better.",
+        "Worse.",
+        "No different.",
+        "It depends."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-695",
+      "sourceId": "695",
+      "tier": 100,
+      "topic": "Personality",
+      "prompt": "Imagine your view on a controversial topic is very strong. You suspect it to be in direct opposition to that of your date’s parents, who you are just getting to know. Would you argue the issues with them?",
+      "options": [
+        "Yes, at my first opportunity.",
+        "Yes, but only if they brought the topic up.",
+        "Yes, but only if my opinion was asked.",
+        "No, I would avoid the topic altogether."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-705",
+      "sourceId": "705",
+      "tier": 100,
+      "topic": "Personality",
+      "prompt": "Generally, in life, what makes you happier?",
+      "options": [
+        "Quality",
+        "Variety"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-717",
+      "sourceId": "717",
+      "tier": 100,
+      "topic": "What if?",
+      "prompt": "If a method were available that would cause the extinction of all mosquitoes on Earth, should it be used?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-727",
+      "sourceId": "727",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "Would you date someone who was already in a committed relationship with someone else?",
+      "options": [
+        "Yes, even in secret.",
+        "Yes, but only if everybody knew.",
+        "No, but I don’t think it’s inherently wrong.",
+        "No, it’s wrong."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-749",
+      "sourceId": "749",
+      "tier": 100,
+      "topic": "Smoking, drinking & substances",
+      "prompt": "Is smoking disgusting?",
+      "options": [
+        "Yes",
+        "Smoking is for melancholic people who smell bad.",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-764",
+      "sourceId": "764",
+      "tier": 250,
+      "topic": "Personality",
+      "prompt": "Which aspect of the salmon life cycle best corresponds with your current state in life?I’m a(n)…",
+      "options": [
+        "fry; eating in the stream where I was born.",
+        "smolt; moving on to life in the big ocean.",
+        "adult; fully developed, living in salt water.",
+        "spawner; with young, dead."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-785",
+      "sourceId": "785",
+      "tier": 100,
+      "topic": "Personality",
+      "prompt": "The best days of my life are:",
+      "options": [
+        "In my future.",
+        "In my past.",
+        "Right now."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-789",
+      "sourceId": "789",
+      "tier": 100,
+      "topic": "Personality",
+      "prompt": "How important is it to be able to ‘agree to disagree’?",
+      "options": [
+        "Very important.",
+        "Somewhat important.",
+        "Not important."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-839",
+      "sourceId": "839",
+      "tier": 250,
+      "topic": "Personality",
+      "prompt": "Do you have a dark and morbid sense of humor?",
+      "options": [
+        "Yes",
+        "No",
+        "Occasionally"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-845",
+      "sourceId": "845",
+      "tier": 50,
+      "topic": "Personality",
+      "prompt": "Do you enjoy intellectual debates on topics like politics, religion, science, or philosophy?",
+      "options": [
+        "I love to argue!",
+        "Sometimes.",
+        "It’s usually boring or annoying.",
+        "I’m not smart enough."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-851",
+      "sourceId": "851",
+      "tier": 250,
+      "topic": "Smoking, drinking & substances",
+      "prompt": "Could you easily obtain illegal drugs through your social network?",
+      "options": [
+        "Yes.",
+        "No.",
+        "Only marijuana."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-877",
+      "sourceId": "877",
+      "tier": 100,
+      "topic": "Personality",
+      "prompt": "How often are you open with your feelings?",
+      "options": [
+        "Always",
+        "Usually",
+        "Rarely",
+        "Never"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-878",
+      "sourceId": "878",
+      "tier": 100,
+      "topic": "Lifestyle",
+      "prompt": "Would you radically alter your appearance (hair, clothes, body modifications) for your significant other?",
+      "options": [
+        "Yes",
+        "No way!",
+        "I’m not sure, it depends…"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-934",
+      "sourceId": "934",
+      "tier": 100,
+      "topic": "Lifestyle",
+      "prompt": "Do you have any tattoos?",
+      "options": [
+        "Yes, I have more than one tattoo.",
+        "Yes, I have one tattoo.",
+        "No, but I want to get a tattoo.",
+        "No, and I have no interest in getting a tattoo."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-979",
+      "sourceId": "979",
+      "tier": 100,
+      "topic": "Lifestyle",
+      "prompt": "How much body hair do you have?",
+      "options": [
+        "A lot",
+        "Average",
+        "Very little / none"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-1019",
+      "sourceId": "1019",
+      "tier": 50,
+      "topic": "Dating & relationships",
+      "prompt": "What is the most exciting thing about getting to know someone new?",
+      "options": [
+        "Discovering your shared interests",
+        "Discovering their body"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-1038",
+      "sourceId": "1038",
+      "tier": 100,
+      "topic": "Sex & intimacy",
+      "prompt": "Would you date somebody who was a virgin at the age of 25?",
+      "options": [
+        "Yes, definitely",
+        "Only if they were willing to give it up",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-1045",
+      "sourceId": "1045",
+      "tier": 100,
+      "topic": "Smoking, drinking & substances",
+      "prompt": "Could you date someone who does drugs?",
+      "options": [
+        "No",
+        "Yes, but only soft stuff like marijuana",
+        "Yes"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-1046",
+      "sourceId": "1046",
+      "tier": 50,
+      "topic": "Smoking, drinking & substances",
+      "prompt": "What’s your deal with harder drugs (stuff beyond pot)?",
+      "options": [
+        "I do drugs regularly.",
+        "I do drugs occasionally.",
+        "I’ve done drugs in the past, but no longer.",
+        "I never do drugs."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-1094",
+      "sourceId": "1094",
+      "tier": 250,
+      "topic": "Smoking, drinking & substances",
+      "prompt": "Would you go out with a smoker?",
+      "options": [
+        "Yes",
+        "Yes, but only an occasional/social smoker",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-1095",
+      "sourceId": "1095",
+      "tier": 250,
+      "topic": "Smoking, drinking & substances",
+      "prompt": "Do you ever feel the need to get really drunk?",
+      "options": [
+        "Often",
+        "Sometimes",
+        "Rarely",
+        "Never"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-1104",
+      "sourceId": "1104",
+      "tier": 100,
+      "topic": "What if?",
+      "prompt": "There are 3 wells: Beauty, Wealth, and Love. From which would you drink?",
+      "options": [
+        "Beauty",
+        "Wealth",
+        "Love"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-1137",
+      "sourceId": "1137",
+      "tier": 250,
+      "topic": "Dating & relationships",
+      "prompt": "If you were dating somebody that you met online, would you be reluctant to tell your friends?",
+      "options": [
+        "Yes, I would be reluctant.",
+        "No, not at all.",
+        "A little, but I would be honest with them."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-1145",
+      "sourceId": "1145",
+      "tier": 250,
+      "topic": "Attraction",
+      "prompt": "If you saw an acquaintance acting incredibly silly when they thought nobody was watching, would you be more attracted or less attracted to them?",
+      "options": [
+        "More attracted",
+        "Less attracted",
+        "My opinion of them would not change"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-1148",
+      "sourceId": "1148",
+      "tier": 100,
+      "topic": "Smoking, drinking & substances",
+      "prompt": "What’s your relationship with marijuana?",
+      "options": [
+        "I smoke regularly.",
+        "I smoke occasionally.",
+        "I smoked in the past, but no longer.",
+        "Never."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-1253",
+      "sourceId": "1253",
+      "tier": 50,
+      "topic": "Health",
+      "prompt": "Is taking care of your body important to you?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-1334",
+      "sourceId": "1334",
+      "tier": 250,
+      "topic": "Odds & ends",
+      "prompt": "Were you born in the United States?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-1382",
+      "sourceId": "1382",
+      "tier": 250,
+      "topic": "Politics",
+      "prompt": "Can you name five current world leaders?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-1410",
+      "sourceId": "1410",
+      "tier": 250,
+      "topic": "What if?",
+      "prompt": "A photographer approaches you on the street and asks to take your picture. What do you do?",
+      "options": [
+        "Pose for them",
+        "Politely refuse"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-1465",
+      "sourceId": "1465",
+      "tier": 250,
+      "topic": "What if?",
+      "prompt": "Do you feel you were born in the correct era/time period?",
+      "options": [
+        "Yes, I love the current times!",
+        "No, I should’ve been born in the future.",
+        "No, I should’ve been born in the recent past.",
+        "No, I should’ve been born in the distant past."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-1540",
+      "sourceId": "1540",
+      "tier": 100,
+      "topic": "What if?",
+      "prompt": "If you turn a left-handed glove inside out, it fits…",
+      "options": [
+        "On my left hand",
+        "On my right hand"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-1573",
+      "sourceId": "1573",
+      "tier": 250,
+      "topic": "What if?",
+      "prompt": "If you had the opportunity to drink from the fountain of youth and revert to a younger age, would you?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-1574",
+      "sourceId": "1574",
+      "tier": 250,
+      "topic": "What if?",
+      "prompt": "Would you like to eventually become the oldest living person?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-1712",
+      "sourceId": "1712",
+      "tier": 250,
+      "topic": "Personality",
+      "prompt": "What should be done with your body after you die?",
+      "options": [
+        "Bury me.",
+        "Cremate me.",
+        "By all means, please find a good taxidermist.",
+        "Something else."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-1790",
+      "sourceId": "1790",
+      "tier": 100,
+      "topic": "Personality",
+      "prompt": "You answer the phone and it’s somebody trying to sell you something. What are you more likely to do?",
+      "options": [
+        "Hang up immediately.",
+        "Say you’re not interested when they let you talk.",
+        "Listen politely to the whole spiel.",
+        "Say something clever and cutting."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-1836",
+      "sourceId": "1836",
+      "tier": 250,
+      "topic": "Smoking, drinking & substances",
+      "prompt": "Do you consider the act of leaving cigarette butts on the ground to be littering?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-1935",
+      "sourceId": "1935",
+      "tier": 250,
+      "topic": "What if?",
+      "prompt": "If you had to live through an entire year of either darkness or daylight, which would you chose?",
+      "options": [
+        "Darkness.",
+        "Daylight."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-2047",
+      "sourceId": "2047",
+      "tier": 250,
+      "topic": "Attraction",
+      "prompt": "Which is closer to perfection?",
+      "options": [
+        "The male body",
+        "The female body"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-2063",
+      "sourceId": "2063",
+      "tier": 100,
+      "topic": "What if?",
+      "prompt": "If you could choose to live forever, would you?",
+      "options": [
+        "Yes",
+        "No",
+        "Only if I could be young forever.",
+        "Only if I could be young and beautiful forever."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-2072",
+      "sourceId": "2072",
+      "tier": 250,
+      "topic": "Attraction",
+      "prompt": "Does your culture, ethnicity, or race play a large role in your identity?",
+      "options": [
+        "It plays a crucial part in who I am",
+        "It’s interesting, but not really",
+        "Who I am is completely independent of my heritage"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-2114",
+      "sourceId": "2114",
+      "tier": 100,
+      "topic": "Personality",
+      "prompt": "How do you usually feel toward authority figures?",
+      "options": [
+        "Grateful or appreciative",
+        "Aggressive or angry",
+        "Indifferent",
+        "Sexually attracted"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-2129",
+      "sourceId": "2129",
+      "tier": 250,
+      "topic": "What if?",
+      "prompt": "You’re given one chance to travel through time. How do you use it?",
+      "options": [
+        "Alter events in history for the greater good.",
+        "Use past/future info for personal gain.",
+        "Alter something you regret",
+        "Do nothing–time travel could invoke chaos"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-2154",
+      "sourceId": "2154",
+      "tier": 10,
+      "topic": "Dating & relationships",
+      "prompt": "Once you have grown to love somebody, is it possible to stop loving them?",
+      "options": [
+        "Yes.",
+        "No."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-2167",
+      "sourceId": "2167",
+      "tier": 250,
+      "topic": "What if?",
+      "prompt": "If you could have one of the following to take with you on a deserted island and you had to live there for five years, which would you take?",
+      "options": [
+        "A computer with internet.",
+        "A phone.",
+        "An unlimited food supply.",
+        "A partner."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-2199",
+      "sourceId": "2199",
+      "tier": 100,
+      "topic": "Politics",
+      "prompt": "Should people be allowed to sell their body parts, organs, and tissues for profit?",
+      "options": [
+        "Yes.",
+        "No."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-2307",
+      "sourceId": "2307",
+      "tier": 250,
+      "topic": "What if?",
+      "prompt": "In a certain light, couldn’t being homeless be exciting?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-2346",
+      "sourceId": "2346",
+      "tier": 250,
+      "topic": "Personality",
+      "prompt": "Do you have a problem with authority?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-2352",
+      "sourceId": "2352",
+      "tier": 250,
+      "topic": "What if?",
+      "prompt": "Hypothetically, and if the lack of either wouldn’t affect your health, which would you give up?",
+      "options": [
+        "Sex",
+        "Sleep"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-2419",
+      "sourceId": "2419",
+      "tier": 100,
+      "topic": "Dating & relationships",
+      "prompt": "After meeting somebody new, is it acceptable to search the internet to find information about them?",
+      "options": [
+        "Yes, this would be completely normal.",
+        "No, this would be inappropriate."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-2476",
+      "sourceId": "2476",
+      "tier": 250,
+      "topic": "Politics",
+      "prompt": "How do you feel about nations spending billions of dollars on space exploration?",
+      "options": [
+        "It’s important for it’s own sake.",
+        "The new technologies developed benefit everybody.",
+        "Problems here on earth are more urgent.",
+        "I don’t care."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-2552",
+      "sourceId": "2552",
+      "tier": 250,
+      "topic": "Smoking, drinking & substances",
+      "prompt": "Generally, do you enjoy being drunk?",
+      "options": [
+        "Yes",
+        "No",
+        "I don’t know, because I’ve never been drunk."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-2566",
+      "sourceId": "2566",
+      "tier": 250,
+      "topic": "What if?",
+      "prompt": "If some men are doctors and some doctors are tall, does it follow that some men are tall?",
+      "options": [
+        "Yes",
+        "No",
+        "I HATE LOGIC."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-2569",
+      "sourceId": "2569",
+      "tier": 250,
+      "topic": "What if?",
+      "prompt": "STALE is to STEAL as 89475 is to…",
+      "options": [
+        "89457",
+        "98547",
+        "89754",
+        "89547"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": true
+    },
+    {
+      "id": "vault-2587",
+      "sourceId": "2587",
+      "tier": 250,
+      "topic": "Ethics",
+      "prompt": "You have just been unfairly laid off from work. As you are leaving, you have an opportunity to steal something of value, and nobody would know. Would you take it?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-2599",
+      "sourceId": "2599",
+      "tier": 100,
+      "topic": "Smoking, drinking & substances",
+      "prompt": "Regardless of whether or not you smoke marijuana, do you think it should be legalized for adults?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-2708",
+      "sourceId": "2708",
+      "tier": 250,
+      "topic": "Smoking, drinking & substances",
+      "prompt": "How do you feel about people with past addictions?",
+      "options": [
+        "Completely uninterested",
+        "Extremely hesitant",
+        "A little hesitant",
+        "Totally fine"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-2724",
+      "sourceId": "2724",
+      "tier": 250,
+      "topic": "Ethics",
+      "prompt": "A man is walking down the street and is covered with what appears to be someone’s blood. Which would be closest to your response?",
+      "options": [
+        "Call the authorities.",
+        "Confront him.",
+        "Do nothing other than avoid him.",
+        "Ask him if he needs help."
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2",
+        "option-3"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-2763",
+      "sourceId": "2763",
+      "tier": 100,
+      "topic": "Personality",
+      "prompt": "I find myself in fights with authority figures…",
+      "options": [
+        "Often",
+        "Rarely / never"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-2798",
+      "sourceId": "2798",
+      "tier": 250,
+      "topic": "Sex & intimacy",
+      "prompt": "Do you believe contraception is morally wrong?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-2824",
+      "sourceId": "2824",
+      "tier": 250,
+      "topic": "Culture",
+      "prompt": "Sexually explicit art or song lyrics should be",
+      "options": [
+        "Embraced as an art form",
+        "Accepted as free expression",
+        "Censored to protect society"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1",
+        "option-2"
+      ],
+      "okcOriginal": false
+    },
+    {
+      "id": "vault-2854",
+      "sourceId": "2854",
+      "tier": 250,
+      "topic": "Ethics",
+      "prompt": "Would you consider dating someone who has vocalized a strong negative bias toward a certain race of people?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "optionIds": [
+        "option-0",
+        "option-1"
+      ],
+      "okcOriginal": false
+    }
+  ]
+};
