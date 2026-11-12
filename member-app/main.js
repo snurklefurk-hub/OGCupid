@@ -1,4 +1,6 @@
 import { createAuthClient } from "@neon/auth";
+import { nextCompatibilityQuestion } from "./question-flow.js";
+import "../public/questions/question-bank.js";
 import "./styles.css";
 
 // Preview-only defaults. The production build does NOT connect to the
@@ -23,6 +25,12 @@ const $ = (id) => document.getElementById(id);
 let currentUser = null;
 let sessionUserId = null;
 let cachedProfile = null;
+const questions = window.OGCQuestionBank.questions.map(question => ({
+  ...question, tier: question.tier,
+}));
+let savedAnswers = new Map();
+let currentQuestion = null;
+let skippedQuestions = new Set();
 
 function message(text, type = "info") {
   const node = $("notice");
@@ -45,7 +53,7 @@ function fields(form) {
 async function operation(button, label, job) {
   if (button.disabled) return;
   button.disabled = true;
-  message(label + "…");
+  message(label + ".");
   try {
     await job();
   } catch (error) {
@@ -74,6 +82,11 @@ function chooseAuthTab(name) {
 
 function clearMemberView() {
   cachedProfile = null;
+  savedAnswers = new Map();
+  currentQuestion = null;
+  skippedQuestions = new Set();
+  show("question-view", false);
+  show("question-locked", true);
   $("profile-form").reset();
   $("saved-info").textContent = "";
   show("saved-info", false);
@@ -87,6 +100,8 @@ function renderAuthenticated(member) {
   show("member-view", authenticated);
   show("profile-locked", !authenticated);
   show("profile-form", authenticated);
+  show("question-view", authenticated);
+  show("question-locked", !authenticated);
   // Normal owner-controlled account deletion in the development site.
   show("deletion-test", authenticated && accountDeletionInUi);
   if (!member) return;
@@ -112,7 +127,10 @@ async function refreshMember(options = {}) {
   currentUser = member;
   renderAuthenticated(member);
 
-  if (member && options.loadProfile) await loadProfile({ silent: true });
+  if (member && options.loadProfile) {
+    await loadProfile({ silent: true });
+    await loadAnswers();
+  }
   return member;
 }
 
@@ -151,9 +169,11 @@ async function getAccessToken() {
   return token;
 }
 
-async function requestProfile(method, body) {
+async function requestPrivate(path, method, body) {
   const token = await getAccessToken();
-  const result = await fetch(memberApiUrl, {
+  const endpoint = new URL(memberApiUrl);
+  endpoint.pathname = path;
+  const result = await fetch(endpoint.toString(), {
     method,
     headers: {
       Authorization: "Bearer " + token,
@@ -180,6 +200,52 @@ async function requestProfile(method, body) {
       (response.error || "unknown error"));
   }
   return response;
+}
+const requestProfile = (method, body) => requestPrivate("/profile", method, body);
+
+async function loadAnswers() {
+  const result = await requestPrivate("/answers", "GET");
+  savedAnswers = new Map((result.answers || []).map(answer => [answer.questionId, answer]));
+  skippedQuestions.clear();
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const remaining = questions.filter(question => !skippedQuestions.has(question.id));
+  const selection = nextCompatibilityQuestion(remaining, savedAnswers.keys());
+  currentQuestion = selection?.question || null;
+  show("question-form", !!currentQuestion);
+  show("question-complete", !currentQuestion && savedAnswers.size >= questions.length);
+  const count = savedAnswers.size;
+  $("question-progress").textContent = currentQuestion
+    ? `${count} / ${questions.length} answered � ${selection.focusTier.replace("next", "Next ").replace("first", "First ")}`
+    : `${count} / ${questions.length} answered`;
+  if (!currentQuestion) {
+    if (count < questions.length) $("question-progress").textContent += " � Come back to skipped questions after refreshing.";
+    return;
+  }
+  $("question-prompt").textContent = currentQuestion.prompt;
+  const own = $("question-choices");
+  const acceptable = $("acceptable-choices");
+  own.replaceChildren($("question-prompt"));
+  acceptable.replaceChildren(acceptable.querySelector("legend"));
+  currentQuestion.options.forEach((label, index) => {
+    const id = currentQuestion.optionIds[index];
+    const ownLabel = document.createElement("label");
+    const radio = document.createElement("input");
+    radio.type = "radio"; radio.name = "answer"; radio.value = id; radio.required = true;
+    ownLabel.append(radio, document.createTextNode(label));
+    own.append(ownLabel);
+    const partnerLabel = document.createElement("label");
+    const check = document.createElement("input");
+    check.type = "checkbox"; check.name = "acceptable"; check.value = id;
+    partnerLabel.append(check, document.createTextNode(label));
+    acceptable.append(partnerLabel);
+  });
+  show("question-skip", selection.focusTier !== "first10");
+  $("question-importance").value = "1";
+  $("question-note").value = "";
+  $("question-private").checked = false;
 }
 
 function showStoredProfile(profile) {
@@ -446,12 +512,45 @@ function wireForms() {
       message("Your profile has been saved privately to PostgreSQL.", "ok");
     });
   });
+
+  $("question-skip").addEventListener("click", () => {
+    if (!currentQuestion) return;
+    skippedQuestions.add(currentQuestion.id);
+    renderQuestion();
+  });
+  $("question-form").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    if (!currentQuestion || !form.reportValidity()) return;
+    const question = currentQuestion;
+    const own = form.querySelector('input[name="answer"]:checked');
+    if (!own) return;
+    const accepted = [...form.querySelectorAll('input[name="acceptable"]:checked')].map(input => input.value);
+    if (!accepted.length) {
+      message("Select at least one answer you would accept from someone else.", "error");
+      return;
+    }
+    operation(form.querySelector('button[type="submit"]'), "Saving your answer", async () => {
+      const answer = {
+        questionId: question.id,
+        optionId: own.value,
+        acceptableOptions: accepted,
+        importance: Number($("question-importance").value),
+        isPrivate: $("question-private").checked,
+        note: $("question-note").value.trim(),
+      };
+      await requestPrivate("/answers", "PUT", answer);
+      savedAnswers.set(question.id, answer);
+      renderQuestion();
+      message("Answer saved privately to your account.", "ok");
+    });
+  });
 }
 
 async function start() {
   if (local) {
     $("environment-label").textContent = "DEVELOPMENT ONLY";
-    document.title = "DEV · OG Cupid Member Accounts";
+    document.title = "DEV � OG Cupid Member Accounts";
   }
   if (!auth) {
     show("unavailable-view", true);
@@ -472,3 +571,4 @@ async function start() {
 }
 
 start();
+

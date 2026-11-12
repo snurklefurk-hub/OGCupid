@@ -86,7 +86,10 @@ export function nextCompatibilityQuestion(questions, answeredIds, random = Math.
         throw new RangeError("Random source must return a number in [0,1)");
       }
       if (roll < 0.10) {
-        const others = available.filter(item => item.tier !== focusTier);
+        // Discovery reaches only later published sets, never an unpublished
+        // "other" record or an already completed earlier set.
+        const later = QUESTION_TIERS.slice(QUESTION_TIERS.indexOf(focusTier) + 1, 4);
+        const others = available.filter(item => later.includes(item.tier));
         const outside = sample(others, random);
         if (outside) {
           return {
@@ -111,3 +114,4 @@ export function nextCompatibilityQuestion(questions, answeredIds, random = Math.
     ? { question: afterStaged.question, focusTier: "other", servedFromOutsideTier: false }
     : null;
 }
+

@@ -75,3 +75,13 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .danger-zone p{font-size:13px}
 .danger-button{background:#a82b40;color:#fff}
 .danger-button:hover:not(:disabled){background:#8e2336}
+
+.question-panel{margin:0 clamp(18px,4vw,36px) 35px;background:#fff8e8}
+.question-progress{font-size:13px;font-weight:900;color:var(--blue);text-transform:uppercase}
+.question-panel fieldset{border:0;padding:0;margin:20px 0}
+.question-panel legend{font-size:19px;font-weight:900;margin-bottom:10px}
+.question-panel #acceptable-choices legend{font-size:14px}
+.question-panel fieldset label{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;margin:7px 0;background:#fff;border:2px solid var(--ink);font-size:14px;font-weight:800;cursor:pointer}
+.question-panel fieldset input{width:20px;height:20px;flex:none;accent-color:var(--blue)}
+.question-panel select{display:block;border:2px solid var(--ink);background:#fff;padding:10px;width:min(100%,360px);font:inherit}
+

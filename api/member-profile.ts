@@ -141,11 +141,12 @@ export default {
 
     const url = new URL(request.url);
     const profilePath = url.pathname === "/profile" || url.pathname === "/profile/";
+    const answersPath = url.pathname === "/answers" || url.pathname === "/answers/";
     const deletePath = url.pathname === "/account/delete" || url.pathname === "/account/delete/";
     // A credential check that can NEVER call the privileged eraser.
     // Only enabled for the one disposable development account.
     const verifyPath = url.pathname === "/account/reauth-check" || url.pathname === "/account/reauth-check/";
-    if (!profilePath && !deletePath && !verifyPath) {
+    if (!profilePath && !answersPath && !deletePath && !verifyPath) {
       return json(request, { error: "Not found" }, 404);
     }
     // Strictly separate development-only destructive operations from profiles.
@@ -172,7 +173,7 @@ export default {
     if (!userId) return json(request, { error: "Unauthorized" }, 401);
 
     try {
-      if (profilePath) {
+      if (profilePath || answersPath) {
         // A signed JWT can outlive the account/session that issued it.
         // Do not allow a deleted identity to read an empty profile as if it
         // were still a member, or attempt to recreate a profile via PUT.
@@ -292,6 +293,63 @@ export default {
         return json(request, { deleted: true });
       }
 
+      if (answersPath) {
+        if (request.method === "GET") {
+          const result = await withMember(userId, client => client.query(
+            `SELECT question_id, option_id, acceptable_options, importance, is_private, note, updated_at
+             FROM app_private.member_match_answers WHERE user_id = $1::uuid ORDER BY question_id`, [userId],
+          ));
+          return json(request, { answers: result.rows.map(row => ({
+            questionId: row.question_id, optionId: row.option_id,
+            acceptableOptions: row.acceptable_options, importance: row.importance,
+            isPrivate: row.is_private, note: row.note, updatedAt: row.updated_at,
+          })) });
+        }
+        if (!(request.headers.get("content-type") ?? "").toLowerCase().startsWith("application/json")) {
+          return json(request, { error: "Expected JSON" }, 415);
+        }
+        const raw = await request.text();
+        if (new TextEncoder().encode(raw).byteLength > 4096) return json(request, { error: "Request too large" }, 413);
+        let answer: Record<string, unknown>;
+        try {
+          const parsed: unknown = JSON.parse(raw);
+          if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error("Invalid answer");
+          answer = parsed as Record<string, unknown>;
+        } catch { return json(request, { error: "Invalid JSON" }, 400); }
+        const questionId = answer.questionId;
+        const optionId = answer.optionId;
+        const acceptable = answer.acceptableOptions;
+        const note = answer.note ?? "";
+        if (typeof questionId !== "string" || !/^vault-[0-9]{1,25}$/.test(questionId) ||
+            typeof optionId !== "string" || !/^option-[0-9]{1,20}$/.test(optionId) ||
+            !Array.isArray(acceptable) || acceptable.length > 20 ||
+            !acceptable.every(value => typeof value === "string" && /^option-[0-9]{1,20}$/.test(value)) ||
+            ![0, 1, 10, 50, 250].includes(answer.importance as number) ||
+            typeof answer.isPrivate !== "boolean" || typeof note !== "string" || note.length > 400) {
+          return json(request, { error: "Invalid answer" }, 400);
+        }
+        const result = await withMember(userId, async client => {
+          const published = await client.query(
+            "SELECT option_ids FROM app_private.published_match_questions WHERE question_id = $1", [questionId],
+          );
+          const ids: string[] = published.rows[0]?.option_ids ?? [];
+          if (!ids.includes(optionId) || !acceptable.every(value => ids.includes(value))) return null;
+          return client.query(
+          `INSERT INTO app_private.member_match_answers
+             (user_id, question_id, option_id, acceptable_options, importance, is_private, note)
+           VALUES ($1::uuid, $2, $3, $4::text[], $5, $6, $7)
+           ON CONFLICT (user_id, question_id) DO UPDATE SET
+             option_id = EXCLUDED.option_id, acceptable_options = EXCLUDED.acceptable_options,
+             importance = EXCLUDED.importance, is_private = EXCLUDED.is_private,
+             note = EXCLUDED.note, updated_at = now()
+           RETURNING updated_at`,
+          [userId, questionId, optionId, acceptable, answer.importance, answer.isPrivate, note],
+          );
+        });
+        if (!result) return json(request, { error: "Question or choice is not in the published set" }, 400);
+        return json(request, { saved: true, updatedAt: result.rows[0].updated_at });
+      }
+
       if (request.method === "GET") {
         const result = await withMember(userId, client =>
           client.query(
@@ -320,7 +378,7 @@ export default {
       const displayName = typeof fields.displayName === "string" ? fields.displayName.trim() : "";
       const aboutMe = typeof fields.aboutMe === "string" ? fields.aboutMe.trim() : "";
       if (displayName.length < 2 || displayName.length > 60 || aboutMe.length > 5000 || fields.adultConfirmed !== true) {
-        return json(request, { error: "Enter a 2–60 character name, a bio no longer than 5000 characters, and confirm you are at least 18" }, 400);
+        return json(request, { error: "Enter a 2-60 character name, a bio no longer than 5000 characters, and confirm you are at least 18" }, 400);
       }
 
       const result = await withMember(userId, client => client.query(
@@ -342,3 +400,4 @@ export default {
     }
   },
 };
+

@@ -41,6 +41,12 @@ test("next 50 has 10-percent outside-tier discovery", () => {
   assert.equal(exactBoundary.servedFromOutsideTier, false);
 });
 
+test("discovery never draws from unpublished or earlier tiers", () => {
+  const picked = run(catalog, ["ten-a", "ten-b"], [0.01, 0.99]);
+  assert.equal(picked.question.id, "twofifty-a");
+  assert.notEqual(picked.question.id, "outside-a");
+});
+
 test("next 100 also has 10-percent discovery but next 250 does not", () => {
   const answered = ["ten-a", "ten-b", "fifty-a", "fifty-b"];
   const hundred = run(catalog, answered, [0.01, 0]);
@@ -89,3 +95,4 @@ test("duplicate IDs and non-numeric random output cannot bias progression", () =
   assert.throws(() => run([q("one", 10)], [], [1]), RangeError);
   assert.throws(() => run([q("one", 10)], [], [Number.NaN]), RangeError);
 });
+
