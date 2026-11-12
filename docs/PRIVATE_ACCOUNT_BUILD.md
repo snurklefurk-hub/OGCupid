@@ -61,3 +61,50 @@ to the production branch without a completed auth/privacy test.
 **Do not enable production signups** until this checklist is verified and the
 owner agrees to the public beta scope. A commit or a function deployment is not
 proof of a secure end-to-end registration system.
+
+
+## Verified development-role and isolation testing (2026-11-11)
+
+The first API deployment inherited Neon's `DATABASE_URL` for `neondb_owner`,
+a role with `rolbypassrls=true`. **FORCE ROW LEVEL SECURITY is not
+effective for BYPASSRLS roles.** This was caught during security verification
+before public registration.
+
+Correction, applied to the *development branch only*:
+
+- Provisioned `ogcupid_member_api` as a Neon `read_write` role scoped
+  to database `neondb` and schema `app_private`. Verified
+  `rolsuper=false`, `rolbypassrls=false`, and no create-role or
+  create-database privileges.
+- Through the Neon admin connection, obtained a role-specific connection
+  string **without displaying or storing the password in code or docs**.
+- Redeployed the `members` Function with a user-defined `DATABASE_URL`
+  environment override for the scoped role. This overrides Neon's default
+  injected owner string; Neon returns environment variable *names*, not values.
+  Deployment 2 completed.
+- **Important operational rule:** each target branch, including production,
+  needs its own scoped role and protected runtime connection override before
+  deploying the member API. Never allow a release to fall back to the branch
+  owner's automatically injected `DATABASE_URL`; it bypasses RLS. A normal
+  `neon deploy` retains variables not declared in `neon.ts` per Neon docs,
+  but verify the function deployment's effective role before trusting it.
+- The developer's local `.env.local` still contains Neon-generated owner
+  URLs. Do not use those URLs to run production member API code.
+
+**Passing test results (scoped role against dev branch):**
+
+- Unauthenticated deployed HTTP `GET /profile` returned 401.
+- No transaction-scoped user identity: SELECT returned zero profiles; UPDATE
+  changed zero rows.
+- Two synthetic Neon Auth identities were created on the development branch
+  for database-level testing. A could see its one record and not B; B could
+  see its one record and not A.
+- Attempts to UPDATE the other user's row affected zero rows.
+- An attempt to insert/update B's identity under A's transaction context failed
+  with PostgreSQL `42501`, RLS policy violation.
+
+**Still unverified:** valid JWT HTTP GET/PUT from sign-in sessions,
+registration/email OTP, profile survival through login/logout, rate limits,
+frontend integration, DNS/HTTPS, backups/restore, and production role isolation.
+Do not enable public signup or mark this release production ready.
+
