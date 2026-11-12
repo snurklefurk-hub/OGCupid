@@ -114,6 +114,28 @@ type MemberProfile = {
   userId: string;
   displayName: string;
   aboutMe: string;
+  age: number | null;
+  cityRegion: string;
+  gender: string;
+  pronouns: string;
+  orientation: string;
+  relationshipGoal: string;
+  lookingFor: string;
+  work: string;
+  education: string;
+  height: string;
+  kids: string;
+  pets: string;
+  smoking: string;
+  drinking: string;
+  diet: string;
+  languages: string;
+  lifeDirection: string;
+  goodAt: string;
+  favorites: string;
+  sixThings: string;
+  fridayNight: string;
+  messageMeIf: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -123,10 +145,59 @@ function present(row: Record<string, unknown>): MemberProfile {
     userId: String(row.user_id),
     displayName: String(row.display_name),
     aboutMe: String(row.about_me),
+    age: row.age == null ? null : Number(row.age),
+    cityRegion: String(row.city_region ?? ""),
+    gender: String(row.gender ?? ""),
+    pronouns: String(row.pronouns ?? ""),
+    orientation: String(row.orientation ?? ""),
+    relationshipGoal: String(row.relationship_goal ?? ""),
+    lookingFor: String(row.looking_for ?? ""),
+    work: String(row.work ?? ""),
+    education: String(row.education ?? ""),
+    height: String(row.height ?? ""),
+    kids: String(row.kids ?? ""),
+    pets: String(row.pets ?? ""),
+    smoking: String(row.smoking ?? ""),
+    drinking: String(row.drinking ?? ""),
+    diet: String(row.diet ?? ""),
+    languages: String(row.languages ?? ""),
+    lifeDirection: String(row.life_direction ?? ""),
+    goodAt: String(row.good_at ?? ""),
+    favorites: String(row.favorites ?? ""),
+    sixThings: String(row.six_things ?? ""),
+    fridayNight: String(row.friday_night ?? ""),
+    messageMeIf: String(row.message_me_if ?? ""),
     createdAt: new Date(String(row.created_at)).toISOString(),
     updatedAt: new Date(String(row.updated_at)).toISOString(),
   };
 }
+
+
+/** Explicit server-owned field schema, shared by validation and SQL assembly.
+ * Never build SQL column names from incoming JSON keys. */
+const profileTextFields = [
+  ["cityRegion", "city_region", 100],
+  ["gender", "gender", 60],
+  ["pronouns", "pronouns", 40],
+  ["orientation", "orientation", 60],
+  ["relationshipGoal", "relationship_goal", 100],
+  ["lookingFor", "looking_for", 500],
+  ["work", "work", 160],
+  ["education", "education", 120],
+  ["height", "height", 50],
+  ["kids", "kids", 80],
+  ["pets", "pets", 80],
+  ["smoking", "smoking", 60],
+  ["drinking", "drinking", 60],
+  ["diet", "diet", 100],
+  ["languages", "languages", 160],
+  ["lifeDirection", "life_direction", 2000],
+  ["goodAt", "good_at", 1500],
+  ["favorites", "favorites", 2000],
+  ["sixThings", "six_things", 1500],
+  ["fridayNight", "friday_night", 1500],
+  ["messageMeIf", "message_me_if", 1500],
+] as const;
 
 export default {
   async fetch(request: Request): Promise<Response> {
@@ -431,7 +502,7 @@ export default {
       if (request.method === "GET") {
         const result = await withMember(userId, client =>
           client.query(
-            "SELECT user_id, display_name, about_me, created_at, updated_at FROM app_private.member_profiles WHERE user_id = $1::uuid",
+            `SELECT user_id, display_name, about_me, age, city_region, gender, pronouns, orientation, relationship_goal, looking_for, work, education, height, kids, pets, smoking, drinking, diet, languages, life_direction, good_at, favorites, six_things, friday_night, message_me_if, created_at, updated_at FROM app_private.member_profiles WHERE user_id = $1::uuid`,
             [userId],
           ),
         );
@@ -444,7 +515,7 @@ export default {
         return json(request, { error: "Expected JSON" }, 415);
       }
       const input = await request.text();
-      if (new TextEncoder().encode(input).byteLength > 12000) {
+      if (new TextEncoder().encode(input).byteLength > 24000) {
         return json(request, { error: "Request too large" }, 413);
       }
       let body: unknown;
@@ -456,19 +527,39 @@ export default {
       const displayName = typeof fields.displayName === "string" ? fields.displayName.trim() : "";
       const aboutMe = typeof fields.aboutMe === "string" ? fields.aboutMe.trim() : "";
       if (displayName.length < 2 || displayName.length > 60 || aboutMe.length > 5000 || fields.adultConfirmed !== true) {
-        return json(request, { error: "Enter a 2-60 character name, a bio no longer than 5000 characters, and confirm you are at least 18" }, 400);
+        return json(request, { error: "Enter a 2–60 character name, a bio no longer than 5000 characters, and confirm you are at least 18" }, 400);
       }
-
-      const result = await withMember(userId, client => client.query(
-        `INSERT INTO app_private.member_profiles
-           (user_id, display_name, about_me, adult_attested_at)
-         VALUES ($1::uuid, $2, $3, now())
+      const rawAge = fields.age;
+      const age = rawAge == null || rawAge === "" ? null : rawAge;
+      if (age !== null && (!Number.isInteger(age) || Number(age) < 18 || Number(age) > 120)) {
+        return json(request, { error: "Age must be between 18 and 120, or left blank" }, 400);
+      }
+      const extraValues: string[] = [];
+      for (const [key, , maxLength] of profileTextFields) {
+        const value = fields[key] ?? "";
+        if (typeof value !== "string" || value.trim().length > maxLength) {
+          return json(request, { error: "A profile field exceeds its permitted length" }, 400);
+        }
+        extraValues.push(value.trim());
+      }
+      // SQL identifiers are always sourced from the constant profileTextFields
+      // above. Only values are supplied by the member, via parameters.
+      const columns = profileTextFields.map(([, column]) => column);
+      const fieldUpdates = columns.map(column => `${column} = EXCLUDED.${column}`);
+      const paramList = columns.map((_, index) => `${index + 5}`);
+      const allReturned = ["user_id", "display_name", "about_me", "age", ...columns, "created_at", "updated_at"];
+      const sql = `INSERT INTO app_private.member_profiles
+           (user_id, display_name, about_me, adult_attested_at, age, ${columns.join(", ")})
+         VALUES ($1::uuid, $2, $3, now(), $4, ${paramList.join(", ")})
          ON CONFLICT (user_id) DO UPDATE SET
            display_name = EXCLUDED.display_name,
            about_me = EXCLUDED.about_me,
+           age = EXCLUDED.age,
+           ${fieldUpdates.join(", ")},
            updated_at = now()
-         RETURNING user_id, display_name, about_me, created_at, updated_at`,
-        [userId, displayName, aboutMe],
+         RETURNING ${allReturned.join(", ")}`;
+      const result = await withMember(userId, client => client.query(
+        sql, [userId, displayName, aboutMe, age, ...extraValues],
       ));
       return json(request, { profile: present(result.rows[0]) });
     } catch (error) {
