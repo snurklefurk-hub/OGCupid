@@ -1,3 +1,4 @@
+# Rebuild member Persona branding after the original header was added.
 name: Publish OG Cupid member-only pages (one-time)
 on:
   push:
