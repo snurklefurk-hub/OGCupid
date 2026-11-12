@@ -20,8 +20,6 @@ CREATE TABLE IF NOT EXISTS app_private.member_email_preferences (
 ALTER TABLE app_private.member_email_preferences ENABLE ROW LEVEL SECURITY;
 ALTER TABLE app_private.member_email_preferences FORCE ROW LEVEL SECURITY;
 
-DROP POLICY IF EXISTS member_email_preferences_owner_only
-  ON app_private.member_email_preferences;
 CREATE POLICY member_email_preferences_owner_only
   ON app_private.member_email_preferences
   FOR ALL TO ogcupid_member_api
