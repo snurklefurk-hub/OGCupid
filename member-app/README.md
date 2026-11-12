@@ -27,9 +27,11 @@ npm run dev
 ```
 
 Visit `http://localhost:5173/`. Only localhost automatically connects to
-the **isolated development branch**. Existing test accounts can sign in and
-save/load their own profile. Signup is independently controlled by Neon Auth;
-it is currently **disabled** on the development branch after the tests.
+the **isolated development branch**. Members can now create accounts (email
+verification by OTP), sign in, save profiles, and delete their own accounts
+with their current password plus a DELETE confirmation. Both signup and
+self-service deletion are enabled for iterative development. Production
+registration remains disabled. The database is not seeded with public users.
 
 The source does not store passwords, OTPs, or JWTs in localStorage, console
 logs, GitHub, or HTML. The session is managed by Neon Auth.
@@ -59,26 +61,29 @@ Never set production URLs to the dev branch. Never put `DATABASE_URL`,
 `AWS_SECRET_ACCESS_KEY`, or any auth/admin secret in a `VITE_*` variable.
 
 The account page includes `noindex` while under development.
-The registration button is disabled unless the build explicitly specifies
-`VITE_OGC_REGISTRATION_ENABLED=true` **and** the branch's server-side
-registration setting is separately enabled. Existing accounts can still log in.
+The registration form is enabled automatically on localhost, where the
+isolated Neon Auth development branch also allows signup. Non-local builds
+require an explicit `VITE_OGC_REGISTRATION_ENABLED=true` and a separately
+enabled server-side signup setting. Existing members can still sign in.
 
 Password recovery uses Neon's supported Email OTP endpoints. The owner has
 successfully tested a recovery email/code, reset, re-login, and preservation
 of the saved profile. Old-password rejection and an already-active session's
 revocation remain separate acceptance tests.
 
-A custom deletion endpoint is drafted because managed Auth has no exposed
-switch for native Better Auth hard deletion. It uses independently verified
-JWT and account password, a five-attempt/hour rate limit, and a separate
-database credential that can invoke only a narrowly scoped erasure function.
-**It has been deployed and end-to-end tested on one disposable development
-account; deletion and diagnostic endpoints were disabled again after success.**
-The API requires both
-the exact development branch and `OGC_ACCOUNT_DELETION_ENABLED=true`; the
-browser form also requires localhost and
-`VITE_OGC_DELETE_TEST=true`. Both flags are OFF by default. Read
-[account lifecycle notes](../docs/ACCOUNT_LIFECYCLE.md) first.
+The custom deletion endpoint was successfully exercised end-to-end with
+a disposable development member. It independently verifies a signed JWT,
+reauthenticates the *same* member using their current password, limits
+deletion to five attempts per hour, and uses a separate database role with
+permission only to invoke the no-target-parameter erasure function.
+As of 2026-11-12, owner-authorized **development signup and self-deletion
+are enabled for all authenticated development members**, not just a
+disposable test ID. The obsolete single-account SQL allowlist is replaced
+by migration 005. The browser form is available automatically on localhost;
+the server endpoint remains constrained to the exact development branch
+and `OGC_ACCOUNT_DELETION_ENABLED=true`. The separate diagnostic endpoint
+is disabled. **This feature is not published to production**, and future
+user-owned tables/media must declare and verify their deletion behavior.
 
 ## Tested in the isolated development environment
 
