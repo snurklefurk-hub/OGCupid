@@ -12,6 +12,14 @@ for (const name of required) {
 const pool = new Pool({ connectionString: process.env.DATABASE_URL!, max: 5 });
 attachDatabasePool(pool);
 
+// Separate, narrowly scoped DB credential. Unlike the normal member role,
+// only this role can execute the reviewed user-deletion SECURITY DEFINER
+// function. It has no direct SELECT/DELETE rights on user or profile tables.
+const deletionPool = process.env.OGC_DELETION_DATABASE_URL
+  ? new Pool({ connectionString: process.env.OGC_DELETION_DATABASE_URL, max: 2 })
+  : null;
+if (deletionPool) attachDatabasePool(deletionPool);
+
 const jwks = createRemoteJWKSet(new URL(process.env.NEON_AUTH_JWKS_URL!));
 const issuer = new URL(process.env.NEON_AUTH_BASE_URL!).origin;
 const allowedOrigins = new Set([
@@ -82,6 +90,26 @@ async function withMember<T>(
   }
 }
 
+async function withDeletionAuthority<T>(
+  userId: string,
+  action: (client: PoolClient) => Promise<T>,
+): Promise<T> {
+  if (!deletionPool) throw new Error("Deletion not configured");
+  const client = await deletionPool.connect();
+  try {
+    await client.query("BEGIN");
+    await client.query("SELECT set_config('app.current_user_id', $1, true)", [userId]);
+    const result = await action(client);
+    await client.query("COMMIT");
+    return result;
+  } catch (error) {
+    await client.query("ROLLBACK").catch(() => {});
+    throw error;
+  } finally {
+    client.release();
+  }
+}
+
 type MemberProfile = {
   userId: string;
   displayName: string;
@@ -121,7 +149,8 @@ export default {
     // The endpoint is absent in production, even if an env flag is mis-set.
     if (deletePath &&
         (process.env.NEON_BRANCH !== "dev/private-member-accounts" ||
-         process.env.OGC_ACCOUNT_DELETION_ENABLED !== "true")) {
+         process.env.OGC_ACCOUNT_DELETION_ENABLED !== "true" ||
+         !deletionPool)) {
       return json(request, { error: "Not found" }, 404);
     }
     if (deletePath ? request.method !== "POST" :
@@ -192,7 +221,7 @@ export default {
           return json(request, { error: "Identity confirmation failed. Account not deleted." }, 403);
         }
 
-        const deletion = await withMember(userId, client =>
+        const deletion = await withDeletionAuthority(userId, client =>
           client.query("SELECT app_private.erase_current_member_after_reauth() AS deleted"),
         );
         if (deletion.rows[0]?.deleted !== true) {
