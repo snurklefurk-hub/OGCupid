@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host localhost --port 5173 --strictPort",
-    "build": "vite build"
+    "build": "vite build",
+    "test": "node --test question-flow.test.js"
   },
   "dependencies": {
     "@neon/auth": "latest"
