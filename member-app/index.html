@@ -66,7 +66,7 @@
             </form>
 
             <form id="signup-form" hidden novalidate>
-              <div id="signup-closed" class="small-alert" hidden>New registrations are temporarily closed while we finish safety testing.</div>
+              <div id="signup-closed" class="small-alert" hidden>New registrations are disabled in this environment.</div>
               <label for="signup-name">Display name</label>
               <input id="signup-name" name="name" type="text" minlength="2" maxlength="60" required autocomplete="nickname" placeholder="What should people call you?">
               <label for="signup-email">Email</label>
@@ -135,18 +135,15 @@
             </div>
             <p class="footnote">Your profile is private during testing. Search, matches, photos, and messaging are not enabled yet.</p>
             <section id="deletion-test" class="danger-zone" hidden aria-labelledby="delete-title">
-              <h3 id="delete-title">Delete account — test only</h3>
-              <p>This permanently deletes your authentication account. Your linked private profile should be deleted by database cascade. <strong>Only use this on a disposable development account.</strong></p>
+              <h3 id="delete-title">Delete my account</h3>
+              <p><strong>This is permanent.</strong> Deleting your account removes your login, current private profile, and active sessions. Future member data must have its own deletion rules as new features are added. This control is available on the development site.</p>
               <form id="delete-account-form" novalidate>
                 <label for="delete-password">Current password</label>
-                <input id="delete-password" name="password" type="password" required autocomplete="current-password">
+                <input id="delete-password" name="password" type="password" minlength="12" maxlength="256" required autocomplete="current-password">
                 <label for="delete-confirm">Type DELETE to confirm</label>
                 <input id="delete-confirm" name="confirm" type="text" required autocomplete="off">
-                <button class="button danger-button" type="submit" disabled>Deletion locked during stale-token setup</button>
+                <button class="button danger-button" type="submit">Permanently delete my account</button>
               </form>
-              <button id="reauth-check-button" class="quiet-button" type="button">Check password safely (no deletion)</button>
-              <p class="hint">This is a disposable-account deletion test. Use the destructive button only if you intend to erase this test account permanently. The separate password-check button never deletes anything. Development-only; never shown in the public release.</p>
-            </section>
           </section>
 
           <section class="paper profile-panel" aria-labelledby="profile-title">
@@ -182,14 +179,7 @@
               <div id="saved-info" class="save-info" hidden></div>
             </form>
           </section>
-          <section id="stale-token-test" class="paper danger-zone" hidden aria-labelledby="stale-token-title">
-            <h2 id="stale-token-title">SECURITY TEST // OLD LOGIN TOKENS</h2>
-            <p>Development disposable account only. Keep this first browser tab open while deleting the disposable account from a second tab. The temporary token remains in this tab's memory only; it is never displayed, saved, or transmitted to chat.</p>
-            <p class="hint" id="stale-token-state" role="status">No test token captured yet.</p>
-            <button class="button" type="button" id="stale-token-arm">1. Arm test in this tab</button>
-            <button class="button" type="button" id="stale-token-run" disabled>2. Verify old token after deletion</button>
-            <p class="hint">The arm step proves this exact token could read the account profile while it existed. The replay step expects HTTP 401 for both read and write after deletion. Do not refresh this tab between steps.</p>
-          </section>
+
         </div>
       </div>
       <div class="bottom-mark" aria-hidden="true">THE GOOD INTERNET ISN'T DEAD. WE'RE JUST BRINGING IT BACK.</div>
