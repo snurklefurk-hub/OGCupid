@@ -59,6 +59,15 @@ Never set production URLs to the dev branch. Never put `DATABASE_URL`,
 `AWS_SECRET_ACCESS_KEY`, or any auth/admin secret in a `VITE_*` variable.
 
 The account page includes `noindex` while under development.
+The registration button is disabled unless the build explicitly specifies
+`VITE_OGC_REGISTRATION_ENABLED=true` **and** the branch's server-side
+registration setting is separately enabled. Existing accounts can still log in.
+
+Password recovery uses Neon's supported Email OTP endpoints. Resetting a
+password requires access to the member's verified mailbox and revokes sessions
+according to the branch Auth setting. The account hard-deletion form is
+inactive until we verify the native Managed Better Auth server supports it;
+read `docs/ACCOUNT_LIFECYCLE.md` before modifying this control.
 
 ## Tested in the isolated development environment
 
@@ -75,11 +84,16 @@ The account page includes `noindex` while under development.
       source has not yet been compiled or browser-tested.
 - [ ] Verify production role-specific connection (no owner/BYPASSRLS), proper
       CORS/origin policies, and HTTP cross-user isolation.
-- [ ] Implement reliable password recovery UI. As of Nov 2026 the supported
-      Managed Better Auth password-reset path is its provided UI components;
-      don't invent an unsupported SDK method.
-- [ ] Implement authenticated account deletion, privacy and consent policy,
-      and documented data retention/deletion behavior.
+- [x] Draft email-OTP recovery UI using the documented managed Email OTP plugin.
+      **Not yet user-tested** with real code delivery/reset; see
+      [account lifecycle notes](../docs/ACCOUNT_LIFECYCLE.md).
+- [ ] Verify recovery behavior end-to-end: delivery, invalid/expired OTP,
+      session revocation, sign-in with new password, and old-password rejection.
+- [ ] Confirm native Managed Auth hard-delete support; draft client UI is
+      deliberately hidden behind `VITE_OGC_DELETE_TEST=true` on localhost
+      only, pending backend validation with a disposable dev account.
+- [ ] Implement and verify full authenticated account deletion, privacy and
+      consent policy, backup/retention disclosures, and associated-data cleanup.
 - [ ] Configure production auth trusted domains, branded/custom SMTP, and
       disable production localhost acceptance.
 - [ ] Review defenses against signup abuse, credential stuffing, and API
