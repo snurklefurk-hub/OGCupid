@@ -30,10 +30,43 @@ async function refresh() {
   return member ?? null;
 }
 
+// Managed Better Auth's session JWT is obtained from getSession() in current
+// Neon documentation. Some SDK versions cache an opaque session when token()
+// is called, so fall back to the managed Auth /token endpoint if necessary.
+function isJwt(value) {
+  return typeof value === "string" &&
+    /^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$/.test(value);
+}
+
 async function token() {
-  const { data, error } = await auth.token();
-  if (error || !data?.token) throw new Error(error?.message || "No valid member token. Sign in first.");
-  return data.token; // Only used immediately for the Authorization header; never logged.
+  const { data, error } = await auth.getSession();
+  if (error) throw new Error("Session check failed: " + (error.message || "unknown error"));
+  if (!data?.user) throw new Error("No active session. Please sign in first.");
+
+  const sessionToken = data?.session?.token;
+  if (isJwt(sessionToken)) return sessionToken;
+
+  let response;
+  try {
+    response = await fetch(AUTH_BASE.replace(/\\/$/, "") + "/token", {
+      method: "GET",
+      credentials: "include",
+      cache: "no-store",
+      headers: { Accept: "application/json" },
+    });
+  } catch {
+    throw new Error("Cannot reach Neon Auth token endpoint. Check browser cross-site cookie and network settings.");
+  }
+  if (!response.ok) {
+    throw new Error("Neon Auth token request failed (HTTP " + response.status + "). Please sign in again.");
+  }
+
+  const body = await response.json().catch(() => null);
+  const jwt = body?.token ?? body?.data?.token;
+  if (!isJwt(jwt)) {
+    throw new Error("Neon Auth did not return a JWT. Check whether your browser blocks third-party session cookies.");
+  }
+  return jwt; // Only used in the Authorization header. Never printed, persisted, or logged.
 }
 
 async function profileRequest(method, body) {
