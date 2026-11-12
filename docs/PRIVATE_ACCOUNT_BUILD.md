@@ -108,3 +108,27 @@ registration/email OTP, profile survival through login/logout, rate limits,
 frontend integration, DNS/HTTPS, backups/restore, and production role isolation.
 Do not enable public signup or mark this release production ready.
 
+
+
+## Local browser smoke-test harness
+
+A non-production test UI is committed under `dev/account-smoke/`:
+`index.html`, `main.js`, and an isolated `package.json`.
+The UI uses the official `@neon/auth` client and the development branch's
+public Auth URL; it has **no database credentials or server secrets**.
+Run only on `http://localhost:5173` with Vite. It tests email OTP signup,
+sign-in/out, JWT retrieval, private profile GET/PUT, and persistence.
+
+The `members` Function source permits localhost:5173 **only when**
+`NEON_BRANCH=dev/private-member-accounts`; all other branches retain the
+production web origins only. This source change is not deployed until the
+development Neon Function is redeployed.
+
+Keep development public signup disabled until the local UI is running.
+Enable it only on the development Neon Auth branch for manual email-verification
+testing; keep production signup disabled. After testing, disable dev signup.
+Never send real passwords or OTP codes in ChatGPT messages.
+
+Owner's local project is not automatically synchronized with GitHub PR files.
+They may download the test harness and revised API source from the PR branch
+before a subsequent `neon config plan` and safe development redeploy.
