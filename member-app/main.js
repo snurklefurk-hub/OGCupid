@@ -354,23 +354,42 @@ function wireForms() {
       if (input.confirm !== "DELETE") {
         throw new Error("Type DELETE exactly to confirm.");
       }
-      if (typeof auth.deleteUser !== "function") {
-        throw new Error("Managed Auth does not expose the native delete-user operation.");
-      }
-      // The Auth server must independently validate the current password and
-      // enforce the deletion policy. No client-provided user ID is accepted.
-      const { error } = await auth.deleteUser({ password: String(input.password) });
+      // Server independently verifies our signed JWT, then checks this
+      // account's *current password* directly with managed Neon Auth. The
+      // browser cannot submit a target user ID or access database secrets.
+      const jwt = await getAccessToken();
+      const endpoint = new URL(memberApiUrl);
+      endpoint.pathname = "/account/delete";
+      endpoint.search = "";
+      const response = await fetch(endpoint.toString(), {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + jwt,
+          "Content-Type": "application/json",
+        },
+        credentials: "omit",
+        cache: "no-store",
+        body: JSON.stringify({
+          email: currentUser.email,
+          password: String(input.password),
+          confirm: "DELETE",
+        }),
+      });
       form.elements.password.value = "";
       form.elements.confirm.value = "";
-      if (error) {
-        throw new Error(asError(error, "Managed Auth refused account deletion."));
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || result.deleted !== true) {
+        throw new Error(result.error || "Deletion was not completed (HTTP " + response.status + ").");
       }
+      // Once its user row is gone, managed Auth may reject signOut because the
+      // session was cascaded already. Best-effort cookie cleanup only.
+      try { await auth.signOut(); } catch { /* Already deleted */ }
       sessionUserId = null;
       currentUser = null;
       clearMemberView();
       renderAuthenticated(null);
       chooseAuthTab("signin");
-      message("Test account deletion was accepted. Confirm database cascade and session revocation before calling it complete.", "ok");
+      message("Your test account and linked profile were deleted. Database backups expire according to their retention schedule.", "ok");
     });
   });
 
