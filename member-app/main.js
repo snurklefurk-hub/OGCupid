@@ -18,7 +18,10 @@ const memberApiUrl = local
 // configured production endpoints and explicit release approval.
 const registrationOpenInUi =
   local || import.meta.env.VITE_OGC_REGISTRATION_ENABLED === "true";
-const accountDeletionInUi = local;
+// Self-service deletion is available on both authenticated development and
+// production member sites. The API independently requires JWT + password,
+// its dedicated deletion role, and the server-side feature flag.
+const accountDeletionInUi = Boolean(authBaseUrl && memberApiUrl);
 const auth = authBaseUrl && memberApiUrl ? createAuthClient(authBaseUrl) : null;
 
 const $ = (id) => document.getElementById(id);
@@ -493,7 +496,7 @@ function wireForms() {
     event.preventDefault();
     const form = event.currentTarget;
     if (!accountDeletionInUi || !currentUser) {
-      message("Account deletion is only available in the development site.", "error");
+      message("Account deletion is not available in this environment.", "error");
       return;
     }
     if (!form.reportValidity()) return;
