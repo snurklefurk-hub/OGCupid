@@ -144,7 +144,8 @@
                 <input id="delete-confirm" name="confirm" type="text" required autocomplete="off">
                 <button class="button danger-button" type="submit">Permanently delete test account</button>
               </form>
-              <p class="hint">Unavailable until the managed authentication provider supports and passes a verified deletion test. This control is not part of the public preview.</p>
+              <button id="reauth-check-button" class="quiet-button" type="button">Check password safely (no deletion)</button>
+              <p class="hint">The destructive server endpoint is currently disabled while we test password verification. The button above checks identity without deleting anything. Development-only; never shown in the public release.</p>
             </section>
           </section>
 
