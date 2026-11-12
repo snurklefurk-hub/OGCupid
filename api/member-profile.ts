@@ -110,6 +110,76 @@ async function withDeletionAuthority<T>(
   }
 }
 
+
+type CanonicalPlace = {
+  id: number;
+  key: string;
+  label: string;
+  lat: number;
+  lon: number;
+};
+
+type GeoRow = Record<string, unknown> | null;
+
+function geoDetails(row: GeoRow) {
+  return {
+    localityId: row?.locality_id == null ? null : Number(row.locality_id),
+    localityKey: String(row?.locality_shard ?? ""),
+    searchOriginId: row?.search_origin_id == null ? null : Number(row.search_origin_id),
+    searchOriginKey: String(row?.search_origin_shard ?? ""),
+    searchOriginLabel: String(row?.search_origin_label ?? ""),
+    searchRadiusMiles: row?.search_radius_miles == null ? null : Number(row.search_radius_miles),
+  };
+}
+
+// GeoNames city data is hosted as public static reference data on OG Cupid.
+// The server, not the browser, resolves coordinates and labels from the
+// canonical ID. A member cannot insert arbitrary precise GPS coordinates.
+const placeShardCache = new Map<string, Array<Record<string, unknown>>>();
+async function verifiedPlace(raw: unknown): Promise<CanonicalPlace | null> {
+  if (raw == null) return null;
+  if (typeof raw !== "object" || Array.isArray(raw)) throw new Error("Invalid location");
+  const ref = raw as Record<string, unknown>;
+  if (Object.keys(ref).sort().join(",") !== "id,key" ||
+      !Number.isSafeInteger(ref.id) || Number(ref.id) <= 0 || Number(ref.id) > 999999999 ||
+      typeof ref.key !== "string" || !/^[a-z0-9_]{2}$/.test(ref.key)) {
+    throw new Error("Invalid location");
+  }
+  let places = placeShardCache.get(ref.key);
+  if (!places) {
+    const url = "https://ogcupid.onrender.com/locations/" + ref.key + ".json";
+    let response: Response;
+    try {
+      response = await fetch(url, { cache: "force-cache", redirect: "error", signal: AbortSignal.timeout(6000) });
+    } catch { throw new Error("Location index unavailable"); }
+    if (!response.ok || !(response.headers.get("content-type") ?? "").includes("json") ||
+        Number(response.headers.get("content-length") ?? 0) > 4000000) {
+      throw new Error("Location index unavailable");
+    }
+    const data: unknown = await response.json().catch(() => null);
+    if (!Array.isArray(data) || data.length > 50000) throw new Error("Location index unavailable");
+    places = data as Array<Record<string, unknown>>;
+    if (placeShardCache.size > 32) placeShardCache.delete(placeShardCache.keys().next().value ?? "");
+    placeShardCache.set(ref.key, places);
+  }
+  const place = places.find(entry => entry.id === ref.id);
+  if (!place || typeof place.n !== "string" || !place.n.trim() ||
+      typeof place.a !== "string" || typeof place.c !== "string" ||
+      !/^[A-Z]{2}$/.test(place.c) ||
+      typeof place.x !== "number" || typeof place.y !== "number" ||
+      !Number.isFinite(place.x) || !Number.isFinite(place.y) ||
+      Math.abs(place.x) > 90 || Math.abs(place.y) > 180) {
+    throw new Error("Invalid location");
+  }
+  const countryName = new Intl.DisplayNames(["en"], { type: "region" }).of(place.c) || place.c;
+  const name = place.n.trim();
+  const region = place.a.trim();
+  const label = [name, region && region.toLowerCase() !== name.toLowerCase() ? region : "", countryName]
+    .filter(Boolean).join(", ");
+  if (label.length > 100) throw new Error("Invalid location");
+  return { id: Number(ref.id), key: ref.key, label, lat: place.x, lon: place.y };
+}
+
 type MemberProfile = {
   userId: string;
   displayName: string;
@@ -500,14 +570,19 @@ export default {
       }
 
       if (request.method === "GET") {
-        const result = await withMember(userId, client =>
-          client.query(
+        const result = await withMember(userId, async client => {
+          const profile = await client.query(
             `SELECT user_id, display_name, about_me, age, city_region, gender, pronouns, orientation, relationship_goal, looking_for, work, education, height, kids, pets, smoking, drinking, diet, languages, life_direction, good_at, favorites, six_things, friday_night, message_me_if, created_at, updated_at FROM app_private.member_profiles WHERE user_id = $1::uuid`,
             [userId],
-          ),
-        );
-        if (!result.rows.length) return json(request, { profile: null });
-        return json(request, { profile: present(result.rows[0]) });
+          );
+          const geo = await client.query(
+            "SELECT locality_id, locality_shard, search_origin_id, search_origin_shard, search_origin_label, search_radius_miles FROM app_private.member_localities WHERE user_id = $1::uuid",
+            [userId],
+          );
+          return { profile: profile.rows[0] ?? null, geo: geo.rows[0] ?? null };
+        });
+        if (!result.profile) return json(request, { profile: null });
+        return json(request, { profile: { ...present(result.profile), ...geoDetails(result.geo) } });
       }
 
       // PUT is a complete replacement of the editable private fields.
@@ -534,9 +609,36 @@ export default {
       if (age !== null && (!Number.isInteger(age) || Number(age) < 18 || Number(age) > 120)) {
         return json(request, { error: "Age must be between 18 and 120, or left blank" }, 400);
       }
+      // Older editor versions do not send any geo keys: keep their existing
+      // locality preferences untouched when they save ordinary essay fields.
+      const geoSupplied = ["locality", "searchOrigin", "searchRadiusMiles"]
+        .some(key => Object.prototype.hasOwnProperty.call(fields, key));
+      let locality: CanonicalPlace | null = null;
+      let searchOrigin: CanonicalPlace | null = null;
+      let searchRadiusMiles: number | null = null;
+      if (geoSupplied) {
+        if (!["locality", "searchOrigin", "searchRadiusMiles"]
+          .every(key => Object.prototype.hasOwnProperty.call(fields, key))) {
+          return json(request, { error: "Incomplete location preferences" }, 400);
+        }
+        if (fields.searchRadiusMiles !== null &&
+            ![10, 25, 50, 100, 250].includes(fields.searchRadiusMiles as number)) {
+          return json(request, { error: "Choose a valid distance" }, 400);
+        }
+        searchRadiusMiles = fields.searchRadiusMiles as number | null;
+        try {
+          locality = await verifiedPlace(fields.locality);
+          searchOrigin = await verifiedPlace(fields.searchOrigin);
+        } catch (error) {
+          const unavailable = error instanceof Error && error.message === "Location index unavailable";
+          return json(request,
+            { error: unavailable ? "Locality index temporarily unavailable" : "Choose a locality from the search results" },
+            unavailable ? 503 : 400);
+        }
+      }
       const extraValues: string[] = [];
       for (const [key, , maxLength] of profileTextFields) {
-        const value = fields[key] ?? "";
+        const value = key === "cityRegion" && locality ? locality.label : (fields[key] ?? "");
         if (typeof value !== "string" || value.trim().length > maxLength) {
           return json(request, { error: "A profile field exceeds its permitted length" }, 400);
         }
@@ -558,10 +660,31 @@ export default {
            ${fieldUpdates.join(", ")},
            updated_at = now()
          RETURNING ${allReturned.join(", ")}`;
-      const result = await withMember(userId, client => client.query(
-        sql, [userId, displayName, aboutMe, age, ...extraValues],
-      ));
-      return json(request, { profile: present(result.rows[0]) });
+      const result = await withMember(userId, async client => {
+        const saved = await client.query(sql, [userId, displayName, aboutMe, age, ...extraValues]);
+        if (geoSupplied) {
+          await client.query(
+            "INSERT INTO app_private.member_localities " +
+            "(user_id, locality_id, locality_shard, locality_lat, locality_lon, " +
+            "search_origin_id, search_origin_shard, search_origin_label, search_origin_lat, search_origin_lon, search_radius_miles) " +
+            "VALUES ($1::uuid,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) " +
+            "ON CONFLICT (user_id) DO UPDATE SET locality_id=EXCLUDED.locality_id, " +
+            "locality_shard=EXCLUDED.locality_shard, locality_lat=EXCLUDED.locality_lat, locality_lon=EXCLUDED.locality_lon, " +
+            "search_origin_id=EXCLUDED.search_origin_id, search_origin_shard=EXCLUDED.search_origin_shard, " +
+            "search_origin_label=EXCLUDED.search_origin_label, search_origin_lat=EXCLUDED.search_origin_lat, " +
+            "search_origin_lon=EXCLUDED.search_origin_lon, search_radius_miles=EXCLUDED.search_radius_miles, updated_at=now()",
+            [userId, locality?.id ?? null, locality?.key ?? null, locality?.lat ?? null, locality?.lon ?? null,
+             searchOrigin?.id ?? null, searchOrigin?.key ?? null, searchOrigin?.label ?? null,
+             searchOrigin?.lat ?? null, searchOrigin?.lon ?? null, searchRadiusMiles],
+          );
+        }
+        const geo = await client.query(
+          "SELECT locality_id, locality_shard, search_origin_id, search_origin_shard, search_origin_label, search_radius_miles FROM app_private.member_localities WHERE user_id = $1::uuid",
+          [userId],
+        );
+        return { profile: saved.rows[0], geo: geo.rows[0] ?? null };
+      });
+      return json(request, { profile: { ...present(result.profile), ...geoDetails(result.geo) } });
     } catch (error) {
       // Do not echo SQL errors, tokens, or personally identifiable information.
       console.error("Private profile request failed", error instanceof Error ? error.name : "unknown");
