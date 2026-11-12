@@ -210,8 +210,10 @@
                     <input id="profile-age" name="age" type="number" min="18" max="120" step="1" placeholder="18–120 (self-reported)" inputmode="numeric">
                   </div>
                   <div class="profile-field ">
-                    <label for="profile-city-region">City / general area</label>
-                    <input id="profile-city-region" name="cityRegion" type="text" maxlength="100" placeholder="Savannah, GA (no street addresses)">
+                    <label for="profile-city-region">My city or town</label>
+                    <input id="profile-city-region" name="cityRegion" type="search" maxlength="100" placeholder="Start typing a city or town" autocomplete="off" spellcheck="false" aria-controls="profile-city-options" aria-autocomplete="list">
+                    <div id="profile-city-options" class="locality-results" role="listbox" aria-label="Matching towns" hidden></div>
+                    <p id="profile-city-hint" class="hint">Choose a town from the results. No street addresses or GPS required.</p>
                   </div>
                   <fieldset class="classic-choice-group profile-field-wide">
                     <legend>I am a</legend>
@@ -244,7 +246,32 @@
                 </div>
               </fieldset>
               <fieldset class="profile-edit-section">
-                <legend>03 / LIFE & DETAILS</legend>
+                <legend>03 / MATCH DISTANCE</legend>
+                <p class="profile-fieldset-intro">Private preferences for finding people later. These do not publish your profile or make it discoverable.</p>
+                <div class="profile-field-grid">
+                  <div class="profile-field profile-field-wide">
+                    <label for="search-origin">Search around</label>
+                    <input id="search-origin" name="searchOriginLabel" type="search" maxlength="100" placeholder="My city (leave blank to use my location)" autocomplete="off" spellcheck="false" aria-controls="search-origin-options" aria-autocomplete="list">
+                    <div id="search-origin-options" class="locality-results" role="listbox" aria-label="Search origin towns" hidden></div>
+                    <p id="search-origin-hint" class="hint">Optional: choose a different city to search around.</p>
+                  </div>
+                  <div class="profile-field profile-field-wide">
+                    <label for="search-radius">Maximum distance</label>
+                    <select id="search-radius" name="searchRadiusMiles">
+                      <option value="">Anywhere</option>
+                      <option value="10">10 miles</option>
+                      <option value="25">25 miles</option>
+                      <option value="50">50 miles</option>
+                      <option value="100">100 miles</option>
+                      <option value="250">250 miles</option>
+                    </select>
+                    <p class="hint">Straight-line distance between approximate town centers—not driving miles.</p>
+                  </div>
+                  <p class="profile-field-wide hint">Place data from <a href="https://www.geonames.org/" target="_blank" rel="noopener noreferrer">GeoNames</a> (CC BY 4.0). Matching is not live yet; these preferences are saved privately.</p>
+                </div>
+              </fieldset>
+              <fieldset class="profile-edit-section">
+                <legend>04 / LIFE & DETAILS</legend>
                 <p class="profile-fieldset-intro">These are conversation starters, not a checklist for human worth.</p>
                 <div class="profile-field-grid">
                   <div class="profile-field ">
@@ -286,7 +313,7 @@
                 </div>
               </fieldset>
               <fieldset class="profile-edit-section">
-                <legend>04 / THE ESSAYS</legend>
+                <legend>05 / THE ESSAYS</legend>
                 <p class="profile-fieldset-intro">The good stuff. The old site had room for actual words; so do we.</p>
                 <div class="profile-field-grid">
                   <div class="profile-field profile-field-wide">
