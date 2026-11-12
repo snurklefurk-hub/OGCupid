@@ -1,8 +1,60 @@
 # Account recovery and deletion — implementation status
 
-Status: **draft development feature, not public launch ready**.
+Status: **production registration and member-owned deletion deployed**.
 Last reviewed: 2026-11-12 UTC.
-Related: [Draft PR #1](https://github.com/snurklefurk-hub/OGCupid/pull/1).
+Related: [GitHub main](https://github.com/snurklefurk-hub/OGCupid/tree/main) and [historical draft PR #1](https://github.com/snurklefurk-hub/OGCupid/pull/1).
+
+## Production self-service deletion enabled — 2026-11-12
+
+Owner explicitly authorized enabling account deletion in **production** after
+production member signup and persistence had been published. This is an
+implementation/release record, not a claim that all future content moderation,
+legal, privacy or hardening work is complete.
+
+- **Backend:** main-branch `api/member-profile.ts` now permits `POST
+  /account/delete` only when `NEON_BRANCH` is `production` or the named
+  development branch **and** `OGC_ACCOUNT_DELETION_ENABLED=true` **and**
+  a server-only `OGC_DELETION_DATABASE_URL` credential exists. The old
+  development-only diagnostic route remains separately disabled.
+  Production uses the fixed, Neon Auth-trusted
+  `https://ogcupid.onrender.com` origin for current-password reauthentication,
+  not the untrusted incoming request Origin.
+- **Authentication:** API independently verifies the signed JWT; it rate-limits
+  each owner to five deletion attempts per hour; then Neon Auth verifies the
+  submitted current password, requiring Auth-returned user ID to **equal**
+  the JWT subject. No client-supplied target account ID is accepted.
+- **Production SQL:** [migration 006](../db/migrations/006_production_member_self_deletion.sql)
+  applied on Neon branch `production`. A dedicated `ogcupid_delete_api`
+  credential (NO BYPASSRLS; no direct table reads, writes or user deletion)
+  can only execute a SECURITY DEFINER no-argument self-erasure function.
+  Ordinary `ogcupid_member_api` cannot execute that function but may execute
+  a separate attempt-throttling helper. Cascading Auth user FKs delete the
+  current private profile, stored match answers, linked sessions, and attempts
+  record. Backup retention remains governed by the service's actual policy.
+- **Deployed:** production Neon Function `members` active **deployment #3**
+  has status `completed`, with server-only deletion credential and enable
+  flag present. GitHub `main` compiles the account page with production
+  Auth/member endpoints; Render deployed the versioned member UI bundle in
+  commit `65af7c79b430bfc442a2f96c85be74146292711d` with status
+  **live**. Production signup remains email-OTP verified.
+- **Safety checks (non-destructive):** the new database role lacks direct
+  SELECT on `member_profiles` / `member_match_answers` and lacks direct
+  DELETE on Neon Auth users; restricted role privilege checks passed.
+  Frontend compiled code contains correct production endpoints and
+  enables the deletion form for an authenticated user. No database credentials
+  are exposed in the browser. Production had **zero Auth users, profiles
+  and answers** during release verification; no existing account was deleted.
+- **Unverified:** a genuine production browser POST involving an authenticated
+  member, correct password and resulting self-deletion, as well as live
+  previously-issued JWT replay and restore/retention workflows, were **not**
+  exercised, per the owner's request to stop repetitive account exercises.
+  The deployment completed, but an HTTP end-to-end successful account deletion
+  must not be claimed without a real test.
+
+**Earlier development sections below are historical milestones.** References
+below to "production disabled", "not deployed", or a disposable-only SQL
+allowlist describe the state *before* this production release and have been
+superseded by the current status in this section.
 
 ## Current development state — signup and owner deletion ENABLED (2026-11-12)
 
