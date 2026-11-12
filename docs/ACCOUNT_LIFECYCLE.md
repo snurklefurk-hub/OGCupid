@@ -156,6 +156,55 @@ endpoint on a *new* disposable development account after deployment and
 explicit enabling. No further account erasure has occurred or been authorized
 solely by this historical administrative cascade test.
 
+## Reauthentication regression and safe diagnosis (2026-11-12)
+
+**Owner confirmed:** the disposable user can sign OUT and sign IN normally with
+the same password that deletion failed to reauthenticate. Therefore do not
+instruct another password reset. The original deletion backend's raw
+`fetch(NEON_AUTH_BASE_URL + "/sign-in/email")` request had no explicit
+`Origin` header, and suppressed all upstream status/error codes. Better Auth
+may reject such a request for CSRF/origin reasons, but the actual root cause
+is **unconfirmed** until diagnostics run. It also initially assumed only
+`response.user.id` rather than accepting a wrapped `response.data.user.id`.
+
+**Change:** GitHub feature branch now has a **non-destructive**,
+member-authenticated `POST /account/reauth-check` route. The route is
+entirely absent except on the isolated dev branch with *both*
+`OGC_REAUTH_TEST_ENABLED=true` and
+`OGC_REAUTH_TEST_USER_ID` matching the designated disposable account's
+ID. It confirms the JWT subject matches that user ID, reserves an ordinary
+rate-limit attempt, posts to Neon Auth from a **fixed trusted localhost
+origin**, and returns only sanitized stage/status/allowlisted error codes
+instead of secrets or credentials. A match produces
+`{verified:true,deleted:false}` and returns **before** the SQL erase call.
+The browser test form now shows only for that disposable account, and has
+a separate **Check password safely (no deletion)** button.
+
+The privileged `/account/delete` route remains disabled with server-only
+`OGC_ACCOUNT_DELETION_ENABLED=false`. Neon Function deployment **#10**
+updated **environment configuration only**, enabling the isolated diagnostic
+route but not deploying the new source yet. The existing #10 code does not
+contain that route; a **new source deployment is needed** before testing.
+
+Dev SQL attempted attempts counter had reached 6 from repeated failed
+verification tests. While deletion was disabled, the single disposable
+member's hourly window start was advanced 61 minutes into the past, retaining
+its historical count, so its *next* properly rate-limited check can start a
+new window. No account was deleted; 5 users and 5 profiles remain; the
+test-only SQL allowlist is intact. Do not reset or bypass the limiter for
+other users or production.
+
+**Next acceptance:** sync/deploy the updated Function to the **development**
+branch only; sync local `member-app/index.html` and `main.js`; ask owner to
+click *Check password safely* with the same known-working password exactly
+once; inspect whether `verified:true,deleted:false`, or a diagnostic
+stage/status/code. Recheck database and clean up the diagnostic flag before
+allowing an actual deletion test. Never share passwords or raw provider
+responses in chats/logs.
+
+See Better Auth origin security guidance:
+https://better-auth.com/docs/reference/security
+
 ## Safety / deployment state
 
 - Development and production signup are **disabled server-side**.
