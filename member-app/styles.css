@@ -238,3 +238,35 @@ button:disabled{opacity:.55;cursor:not-allowed}
  .og-preview-identity h3{font-size:26px}
  .og-preview-hero{gap:10px}
 }
+
+/* Early-OkCupid-style personal basics: readable selections, no free-text
+   pronouns, orientation or generic gender form fields. */
+.profile-edit-section .classic-choice-group{
+  border:0;border-top:1px solid #d8d1df;margin:5px 0 1px;padding:15px 0 7px;
+  min-width:0;
+}
+.profile-edit-section .classic-choice-group legend{
+  font:900 16px/1.4 "Trebuchet MS",sans-serif;letter-spacing:0;
+  text-transform:none;color:var(--ink);padding:0 8px 0 0;
+}
+.classic-choice-options{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px}
+.profile-edit-section .classic-choice{
+  display:inline-flex;align-items:center;gap:9px;min-height:42px;
+  padding:10px 14px;background:#fff;border:2px solid #bdb5cf;
+  font:800 14px/1.25 "Trebuchet MS",sans-serif;cursor:pointer;
+  transition:background-color .12s,border-color .12s;
+}
+.profile-edit-section .classic-choice input{
+  margin:0;inline-size:17px;block-size:17px;accent-color:var(--blue);flex:none;
+}
+.profile-edit-section .classic-choice:hover{border-color:var(--blue);background:#f4f1fe}
+.profile-edit-section .classic-choice:has(input:checked){border-color:var(--blue);background:#eae5ff}
+.profile-edit-section .classic-choice:focus-within{outline:3px solid #e4b53d;outline-offset:2px}
+@media(max-width:760px){
+  .profile-edit-section .classic-choice-group{padding-top:12px}
+  .classic-choice-options{gap:7px}
+  .profile-edit-section .classic-choice{padding:9px 11px;min-height:42px;font-size:13px}
+}
+@media(prefers-reduced-motion:reduce){
+  .profile-edit-section .classic-choice{transition:none}
+}
