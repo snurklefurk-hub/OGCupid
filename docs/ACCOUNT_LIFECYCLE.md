@@ -1,7 +1,7 @@
 # Account recovery and deletion — implementation status
 
 Status: **draft development feature, not public launch ready**.
-Last reviewed: 2026-11-11 US Eastern.
+Last reviewed: 2026-11-12 UTC.
 Related: [Draft PR #1](https://github.com/snurklefurk-hub/OGCupid/pull/1).
 
 ## Password recovery
@@ -205,6 +205,68 @@ responses in chats/logs.
 See Better Auth origin security guidance:
 https://better-auth.com/docs/reference/security
 
+## Self-service browser account deletion — PASSED (2026-11-12 UTC)
+
+**Result:** the owner used the disposable development account to complete
+email verification, password establishment, and verified browser sign-in.
+Initial deletion attempts were correctly rejected while the server's raw
+Better Auth sign-in call was missing a trusted `Origin` header; the resulting
+attempts accumulated against the rate limiter. The owner demonstrated that
+the identical password worked via the normal browser sign-in. The backend was
+updated to use the fixed trusted development Origin and to accept either of
+the provider's expected user-response shapes. A **non-destructive**
+`/account/reauth-check` confirmed `verified:true, deleted:false` from
+the browser without touching user data.
+
+The owner then submitted `DELETE` and the same known-working password to the
+development-only `POST /account/delete` endpoint. The browser displayed:
+**"Your test account and linked profile were deleted. Database backups
+expire according to their retention schedule."**
+
+**Independently confirmed after the browser result via read-only PostgreSQL:**
+
+| Check | Observed |
+|---|---:|
+| Total Neon Auth users, before -> after | 5 -> **4** |
+| Total `app_private.member_profiles`, before -> after | 5 -> **4** |
+| Deleted user row (disposable UUID only) | **0** |
+| Deleted user's private profile | **0** |
+| Deleted user's linked `neon_auth.account` rows | **0** |
+| Deleted user's `neon_auth.session` rows | **0** |
+| Deleted user's `app_private.member_deletion_attempts` rows | **0** |
+| Established synthetic security-test private profiles | **2** unchanged |
+| Temporary one-user SQL allowlist still installed | **Yes** |
+
+The session results demonstrate **database-side cleanup of existing session
+records**, including this test user's previously active sessions. This does
+not by itself establish how quickly an already-issued JWT or cached browser
+session fails across every route, or prove removal from snapshots/backups
+before retention expiry. No files/photos, messaging, payments, or third-party
+storage have been implemented for this member profile yet.
+
+**Immediately after the owner's success message**, the development Neon
+Function was switched back to
+`OGC_ACCOUNT_DELETION_ENABLED=false` and
+`OGC_REAUTH_TEST_ENABLED=false`. Neon **deployment #13 completed** and
+`get_function` confirmed that deployment active. The test-only SQL allowlist
+remains deliberately in place to prevent any other account from being erased
+if a test flag is accidentally reenabled. The deleted disposable account's
+UUID will never be reused. Both owner test accounts remain, all other
+development records returned to the prior four/four baseline, and **nothing
+was deployed or modified in production**.
+
+**Acceptance:** end-to-end account deletion, current password recheck,
+owner-only targeting, database cascade (profile + auth credentials + sessions),
+per-user attempt log cleanup, and isolation from other dev accounts all passed
+for one disposable member in the isolated development environment.
+
+**Before public release:** remove all hardcoded development test-account IDs
+and test flags, replace the one-user SQL allowlist only after a reviewed
+production-safe authorization design, verify backup/retention notices, audit
+log behavior, session/JWT behavior after deletion, uploads/media and future
+associated records, abusive retry defenses, and production rollout controls.
+The website is **not yet ready for public registration**.
+
 ## Safety / deployment state
 
 - Development and production signup are **disabled server-side**.
@@ -220,12 +282,15 @@ https://better-auth.com/docs/reference/security
   account deletion, privacy policy and retention, moderation, and abuse
   controls.
 
-## Next acceptance test: gated self-service deletion
+## Next acceptance tests
 
-Download the updated `api/member-profile.ts` from the feature branch and
-deploy it to the linked **development** Neon Function *without enabling
-deletion*. Inspect the deployment, then test a disabled call. Account deletion
-must remain off until a disposable, email-verified password account can
-exercise correct-password and wrong-password paths safely.
+- Keep the destructive and diagnostic development routes disabled.
+- Run regression tests for post-deletion stale JWTs/cached sessions (especially
+  whether the profile API rejects a deleted identity cleanly).
+- Determine documented data-retention, audit and backup policy before public
+  launch; extend cleanup to photos/uploads and all future user-owned tables.
+- Separately verify old-password rejection/parallel-session revocation after
+  password reset, production build isolation, moderation and security review.
+- Do not promote this dev-only endpoint with its hardcoded user allowlist.
 
 **Never test deletion on the two established accounts or production.**
