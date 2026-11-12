@@ -72,7 +72,9 @@ A custom deletion endpoint is drafted because managed Auth has no exposed
 switch for native Better Auth hard deletion. It uses independently verified
 JWT and account password, a five-attempt/hour rate limit, and a separate
 database credential that can invoke only a narrowly scoped erasure function.
-**It has not yet been deployed or end-to-end tested.** The API requires both
+**It has been deployed and end-to-end tested on one disposable development
+account; deletion and diagnostic endpoints were disabled again after success.**
+The API requires both
 the exact development branch and `OGC_ACCOUNT_DELETION_ENABLED=true`; the
 browser form also requires localhost and
 `VITE_OGC_DELETE_TEST=true`. Both flags are OFF by default. Read
@@ -99,11 +101,16 @@ browser form also requires localhost and
       revocation of already-active sessions in another browser.
 - [x] Draft isolated, rate-limited backend deletion path with dedicated
       least-privilege database role and server-side password recheck.
-- [ ] Deploy deletion backend source *disabled*, verify access controls, and
-      test actual self-service deletion with another disposable dev account
-      after explicitly enabling dev-only flags.
-- [ ] Implement and verify full authenticated account deletion, privacy and
-      consent policy, backup/retention disclosures, and associated-data cleanup.
+- [x] Deploy and exercise the scoped development self-deletion endpoint
+      using an email-verified disposable account. Real password verified,
+      browser deletion succeeded; read-only database checks confirmed
+      Auth user, linked credentials, private profile, active sessions, and
+      test throttling row all gone; four existing accounts/profiles intact.
+      Development deletion/diagnostic routes were re-disabled immediately
+      afterward (Neon Function deployment #13).
+- [ ] Generalize/review deletion for production, publish privacy and consent
+      policy and backup/retention disclosures, verify stale-JWT behavior,
+      and extend cleanup to all future member-owned assets/data.
 - [ ] Configure production auth trusted domains, branded/custom SMTP, and
       disable production localhost acceptance.
 - [ ] Review defenses against signup abuse, credential stuffing, and API
