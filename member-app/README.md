@@ -63,11 +63,20 @@ The registration button is disabled unless the build explicitly specifies
 `VITE_OGC_REGISTRATION_ENABLED=true` **and** the branch's server-side
 registration setting is separately enabled. Existing accounts can still log in.
 
-Password recovery uses Neon's supported Email OTP endpoints. Resetting a
-password requires access to the member's verified mailbox and revokes sessions
-according to the branch Auth setting. The account hard-deletion form is
-inactive until we verify the native Managed Better Auth server supports it;
-read `docs/ACCOUNT_LIFECYCLE.md` before modifying this control.
+Password recovery uses Neon's supported Email OTP endpoints. The owner has
+successfully tested a recovery email/code, reset, re-login, and preservation
+of the saved profile. Old-password rejection and an already-active session's
+revocation remain separate acceptance tests.
+
+A custom deletion endpoint is drafted because managed Auth has no exposed
+switch for native Better Auth hard deletion. It uses independently verified
+JWT and account password, a five-attempt/hour rate limit, and a separate
+database credential that can invoke only a narrowly scoped erasure function.
+**It has not yet been deployed or end-to-end tested.** The API requires both
+the exact development branch and `OGC_ACCOUNT_DELETION_ENABLED=true`; the
+browser form also requires localhost and
+`VITE_OGC_DELETE_TEST=true`. Both flags are OFF by default. Read
+[account lifecycle notes](../docs/ACCOUNT_LIFECYCLE.md) first.
 
 ## Tested in the isolated development environment
 
@@ -80,18 +89,19 @@ read `docs/ACCOUNT_LIFECYCLE.md` before modifying this control.
 
 ## Production launch BLOCKERS
 
-- [ ] Build and verify this **new** member page in a real browser. The page's
-      source has not yet been compiled or browser-tested.
+- [x] New member page loaded in browser; existing sessions, login/switching,
+      private profile auto-load verified by owner on localhost.
 - [ ] Verify production role-specific connection (no owner/BYPASSRLS), proper
       CORS/origin policies, and HTTP cross-user isolation.
-- [x] Draft email-OTP recovery UI using the documented managed Email OTP plugin.
-      **Not yet user-tested** with real code delivery/reset; see
-      [account lifecycle notes](../docs/ACCOUNT_LIFECYCLE.md).
-- [ ] Verify recovery behavior end-to-end: delivery, invalid/expired OTP,
-      session revocation, sign-in with new password, and old-password rejection.
-- [ ] Confirm native Managed Auth hard-delete support; draft client UI is
-      deliberately hidden behind `VITE_OGC_DELETE_TEST=true` on localhost
-      only, pending backend validation with a disposable dev account.
+- [x] Owner browser-tested email-code password reset, new login, and intact
+      profile. See [account lifecycle notes](../docs/ACCOUNT_LIFECYCLE.md).
+- [ ] Verify recovery edge cases: expired OTP, old-password rejection and
+      revocation of already-active sessions in another browser.
+- [x] Draft isolated, rate-limited backend deletion path with dedicated
+      least-privilege database role and server-side password recheck.
+- [ ] Deploy deletion backend source *disabled*, verify access controls, and
+      test actual self-service deletion with another disposable dev account
+      after explicitly enabling dev-only flags.
 - [ ] Implement and verify full authenticated account deletion, privacy and
       consent policy, backup/retention disclosures, and associated-data cleanup.
 - [ ] Configure production auth trusted domains, branded/custom SMTP, and
