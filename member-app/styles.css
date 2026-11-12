@@ -67,3 +67,11 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .bottom-mark{text-align:center;background:#e9e5f9;border-top:3px solid var(--ink);font-size:11px;font-weight:900;letter-spacing:1.2px;padding:17px}
 @media(max-width:830px){.masthead{flex-direction:column;align-items:flex-start;padding:20px}.masthead nav{flex-wrap:wrap;gap:12px}.nav-tag{display:none}.columns{grid-template-columns:1fr}.shell{margin-top:12px}.intro{padding-top:24px}.topline{font-size:10px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+
+/* Account recovery and opt-in development-only destructive-operation preview. */
+#forgot-password{display:inline-block;margin-top:10px}
+.danger-zone{margin-top:28px;padding:18px;border:2px dashed #bd3246;background:#fff0f2}
+.danger-zone h3{color:#90283a}
+.danger-zone p{font-size:13px}
+.danger-button{background:#a82b40;color:#fff}
+.danger-button:hover:not(:disabled){background:#8e2336}
