@@ -19,6 +19,10 @@ const allowedOrigins = new Set([
   "https://www.ogcupid.com",
   "https://ogcupid.onrender.com",
 ]);
+// Local browser testing is allowed ONLY for the isolated development branch.
+if (process.env.NEON_BRANCH === "dev/private-member-accounts") {
+  allowedOrigins.add("http://localhost:5173");
+}
 
 function headersFor(request: Request): Headers {
   const h = new Headers({
