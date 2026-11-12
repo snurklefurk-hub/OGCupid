@@ -212,22 +212,30 @@
                     <label for="profile-city-region">City / general area</label>
                     <input id="profile-city-region" name="cityRegion" type="text" maxlength="100" placeholder="Savannah, GA (no street addresses)">
                   </div>
-                  <div class="profile-field ">
-                    <label for="profile-pronouns">Pronouns</label>
-                    <input id="profile-pronouns" name="pronouns" type="text" maxlength="40" placeholder="Optional">
-                  </div>
-                  <div class="profile-field ">
-                    <label for="profile-gender">Gender</label>
-                    <input id="profile-gender" name="gender" type="text" maxlength="60" placeholder="In your own words">
-                  </div>
-                  <div class="profile-field ">
-                    <label for="profile-orientation">Orientation</label>
-                    <input id="profile-orientation" name="orientation" type="text" maxlength="60" placeholder="Optional">
-                  </div>
-                  <div class="profile-field ">
-                    <label for="profile-relationship-goal">Relationship goals</label>
-                    <input id="profile-relationship-goal" name="relationshipGoal" type="text" maxlength="100" placeholder="Dating, long-term, friendship, etc.">
-                  </div>
+                  <fieldset class="classic-choice-group profile-field-wide">
+                    <legend>I am a</legend>
+                    <div class="classic-choice-options">
+                      <label class="classic-choice"><input type="radio" name="gender" value="man"><span>Man</span></label>
+                      <label class="classic-choice"><input type="radio" name="gender" value="woman"><span>Woman</span></label>
+                    </div>
+                  </fieldset>
+                  <fieldset class="classic-choice-group profile-field-wide">
+                    <legend>Interested in</legend>
+                    <div class="classic-choice-options">
+                      <label class="classic-choice"><input type="checkbox" name="interestedIn" value="men"><span>Men</span></label>
+                      <label class="classic-choice"><input type="checkbox" name="interestedIn" value="women"><span>Women</span></label>
+                    </div>
+                  </fieldset>
+                  <fieldset class="classic-choice-group profile-field-wide">
+                    <legend>I'm open to</legend>
+                    <div class="classic-choice-options">
+                      <label class="classic-choice"><input type="checkbox" name="openTo" value="long-term dating"><span>Long-term dating</span></label>
+                      <label class="classic-choice"><input type="checkbox" name="openTo" value="short-term dating"><span>Short-term dating</span></label>
+                      <label class="classic-choice"><input type="checkbox" name="openTo" value="new friends"><span>New friends</span></label>
+                      <label class="classic-choice"><input type="checkbox" name="openTo" value="casual sex"><span>Casual sex</span></label>
+                      <label class="classic-choice"><input type="checkbox" name="openTo" value="activity partners"><span>Activity partners</span></label>
+                    </div>
+                  </fieldset>
                   <div class="profile-field profile-field-wide">
                     <label for="profile-looking-for">I'm looking for</label>
                     <textarea id="profile-looking-for" name="lookingFor" rows="4" maxlength="500" placeholder="Who or what kind of connection are you interested in?"></textarea>
