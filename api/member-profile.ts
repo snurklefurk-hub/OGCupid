@@ -579,10 +579,23 @@ export default {
             "SELECT locality_id, locality_shard, search_origin_id, search_origin_shard, search_origin_label, search_radius_miles FROM app_private.member_localities WHERE user_id = $1::uuid",
             [userId],
           );
-          return { profile: profile.rows[0] ?? null, geo: geo.rows[0] ?? null };
+          // This uses the transaction-local authenticated member identity.
+          // The founder award table itself has no direct member-role grants.
+          const founder = await client.query(
+            "SELECT app_private.current_member_founder_status() AS status",
+          );
+          return {
+            profile: profile.rows[0] ?? null,
+            geo: geo.rows[0] ?? null,
+            founderStatus: founder.rows[0]?.status ?? null,
+          };
         });
         if (!result.profile) return json(request, { profile: null });
-        return json(request, { profile: { ...present(result.profile), ...geoDetails(result.geo) } });
+        return json(request, { profile: {
+          ...present(result.profile),
+          ...geoDetails(result.geo),
+          founderStatus: result.founderStatus,
+        } });
       }
 
       // PUT is a complete replacement of the editable private fields.
@@ -682,9 +695,20 @@ export default {
           "SELECT locality_id, locality_shard, search_origin_id, search_origin_shard, search_origin_label, search_radius_miles FROM app_private.member_localities WHERE user_id = $1::uuid",
           [userId],
         );
-        return { profile: saved.rows[0], geo: geo.rows[0] ?? null };
+        const founder = await client.query(
+          "SELECT app_private.current_member_founder_status() AS status",
+        );
+        return {
+          profile: saved.rows[0],
+          geo: geo.rows[0] ?? null,
+          founderStatus: founder.rows[0]?.status ?? null,
+        };
       });
-      return json(request, { profile: { ...present(result.profile), ...geoDetails(result.geo) } });
+      return json(request, { profile: {
+        ...present(result.profile),
+        ...geoDetails(result.geo),
+        founderStatus: result.founderStatus,
+      } });
     } catch (error) {
       // Do not echo SQL errors, tokens, or personally identifiable information.
       console.error("Private profile request failed", error instanceof Error ? error.name : "unknown");
