@@ -416,9 +416,9 @@ function renderQuestion() {
 
 // OG Cupid's classic long-form profile is entirely owner-editable. The
 // preview uses textContent and DOM nodes, never member-submitted HTML.
-const longProfileFields = Object.freeze(["cityRegion","gender","pronouns","orientation","relationshipGoal","lookingFor","work","education","height","kids","pets","smoking","drinking","diet","languages","lifeDirection","goodAt","favorites","sixThings","fridayNight","messageMeIf"]);
+const longProfileFields = Object.freeze(["cityRegion","lookingFor","work","education","height","kids","pets","smoking","drinking","diet","languages","lifeDirection","goodAt","favorites","sixThings","fridayNight","messageMeIf"]);
 const previewEssays = Object.freeze([["aboutMe","about","about-section"],["lifeDirection","life-direction","life-direction-section"],["goodAt","good-at","good-at-section"],["favorites","favorites","favorites-section"],["sixThings","six-things","six-things-section"],["fridayNight","friday-night","friday-night-section"],["messageMeIf","message-me-if","message-me-if-section"]]);
-const previewDetails = Object.freeze([["Work","work"],["Education","education"],["Height","height"],["Kids","kids"],["Pets","pets"],["Smokes","smoking"],["Drinks","drinking"],["Diet","diet"],["Speaks","languages"],["Orientation","orientation"]]);
+const previewDetails = Object.freeze([["Work","work"],["Education","education"],["Height","height"],["Kids","kids"],["Pets","pets"],["Smokes","smoking"],["Drinks","drinking"],["Diet","diet"],["Speaks","languages"]]);
 
 function readProfileDraft(form = $("profile-form")) {
   const ageValue = form.elements.age.value.trim();
@@ -427,6 +427,13 @@ function readProfileDraft(form = $("profile-form")) {
     aboutMe: form.elements.aboutMe.value.trim(),
     age: ageValue ? Number(ageValue) : null,
     adultConfirmed: form.elements.adultConfirmed.checked,
+    gender: form.querySelector('input[name="gender"]:checked')?.value ?? "",
+    // Existing private text columns are sufficient for the classic fixed choices.
+    // Store stable comma-separated option values; no new schema or public access.
+    orientation: [...form.querySelectorAll('input[name="interestedIn"]:checked')]
+      .map(input => input.value).join(","),
+    relationshipGoal: [...form.querySelectorAll('input[name="openTo"]:checked')]
+      .map(input => input.value).join(","),
   };
   for (const field of longProfileFields) draft[field] = form.elements[field].value.trim();
   return draft;
@@ -440,14 +447,14 @@ function renderProfilePreview() {
   const introBits = [];
   if (Number.isInteger(draft.age) && draft.age >= 18 && draft.age <= 120) introBits.push(String(draft.age));
   if (draft.cityRegion) introBits.push(draft.cityRegion);
-  if (draft.pronouns) introBits.push(draft.pronouns);
-  $("preview-one-line").textContent = introBits.join(" · ") || "Add your age, general area, or pronouns.";
+  $("preview-one-line").textContent = introBits.join(" · ") || "Add your age or general area.";
 
   const tags = $("preview-tags");
   tags.replaceChildren();
-  for (const text of [draft.gender, draft.relationshipGoal].filter(Boolean)) {
+  const goalTags = draft.relationshipGoal ? draft.relationshipGoal.split(",") : [];
+  for (const text of [draft.gender, ...goalTags].filter(Boolean)) {
     const tag = document.createElement("span");
-    tag.textContent = text;
+    tag.textContent = text === "man" ? "Man" : text === "woman" ? "Woman" : text;
     tags.appendChild(tag);
   }
 
@@ -456,6 +463,14 @@ function renderProfilePreview() {
 
   const details = $("preview-details");
   details.replaceChildren();
+  if (draft.orientation) {
+    const term = document.createElement("dt");
+    const description = document.createElement("dd");
+    term.textContent = "Interested in";
+    description.textContent = draft.orientation.split(",").map(value =>
+      value === "men" ? "Men" : "Women").join(", ");
+    details.append(term, description);
+  }
   for (const [label, field] of previewDetails) {
     if (!draft[field]) continue;
     const term = document.createElement("dt");
@@ -493,6 +508,17 @@ function showStoredProfile(profile) {
   form.elements.aboutMe.value = profile?.aboutMe ?? "";
   form.elements.age.value = profile?.age == null ? "" : String(profile.age);
   for (const field of longProfileFields) form.elements[field].value = profile?.[field] ?? "";
+  form.querySelectorAll('input[name="gender"]').forEach(input => {
+    input.checked = input.value === String(profile?.gender ?? "").toLowerCase();
+  });
+  const interests = new Set(String(profile?.orientation ?? "").split(",").map(value => value.trim()));
+  form.querySelectorAll('input[name="interestedIn"]').forEach(input => {
+    input.checked = interests.has(input.value);
+  });
+  const openTo = new Set(String(profile?.relationshipGoal ?? "").split(",").map(value => value.trim()));
+  form.querySelectorAll('input[name="openTo"]').forEach(input => {
+    input.checked = openTo.has(input.value);
+  });
   form.elements.adultConfirmed.checked = Boolean(profile);
   renderProfilePreview();
   const savedInfo = $("saved-info");
