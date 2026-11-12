@@ -79,6 +79,110 @@ function fields(form) {
   return Object.fromEntries(new FormData(form).entries());
 }
 
+// Four signup/email settings choices. No optional mail is opted-in by default.
+const necessaryEmailOnly = Object.freeze({
+  unreadMessages: false, unseenActivity: false, siteUpdates: false, necessaryOnly: true,
+});
+const signupEmailOptionsStorageKey = "ogcupid.pending-email-preferences.v1";
+// Staging is intentionally short-lived and stores ONLY preferences + the
+// account email needed to match an eventual verified sign-in. No password,
+// OTP or auth token is ever saved here.
+let pendingEmailPreferencesInMemory = null;
+
+function readEmailOptions(form) {
+  const options = {
+    unreadMessages: form.elements.emailMessages.checked,
+    unseenActivity: form.elements.emailActivity.checked,
+    siteUpdates: form.elements.emailNews.checked,
+    necessaryOnly: form.elements.emailNecessaryOnly.checked,
+  };
+  return normalizeEmailOptions(options);
+}
+
+function normalizeEmailOptions(options) {
+  const necessaryOnly = options.necessaryOnly === true ||
+    !(options.unreadMessages || options.unseenActivity || options.siteUpdates);
+  return {
+    unreadMessages: !necessaryOnly && options.unreadMessages === true,
+    unseenActivity: !necessaryOnly && options.unseenActivity === true,
+    siteUpdates: !necessaryOnly && options.siteUpdates === true,
+    necessaryOnly,
+  };
+}
+
+function populateEmailOptions(form, options) {
+  const selected = normalizeEmailOptions(options);
+  form.elements.emailMessages.checked = selected.unreadMessages;
+  form.elements.emailActivity.checked = selected.unseenActivity;
+  form.elements.emailNews.checked = selected.siteUpdates;
+  form.elements.emailNecessaryOnly.checked = selected.necessaryOnly;
+}
+
+function bindEmailOptionOverrides(form) {
+  form.addEventListener("change", event => {
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement) || !target.dataset.emailOption) return;
+    const optionals = [
+      form.elements.emailMessages, form.elements.emailActivity, form.elements.emailNews,
+    ];
+    const necessary = form.elements.emailNecessaryOnly;
+    if (target === necessary && necessary.checked) {
+      optionals.forEach(input => { input.checked = false; });
+    } else if (optionals.includes(target) && target.checked) {
+      necessary.checked = false;
+    }
+    if (!optionals.some(input => input.checked)) necessary.checked = true;
+  });
+}
+
+function stageSignupEmailOptions(email, options) {
+  const record = {
+    email: email.trim().toLowerCase(),
+    storedAt: Date.now(),
+    preferences: normalizeEmailOptions(options),
+  };
+  pendingEmailPreferencesInMemory = record;
+  try { sessionStorage.setItem(signupEmailOptionsStorageKey, JSON.stringify(record)); }
+  catch { /* Private-browsing storage may be disabled; memory still works. */ }
+}
+
+function stagedEmailOptionsFor(member) {
+  let staged = pendingEmailPreferencesInMemory;
+  if (!staged) {
+    try { staged = JSON.parse(sessionStorage.getItem(signupEmailOptionsStorageKey) || "null"); }
+    catch { staged = null; }
+  }
+  if (!staged || typeof staged !== "object") return null;
+  if (Date.now() - staged.storedAt > 7 * 86400000 || !Number.isFinite(staged.storedAt)) {
+    clearStagedEmailOptions();
+    return null;
+  }
+  if (typeof member?.email !== "string" ||
+      staged.email !== member.email.trim().toLowerCase()) return null;
+  const choices = staged.preferences;
+  return choices && typeof choices === "object" ? normalizeEmailOptions(choices) : null;
+}
+
+function clearStagedEmailOptions() {
+  pendingEmailPreferencesInMemory = null;
+  try { sessionStorage.removeItem(signupEmailOptionsStorageKey); }
+  catch { /* No writable session storage. */ }
+}
+
+async function loadEmailOptions() {
+  if (!currentUser) return;
+  const pending = stagedEmailOptionsFor(currentUser);
+  // This runs only after an authenticated Neon session has been confirmed.
+  // It survives the email-code step without trusting an unauthenticated ID.
+  const result = pending
+    ? await requestPrivate("/email-preferences", "PUT", pending)
+    : await requestPrivate("/email-preferences", "GET");
+  populateEmailOptions($("email-settings-form"), result.preferences || necessaryEmailOnly);
+  if (pending) clearStagedEmailOptions();
+  $("email-preferences-status").textContent = pending
+    ? "Your signup email choices have been saved." : "";
+}
+
 async function operation(button, label, job) {
   if (button.disabled) return;
   button.disabled = true;
@@ -118,6 +222,8 @@ function clearMemberView() {
   show("question-view", false);
   show("question-locked", true);
   $("profile-form").reset();
+  populateEmailOptions($("email-settings-form"), necessaryEmailOnly);
+  $("email-preferences-status").textContent = "";
   $("saved-info").textContent = "";
   show("saved-info", false);
   $("member-welcome").textContent = "";
@@ -133,6 +239,7 @@ function renderAuthenticated(member) {
   show("question-view", authenticated);
   show("question-locked", !authenticated);
   show("member-persona-panel", authenticated);
+  show("email-settings-form", authenticated);
   // Normal owner-controlled account deletion in the development site.
   show("deletion-test", authenticated && accountDeletionInUi);
   if (!member) return;
@@ -161,6 +268,8 @@ async function refreshMember(options = {}) {
   if (member && options.loadProfile) {
     await loadProfile({ silent: true });
     await loadAnswers();
+    try { await loadEmailOptions(); }
+    catch { $("email-preferences-status").textContent = "Could not load email preferences. Try saving them again."; }
   }
   return member;
 }
@@ -332,6 +441,10 @@ async function loadProfile({ silent = false } = {}) {
 }
 
 function wireForms() {
+  bindEmailOptionOverrides($("signup-form"));
+  bindEmailOptionOverrides($("email-settings-form"));
+  populateEmailOptions($("signup-form"), necessaryEmailOnly);
+  populateEmailOptions($("email-settings-form"), necessaryEmailOnly);
   $("show-signin").addEventListener("click", () => chooseAuthTab("signin"));
   $("show-signup").addEventListener("click", () => chooseAuthTab("signup"));
   $("back-to-signin").addEventListener("click", () => chooseAuthTab("signin"));
@@ -455,6 +568,7 @@ function wireForms() {
       });
       form.elements.password.value = "";
       if (error) throw new Error(asError(error, "Account creation failed"));
+      stageSignupEmailOptions(email, readEmailOptions(form));
       $("verify-form").elements.email.value = email;
       chooseAuthTab("verify");
       message("Check your inbox for a verification code from OG Cupid.", "ok");
@@ -492,6 +606,21 @@ function wireForms() {
 
   $("reload-profile").addEventListener("click", (event) =>
     operation(event.currentTarget, "Loading your profile", () => loadProfile()));
+
+  $("email-settings-form").addEventListener("submit", event => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    if (!currentUser) {
+      message("Sign in to update your email preferences.", "error");
+      return;
+    }
+    operation(form.querySelector('button[type="submit"]'), "Saving email preferences", async () => {
+      const result = await requestPrivate("/email-preferences", "PUT", readEmailOptions(form));
+      populateEmailOptions(form, result.preferences || necessaryEmailOnly);
+      $("email-preferences-status").textContent = "Email preferences saved to your account.";
+      message("Your email choices are saved.", "ok");
+    });
+  });
 
   $("delete-account-form").addEventListener("submit", (event) => {
     event.preventDefault();
