@@ -164,7 +164,17 @@ async function requestProfile(method, body) {
   });
   const response = await result.json().catch(() => ({}));
   if (!result.ok) {
-    if (result.status === 401) await refreshMember();
+    if (result.status === 401) {
+      // A browser/Neon Auth session may be locally cached even after the
+      // member was deleted. Trust the profile API's 401 over any cached UI.
+      // Never leave the previous account's profile visible in this case.
+      try { await auth.signOut(); } catch { /* Session may already be gone */ }
+      currentUser = null;
+      sessionUserId = null;
+      clearMemberView();
+      renderAuthenticated(null);
+      throw new Error("Your account session is no longer valid. Please sign in again.");
+    }
     throw new Error("Profile request failed (HTTP " + result.status + "): " +
       (response.error || "unknown error"));
   }
