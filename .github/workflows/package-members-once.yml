@@ -1,0 +1,40 @@
+name: Package OG Cupid Neon member API (one-time release build)
+on:
+  push:
+    paths:
+      - ".github/workflows/package-members-once.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Bundle public source with no credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-audit --no-fund
+          npx --yes esbuild@0.25.12 api/member-profile.ts --bundle --platform=node --target=node24 --format=esm --outfile=.temporary/index.mjs --external:pg-native --banner:js="import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);"
+          node --check .temporary/index.mjs
+          (cd .temporary && zip -q -X -9 prod-members-bundle.zip index.mjs)
+          base64 -w0 .temporary/prod-members-bundle.zip > .temporary/prod-members-bundle.b64
+          printf '\n' >> .temporary/prod-members-bundle.b64
+          test -s .temporary/prod-members-bundle.b64
+          echo "Bundle bytes: $(wc -c < .temporary/prod-members-bundle.zip)"
+      - name: Make temporary deployment artifact available to Neon connector
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .temporary/prod-members-bundle.b64
+          git commit -m "build: temporary Neon production members function bundle"
+          git push origin HEAD:main
