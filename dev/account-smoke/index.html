@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>OG Cupid — Development Account Smoke Test</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; }
+    body { max-width: 900px; margin: 2rem auto; padding: 0 1.25rem; color: #e8eaf0; background: #141824; }
+    main { display: grid; grid-template-columns: repeat(auto-fit,minmax(290px,1fr)); gap: 1rem; }
+    section { border: 1px solid #434b5d; padding: 1rem; border-radius: 10px; }
+    h1 { margin-bottom: .25rem; }
+    h2 { font-size: 1.1rem; }
+    label { display: block; margin: .65rem 0; }
+    input:not([type=checkbox]), textarea { display: block; width: 100%; box-sizing: border-box; margin: .2rem 0; padding: .65rem; border: 1px solid #68748a; border-radius: 6px; background: #242d40; color: white; }
+    textarea { min-height: 110px; }
+    button { margin: .4rem .3rem .4rem 0; padding: .55rem .9rem; cursor: pointer; }
+    pre { overflow-wrap: anywhere; white-space: pre-wrap; background: #222b3c; padding: 1rem; border-radius: 6px; }
+    .note { color: #b9c7dd; }
+    .flag { color: #f1c16a; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>OG Cupid — Development Accounts</h1>
+    <p class="flag">PRIVATE LOCAL TEST HARNESS · NOT THE PUBLIC SITE · SYNTHETIC DATA ONLY</p>
+    <p class="note">Uses development Neon Auth and the development member API. Never paste credentials or tokens into chat or GitHub.</p>
+  </header>
+  <main>
+    <section>
+      <h2>1. Register a test account</h2>
+      <form id="register">
+        <label>Display name <input name="name" required minlength="2" maxlength="60" autocomplete="nickname"></label>
+        <label>Email you control <input name="email" type="email" required autocomplete="email"></label>
+        <label>Password <input name="password" type="password" minlength="12" required autocomplete="new-password"></label>
+        <label><input name="adult" type="checkbox" required> I confirm I am at least 18.</label>
+        <button type="submit">Register (dev only)</button>
+      </form>
+      <h2>Verify email OTP</h2>
+      <form id="verify">
+        <label>Email <input name="email" type="email" required></label>
+        <label>Verification code from email <input name="otp" required autocomplete="one-time-code"></label>
+        <button type="submit">Verify email</button>
+      </form>
+    </section>
+    <section>
+      <h2>2. Sign in / out</h2>
+      <form id="login">
+        <label>Email <input name="email" type="email" required autocomplete="username"></label>
+        <label>Password <input name="password" type="password" required autocomplete="current-password"></label>
+        <button type="submit">Sign in</button>
+      </form>
+      <button id="refresh" type="button">Check session</button>
+      <button id="logout" type="button">Sign out</button>
+      <pre id="session">Checking session…</pre>
+    </section>
+    <section>
+      <h2>3. My private profile</h2>
+      <button type="button" id="load">Load my profile</button>
+      <form id="profile">
+        <label>Display name <input name="displayName" minlength="2" maxlength="60" required></label>
+        <label>About me <textarea name="aboutMe" maxlength="5000"></textarea></label>
+        <label><input name="adultConfirmed" type="checkbox" required> I confirm I am at least 18.</label>
+        <button type="submit">Save my profile</button>
+      </form>
+      <pre id="profilePreview">No profile loaded</pre>
+    </section>
+    <section>
+      <h2>Test results</h2>
+      <pre id="result" aria-live="polite">Ready. Public signup is still disabled.</pre>
+      <p class="note">For real isolation testing, repeat with a second account. This page never displays or saves access tokens.</p>
+    </section>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
