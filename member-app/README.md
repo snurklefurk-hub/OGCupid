@@ -108,9 +108,15 @@ browser form also requires localhost and
       test throttling row all gone; four existing accounts/profiles intact.
       Development deletion/diagnostic routes were re-disabled immediately
       afterward (Neon Function deployment #13).
+- [x] Add restricted, server-context active-user lookup on the
+      isolated development branch and verify SQL behavior for deleted,
+      missing and existing member IDs (migration 004).
+- [ ] Deploy the updated profile API and browser UI to development,
+      validate HTTP 401 for a deleted member's previously issued JWT,
+      and verify the stale profile UI is cleared.
 - [ ] Generalize/review deletion for production, publish privacy and consent
-      policy and backup/retention disclosures, verify stale-JWT behavior,
-      and extend cleanup to all future member-owned assets/data.
+      policy and backup/retention disclosures, verify stale-JWT behavior
+      end-to-end, and extend cleanup to all future member-owned assets/data.
 - [ ] Configure production auth trusted domains, branded/custom SMTP, and
       disable production localhost acceptance.
 - [ ] Review defenses against signup abuse, credential stuffing, and API
