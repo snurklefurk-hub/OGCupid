@@ -149,10 +149,13 @@ export default {
     if (!profilePath && !answersPath && !deletePath && !verifyPath) {
       return json(request, { error: "Not found" }, 404);
     }
-    // Strictly separate development-only destructive operations from profiles.
-    // The endpoint is absent in production, even if an env flag is mis-set.
+    // Self-service deletion is allowed only on the explicitly configured
+    // development or production branch, and only with its dedicated
+    // server-side deletion credential and deliberate feature flag.
+    const productionBranch = process.env.NEON_BRANCH === "production";
+    const developmentBranch = process.env.NEON_BRANCH === "dev/private-member-accounts";
     if (deletePath &&
-        (process.env.NEON_BRANCH !== "dev/private-member-accounts" ||
+        (!(productionBranch || developmentBranch) ||
          process.env.OGC_ACCOUNT_DELETION_ENABLED !== "true" ||
          !deletionPool)) {
       return json(request, { error: "Not found" }, 404);
@@ -231,9 +234,11 @@ export default {
         // ONLY when the server-confirmed identity matches the signed JWT sub.
         // Never forward Auth cookies, tokens, passwords, or error details.
         const baseUrl = process.env.NEON_AUTH_BASE_URL!.trim().replace(/\/$/, "");
-        // The successful browser sign-in originates at localhost:5173.
-        // Use this fixed, known-trusted dev origin for the server-side call,
-        // not an Origin supplied by the browser.
+        // Verify against Neon Auth using a fixed, trusted origin belonging
+        // to this branch. Do not forward a browser-controlled Origin.
+        const trustedReauthOrigin = productionBranch
+          ? "https://ogcupid.onrender.com"
+          : "http://localhost:5173";
         const verification = await fetch(baseUrl + "/sign-in/email", {
           method: "POST",
           redirect: "error",
@@ -241,7 +246,7 @@ export default {
           headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "Origin": "http://localhost:5173",
+            "Origin": trustedReauthOrigin,
           },
           body: JSON.stringify({ email, password, rememberMe: false }),
           signal: AbortSignal.timeout(12000),
