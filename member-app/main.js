@@ -33,6 +33,31 @@ let currentQuestion = null;
 let skippedQuestions = new Set();
 let editingQuestionId = null;
 
+function pendingKey() {
+  return currentUser?.id ? "ogcupid_pending_question_v1_" + currentUser.id : null;
+}
+
+function readPendingQuestion() {
+  try {
+    const key = pendingKey();
+    return key ? JSON.parse(sessionStorage.getItem(key) || "null") : null;
+  } catch { return null; }
+}
+
+function writePendingQuestion(questionId, focusTier) {
+  try {
+    const key = pendingKey();
+    if (key) sessionStorage.setItem(key, JSON.stringify({ questionId, focusTier }));
+  } catch { /* Storage may be unavailable; answering still works. */ }
+}
+
+function clearPendingQuestion() {
+  try {
+    const key = pendingKey();
+    if (key) sessionStorage.removeItem(key);
+  } catch { /* Storage may be unavailable. */ }
+}
+
 function message(text, type = "info") {
   const node = $("notice");
   node.className = "notice" + (type === "ok" ? " ok" : type === "error" ? " error" : "");
@@ -221,14 +246,23 @@ function renderQuestion() {
   review.value = editingQuestionId || "";
   const remaining = questions.filter(question => !skippedQuestions.has(question.id));
   const selection = editingQuestionId ? null : nextCompatibilityQuestion(remaining, savedAnswers.keys());
+  const stored = editingQuestionId ? null : readPendingQuestion();
+  const pending = stored && typeof stored.focusTier === "string" &&
+    ["first10", "next50", "next100", "next250"].includes(stored.focusTier) &&
+    remaining.find(item =>
+    item.id === stored.questionId && !savedAnswers.has(item.id));
   currentQuestion = editingQuestionId
     ? questions.find(item => item.id === editingQuestionId) || null
-    : selection?.question || null;
+    : pending || selection?.question || null;
+  const focusTier = pending ? stored.focusTier : selection?.focusTier;
+  if (!editingQuestionId && currentQuestion && !pending) {
+    writePendingQuestion(currentQuestion.id, focusTier);
+  }
   show("question-form", !!currentQuestion);
   show("question-complete", !currentQuestion && savedAnswers.size >= questions.length);
   const count = savedAnswers.size;
   $("question-progress").textContent = currentQuestion
-    ? `${count} / ${questions.length} answered | ${editingQuestionId ? "Reviewing saved answer" : selection.focusTier.replace("next", "Next ").replace("first", "First ")}`
+    ? `${count} / ${questions.length} answered | ${editingQuestionId ? "Reviewing saved answer" : focusTier.replace("next", "Next ").replace("first", "First ")}`
     : `${count} / ${questions.length} answered`;
   if (!currentQuestion) {
     if (count < questions.length) $("question-progress").textContent += " | Come back to skipped questions after refreshing.";
@@ -252,7 +286,7 @@ function renderQuestion() {
     partnerLabel.append(check, document.createTextNode(label));
     acceptable.append(partnerLabel);
   });
-  show("question-skip", !editingQuestionId && selection.focusTier !== "first10");
+  show("question-skip", !editingQuestionId && focusTier !== "first10");
   const previous = savedAnswers.get(currentQuestion.id);
   if (previous) {
     own.querySelectorAll('input[name="answer"]').forEach(input => { input.checked = input.value === previous.optionId; });
@@ -533,6 +567,7 @@ function wireForms() {
   $("question-skip").addEventListener("click", () => {
     if (!currentQuestion) return;
     skippedQuestions.add(currentQuestion.id);
+    clearPendingQuestion();
     renderQuestion();
   });
   $("answered-review").addEventListener("change", event => {
@@ -562,6 +597,7 @@ function wireForms() {
       };
       await requestPrivate("/answers", "PUT", answer);
       savedAnswers.set(question.id, answer);
+      if (!editingQuestionId) clearPendingQuestion();
       editingQuestionId = null;
       renderQuestion();
       message("Answer saved privately to your account.", "ok");
