@@ -62,6 +62,7 @@
               <input id="signin-password" name="password" type="password" required autocomplete="current-password">
               <button class="button primary" type="submit">Sign in <span aria-hidden="true">→</span></button>
               <button id="forgot-password" class="quiet-button" type="button">Forgot your password?</button>
+              <button id="open-verify" class="quiet-button" type="button">Verify email</button>
             </form>
 
             <form id="signup-form" hidden novalidate>
@@ -87,6 +88,7 @@
               <input id="verify-email" name="email" type="email" required autocomplete="email">
               <label for="verify-code">Verification code</label>
               <input id="verify-code" name="otp" type="text" required autocomplete="one-time-code" inputmode="numeric">
+              <button id="send-verify-code" class="quiet-button" type="button">Send verification code</button>
               <button class="button primary" type="submit">Verify email</button>
               <button class="quiet-button" id="back-to-signin" type="button">Back to sign in</button>
             </form>
