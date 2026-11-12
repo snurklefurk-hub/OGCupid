@@ -622,7 +622,7 @@ async function start() {
     const member = await refreshMember({ loadProfile: true });
     message(member
       ? "Signed in. Your private member profile is ready."
-      : "Sign in or create a development account. Public registration remains closed.", "ok");
+      : (registrationOpenInUi ? "Sign in or create your OG Cupid account." : "Sign in to your OG Cupid account."), "ok");
   } catch {
     message("Couldn't check your session. Try signing in again.", "error");
   }

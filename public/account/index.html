@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fff6e5">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta name="description" content="OG Cupid member accounts and profiles. Bringing back people, not swipes.">
+  <title>Your corner of the internet | OG Cupid</title>
+  <script type="module" crossorigin src="./assets/index-BweJFXpg.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-BSWYbLBu.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="shell">
+    <div class="topline">
+      <span>OG CUPID // YOUR CORNER OF THE INTERNET</span>
+      <span id="environment-label">WELCOME TO OG CUPID</span>
+    </div>
+    <header class="masthead">
+      <a class="brand" href="/" aria-label="OG Cupid homepage"><span class="brand-heart" aria-hidden="true">&#9829;</span> OG <span>Cupid</span></a>
+      <nav aria-label="Member navigation">
+        <a href="/">The manifesto</a>
+        <a href="/questions/">Match questions</a>
+        <span class="nav-tag">NO SWIPING REQUIRED</span>
+      </nav>
+    </header>
+    <main id="main">
+      <div class="intro">
+        <span class="stamp">LET'S MAKE THIS PERSONAL</span>
+        <h1>BE MORE THAN <em>A THUMBNAIL.</em></h1>
+        <p>Remember when a dating profile told you something about a person? Your page. Your words. Your weird little corner of the internet.</p>
+      </div>
+
+      <div id="notice" class="notice" role="status" aria-live="polite">Checking membership availability.</div>
+
+      <section id="unavailable-view" class="paper" hidden aria-labelledby="unavailable-title">
+        <span class="eyebrow">NOT OPEN TO THE PUBLIC YET</span>
+        <h2 id="unavailable-title">WE'RE BUILDING IT RIGHT.</h2>
+        <p>Account registration isn't open at the moment. The quizzes and the rest of OG Cupid are still yours to explore.</p>
+        <a class="button" href="/questions/">Explore the questions</a>
+      </section>
+
+      <div id="app-view" hidden>
+        <div class="columns">
+          <section class="paper" id="guest-view" aria-labelledby="account-title">
+            <p class="eyebrow">01 / ACCOUNT</p>
+            <div class="panel-head">
+              <h2 id="account-title">COME ON IN.</h2>
+              <span class="mini-heart" aria-hidden="true">&#9829;</span>
+            </div>
+            <div class="switcher" role="group" aria-label="Account actions">
+              <button id="show-signin" type="button" aria-pressed="true">Sign in</button>
+              <button id="show-signup" type="button" aria-pressed="false">Create account</button>
+            </div>
+
+            <form id="signin-form" novalidate>
+              <label for="signin-email">Email</label>
+              <input id="signin-email" name="email" type="email" required autocomplete="username" maxlength="256">
+              <label for="signin-password">Password</label>
+              <input id="signin-password" name="password" type="password" required autocomplete="current-password">
+              <button class="button primary" type="submit">Sign in <span aria-hidden="true">&rarr;</span></button>
+              <button id="forgot-password" class="quiet-button" type="button">Forgot your password?</button>
+              <button id="open-verify" class="quiet-button" type="button">Verify email</button>
+            </form>
+
+            <form id="signup-form" hidden novalidate>
+              <div id="signup-closed" class="small-alert" hidden>New registrations are disabled in this environment.</div>
+              <label for="signup-name">Display name</label>
+              <input id="signup-name" name="name" type="text" minlength="2" maxlength="60" required autocomplete="nickname" placeholder="What should people call you?">
+              <label for="signup-email">Email</label>
+              <input id="signup-email" name="email" type="email" maxlength="256" required autocomplete="email">
+              <label for="signup-password">Password <span class="hint">(12 characters minimum)</span></label>
+              <input id="signup-password" name="password" type="password" minlength="12" required autocomplete="new-password">
+              <label class="checkrow" for="signup-adult">
+                <input id="signup-adult" name="adult" type="checkbox" required>
+                <span>I confirm I'm at least 18 years old.</span>
+              </label>
+              <button class="button primary" id="signup-submit" type="submit">Create my account <span aria-hidden="true">&rarr;</span></button>
+              <p class="hint">We'll email you a one-time verification code. No public profile is created automatically.</p>
+            </form>
+
+            <form id="verify-form" hidden novalidate>
+              <h3>Verify your email</h3>
+              <p>Check your inbox for a one-time code from OG Cupid. Never share it with anyone.</p>
+              <label for="verify-email">Email</label>
+              <input id="verify-email" name="email" type="email" required autocomplete="email">
+              <label for="verify-code">Verification code</label>
+              <input id="verify-code" name="otp" type="text" required autocomplete="one-time-code" inputmode="numeric">
+              <button id="send-verify-code" class="quiet-button" type="button">Send verification code</button>
+              <button class="button primary" type="submit">Verify email</button>
+              <button class="quiet-button" id="back-to-signin" type="button">Back to sign in</button>
+            </form>
+
+            <form id="reset-request-form" hidden novalidate>
+              <h3>Reset your password</h3>
+              <p class="hint">We'll send a one-time recovery code to your email address. Use it to choose a new password.</p>
+              <label for="reset-request-email">Email</label>
+              <input id="reset-request-email" name="email" type="email" required autocomplete="email" maxlength="256">
+              <button class="button primary" type="submit">Send recovery code</button>
+              <button class="quiet-button" type="button" data-back-signin>Back to sign in</button>
+            </form>
+
+            <form id="reset-confirm-form" hidden novalidate>
+              <h3>Choose a new password</h3>
+              <p class="hint">Enter the recovery code from your email and a new password. Resetting your password signs out other sessions.</p>
+              <label for="reset-confirm-email">Email</label>
+              <input id="reset-confirm-email" name="email" type="email" required autocomplete="email" maxlength="256">
+              <label for="reset-confirm-otp">Recovery code</label>
+              <input id="reset-confirm-otp" name="otp" type="text" inputmode="numeric" autocomplete="one-time-code" required maxlength="24">
+              <label for="reset-confirm-password">New password</label>
+              <input id="reset-confirm-password" name="password" type="password" required minlength="12" maxlength="128" autocomplete="new-password">
+              <label for="reset-confirm-repeat">Confirm new password</label>
+              <input id="reset-confirm-repeat" name="repeat" type="password" required minlength="12" maxlength="128" autocomplete="new-password">
+              <button class="button primary" type="submit">Reset password</button>
+              <button id="send-another-code" class="quiet-button" type="button">Request another code</button>
+              <button class="quiet-button" type="button" data-back-signin>Back to sign in</button>
+            </form>
+
+            <p class="footnote">Your email and sign-in details are never shown on a public profile. Recovery uses email codes.</p>
+          </section>
+
+          <section class="paper" id="member-view" hidden aria-labelledby="member-title">
+            <p class="eyebrow">01 / ACCOUNT</p>
+            <div class="panel-head">
+              <h2 id="member-title">WELCOME BACK.</h2>
+              <span class="mini-heart" aria-hidden="true">&#9829;</span>
+            </div>
+            <p id="member-welcome" class="member-name"></p>
+            <p class="hint" id="member-email"></p>
+            <div class="member-actions">
+              <button id="reload-profile" class="button" type="button">Load my profile</button>
+              <button id="signout" class="quiet-button" type="button">Sign out</button>
+            </div>
+            <p class="footnote">Your profile and answers are private. Member discovery, photos, and messaging are coming next.</p>
+            <section id="deletion-test" class="danger-zone" hidden aria-labelledby="delete-title">
+              <h3 id="delete-title">Delete my account</h3>
+              <p><strong>This is permanent.</strong> Deleting your account removes your login, current private profile, and active sessions. Future member data must have its own deletion rules as new features are added. This control is available on the development site.</p>
+              <form id="delete-account-form" novalidate>
+                <label for="delete-password">Current password</label>
+                <input id="delete-password" name="password" type="password" minlength="12" maxlength="256" required autocomplete="current-password">
+                <label for="delete-confirm">Type DELETE to confirm</label>
+                <input id="delete-confirm" name="confirm" type="text" required autocomplete="off">
+                <button class="button danger-button" type="submit">Permanently delete my account</button>
+              </form>
+          </section>
+          </section>
+
+          <section class="paper profile-panel" aria-labelledby="profile-title">
+            <p class="eyebrow">02 / YOUR PROFILE</p>
+            <div class="panel-head">
+              <h2 id="profile-title">TELL US SOMETHING.</h2>
+              <span class="mini-heart" aria-hidden="true">&#10022;</span>
+            </div>
+            <div id="profile-locked">
+              <p>A real profile, not a swipe card. Sign in to start making yours.</p>
+              <div class="teaser">
+                <strong>COMING NEXT</strong>
+                <ul>
+                  <li>Proper profile fields and personality</li>
+                  <li>Compatibility insights from shared answers</li>
+                  <li>Photos that you control</li>
+                  <li>Privacy before discoverability</li>
+                </ul>
+              </div>
+            </div>
+            <form id="profile-form" hidden novalidate>
+              <label for="profile-name">Display name</label>
+              <input id="profile-name" name="displayName" type="text" required minlength="2" maxlength="60" autocomplete="nickname">
+              <label for="profile-about">About me</label>
+              <textarea id="profile-about" name="aboutMe" rows="9" maxlength="5000" placeholder="Give somebody a reason to keep reading."></textarea>
+              <span class="hint"><span id="bio-count">0</span> / 5000 characters</span>
+              <label class="checkrow" for="profile-adult">
+                <input id="profile-adult" name="adultConfirmed" type="checkbox" required>
+                <span>I confirm I'm at least 18 years old.</span>
+              </label>
+              <button class="button primary" type="submit">Save my profile <span aria-hidden="true">&#9829;</span></button>
+              <p class="hint">Only you can access these fields.</p>
+              <div id="saved-info" class="save-info" hidden></div>
+            </form>
+          </section>
+
+        </div>
+        <section class="paper question-panel" aria-labelledby="question-title">
+          <p class="eyebrow">03 / MATCH QUESTIONS</p>
+          <h2 id="question-title">THE GOOD QUESTIONS.</h2>
+          <p id="question-locked">Sign in to answer the curated match questions. Your answers stay attached to your account.</p>
+          <div id="question-view" hidden>
+            <p id="question-progress" class="question-progress"></p>
+            <label for="answered-review">Review a saved answer</label>
+            <select id="answered-review"><option value="">Continue with unanswered questions</option></select>
+            <form id="question-form" novalidate>
+              <fieldset id="question-choices">
+                <legend id="question-prompt"></legend>
+              </fieldset>
+              <fieldset id="acceptable-choices">
+                <legend>Answers you would accept from someone else</legend>
+              </fieldset>
+              <label for="question-importance">How much does this matter?</label>
+              <select id="question-importance" name="importance">
+                <option value="0">Irrelevant</option><option value="1" selected>A little</option>
+                <option value="10">Somewhat</option><option value="50">Very</option><option value="250">Mandatory</option>
+              </select>
+              <label for="question-note">Anything to add? (private, optional)</label>
+              <textarea id="question-note" name="note" rows="2" maxlength="400"></textarea>
+              <label class="checkrow" for="question-private"><input id="question-private" name="private" type="checkbox"><span>Keep this answer private</span></label>
+              <button class="button primary" type="submit">Save answer and continue &rarr;</button>
+              <button id="question-skip" class="quiet-button" type="button" hidden>Skip for now</button>
+            </form>
+            <p id="question-complete" hidden>You've answered the full curated set. Come back as we build matching.</p>
+          </div>
+        </section>
+      </div>
+      <div class="bottom-mark" aria-hidden="true">THE GOOD INTERNET ISN'T DEAD. WE'RE JUST BRINGING IT BACK.</div>
+    </main>
+  </div>
+</body>
+</html>
+
