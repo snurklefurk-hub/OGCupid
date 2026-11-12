@@ -11,8 +11,8 @@ const authBaseUrl = local
 const memberApiUrl = local
   ? "https://br-empty-lab-bbjb0q1u-members.compute.c-15.us-east-1.aws.neon.tech/profile"
   : (import.meta.env.VITE_OGC_MEMBER_API_URL || "");
-const registrationOpenInUi = local ||
-  (import.meta.env.VITE_OGC_REGISTRATION_ENABLED === "true");
+const registrationOpenInUi =
+  import.meta.env.VITE_OGC_REGISTRATION_ENABLED === "true";
 // Destructive testing is deliberately opt-in and unavailable in production.
 const deletionTestEnabled = local && import.meta.env.VITE_OGC_DELETE_TEST === "true";
 const auth = authBaseUrl && memberApiUrl ? createAuthClient(authBaseUrl) : null;
