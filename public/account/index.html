@@ -8,9 +8,9 @@
   <meta name="referrer" content="no-referrer">
   <meta name="description" content="OG Cupid member accounts and profiles. Bringing back people, not swipes.">
   <title>Your corner of the internet | OG Cupid</title>
-  <script type="module" crossorigin src="./assets/index-CWQjgsJW.js"></script>
+  <script type="module" crossorigin src="./assets/index-BM92d5of.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/neon-auth-BIaN13e0.js">
-  <link rel="stylesheet" crossorigin href="./assets/index-Y8o1pQny.css">
+  <link rel="stylesheet" crossorigin href="./assets/index-BUGSBgRT.css">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -74,6 +74,15 @@
               <input id="signup-email" name="email" type="email" maxlength="256" required autocomplete="email">
               <label for="signup-password">Password <span class="hint">(12 characters minimum)</span></label>
               <input id="signup-password" name="password" type="password" minlength="12" required autocomplete="new-password">
+              <fieldset class="email-options" id="signup-email-options">
+                <legend>What emails do you want from OG Cupid?</legend>
+                <p class="email-options-lead">Choose any combination of the first three, or necessary emails only.</p>
+                <label class="checkrow email-option" for="signup-email-messages"><input id="signup-email-messages" name="emailMessages" type="checkbox" data-email-option="messages"><span><strong>Unread messages</strong><small>Give me a heads-up if someone has messaged me.</small></span></label>
+                <label class="checkrow email-option" for="signup-email-activity"><input id="signup-email-activity" name="emailActivity" type="checkbox" data-email-option="activity"><span><strong>Unseen account activity</strong><small>Referrals, a match question I submitted being published, and similar updates.</small></span></label>
+                <label class="checkrow email-option" for="signup-email-news"><input id="signup-email-news" name="emailNews" type="checkbox" data-email-option="news"><span><strong>News from OG Cupid</strong><small>New features, site updates, and fresh OgTrends articles.</small></span></label>
+                <label class="checkrow email-option email-option-necessary" for="signup-email-necessary"><input id="signup-email-necessary" name="emailNecessaryOnly" type="checkbox" data-email-option="necessary" checked><span><strong>Necessary site emails only</strong><small>Only verification, account recovery, security, and other essential account messages. This overrides the choices above.</small></span></label>
+                <p class="email-options-promise">One optional email at most between logins, not one for every message or event. We won't baja blast your inbox.</p>
+              </fieldset>
               <label class="checkrow" for="signup-adult">
                 <input id="signup-adult" name="adult" type="checkbox" required>
                 <span>I confirm I'm at least 18 years old.</span>
@@ -134,6 +143,19 @@
               <button id="reload-profile" class="button" type="button">Load my profile</button>
               <button id="signout" class="quiet-button" type="button">Sign out</button>
             </div>
+            <form id="email-settings-form" class="member-email-settings" hidden novalidate>
+              <fieldset class="email-options">
+                <legend>Email preferences</legend>
+                <p class="email-options-lead">Change these any time. Pick any combination of the first three.</p>
+                <label class="checkrow email-option" for="settings-email-messages"><input id="settings-email-messages" name="emailMessages" type="checkbox" data-email-option="messages"><span><strong>Unread messages</strong><small>Tell me when I have unread messages.</small></span></label>
+                <label class="checkrow email-option" for="settings-email-activity"><input id="settings-email-activity" name="emailActivity" type="checkbox" data-email-option="activity"><span><strong>Unseen account activity</strong><small>Referrals, published match questions, and similar activity.</small></span></label>
+                <label class="checkrow email-option" for="settings-email-news"><input id="settings-email-news" name="emailNews" type="checkbox" data-email-option="news"><span><strong>OG Cupid news</strong><small>Features, updates, and OgTrends articles.</small></span></label>
+                <label class="checkrow email-option email-option-necessary" for="settings-email-necessary"><input id="settings-email-necessary" name="emailNecessaryOnly" type="checkbox" data-email-option="necessary" checked><span><strong>Necessary site emails only</strong><small>Overrides all optional emails.</small></span></label>
+                <p class="email-options-promise">At most one optional email between logins. No inbox baja blast.</p>
+              </fieldset>
+              <button class="button" type="submit">Save email preferences</button>
+              <p id="email-preferences-status" class="hint" role="status" aria-live="polite"></p>
+            </form>
             <p class="footnote">Your profile and answers are private. Member discovery, photos, and messaging are coming next.</p>
             <section id="deletion-test" class="danger-zone" hidden aria-labelledby="delete-title">
               <h3 id="delete-title">Delete my account</h3>
