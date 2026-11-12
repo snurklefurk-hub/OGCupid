@@ -1,0 +1,61 @@
+name: Build substantive OG Cupid profiles (one-time release)
+on:
+  push:
+    paths:
+      - ".github/workflows/build-substantive-profiles-once.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Package updated owner-only profile API
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-audit --no-fund
+          npx --yes esbuild@0.25.12 api/member-profile.ts --bundle --platform=node --target=node24 --format=esm --outfile=.temporary/index.mjs --external:pg-native --banner:js="import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);"
+          node --check .temporary/index.mjs
+          (cd .temporary && zip -q -X -9 substantive-profiles-api.zip index.mjs)
+          base64 -w0 .temporary/substantive-profiles-api.zip > .temporary/substantive-profiles-api.b64
+          printf '\n' >> .temporary/substantive-profiles-api.b64
+          test -s .temporary/substantive-profiles-api.b64
+      - name: Test and build production member app
+        shell: bash
+        env:
+          VITE_OGC_AUTH_URL: https://ep-hidden-breeze-bbdn5nsb.neonauth.c-15.us-east-1.aws.neon.tech/neondb/auth
+          VITE_OGC_MEMBER_API_URL: https://br-plain-unit-bbcbxpqq-members.compute.c-15.us-east-1.aws.neon.tech/profile
+          VITE_OGC_REGISTRATION_ENABLED: "true"
+        run: |
+          set -euo pipefail
+          npm --prefix member-app install --no-audit --no-fund
+          npm --prefix member-app test
+          npm --prefix member-app run build
+          test -s public/account/index.html
+          grep -q 'id="profile-preview-panel"' public/account/index.html
+          grep -q 'name="lifeDirection"' public/account/index.html
+          grep -q 'name="messageMeIf"' public/account/index.html
+          grep -q 'id="signup-email-options"' public/account/index.html
+          echo "Substantive profile frontend compiled"
+      - name: Publish frontend assets and temporary server bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f -A public/account
+          git add -f .temporary/substantive-profiles-api.b64
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "build: release private long-form profiles and preview"
+            git push origin HEAD:main
+          fi
