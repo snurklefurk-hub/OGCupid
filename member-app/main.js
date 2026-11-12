@@ -228,10 +228,10 @@ function renderQuestion() {
   show("question-complete", !currentQuestion && savedAnswers.size >= questions.length);
   const count = savedAnswers.size;
   $("question-progress").textContent = currentQuestion
-    ? `${count} / ${questions.length} answered � ${editingQuestionId ? "Reviewing saved answer" : selection.focusTier.replace("next", "Next ").replace("first", "First ")}`
+    ? `${count} / ${questions.length} answered | ${editingQuestionId ? "Reviewing saved answer" : selection.focusTier.replace("next", "Next ").replace("first", "First ")}`
     : `${count} / ${questions.length} answered`;
   if (!currentQuestion) {
-    if (count < questions.length) $("question-progress").textContent += " � Come back to skipped questions after refreshing.";
+    if (count < questions.length) $("question-progress").textContent += " | Come back to skipped questions after refreshing.";
     return;
   }
   $("question-prompt").textContent = currentQuestion.prompt;
@@ -572,7 +572,7 @@ function wireForms() {
 async function start() {
   if (local) {
     $("environment-label").textContent = "DEVELOPMENT ONLY";
-    document.title = "DEV � OG Cupid Member Accounts";
+    document.title = "DEV | OG Cupid Member Accounts";
   }
   if (!auth) {
     show("unavailable-view", true);

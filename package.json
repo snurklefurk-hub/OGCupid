@@ -1,0 +1,14 @@
+{
+  "name": "ogcupid-development",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "npm --prefix member-app test",
+    "build:member": "npm --prefix member-app run build"
+  },
+  "dependencies": {
+    "@neon/functions": "0.11.0",
+    "jose": "6.2.17",
+    "pg": "8.23.1"
+  }
+}
