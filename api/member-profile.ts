@@ -172,6 +172,20 @@ export default {
     if (!userId) return json(request, { error: "Unauthorized" }, 401);
 
     try {
+      if (profilePath) {
+        // A signed JWT can outlive the account/session that issued it.
+        // Do not allow a deleted identity to read an empty profile as if it
+        // were still a member, or attempt to recreate a profile via PUT.
+        // The restricted profile role cannot SELECT Neon Auth's user table,
+        // so use a no-argument SECURITY DEFINER liveness check instead.
+        const liveness = await withMember(userId, client =>
+          client.query("SELECT app_private.current_member_is_active() AS active"),
+        );
+        if (liveness.rows[0]?.active !== true) {
+          return json(request, { error: "Account no longer active" }, 401);
+        }
+      }
+
       if (deletePath || verifyPath) {
         if (verifyPath && userId !== process.env.OGC_REAUTH_TEST_USER_ID) {
           return json(request, { error: "Not found" }, 404);
