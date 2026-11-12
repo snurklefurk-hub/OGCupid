@@ -5,6 +5,11 @@ import { createAuthClient } from "@neon/auth";
 const AUTH_BASE = "https://ep-blue-credit-bbfdwceu.neonauth.c-15.us-east-1.aws.neon.tech/neondb/auth";
 const MEMBER_API = "https://br-empty-lab-bbjb0q1u-members.compute.c-15.us-east-1.aws.neon.tech/profile";
 const auth = createAuthClient(AUTH_BASE);
+let displayedUserId = null;
+
+function accountDisplayName(member) {
+  return typeof member?.name === "string" ? member.name.trim().slice(0, 60) : "";
+}
 
 const $ = (id) => document.getElementById(id);
 const say = (message) => { $("result").textContent = String(message); };
@@ -24,6 +29,17 @@ async function refresh() {
   const { data, error } = await auth.getSession();
   if (error) throw new Error(error.message || "Session check failed");
   const member = data?.user;
+  const currentUserId = member?.id ?? null;
+  if (currentUserId !== displayedUserId) {
+    // Never keep another account's profile fields visible after account switch.
+    $("profile").reset();
+    $("profilePreview").textContent = "No profile loaded";
+    displayedUserId = currentUserId;
+  }
+  if (member && !$("profile").elements.displayName.value.trim()) {
+    // The signup name is the default, not a second name the member must enter.
+    $("profile").elements.displayName.value = accountDisplayName(member);
+  }
   $("session").textContent = member
     ? "Signed in: " + member.email + "\nUser ID: " + member.id
     : "Not signed in";
@@ -86,9 +102,10 @@ async function profileRequest(method, body) {
   return data;
 }
 
-function showProfile(profile) {
+function showProfile(profile, signupName = "") {
+  const form = $("profile");
   if (profile) {
-    const form = $("profile");
+    // A saved profile always wins over the signup/account name.
     form.elements.displayName.value = profile.displayName || "";
     form.elements.aboutMe.value = profile.aboutMe || "";
     $("profilePreview").textContent =
@@ -97,6 +114,8 @@ function showProfile(profile) {
       "\nCreated at: " + profile.createdAt +
       "\nUpdated at: " + profile.updatedAt;
   } else {
+    form.elements.displayName.value = signupName;
+    form.elements.aboutMe.value = "";
     $("profilePreview").textContent = "No persisted profile yet.";
   }
 }
@@ -158,7 +177,8 @@ $("logout").addEventListener("click", () => run("Sign out", async () => {
 }));
 $("load").addEventListener("click", () => run("Load profile", async () => {
   const data = await profileRequest("GET");
-  showProfile(data.profile);
+  const member = await refresh();
+  showProfile(data.profile, accountDisplayName(member));
   say(data.profile ? "Profile retrieved from database." : "No profile saved for this account.");
 }));
 $("profile").addEventListener("submit", (event) => {
