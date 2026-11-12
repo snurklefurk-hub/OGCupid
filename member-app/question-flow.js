@@ -61,8 +61,17 @@ export function nextCompatibilityQuestion(questions, answeredIds, random = Math.
         question.hidden || question.dismissed || question.dogshit ||
         question.answers?.every?.(answer => answer?.junk === true) ||
         answered.has(String(question.id)) || seen.has(String(question.id))) continue;
+    // Junk-marked answer options must never be shown. Do not mutate the
+    // source data; the eventual saved-answer service owns canonical records.
+    const answers = Array.isArray(question.answers)
+      ? question.answers.filter(answer => answer != null && answer.junk !== true)
+      : null;
+    if (answers && answers.length === 0) continue;
     seen.add(String(question.id));
-    available.push({ question, tier: normalizeTier(question.tier) });
+    available.push({
+      question: answers ? { ...question, answers } : question,
+      tier: normalizeTier(question.tier),
+    });
   }
 
   for (const focusTier of QUESTION_TIERS.slice(0, 4)) {
