@@ -31,6 +31,7 @@ const questions = window.OGCQuestionBank.questions.map(question => ({
 let savedAnswers = new Map();
 let currentQuestion = null;
 let skippedQuestions = new Set();
+let editingQuestionId = null;
 
 function message(text, type = "info") {
   const node = $("notice");
@@ -85,6 +86,7 @@ function clearMemberView() {
   savedAnswers = new Map();
   currentQuestion = null;
   skippedQuestions = new Set();
+  editingQuestionId = null;
   show("question-view", false);
   show("question-locked", true);
   $("profile-form").reset();
@@ -211,14 +213,22 @@ async function loadAnswers() {
 }
 
 function renderQuestion() {
+  const review = $("answered-review");
+  review.replaceChildren(new Option("Continue with unanswered questions", ""));
+  for (const question of questions.filter(item => savedAnswers.has(item.id))) {
+    review.add(new Option(question.prompt.slice(0, 110), question.id));
+  }
+  review.value = editingQuestionId || "";
   const remaining = questions.filter(question => !skippedQuestions.has(question.id));
-  const selection = nextCompatibilityQuestion(remaining, savedAnswers.keys());
-  currentQuestion = selection?.question || null;
+  const selection = editingQuestionId ? null : nextCompatibilityQuestion(remaining, savedAnswers.keys());
+  currentQuestion = editingQuestionId
+    ? questions.find(item => item.id === editingQuestionId) || null
+    : selection?.question || null;
   show("question-form", !!currentQuestion);
   show("question-complete", !currentQuestion && savedAnswers.size >= questions.length);
   const count = savedAnswers.size;
   $("question-progress").textContent = currentQuestion
-    ? `${count} / ${questions.length} answered � ${selection.focusTier.replace("next", "Next ").replace("first", "First ")}`
+    ? `${count} / ${questions.length} answered � ${editingQuestionId ? "Reviewing saved answer" : selection.focusTier.replace("next", "Next ").replace("first", "First ")}`
     : `${count} / ${questions.length} answered`;
   if (!currentQuestion) {
     if (count < questions.length) $("question-progress").textContent += " � Come back to skipped questions after refreshing.";
@@ -242,10 +252,17 @@ function renderQuestion() {
     partnerLabel.append(check, document.createTextNode(label));
     acceptable.append(partnerLabel);
   });
-  show("question-skip", selection.focusTier !== "first10");
-  $("question-importance").value = "1";
-  $("question-note").value = "";
-  $("question-private").checked = false;
+  show("question-skip", !editingQuestionId && selection.focusTier !== "first10");
+  const previous = savedAnswers.get(currentQuestion.id);
+  if (previous) {
+    own.querySelectorAll('input[name="answer"]').forEach(input => { input.checked = input.value === previous.optionId; });
+    acceptable.querySelectorAll('input[name="acceptable"]').forEach(input => {
+      input.checked = previous.acceptableOptions.includes(input.value);
+    });
+  }
+  $("question-importance").value = String(previous?.importance ?? 1);
+  $("question-note").value = previous?.note ?? "";
+  $("question-private").checked = previous?.isPrivate ?? false;
 }
 
 function showStoredProfile(profile) {
@@ -518,6 +535,10 @@ function wireForms() {
     skippedQuestions.add(currentQuestion.id);
     renderQuestion();
   });
+  $("answered-review").addEventListener("change", event => {
+    editingQuestionId = event.currentTarget.value || null;
+    renderQuestion();
+  });
   $("question-form").addEventListener("submit", (event) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -541,6 +562,7 @@ function wireForms() {
       };
       await requestPrivate("/answers", "PUT", answer);
       savedAnswers.set(question.id, answer);
+      editingQuestionId = null;
       renderQuestion();
       message("Answer saved privately to your account.", "ok");
     });
