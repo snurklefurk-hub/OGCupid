@@ -471,8 +471,25 @@ body { min-width:320px; }
 </style>
   <style>html.member-gated{visibility:hidden}body{overflow-x:clip}</style>
   <script type="module" src="./persona-gate.js"></script>
+
+  <style>
+    .member-quiz-header{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;
+      padding:13px 22px;margin:12px auto 0;width:min(100% - 18px,1100px);
+      background:#fffdf7;border:2px solid #24203e;box-shadow:4px 4px 0 #24203e}
+    .member-quiz-header img{display:block;width:200px;max-width:100%;height:auto}
+    .member-quiz-header a:last-child{font:900 13px/1.2 "Trebuchet MS",sans-serif;
+      text-decoration:none;color:#24203e;text-transform:uppercase}
+    .member-quiz-header a:last-child:hover{text-decoration:underline}
+    @media(max-width:760px){.member-quiz-header{margin-top:9px;padding:13px 15px;
+      width:calc(100% - 18px);box-shadow:3px 3px 0 #24203e}
+      .member-quiz-header img{width:175px}}
+  </style>
 </head>
 <body>
+<header class="member-quiz-header">
+  <a href="/account/" aria-label="OG Cupid member dashboard"><img src="/brand/og-cupid-arrow.svg" alt="OG Cupid" width="720" height="174" decoding="async"></a>
+  <a href="/account/">← Back to my account</a>
+</header>
 <main class="standalone-quiz" id="main">
 <section class="persona-zone" id="quiz" aria-labelledby="persona-title">
           <div class="persona-heading">
