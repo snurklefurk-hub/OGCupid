@@ -220,12 +220,15 @@ function wireForms() {
       const email = String(fields(form).email).trim();
       // Neon Managed Better Auth's documented Email OTP recovery method.
       // Some Better Auth client versions renamed this route.
-      const request = auth.forgetPassword?.emailOtp ||
-        auth.emailOtp?.requestPasswordReset;
-      if (typeof request !== "function") {
+      let result;
+      if (typeof auth.forgetPassword?.emailOtp === "function") {
+        result = await auth.forgetPassword.emailOtp({ email });
+      } else if (typeof auth.emailOtp?.requestPasswordReset === "function") {
+        result = await auth.emailOtp.requestPasswordReset({ email });
+      } else {
         throw new Error("Password recovery isn't supported by this installed Auth client. No account was changed.");
       }
-      const { error } = await request({ email });
+      const { error } = result;
       if (error) throw new Error(asError(error, "Could not request a recovery code."));
       $("reset-confirm-form").elements.email.value = email;
       chooseAuthTab("reset-confirm");
