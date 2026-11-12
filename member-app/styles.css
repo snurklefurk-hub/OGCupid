@@ -85,3 +85,31 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .question-panel fieldset input{width:20px;height:20px;flex:none;accent-color:var(--blue)}
 .question-panel select{display:block;border:2px solid var(--ink);background:#fff;padding:10px;width:min(100%,360px);font:inherit}
 
+
+/* Branding and mobile page frame match the public homepage. */
+.masthead .brand-original{display:inline-flex;align-items:center;line-height:0;letter-spacing:0}
+.masthead .brand-original img{display:block;width:230px;max-width:100%;height:auto;mix-blend-mode:multiply}
+.member-persona-panel{margin:0 clamp(18px,4vw,36px) 36px;background:#e8e7ff}
+.member-persona-panel p:not(.eyebrow){margin:0 0 12px;max-width:600px;line-height:1.55}
+.member-persona-panel .button{margin-top:8px}
+@media (max-width:760px) {
+  /* Prevent the 12px main-frame shadow from making /account/ look wider
+     and offset compared with the main site on narrow screens. */
+  .shell{max-width:100%;margin:9px auto 28px;padding:0 9px}
+  .topline{border-width:2px;border-bottom:0;padding:9px 12px}
+  .masthead{border-width:2px;border-bottom:0;padding:17px 16px;gap:13px}
+  .masthead .brand-original img{width:195px;max-width:min(68vw,100%)}
+  .masthead nav{display:flex;flex-wrap:wrap;gap:10px 16px}
+  .masthead nav a{font-size:12px}
+  main{border-width:2px;box-shadow:5px 5px 0 var(--ink)}
+  .paper{box-shadow:2px 2px 0 var(--ink)}
+  .intro{padding:24px 19px 22px}
+  .columns{padding:22px 17px 24px;gap:15px}
+  .question-panel,.member-persona-panel{margin:0 17px 24px}
+  .bottom-mark{padding:15px 12px}
+}
+@media(max-width:380px){
+  .masthead .brand-original img{width:180px}
+  .shell{padding:0 9px}
+  .paper{padding:17px}
+}
