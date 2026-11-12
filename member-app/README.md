@@ -1,7 +1,9 @@
-# OG Cupid member site (development)
+# OG Cupid member site (development and production)
 
-**Not live; not production-ready.** This folder is the source for the real
-`/account/` experience. The legacy `dev/account-smoke/` harness remains as a
+**Live at https://ogcupid.onrender.com/account/ since 2026-11-12.**
+Production account creation, saved profiles, match answers and owner-only
+self-deletion are enabled. Full public-launch security, privacy and moderation
+hardening remains open. This folder is the source for the real `/account/` experience. The legacy `dev/account-smoke/` harness remains as a
 small regression test. The existing public homepage, quizzes, and OGTrends
 are intentionally untouched.
 
@@ -13,7 +15,9 @@ are intentionally untouched.
   `ogcupid_member_api` connection role. Never use `neondb_owner` for this API:
   that role has `BYPASSRLS` and would defeat isolation.
 - Vite creates a static build in `../public/account/`, not a new server.
-  The Render static-site build must compile this before publication.
+  Render currently serves the **prebuilt, versioned** assets committed into
+  `public/account/`; its build command does not rebuild this app. Future
+  frontend changes require an explicit Vite build and published assets.
 
 ## Local development
 
@@ -31,7 +35,7 @@ the **isolated development branch**. Members can now create accounts (email
 verification by OTP), sign in, save profiles, and delete their own accounts
 with their current password plus a DELETE confirmation. Both signup and
 self-service deletion are enabled for iterative development. Production
-registration remains disabled. The database is not seeded with public users.
+registration is also enabled, requiring email OTP verification.
 
 The source does not store passwords, OTPs, or JWTs in localStorage, console
 logs, GitHub, or HTML. The session is managed by Neon Auth.
@@ -43,10 +47,11 @@ npm install
 npm run build
 ```
 
-The output is generated at `public/account/` and is intentionally ignored
-by Git. A future Render build should compile the member app and then preserve
-the current homepage build. **Do not update Render or merge this branch until
-all release gates have passed.**
+The output is generated at `public/account/` and normally ignored by Git;
+the production deployment explicitly commits the generated artifacts (forced
+Git add) so Render can serve them. Do not assume changing this source file
+alone updates the production website. Eventually update the Render build to
+compile the member app rather than depending on prebuilt assets.
 
 Non-local builds have no backend endpoints by default. To connect to **the
 production branch**, a deliberate release must set these *public* Vite build
@@ -54,8 +59,8 @@ variables, then rebuild:
 
 - `VITE_OGC_AUTH_URL` — production Neon Auth base URL (not a secret).
 - `VITE_OGC_MEMBER_API_URL` — production member Function URL (not a secret).
-- `VITE_OGC_REGISTRATION_ENABLED=true` only after the server-side production
-  signup gate is intentionally opened and independently verified.
+- `VITE_OGC_REGISTRATION_ENABLED=true` for current production builds; the
+  production Neon Auth signup gate was independently checked as enabled.
 
 Never set production URLs to the dev branch. Never put `DATABASE_URL`,
 `AWS_SECRET_ACCESS_KEY`, or any auth/admin secret in a `VITE_*` variable.
@@ -76,14 +81,20 @@ a disposable development member. It independently verifies a signed JWT,
 reauthenticates the *same* member using their current password, limits
 deletion to five attempts per hour, and uses a separate database role with
 permission only to invoke the no-target-parameter erasure function.
-As of 2026-11-12, owner-authorized **development signup and self-deletion
-are enabled for all authenticated development members**, not just a
-disposable test ID. The obsolete single-account SQL allowlist is replaced
-by migration 005. The browser form is available automatically on localhost;
-the server endpoint remains constrained to the exact development branch
-and `OGC_ACCOUNT_DELETION_ENABLED=true`. The separate diagnostic endpoint
-is disabled. **This feature is not published to production**, and future
-user-owned tables/media must declare and verify their deletion behavior.
+As of 2026-11-12, owner-authorized self-service deletion is enabled on
+**both the isolated development site and production**. Development migration
+005 removed the temporary disposable-only allowlist; production migration
+006 adds its own dedicated deletion role and function. The browser form is
+shown on authenticated deployments; the API permits only explicitly named
+development or production Neon branches with
+`OGC_ACCOUNT_DELETION_ENABLED=true` and a server-side
+`OGC_DELETION_DATABASE_URL` credential. It rechecks the current password,
+verifies the same account ID, and limits deletion to five attempts/hour.
+Production Neon Function deployment #3 completed; Render published the
+versioned member app build in commit `65af7c79b430bfc442a2f96c85be74146292711d`.
+The old reauth diagnostic route remains disabled. Existing database FKs
+cascade deletion to saved match answers and private profiles; future owned
+content and media must define equivalent lifecycle behavior.
 
 ## Tested in the isolated development environment
 
@@ -94,7 +105,7 @@ user-owned tables/media must declare and verify their deletion behavior.
 - SQL-level cross-user reads/updates denied; forged cross-user upsert rejected.
 - The locally tested signup display name now prepopulates a blank profile.
 
-## Production launch BLOCKERS
+## Post-launch security and feature hardening backlog
 
 - [x] New member page loaded in browser; existing sessions, login/switching,
       private profile auto-load verified by owner on localhost.
@@ -119,9 +130,13 @@ user-owned tables/media must declare and verify their deletion behavior.
 - [ ] Deploy the updated profile API and browser UI to development,
       validate HTTP 401 for a deleted member's previously issued JWT,
       and verify the stale profile UI is cleared.
-- [ ] Generalize/review deletion for production, publish privacy and consent
-      policy and backup/retention disclosures, verify stale-JWT behavior
-      end-to-end, and extend cleanup to all future member-owned assets/data.
+- [x] Enable scoped production self-deletion with dedicated no-table-access
+      role, verified JWT/current password, throttling, and cascades for
+      current profile and saved question answers (migration 006).
+- [ ] Publish privacy/consent policy and backup/retention disclosures,
+      verify stale-JWT behavior end-to-end, and extend deletion cleanup to
+      future member-owned assets/data. No live production account was
+      created/deleted for a destructive test.
 - [ ] Configure production auth trusted domains, branded/custom SMTP, and
       disable production localhost acceptance.
 - [ ] Review defenses against signup abuse, credential stuffing, and API
@@ -135,4 +150,7 @@ user-owned tables/media must declare and verify their deletion behavior.
 - [ ] Resolve copyright/trademark questions about recovered legacy artwork,
       and finalize terms and safety/moderation rules before wider public access.
 
-Current release status: **development draft PR only, production signup locked**.
+Current release status: **production site LIVE; signup and self-deletion
+backend/UI enabled on November 12, 2026**. No production destructive
+end-to-end browser test has been run; remaining security and compliance
+items are tracked above. Public user registration has no current members.
