@@ -207,6 +207,24 @@ function wireForms() {
     $("reset-request-form").elements.email.value = $("signin-form").elements.email.value;
     chooseAuthTab("reset-request");
   });
+  $("open-verify").addEventListener("click", () => {
+    $("verify-form").elements.email.value = $("signin-form").elements.email.value;
+    chooseAuthTab("verify");
+    message("Enter your email and request a verification code.");
+  });
+  $("send-verify-code").addEventListener("click", (event) => {
+    const form = $("verify-form");
+    if (!form.elements.email.reportValidity()) return;
+    operation(event.currentTarget, "Sending verification code", async () => {
+      const email = form.elements.email.value.trim();
+      const { error } = await auth.emailOtp.sendVerificationOtp({
+        email,
+        type: "email-verification",
+      });
+      if (error) throw new Error(asError(error, "Could not send verification code"));
+      message("Check your inbox for an OG Cupid email verification code.", "ok");
+    });
+  });
   $("send-another-code").addEventListener("click", () => {
     $("reset-request-form").elements.email.value = $("reset-confirm-form").elements.email.value;
     chooseAuthTab("reset-request");
