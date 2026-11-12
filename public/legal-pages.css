@@ -1,0 +1,41 @@
+
+:root{--ink:#24204b;--blue:#444ac6;--rose:#e44765;--yellow:#ffd361;--mint:#ccf3df;--paper:#fff9eb;--white:#fffefd}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-width:320px;background:radial-gradient(#e4d8c7 1px,transparent 1px) 0 0/24px 24px var(--paper);color:var(--ink);font:16px/1.65 "Trebuchet MS",Verdana,sans-serif}
+a{color:var(--blue);text-underline-offset:3px}
+a:hover{color:#b72e58}
+:focus-visible{outline:3px solid var(--rose);outline-offset:3px}
+.skip{position:absolute;top:-80px;left:20px;z-index:10;padding:10px 14px;background:var(--yellow)}.skip:focus{top:10px}
+.shell{max-width:1030px;margin:32px auto 65px;padding:0 16px}
+.ticker{display:flex;justify-content:space-between;gap:1rem;padding:9px 19px;border:3px solid var(--ink);border-bottom:0;background:var(--yellow);font-size:11px;font-weight:900;letter-spacing:1.3px;text-transform:uppercase}
+.site{border:3px solid var(--ink);background:var(--white);box-shadow:10px 10px 0 var(--ink)}
+.header{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;padding:20px clamp(16px,4vw,32px);border-bottom:3px solid var(--ink)}
+.logo{max-width:218px;display:block}.logo img{display:block;width:100%;height:auto}
+.nav,.footer-links{display:flex;flex-wrap:wrap;align-items:center;gap:15px}
+.nav a,.footer-links a{font-size:13px;font-weight:900;text-decoration:none}
+.nav a[aria-current="page"]{border-bottom:3px solid var(--rose)}
+.hero{background:linear-gradient(125deg,#fff9df,#ffe5e9);border-bottom:3px solid var(--ink);padding:37px clamp(18px,5vw,52px)}
+.stamp{display:inline-block;padding:5px 10px;border:2px solid var(--ink);background:var(--mint);font-size:11px;font-weight:900;letter-spacing:1.2px;text-transform:uppercase}
+h1{font:900 clamp(40px,7vw,70px)/1.05 Impact,"Arial Black",sans-serif;letter-spacing:-.7px;text-transform:uppercase;margin:20px 0 14px}
+h1 em{font-style:normal;color:var(--rose)}
+.lead{max-width:740px;margin:0;font-size:18px;font-weight:700}
+.updated{font-size:12px;font-weight:900;letter-spacing:.4px;margin:20px 0 0}
+.main{max-width:840px;padding:31px clamp(20px,5vw,52px) 49px}
+.main h2{font:900 clamp(24px,3vw,33px)/1.2 Impact,"Arial Black",sans-serif;border-top:2px solid #dfd9dd;padding-top:24px;margin:35px 0 13px}
+.main h3{font-size:18px;margin:22px 0 7px}
+.main p{margin:13px 0}
+.main li{margin:8px 0}
+.main ul{padding-left:25px}
+.main .card{border:2px solid var(--ink);padding:20px 23px;box-shadow:4px 4px 0 var(--ink);background:#fffaf1;margin:20px 0}
+.main .card.alt{background:var(--mint)}
+.main .card h2{border:0;margin:0 0 10px;padding:0}
+.main .card p:last-child{margin-bottom:0}
+.main .fine{font-size:13px;color:#625c77}
+.main .mail{font-size:clamp(17px,2.5vw,23px);font-weight:900;overflow-wrap:anywhere}
+.main .toc{display:flex;gap:10px 20px;flex-wrap:wrap;padding:18px 0 22px;border-bottom:1px dashed #d3c8d7}
+.main .toc a{font-size:13px;font-weight:900}
+.main .notice{padding:16px 19px;background:#fff1c7;border-left:6px solid var(--rose);font-size:14px;font-weight:750}
+.footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:14px 24px;border-top:3px solid var(--ink);padding:19px clamp(16px,4vw,32px);font-size:12px;font-weight:700;background:#fff4e6}
+.footer-links a{font-size:12px}
+@media(max-width:600px){.shell{margin:14px auto 35px;padding:0 12px}.site{box-shadow:6px 6px 0 var(--ink)}.ticker{font-size:9px}.header{padding:16px}.logo{max-width:180px}.nav{gap:8px 15px}.hero{padding:29px 20px}.main{padding:24px 20px 34px}}
