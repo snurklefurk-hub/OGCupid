@@ -67,6 +67,39 @@ in client JavaScript.
 Official reference:
 - https://better-auth.com/docs/concepts/users-accounts
 
+## Isolated development deletion test — PASSED (2026-11-12 UTC)
+
+With the owner's explicit authorization, used Neon administration **only** on
+`dev/private-member-accounts` (branch `br-empty-lab-bbjb0q1u`) to create and
+delete exactly one synthetic disposable Auth user.
+
+- Baseline: **4** Auth users and **4** private profiles (two existing owner test
+  accounts + two established synthetic security-test accounts).
+- Created disposable Auth user ID:
+  `a5f68c0f-dc52-40dd-820c-70221d405f91`.
+- Added one private profile linked to that ID. Both counts became **5**.
+- Reconfirmed the disposable ID, email, and profile before deletion.
+- Called Neon administrative `delete_auth_user` for **that ID only**.
+- Queried tables afterward: **0** rows for that user ID in
+  `neon_auth."user"`, `neon_auth."account"`,
+  `neon_auth."session"`, and `app_private.member_profiles`.
+- Total counts returned to **4** Auth users and **4** private profiles;
+  original synthetic security-test profiles also remained unchanged.
+
+This confirms successful administrative deletion and the expected
+`ON DELETE CASCADE` cleanup of the associated private profile. It does
+**not** prove browser self-service deletion, password reauthentication,
+revocation of a preexisting active session (none was established for this
+disposable user), or immediate erasure from retained database backups.
+Neither of the owner's established test accounts was deleted or modified.
+Production branch remains untouched.
+
+**Next:** implement a secure member-initiated deletion path with fresh
+identity verification and minimal server authority; test it end-to-end on
+another disposable development account, then verify session and asset cleanup.
+Do not enable the hidden client deletion form until server support is
+confirmed. No additional destructive action is authorized by this test.
+
 ## Safety / deployment state
 
 - Development and production signup are **disabled server-side**.
