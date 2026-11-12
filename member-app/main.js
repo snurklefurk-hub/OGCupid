@@ -1,5 +1,6 @@
 import { createAuthClient } from "@neon/auth";
 import { nextCompatibilityQuestion } from "./question-flow.js";
+import { createLocalityPicker } from "./locality-picker.js";
 import "../public/questions/question-bank.js";
 import "./styles.css";
 
@@ -28,6 +29,8 @@ const $ = (id) => document.getElementById(id);
 let currentUser = null;
 let sessionUserId = null;
 let cachedProfile = null;
+let homeCityPicker = null;
+let searchCityPicker = null;
 const questions = window.OGCQuestionBank.questions.map(question => ({
   ...question, tier: question.tier,
 }));
@@ -215,6 +218,8 @@ function chooseAuthTab(name) {
 
 function clearMemberView() {
   cachedProfile = null;
+  homeCityPicker?.clear();
+  searchCityPicker?.clear();
   savedAnswers = new Map();
   currentQuestion = null;
   skippedQuestions = new Set();
@@ -427,6 +432,9 @@ function readProfileDraft(form = $("profile-form")) {
     aboutMe: form.elements.aboutMe.value.trim(),
     age: ageValue ? Number(ageValue) : null,
     adultConfirmed: form.elements.adultConfirmed.checked,
+    locality: homeCityPicker?.current() ?? null,
+    searchOrigin: searchCityPicker?.current() ?? null,
+    searchRadiusMiles: form.elements.searchRadiusMiles.value === "" ? null : Number(form.elements.searchRadiusMiles.value),
     gender: form.querySelector('input[name="gender"]:checked')?.value ?? "",
     // Existing private text columns are sufficient for the classic fixed choices.
     // Store stable comma-separated option values; no new schema or public access.
@@ -508,6 +516,9 @@ function showStoredProfile(profile) {
   form.elements.aboutMe.value = profile?.aboutMe ?? "";
   form.elements.age.value = profile?.age == null ? "" : String(profile.age);
   for (const field of longProfileFields) form.elements[field].value = profile?.[field] ?? "";
+  homeCityPicker?.restore(profile?.localityId, profile?.localityKey, profile?.cityRegion || "");
+  searchCityPicker?.restore(profile?.searchOriginId, profile?.searchOriginKey, profile?.searchOriginLabel || "");
+  form.elements.searchRadiusMiles.value = profile?.searchRadiusMiles == null ? "" : String(profile.searchRadiusMiles);
   form.querySelectorAll('input[name="gender"]').forEach(input => {
     input.checked = input.value === String(profile?.gender ?? "").toLowerCase();
   });
@@ -542,6 +553,8 @@ async function loadProfile({ silent = false } = {}) {
 }
 
 function wireForms() {
+  homeCityPicker = createLocalityPicker($("profile-city-region"), $("profile-city-options"), $("profile-city-hint"), renderProfilePreview);
+  searchCityPicker = createLocalityPicker($("search-origin"), $("search-origin-options"), $("search-origin-hint"), renderProfilePreview);
   bindEmailOptionOverrides($("signup-form"));
   bindEmailOptionOverrides($("email-settings-form"));
   populateEmailOptions($("signup-form"), necessaryEmailOnly);
@@ -785,6 +798,17 @@ function wireForms() {
     operation(form.querySelector('button[type="submit"]'), "Saving your profile", async () => {
       const draft = readProfileDraft(form);
       if (!draft.adultConfirmed) throw new Error("You must confirm that you are at least 18.");
+      // Old free-text places are kept unchanged until the owner selects a
+      // canonical town. Newly entered places must come from the lookup.
+      if (draft.cityRegion && !draft.locality &&
+          draft.cityRegion !== String(cachedProfile?.cityRegion ?? "").trim()) {
+        throw new Error("Choose your city or town from the search results.");
+      }
+      const originText = form.elements.searchOriginLabel.value.trim();
+      if (originText && !draft.searchOrigin &&
+          originText !== String(cachedProfile?.searchOriginLabel ?? "").trim()) {
+        throw new Error("Choose the search-around city from the results, or leave it blank.");
+      }
       const result = await requestProfile("PUT", draft);
       showStoredProfile(result.profile);
       message("Your profile has been saved privately to PostgreSQL.", "ok");
