@@ -25,47 +25,104 @@ Neon generates and emails codes subject to its expiration and throttling.
 Use custom SMTP before public launch. Shared Neon test mail currently sends
 from `auth@mail.myneon.app`.
 
-**Not yet user-tested:** OTP delivery, code acceptance, old-password
-rejection, new-password acceptance, and session revocation with the current
-version of the SDK. These are explicit acceptance tests, not assumed successes.
+**Owner-reported passed:** recovery email/code, new password, login after
+reset, and preserved saved profile on the local member page. **Still to test
+separately:** rejection of the old password and revocation of an already-active
+second-browser session.
 
 Official docs:
 - https://neon.com/docs/auth/guides/plugins/email-otp
 - https://neon.com/docs/auth/guides/password-reset
 
-## Account deletion
+## Account deletion — development backend ready, destructive route OFF
 
-**NOT enabled.** A draft native Better Auth deletion form exists in the member
-page, but is invisible unless (a) running at localhost and (b)
-`VITE_OGC_DELETE_TEST=true` is explicitly configured. The form requires a
-current password plus typing `DELETE`, and would call
-`auth.deleteUser({ password })` against the authenticated account. No
-user-supplied account ID goes to a privileged endpoint.
+Neon Managed Better Auth does not currently expose a confirmed server setting
+to enable native `auth.deleteUser`. We therefore built a **separate,
+server-authorized self-service deletion pathway** in the existing member
+Function instead of handing out Neon administrative credentials.
 
-The normal Better Auth server leaves account hard deletion **disabled by
-default**; the available Neon Managed Auth settings do not expose the
-necessary server-side option. Do not assume this operation works. Do not
-enable the testing flag until provider support has been confirmed and a
-disposable development user is available. Never use the owner's two existing
-test accounts as deletion targets without their explicit approval.
+The backend code is committed to `api/member-profile.ts`, but is **NOT YET
+DEPLOYED**. The development database migrations have been applied; production
+has not been changed.
 
-A read-only development database inspection confirmed
-`app_private.member_profiles.user_id` references
-`neon_auth."user"(id) ON DELETE CASCADE`. That means a *successful auth user
-deletion* should remove its private profile automatically. Verify with a
-disposable user, including associated Auth sessions and any future user-owned
-tables/assets; do not claim erasure of backups immediately (backup expiry
-follows retention policy).
+### Security workflow
 
-If Managed Auth does not support native deletion, implement a **separate
-reviewed self-service deletion mechanism** with independent identity
-reverification, server-only scoped credentials, atomic cleanup and audit,
-and an appropriate user-visible completion status. Do not grant the profile
-API ownership of Neon Auth tables or embed an admin/owner connection string
-in client JavaScript.
+1. The browser sends `POST /account/delete` with the signed member JWT,
+   account email, current password, and explicit `DELETE` confirmation.
+   There is **no user ID** in the request. The site hides the action unless
+   running on localhost with `VITE_OGC_DELETE_TEST=true`.
+2. The backend is disabled unless it runs on the exact
+   `dev/private-member-accounts` branch AND its server-only
+   `OGC_ACCOUNT_DELETION_ENABLED=true` setting is explicitly enabled.
+   Production cannot enable this route by setting an environment variable.
+3. The Function verifies the EdDSA JWT against Neon Auth's published JWKS.
+   The `sub` UUID is the *only* target identity.
+4. A scoped rate-limiter allocates at most **5 attempts/hour/member**
+   *before* any password verification call.
+5. The Function sends the supplied email/password over HTTPS directly to
+   the branch's Neon Managed Auth `/sign-in/email` endpoint. It accepts
+   the confirmation only if Auth succeeds and **returns the same user ID
+   as the verified JWT**. Credentials, provider cookies, and error details
+   are never echoed or logged to the client.
+6. The Function opens an entirely separate `ogcupid_delete_api` Postgres
+   connection. That role has neither BYPASSRLS nor direct read/write on
+   member or Auth tables; it can execute only the narrow
+   `app_private.erase_current_member_after_reauth()` SECURITY DEFINER
+   operation. The ordinary `ogcupid_member_api` profile role cannot
+   execute that eraser.
+7. The SQL eraser takes **no account ID**; it deletes exactly the UUID
+   previously set as `app.current_user_id` by the server from the
+   authenticated JWT. PostgreSQL foreign-key cascades remove linked
+   profiles, credentials, and session records atomically.
+8. The browser clears its local profile UI and attempts Auth cookie signout
+   after confirmed success. Retained backups remain subject to a separate
+   published retention period.
 
-Official reference:
+Database custom session GUC values are **not cryptographic credentials**;
+the trust boundary is the isolated server-only database connection and
+the backend's JWT/password verification. The special delete-role URI is
+stored in the Neon development Function environment as
+`OGC_DELETION_DATABASE_URL`, never in Git or the browser.
+
+### Verified security controls
+
+Applied migrations `002_member_self_deletion.sql` and
+`003_separate_account_deletion_role.sql` on the **development branch only**.
+
+- `ogcupid_member_api`: can access private profiles and use the deletion
+  attempt limiter, **cannot execute the privileged erase function**.
+- `ogcupid_delete_api`: can execute the erase function, **cannot directly
+  SELECT the member profiles or DELETE from Neon Auth users**;
+  `rolsuper=false` and `rolbypassrls=false`.
+- Both no-context deletion helper calls returned `false` in read-only
+  negative tests. Four existing development accounts and profiles remain
+  intact.
+- Development Function deployment #4 is an environment-only update: both
+  original `DATABASE_URL` and dedicated `OGC_DELETION_DATABASE_URL` keys
+  were verified; it still serves the previously deployed API source.
+
+### Remaining test gates
+
+- [ ] Deploy updated backend source to development (no destructive flag).
+- [ ] Confirm unauthenticated `POST /account/delete` cannot succeed and
+      disabled route returns not-found.
+- [ ] Obtain a **new disposable development account with a genuine password**.
+      Never delete either established owner test account.
+- [ ] Explicitly enable the backend deletion flag *on development only* and
+      the local frontend test flag. Confirm wrong-password and wrong-email
+      rejection, quota handling, and successful owner-only deletion.
+- [ ] Confirm all dependent records and active sessions are gone, other
+      users unaffected, and that stale JWTs cannot recreate private data.
+- [ ] Security review: provider rate limits, SQL SECURITY DEFINER hardening,
+      network access to the DB role, Auth provider behavior, backup retention,
+      media cleanup, and account deletion audit policy.
+- [ ] Design production rollout with separate, branch-specific restricted
+      credentials. This development endpoint explicitly refuses production.
+
+Sources:
 - https://better-auth.com/docs/concepts/users-accounts
+- https://neon.com/docs/compute/functions/authentication.md
+
 
 ## Isolated development deletion test — PASSED (2026-11-12 UTC)
 
@@ -94,11 +151,10 @@ disposable user), or immediate erasure from retained database backups.
 Neither of the owner's established test accounts was deleted or modified.
 Production branch remains untouched.
 
-**Next:** implement a secure member-initiated deletion path with fresh
-identity verification and minimal server authority; test it end-to-end on
-another disposable development account, then verify session and asset cleanup.
-Do not enable the hidden client deletion form until server support is
-confirmed. No additional destructive action is authorized by this test.
+**Next:** test the newly drafted, independently reauthenticated member
+endpoint on a *new* disposable development account after deployment and
+explicit enabling. No further account erasure has occurred or been authorized
+solely by this historical administrative cascade test.
 
 ## Safety / deployment state
 
@@ -115,13 +171,12 @@ confirmed. No additional destructive action is authorized by this test.
   account deletion, privacy policy and retention, moderation, and abuse
   controls.
 
-## Next acceptance test: password recovery
+## Next acceptance test: gated self-service deletion
 
-With the local member-app running (stop previous server on port 5173), sign
-out and open **Forgot your password?**. Use one existing *development* test
-account you control. Request the email code, enter it and the new password.
-Then sign in with the new password and confirm the correct private profile
-remains. Also confirm the old password is rejected. Inspect the exact error
-message (without sending codes/passwords) if any step fails.
+Download the updated `api/member-profile.ts` from the feature branch and
+deploy it to the linked **development** Neon Function *without enabling
+deletion*. Inspect the deployment, then test a disabled call. Account deletion
+must remain off until a disposable, email-verified password account can
+exercise correct-password and wrong-password paths safely.
 
-**Do not enable deletion testing yet.**
+**Never test deletion on the two established accounts or production.**
