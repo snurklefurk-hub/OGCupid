@@ -11,20 +11,18 @@ const authBaseUrl = local
 const memberApiUrl = local
   ? "https://br-empty-lab-bbjb0q1u-members.compute.c-15.us-east-1.aws.neon.tech/profile"
   : (import.meta.env.VITE_OGC_MEMBER_API_URL || "");
+// Member creation and self-service deletion are enabled on localhost
+// for iterative development. Public deployment still requires separately
+// configured production endpoints and explicit release approval.
 const registrationOpenInUi =
-  import.meta.env.VITE_OGC_REGISTRATION_ENABLED === "true";
-// Destructive testing is deliberately opt-in and unavailable in production.
-const deletionTestEnabled = local && import.meta.env.VITE_OGC_DELETE_TEST === "true";
+  local || import.meta.env.VITE_OGC_REGISTRATION_ENABLED === "true";
+const accountDeletionInUi = local;
 const auth = authBaseUrl && memberApiUrl ? createAuthClient(authBaseUrl) : null;
 
 const $ = (id) => document.getElementById(id);
 let currentUser = null;
 let sessionUserId = null;
 let cachedProfile = null;
-// Temporary stale-session security fixture. NEVER write this to localStorage,
-// sessionStorage, the page DOM, logs, or chat; lost on page refresh.
-let staleProbeToken = null;
-let staleProbeExpiryMs = 0;
 
 function message(text, type = "info") {
   const node = $("notice");
@@ -89,14 +87,8 @@ function renderAuthenticated(member) {
   show("member-view", authenticated);
   show("profile-locked", !authenticated);
   show("profile-form", authenticated);
-  // Never display the dangerous test controls for either real test account.
-  const disposableTestMember = authenticated && deletionTestEnabled &&
-    member?.id === "e948d6c8-192a-4c07-9e5b-a18c53b57bae";
-  show("deletion-test", disposableTestMember);
-  // Keep the armed probe accessible even if cross-tab signout updates the UI.
-  show("stale-token-test", disposableTestMember || Boolean(staleProbeToken));
-  $("stale-token-arm").disabled = !disposableTestMember;
-  $("stale-token-run").disabled = !staleProbeToken;
+  // Normal owner-controlled account deletion in the development site.
+  show("deletion-test", authenticated && accountDeletionInUi);
   if (!member) return;
   $("member-welcome").textContent = member.name || "OG Cupid member";
   $("member-email").textContent = member.email || "";
@@ -380,141 +372,15 @@ function wireForms() {
   $("reload-profile").addEventListener("click", (event) =>
     operation(event.currentTarget, "Loading your profile", () => loadProfile()));
 
-  $("stale-token-arm").addEventListener("click", (event) => {
-    if (!deletionTestEnabled || currentUser?.id !== "e948d6c8-192a-4c07-9e5b-a18c53b57bae") {
-      message("Only the new disposable development account can arm this test.", "error");
-      return;
-    }
-    operation(event.currentTarget, "Arming a short-lived old-token test", async () => {
-      const token = await getAccessToken();
-      const part = token.split(".")[1]?.replace(/-/g, "+").replace(/_/g, "/");
-      const claims = part ? JSON.parse(atob(part)) : null;
-      const exp = Number(claims?.exp);
-      if (claims?.sub !== "e948d6c8-192a-4c07-9e5b-a18c53b57bae" ||
-          !Number.isFinite(exp) || exp * 1000 < Date.now() + 90_000) {
-        throw new Error("Unable to arm with a matching JWT that remains valid for at least 90 seconds.");
-      }
-      // Prove the exact bearer token works BEFORE the user is deleted.
-      const endpoint = new URL(memberApiUrl);
-      endpoint.pathname = "/profile";
-      endpoint.search = "";
-      const response = await fetch(endpoint.toString(), {
-        method: "GET",
-        cache: "no-store",
-        credentials: "omit",
-        headers: { Authorization: "Bearer " + token },
-      });
-      if (response.status !== 200) {
-        throw new Error("Pre-deletion token check failed (HTTP " + response.status +
-          "). Do not delete this account until the probe is armed.");
-      }
-      staleProbeToken = token;
-      staleProbeExpiryMs = exp * 1000;
-      $("stale-token-run").disabled = false;
-      $("stale-token-state").textContent =
-        "ARMED: This exact token read the profile successfully. Keep THIS tab open. " +
-        "Delete the disposable account in a SECOND tab, then return and click step 2 before the token expires.";
-      message("Old-token test armed. Do not refresh this tab.", "ok");
-    });
-  });
-
-  $("stale-token-run").addEventListener("click", (event) => {
-    if (!staleProbeToken) {
-      message("Test was not armed or this tab was refreshed.", "error");
-      return;
-    }
-    operation(event.currentTarget, "Checking the deleted account's old token", async () => {
-      if (Date.now() >= staleProbeExpiryMs - 15_000) {
-        $("stale-token-state").textContent =
-          "INCONCLUSIVE: the token is too close to expiry to prove account-existence rejection.";
-        throw new Error("JWT expired or near expiry. Do not treat this as a pass.");
-      }
-      const endpoint = new URL(memberApiUrl);
-      endpoint.pathname = "/profile";
-      endpoint.search = "";
-      const headers = { Authorization: "Bearer " + staleProbeToken };
-      const read = await fetch(endpoint.toString(), {
-        method: "GET", headers, cache: "no-store", credentials: "omit",
-      });
-      if (read.status !== 401) {
-        $("stale-token-state").textContent =
-          "FAIL or premature run: old JWT GET returned HTTP " + read.status +
-          " (expected 401). No write probe was sent.";
-        throw new Error("Old-token read should be 401; observed HTTP " + read.status);
-      }
-      // Test PUT with the same JWT only AFTER the GET was refused.
-      const write = await fetch(endpoint.toString(), {
-        method: "PUT", cache: "no-store", credentials: "omit",
-        headers: { ...headers, "Content-Type": "application/json" },
-        body: JSON.stringify({
-          displayName: "STALE TOKEN SECURITY TEST", aboutMe: "Negative security fixture",
-          adultConfirmed: true,
-        }),
-      });
-      if (Date.now() >= staleProbeExpiryMs) {
-        $("stale-token-state").textContent =
-          "INCONCLUSIVE: token expired before both results were recorded.";
-        throw new Error("Token expired during replay; cannot call this a pass.");
-      }
-      const result =
-        write.status === 401 ? "PASSED: previously working JWT rejected for GET and PUT (both HTTP 401)."
-          : "FAILED: GET returned 401, but PUT returned HTTP " + write.status + ".";
-      $("stale-token-state").textContent = result;
-      if (write.status !== 401) throw new Error(result);
-      message(result, "ok");
-    });
-  });
-
-  $("reauth-check-button").addEventListener("click", (event) => {
-    if (!deletionTestEnabled || !currentUser ||
-        currentUser.id !== "e948d6c8-192a-4c07-9e5b-a18c53b57bae") {
-      message("Password-check testing is available only on the disposable development account.", "error");
-      return;
-    }
-    const form = $("delete-account-form");
-    if (!form.elements.password.reportValidity()) return;
-    operation(event.currentTarget, "Checking your password safely", async () => {
-      const password = form.elements.password.value;
-      const jwt = await getAccessToken();
-      const endpoint = new URL(memberApiUrl);
-      endpoint.pathname = "/account/reauth-check";
-      endpoint.search = "";
-      const response = await fetch(endpoint.toString(), {
-        method: "POST",
-        credentials: "omit",
-        cache: "no-store",
-        headers: {
-          "Authorization": "Bearer " + jwt,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: currentUser.email,
-          password,
-          confirm: "VERIFY",
-        }),
-      });
-      form.elements.password.value = "";
-      const result = await response.json().catch(() => ({}));
-      if (response.ok && result.verified === true && result.deleted === false) {
-        message("Password check PASSED. Your account was NOT deleted.", "ok");
-        return;
-      }
-      const stage = typeof result.stage === "string" ? result.stage : "unknown";
-      const status = typeof result.httpStatus === "number" ? result.httpStatus : response.status;
-      const code = typeof result.providerCode === "string" ? result.providerCode : "UNKNOWN";
-      throw new Error("Password check failed: " + stage + " / HTTP " + status + " / " + code + ". Account NOT deleted.");
-    });
-  });
-
   $("delete-account-form").addEventListener("submit", (event) => {
     event.preventDefault();
     const form = event.currentTarget;
-    if (!deletionTestEnabled || !currentUser) {
-      message("Account deletion is not enabled in this build.", "error");
+    if (!accountDeletionInUi || !currentUser) {
+      message("Account deletion is only available in the development site.", "error");
       return;
     }
     if (!form.reportValidity()) return;
-    operation(form.querySelector('button[type="submit"]'), "Deleting your test account", async () => {
+    operation(form.querySelector('button[type="submit"]'), "Deleting your account", async () => {
       const input = fields(form);
       if (input.confirm !== "DELETE") {
         throw new Error("Type DELETE exactly to confirm.");
@@ -554,7 +420,7 @@ function wireForms() {
       clearMemberView();
       renderAuthenticated(null);
       chooseAuthTab("signin");
-      message("Your test account and linked profile were deleted. Database backups expire according to their retention schedule.", "ok");
+      message("Your account and linked private profile were deleted. Database backups expire according to their retention schedule.", "ok");
     });
   });
 
@@ -599,7 +465,7 @@ async function start() {
     const member = await refreshMember({ loadProfile: true });
     message(member
       ? "Signed in. Your private member profile is ready."
-      : "Sign in to your OG Cupid test account. New public registration remains closed.", "ok");
+      : "Sign in or create a development account. Public registration remains closed.", "ok");
   } catch {
     message("Couldn't check your session. Try signing in again.", "error");
   }
