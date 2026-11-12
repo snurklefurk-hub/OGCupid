@@ -4,6 +4,65 @@ Status: **draft development feature, not public launch ready**.
 Last reviewed: 2026-11-12 UTC.
 Related: [Draft PR #1](https://github.com/snurklefurk-hub/OGCupid/pull/1).
 
+## Current development state — signup and owner deletion ENABLED (2026-11-12)
+
+**Product decision:** the owner asked to stop repeated disposable-account
+security rehearsals and enable normal account creation and self-service
+deletion while adding substantive dating-site data and features. Conduct
+further comprehensive security and data-lifecycle reviews once the feature
+set is ready. This authorization is limited here to the **isolated
+development branch**; it is **not authorization to open public production
+registration**.
+
+**Implementation now enabled on development:**
+
+- Neon Auth `dev/private-member-accounts`: email/password signup **allowed**,
+  verification OTP **required**, and revoke sessions on password reset remains
+  **true**. Production Neon Auth signup was independently confirmed
+  **disabled**.
+- Browser source on GitHub branch `feature/private-member-accounts`: signup
+  and normal "Delete my account" form are available for all members on
+  localhost without `VITE_OGC_REGISTRATION_ENABLED` or the obsolete
+  `VITE_OGC_DELETE_TEST`. The disposable-only two-tab JWT test harness and
+  hardcoded profile user ID restriction were removed from the local UI.
+  The account-delete form still requires the current password and exact
+  `DELETE` confirmation; no browser-provided target user ID is accepted.
+- Development PostgreSQL migration
+  `db/migrations/005_enable_dev_self_deletion.sql` replaces the
+  historical single-disposable-ID SQL allowlist with a no-target-argument
+  function deleting only the transaction-local member identity. The
+  security-definer function is executable only by dedicated
+  `ogcupid_delete_api`, **not** ordinary `ogcupid_member_api` or PUBLIC.
+- The development `members` Function remains branch-scoped and requires
+  its server-side `OGC_ACCOUNT_DELETION_ENABLED=true`; dev Neon Function
+  deployment **#18 completed**. Separate reauth diagnostic
+  `OGC_REAUTH_TEST_ENABLED=false`. Standard password recheck, JWT
+  validation, 5/hour attempt limit, private-profile FK cascade, and
+  active-member checks are retained.
+
+**Independent non-destructive verification:** the dev database still has
+5 Auth users / 5 private member profiles, including the separate temporary
+account created for the paused token-replay test; none were deleted while
+enabling this feature. SQL function has **no hardcoded allowed account ID**,
+retains its self-target predicate, and ordinary member database role still
+cannot execute deletion. Dev Neon Auth reports signup enabled and OTP email
+verification required. Production Neon Auth signup reports disabled.
+
+**Deployment scope:** GitHub client source changes are committed but
+*still need to be pulled into the owner's locally running Vite app*. Neon
+backend signup/deletion settings have already been applied. Production
+Render/main branch, accounts, and authentication remain unchanged.
+
+**Caveats for future product development:** this currently erases Auth user,
+Auth linked credentials/sessions, and the current private profile via
+foreign-key cascade; new question responses, photos, messages, and other
+user-owned content must declare their ownership, retention and deletion
+behavior before real launch. Valid-but-stale JWT HTTP replay, backup
+retention, operational abuse defenses, moderation, privacy policy, and
+production rollout review remain uncompleted and should be revisited as
+the site's data model matures. **Do not mistake enabled development
+features for security-reviewed public registration.**
+
 ## Password recovery
 
 Implemented in the `member-app/` browser UI, behind the development
