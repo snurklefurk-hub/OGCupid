@@ -1,0 +1,38 @@
+name: Publish OG Cupid localities
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/build-localities.mjs'
+      - '.github/workflows/publish-localities.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  geonames-index:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Fetch GeoNames town data (CC BY 4.0)
+        run: |
+          curl --fail --location --retry 3 --retry-all-errors --output "$RUNNER_TEMP/cities1000.zip" 'https://download.geonames.org/export/dump/cities1000.zip'
+          unzip -p "$RUNNER_TEMP/cities1000.zip" cities1000.txt > "$RUNNER_TEMP/cities1000.txt"
+          curl --fail --location --retry 3 --retry-all-errors --output "$RUNNER_TEMP/admin1CodesASCII.txt" 'https://download.geonames.org/export/dump/admin1CodesASCII.txt'
+      - name: Generate prefix-sharded city index
+        run: node scripts/build-localities.mjs "$RUNNER_TEMP/cities1000.txt" "$RUNNER_TEMP/admin1CodesASCII.txt"
+      - name: Commit public reference data only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A -f public/locations
+          if ! git diff --cached --quiet; then
+            git commit -m 'data: publish GeoNames city lookup index'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
