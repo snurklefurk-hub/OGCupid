@@ -8,9 +8,9 @@
   <meta name="referrer" content="no-referrer">
   <meta name="description" content="OG Cupid member accounts and profiles. Bringing back people, not swipes.">
   <title>Your corner of the internet | OG Cupid</title>
-  <script type="module" crossorigin src="./assets/index-BM92d5of.js"></script>
+  <script type="module" crossorigin src="./assets/index-C97SDz2g.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/neon-auth-BIaN13e0.js">
-  <link rel="stylesheet" crossorigin href="./assets/index-BUGSBgRT.css">
+  <link rel="stylesheet" crossorigin href="./assets/index-Bkf6ZYTG.css">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -189,22 +189,177 @@
               </div>
             </div>
             <form id="profile-form" hidden novalidate>
-              <label for="profile-name">Display name</label>
-              <input id="profile-name" name="displayName" type="text" required minlength="2" maxlength="60" autocomplete="nickname">
-              <label for="profile-about">About me</label>
-              <textarea id="profile-about" name="aboutMe" rows="9" maxlength="5000" placeholder="Give somebody a reason to keep reading."></textarea>
-              <span class="hint"><span id="bio-count">0</span> / 5000 characters</span>
+              <div class="profile-editor-intro">
+                <p><strong>Build a profile worth reading.</strong> These fields are private for now. You'll get a live preview below as you write.</p>
+                <p id="profile-progress" class="profile-progress">Start with your introduction.</p>
+              </div>
+              <fieldset class="profile-edit-section">
+                <legend>01 / MY SELF-SUMMARY</legend>
+                <label for="profile-name">Display name</label>
+                <input id="profile-name" name="displayName" type="text" required minlength="2" maxlength="60" autocomplete="nickname">
+                <label for="profile-about">My self-summary</label>
+                <textarea id="profile-about" name="aboutMe" rows="7" maxlength="5000" placeholder="Who are you when nobody's forcing you to write a bio?"></textarea>
+                <span class="hint"><span id="bio-count">0</span> / 5000 characters</span>
+              </fieldset>
+              <fieldset class="profile-edit-section">
+                <legend>02 / BASICS</legend>
+                <p class="profile-fieldset-intro">Enough detail to recognize a person, not enough to find their front door.</p>
+                <div class="profile-field-grid">
+                  <div class="profile-field ">
+                    <label for="profile-age">Age</label>
+                    <input id="profile-age" name="age" type="number" min="18" max="120" step="1" placeholder="18–120 (self-reported)" inputmode="numeric">
+                  </div>
+                  <div class="profile-field ">
+                    <label for="profile-city-region">City / general area</label>
+                    <input id="profile-city-region" name="cityRegion" type="text" maxlength="100" placeholder="Savannah, GA (no street addresses)">
+                  </div>
+                  <div class="profile-field ">
+                    <label for="profile-pronouns">Pronouns</label>
+                    <input id="profile-pronouns" name="pronouns" type="text" maxlength="40" placeholder="Optional">
+                  </div>
+                  <div class="profile-field ">
+                    <label for="profile-gender">Gender</label>
+                    <input id="profile-gender" name="gender" type="text" maxlength="60" placeholder="In your own words">
+                  </div>
+                  <div class="profile-field ">
+                    <label for="profile-orientation">Orientation</label>
+                    <input id="profile-orientation" name="orientation" type="text" maxlength="60" placeholder="Optional">
+                  </div>
+                  <div class="profile-field ">
+                    <label for="profile-relationship-goal">Relationship goals</label>
+                    <input id="profile-relationship-goal" name="relationshipGoal" type="text" maxlength="100" placeholder="Dating, long-term, friendship, etc.">
+                  </div>
+                  <div class="profile-field profile-field-wide">
+                    <label for="profile-looking-for">I'm looking for</label>
+                    <textarea id="profile-looking-for" name="lookingFor" rows="4" maxlength="500" placeholder="Who or what kind of connection are you interested in?"></textarea>
+                  </div>
+                </div>
+              </fieldset>
+              <fieldset class="profile-edit-section">
+                <legend>03 / LIFE & DETAILS</legend>
+                <p class="profile-fieldset-intro">These are conversation starters, not a checklist for human worth.</p>
+                <div class="profile-field-grid">
+                  <div class="profile-field ">
+                    <label for="profile-work">Work / what you do</label>
+                    <input id="profile-work" name="work" type="text" maxlength="160" placeholder="Your occupation, passions, or projects">
+                  </div>
+                  <div class="profile-field ">
+                    <label for="profile-education">Education</label>
+                    <input id="profile-education" name="education" type="text" maxlength="120" placeholder="Optional">
+                  </div>
+                  <div class="profile-field ">
+                    <label for="profile-height">Height</label>
+                    <input id="profile-height" name="height" type="text" maxlength="50" placeholder="Optional">
+                  </div>
+                  <div class="profile-field ">
+                    <label for="profile-kids">Kids</label>
+                    <input id="profile-kids" name="kids" type="text" maxlength="80" placeholder="Optional">
+                  </div>
+                  <div class="profile-field ">
+                    <label for="profile-pets">Pets</label>
+                    <input id="profile-pets" name="pets" type="text" maxlength="80" placeholder="Cats, dogs, houseplants...">
+                  </div>
+                  <div class="profile-field ">
+                    <label for="profile-smoking">Smoking</label>
+                    <input id="profile-smoking" name="smoking" type="text" maxlength="60" placeholder="Optional">
+                  </div>
+                  <div class="profile-field ">
+                    <label for="profile-drinking">Drinking</label>
+                    <input id="profile-drinking" name="drinking" type="text" maxlength="60" placeholder="Optional">
+                  </div>
+                  <div class="profile-field ">
+                    <label for="profile-diet">Diet</label>
+                    <input id="profile-diet" name="diet" type="text" maxlength="100" placeholder="Optional">
+                  </div>
+                  <div class="profile-field ">
+                    <label for="profile-languages">Languages</label>
+                    <input id="profile-languages" name="languages" type="text" maxlength="160" placeholder="Languages you speak">
+                  </div>
+                </div>
+              </fieldset>
+              <fieldset class="profile-edit-section">
+                <legend>04 / THE ESSAYS</legend>
+                <p class="profile-fieldset-intro">The good stuff. The old site had room for actual words; so do we.</p>
+                <div class="profile-field-grid">
+                  <div class="profile-field profile-field-wide">
+                    <label for="profile-life-direction">What I'm doing with my life</label>
+                    <textarea id="profile-life-direction" name="lifeDirection" rows="4" maxlength="2000" placeholder="Projects, dreams, detours, things you're figuring out."></textarea>
+                  </div>
+                  <div class="profile-field profile-field-wide">
+                    <label for="profile-good-at">I'm really good at</label>
+                    <textarea id="profile-good-at" name="goodAt" rows="4" maxlength="1500" placeholder="Big or small. Brag a little."></textarea>
+                  </div>
+                  <div class="profile-field profile-field-wide">
+                    <label for="profile-favorites">Favorite books, movies, music, and food</label>
+                    <textarea id="profile-favorites" name="favorites" rows="4" maxlength="2000" placeholder="Tell people what you keep coming back to."></textarea>
+                  </div>
+                  <div class="profile-field profile-field-wide">
+                    <label for="profile-six-things">The six things I could never do without</label>
+                    <textarea id="profile-six-things" name="sixThings" rows="4" maxlength="1500" placeholder="Six things, or six paragraphs. Your call."></textarea>
+                  </div>
+                  <div class="profile-field profile-field-wide">
+                    <label for="profile-friday-night">On a typical Friday night I am…</label>
+                    <textarea id="profile-friday-night" name="fridayNight" rows="4" maxlength="1500" placeholder="Be as unglamorous or interesting as you like."></textarea>
+                  </div>
+                  <div class="profile-field profile-field-wide">
+                    <label for="profile-message-me-if">You should message me if…</label>
+                    <textarea id="profile-message-me-if" name="messageMeIf" rows="4" maxlength="1500" placeholder="Give someone a reason to say more than hey."></textarea>
+                  </div>
+                </div>
+              </fieldset>
               <label class="checkrow" for="profile-adult">
                 <input id="profile-adult" name="adultConfirmed" type="checkbox" required>
                 <span>I confirm I'm at least 18 years old.</span>
               </label>
               <button class="button primary" type="submit">Save my profile <span aria-hidden="true">&#9829;</span></button>
-              <p class="hint">Only you can access these fields.</p>
+              <p class="hint">Your profile is private and is not discoverable yet. No photos or references are published in this phase.</p>
               <div id="saved-info" class="save-info" hidden></div>
             </form>
           </section>
 
         </div>
+        <section class="paper profile-preview-panel" id="profile-preview-panel" hidden aria-labelledby="preview-title">
+          <div class="profile-preview-heading">
+            <div><p class="eyebrow">YOUR PROFILE / PRIVATE PREVIEW</p><h2 id="preview-title">THE CLASSIC PROFILE, REBORN.</h2></div>
+            <p>Exactly your words. No fake references, no invented photos, and nothing public until discovery controls are ready.</p>
+          </div>
+          <article class="og-profile-preview" aria-label="How your profile will look to members">
+            <header class="og-preview-hero">
+              <div class="og-preview-avatar" aria-hidden="true">♥</div>
+              <div class="og-preview-identity">
+                <span class="og-preview-status">PRIVATE DRAFT / ONLY YOU CAN VIEW THIS</span>
+                <h3 id="preview-display-name">Your name goes here</h3>
+                <p id="preview-one-line"></p>
+                <div id="preview-tags" class="og-preview-tags"></div>
+              </div>
+            </header>
+            <div class="og-preview-layout">
+              <div class="og-preview-essays">
+                <section class="og-preview-essay" id="preview-about-section"><h4>My self-summary</h4><p id="preview-about"></p></section>
+                <section class="og-preview-essay" id="preview-life-direction-section" hidden><h4>What I'm doing with my life</h4><p id="preview-life-direction"></p></section>
+                <section class="og-preview-essay" id="preview-good-at-section" hidden><h4>I'm really good at</h4><p id="preview-good-at"></p></section>
+                <section class="og-preview-essay" id="preview-favorites-section" hidden><h4>Favorite books, movies, music, and food</h4><p id="preview-favorites"></p></section>
+                <section class="og-preview-essay" id="preview-six-things-section" hidden><h4>The six things I could never do without</h4><p id="preview-six-things"></p></section>
+                <section class="og-preview-essay" id="preview-friday-night-section" hidden><h4>On a typical Friday night I am…</h4><p id="preview-friday-night"></p></section>
+                <section class="og-preview-essay" id="preview-message-me-if-section" hidden><h4>You should message me if…</h4><p id="preview-message-me-if"></p></section>
+              </div>
+              <aside class="og-preview-aside">
+                <section class="og-preview-sidebox">
+                  <h4>I'm looking for</h4><p id="preview-looking-for"></p>
+                </section>
+                <section class="og-preview-sidebox">
+                  <h4>My details</h4>
+                  <dl id="preview-details"></dl>
+                </section>
+                <section class="og-preview-sidebox">
+                  <h4>Tests &amp; personality</h4>
+                  <p>Compatibility questions and Dating Persona results will appear here when linked to member profiles.</p>
+                  <a href="/account/persona.html">Take the Dating Persona Test ↗</a>
+                </section>
+              </aside>
+            </div>
+          </article>
+        </section>
         <section class="paper question-panel" aria-labelledby="question-title">
           <p class="eyebrow">03 / MATCH QUESTIONS</p>
           <h2 id="question-title">THE GOOD QUESTIONS.</h2>
