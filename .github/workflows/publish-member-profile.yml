@@ -1,0 +1,39 @@
+name: Publish OG Cupid member profile updates
+on:
+  push:
+    branches: [main]
+    paths:
+      - member-app/styles.css
+permissions:
+  contents: write
+jobs:
+  publish-member-app:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: member-app/package-lock.json
+      - name: Install locked dependencies
+        run: npm ci --prefix member-app
+      - name: Run member regression tests
+        run: npm test --prefix member-app
+      - name: Build production member site
+        run: npm run build --prefix member-app
+        env:
+          VITE_OGC_AUTH_URL: https://ep-hidden-breeze-bbdn5nsb.neonauth.c-15.us-east-1.aws.neon.tech/neondb/auth
+          VITE_OGC_MEMBER_API_URL: https://br-plain-unit-bbcbxpqq-members.compute.c-15.us-east-1.aws.neon.tech/profile
+          VITE_OGC_REGISTRATION_ENABLED: 'true'
+      - name: Publish compiled site to production branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -f public/account
+          if ! git diff --cached --quiet; then
+            git commit -m "build: publish classic profile choices"
+            git push origin HEAD:main
+          fi
