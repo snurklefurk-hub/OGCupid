@@ -13,6 +13,8 @@ const memberApiUrl = local
   : (import.meta.env.VITE_OGC_MEMBER_API_URL || "");
 const registrationOpenInUi = local ||
   (import.meta.env.VITE_OGC_REGISTRATION_ENABLED === "true");
+// Destructive testing is deliberately opt-in and unavailable in production.
+const deletionTestEnabled = local && import.meta.env.VITE_OGC_DELETE_TEST === "true";
 const auth = authBaseUrl && memberApiUrl ? createAuthClient(authBaseUrl) : null;
 
 const $ = (id) => document.getElementById(id);
@@ -54,10 +56,15 @@ async function operation(button, label, job) {
 function chooseAuthTab(name) {
   const signup = name === "signup";
   const verify = name === "verify";
-  show("signin-form", !signup && !verify);
+  const resetRequest = name === "reset-request";
+  const resetConfirm = name === "reset-confirm";
+  const signin = name === "signin";
+  show("signin-form", signin);
   show("signup-form", signup);
   show("verify-form", verify);
-  $("show-signin").setAttribute("aria-pressed", String(!signup && !verify));
+  show("reset-request-form", resetRequest);
+  show("reset-confirm-form", resetConfirm);
+  $("show-signin").setAttribute("aria-pressed", String(signin));
   $("show-signup").setAttribute("aria-pressed", String(signup));
   show("signup-closed", signup && !registrationOpenInUi);
   $("signup-submit").disabled = !registrationOpenInUi;
@@ -78,6 +85,7 @@ function renderAuthenticated(member) {
   show("member-view", authenticated);
   show("profile-locked", !authenticated);
   show("profile-form", authenticated);
+  show("deletion-test", authenticated && deletionTestEnabled);
   if (!member) return;
   $("member-welcome").textContent = member.name || "OG Cupid member";
   $("member-email").textContent = member.email || "";
@@ -193,6 +201,68 @@ function wireForms() {
   $("show-signin").addEventListener("click", () => chooseAuthTab("signin"));
   $("show-signup").addEventListener("click", () => chooseAuthTab("signup"));
   $("back-to-signin").addEventListener("click", () => chooseAuthTab("signin"));
+  document.querySelectorAll("[data-back-signin]").forEach(button =>
+    button.addEventListener("click", () => chooseAuthTab("signin")));
+  $("forgot-password").addEventListener("click", () => {
+    $("reset-request-form").elements.email.value = $("signin-form").elements.email.value;
+    chooseAuthTab("reset-request");
+  });
+  $("send-another-code").addEventListener("click", () => {
+    $("reset-request-form").elements.email.value = $("reset-confirm-form").elements.email.value;
+    chooseAuthTab("reset-request");
+  });
+
+  $("reset-request-form").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    if (!form.reportValidity()) return;
+    operation(form.querySelector('button[type="submit"]'), "Requesting a recovery code", async () => {
+      const email = String(fields(form).email).trim();
+      // Neon Managed Better Auth's documented Email OTP recovery method.
+      // Some Better Auth client versions renamed this route.
+      const request = auth.forgetPassword?.emailOtp ||
+        auth.emailOtp?.requestPasswordReset;
+      if (typeof request !== "function") {
+        throw new Error("Password recovery isn't supported by this installed Auth client. No account was changed.");
+      }
+      const { error } = await request({ email });
+      if (error) throw new Error(asError(error, "Could not request a recovery code."));
+      $("reset-confirm-form").elements.email.value = email;
+      chooseAuthTab("reset-confirm");
+      message("If this email belongs to an account, a recovery code has been sent.", "ok");
+    });
+  });
+
+  $("reset-confirm-form").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    if (!form.reportValidity()) return;
+    operation(form.querySelector('button[type="submit"]'), "Updating your password", async () => {
+      const input = fields(form);
+      if (input.password !== input.repeat) throw new Error("The new passwords do not match.");
+      if (typeof auth.emailOtp?.resetPassword !== "function") {
+        throw new Error("This Auth client does not support OTP password reset.");
+      }
+      const { error } = await auth.emailOtp.resetPassword({
+        email: String(input.email).trim(),
+        otp: String(input.otp).trim(),
+        password: String(input.password),
+      });
+      form.elements.otp.value = "";
+      form.elements.password.value = "";
+      form.elements.repeat.value = "";
+      if (error) throw new Error(asError(error, "Password reset failed."));
+      // Managed Auth is set to revoke other sessions on password reset.
+      // Clear local profile details as well, even if an old session was cached.
+      sessionUserId = null;
+      currentUser = null;
+      clearMemberView();
+      renderAuthenticated(null);
+      $("signin-form").elements.email.value = String(input.email).trim();
+      chooseAuthTab("signin");
+      message("Password updated. Please sign in using your new password.", "ok");
+    });
+  });
 
   $("signin-form").addEventListener("submit", (event) => {
     event.preventDefault();
@@ -267,6 +337,39 @@ function wireForms() {
 
   $("reload-profile").addEventListener("click", (event) =>
     operation(event.currentTarget, "Loading your profile", () => loadProfile()));
+
+  $("delete-account-form").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    if (!deletionTestEnabled || !currentUser) {
+      message("Account deletion is not enabled in this build.", "error");
+      return;
+    }
+    if (!form.reportValidity()) return;
+    operation(form.querySelector('button[type="submit"]'), "Deleting your test account", async () => {
+      const input = fields(form);
+      if (input.confirm !== "DELETE") {
+        throw new Error("Type DELETE exactly to confirm.");
+      }
+      if (typeof auth.deleteUser !== "function") {
+        throw new Error("Managed Auth does not expose the native delete-user operation.");
+      }
+      // The Auth server must independently validate the current password and
+      // enforce the deletion policy. No client-provided user ID is accepted.
+      const { error } = await auth.deleteUser({ password: String(input.password) });
+      form.elements.password.value = "";
+      form.elements.confirm.value = "";
+      if (error) {
+        throw new Error(asError(error, "Managed Auth refused account deletion."));
+      }
+      sessionUserId = null;
+      currentUser = null;
+      clearMemberView();
+      renderAuthenticated(null);
+      chooseAuthTab("signin");
+      message("Test account deletion was accepted. Confirm database cascade and session revocation before calling it complete.", "ok");
+    });
+  });
 
   $("profile-about").addEventListener("input", (event) => {
     $("bio-count").textContent = String(event.currentTarget.value.length);
