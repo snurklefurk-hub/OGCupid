@@ -699,6 +699,122 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #f15c
   .og-nav{gap:10px 15px}
 }
 </style>
+
+<style id="ogc-launch-magazine-v4">
+/* Clickable OG Cupid / OgTrends launch issue; restrained desktop,
+   familiar mobile composition. */
+.og-hero-graphic{isolation:isolate}
+.og-magazine{position:relative;z-index:1;width:min(420px,100%);min-height:570px;
+ display:flex;flex-direction:column;padding:17px 20px 16px;overflow:hidden;
+ background:linear-gradient(160deg,#fffdf2 0%,#fff9e9 51%,#ffe8df 100%);
+ color:#282441;border:3px solid #24203e;box-shadow:9px 11px 0 #24203e;
+ transform:rotate(-1.5deg)}
+.og-magazine:before{content:"";position:absolute;z-index:-1;right:-42px;top:95px;
+ width:220px;height:250px;border-radius:50%;
+ background:radial-gradient(circle at 38% 35%,#ff93a8,#f26684 72%);
+ opacity:.17;transform:rotate(18deg)}
+.og-magazine:after{content:"";position:absolute;z-index:3;inset:0 0 auto 0;height:10px;
+ background:linear-gradient(180deg,rgba(36,32,62,.08),transparent);pointer-events:none}
+.og-magazine-meta{display:flex;justify-content:space-between;gap:12px;align-items:center;
+ border-bottom:2px solid #24203e;padding-bottom:9px;
+ font:900 9px/1.2 "Trebuchet MS",sans-serif;letter-spacing:1px;text-transform:uppercase}
+.og-magazine-meta span:last-child{color:#bb4568;text-align:right}
+.og-magazine-masthead{display:flex;justify-content:space-between;align-items:end;gap:8px;
+ padding:10px 0 7px;border-bottom:3px solid #24203e}
+.og-magazine-masthead>span{font:900 clamp(42px,4.7vw,60px)/.86 Impact,"Arial Black",sans-serif;
+ letter-spacing:-1.4px;text-transform:uppercase;white-space:nowrap}
+.og-magazine-masthead>span span{color:#e94c72}
+.og-magazine-masthead small{max-width:80px;text-align:right;
+ font:900 8px/1.2 "Trebuchet MS",sans-serif;letter-spacing:1px}
+.og-magazine-coverstory{padding:19px 0 11px;border-bottom:1px solid #bdb6c1}
+.og-magazine-lead{color:#bd3b62;font:900 10px/1.2 "Trebuchet MS",sans-serif;
+ text-transform:uppercase;letter-spacing:1.3px}
+.og-magazine-coverstory h2{font:900 clamp(51px,5vw,69px)/.89 Impact,"Arial Black",sans-serif;
+ letter-spacing:-1px;text-transform:uppercase;margin:9px 0 8px;color:#272343}
+.og-magazine-coverstory h2 span{color:#f06782}
+.og-magazine-coverstory p{font:bold italic 15px/1.3 Georgia,serif;
+ margin:0;color:#514563}
+.og-magazine-layers{display:flex;flex-direction:column;gap:2px;padding:10px 13px;
+ background:#34305a;color:#fff;margin:12px -6px 10px;transform:rotate(-1deg)}
+.og-magazine-layers strong{font:900 17px/.95 Impact,"Arial Black",sans-serif;letter-spacing:.5px}
+.og-magazine-layers em{color:#f3db9a;font:bold italic 13px/1.1 Georgia,serif}
+.og-magazine-stories-title{display:flex;justify-content:space-between;gap:10px;
+ font:900 9px/1.3 "Trebuchet MS",sans-serif;letter-spacing:1.3px;text-transform:uppercase;padding-bottom:5px}
+.og-magazine-stories-title span{color:#d3486a;text-align:right;font-size:8px}
+.og-magazine-stories a{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:0 10px;
+ padding:7px 3px;border-top:1px solid #a7a0aa;color:#282441;text-decoration:none;
+ transition:background-color .12s}
+.og-magazine-stories a small{grid-column:1;color:#9b4863;
+ font:900 8px/1.2 "Trebuchet MS",sans-serif;letter-spacing:.7px}
+.og-magazine-stories a strong{grid-column:1;font:900 14px/1.1 "Trebuchet MS",sans-serif}
+.og-magazine-stories a>span{grid-row:1/3;grid-column:2;align-self:center;
+ color:#d64b6b;font-size:18px;font-weight:900}
+.og-magazine-stories a:hover{background:#fce3dc}
+.og-magazine-stories a:focus-visible,.og-magazine-question-tease:focus-visible{
+ outline:3px solid #e94c72;outline-offset:1px}
+.og-magazine-bottom{margin-top:auto;display:grid;grid-template-columns:minmax(0,1fr) auto;
+ align-items:end;gap:10px;border-top:3px solid #24203e;padding-top:10px}
+.og-magazine-question-tease{display:flex;flex-direction:column;gap:2px;
+ grid-column:1;color:#282441;text-decoration:none}
+.og-magazine-question-tease strong{font:900 13px/1.2 "Trebuchet MS",sans-serif}
+.og-magazine-question-tease span{color:#9d375a;font:700 10px/1.3 "Trebuchet MS",sans-serif}
+.og-magazine-question-tease:hover strong{text-decoration:underline;text-underline-offset:2px}
+.og-magazine-new{background:#f8d869;border:1px solid #282441;padding:5px 6px;
+ text-align:right;font:900 8px/1.3 "Trebuchet MS",sans-serif}
+.og-sticker{z-index:3;bottom:5.5%;left:1%;pointer-events:none}
+.og-questions-growing{display:flex;flex-direction:column;align-items:flex-start;
+ justify-content:center;transform:rotate(-3deg)}
+.og-questions-growing span{font:900 clamp(102px,12vw,160px)/.83 Impact,"Arial Black",sans-serif;
+ text-transform:uppercase;color:var(--yellow);letter-spacing:-5px}
+.og-questions-growing span:nth-child(2){color:#f3a7b6;transform:translateX(20px)}
+.og-questions-growing small{font:900 12px/1.35 "Trebuchet MS",sans-serif;
+ letter-spacing:1.5px;text-transform:uppercase;padding:8px 10px;margin:17px 0 0 5px;
+ background:#fffef7;color:#302b49;transform:rotate(3deg);border:2px solid #24203e}
+.og-questions p strong{color:#fffbe7;font-weight:900}
+@media(min-width:1024px){
+ .og-hero-graphic{min-height:690px;padding:45px 35px}
+ .og-magazine{min-height:570px;width:min(408px,100%);padding:18px 22px;transform:rotate(-1deg)}
+ .og-magazine-coverstory h2{font-size:67px}
+ .og-magazine-masthead>span{font-size:58px}
+ .og-sticker{bottom:5%;left:0;font-size:12px;transform:rotate(-7deg)}
+ .og-questions-growing span{font-size:clamp(112px,10vw,148px);letter-spacing:-4px}
+}
+@media(min-width:761px) and (max-width:1023px){
+ .og-hero-graphic{min-height:610px;padding:32px 18px}
+ .og-magazine{min-height:540px;padding:13px 14px}
+ .og-magazine-masthead>span{font-size:clamp(40px,5.3vw,55px)}
+ .og-magazine-coverstory h2{font-size:clamp(49px,5.5vw,66px)}
+ .og-magazine-stories a strong{font-size:13px}
+ .og-questions-growing span{font-size:clamp(92px,11vw,135px)}
+}
+@media(max-width:760px){
+ .og-hero-graphic{min-height:0;padding:34px 25px 40px}
+ .og-magazine{min-height:540px;width:min(400px,100%);padding:16px 18px 15px;transform:rotate(2deg)}
+ .og-magazine-masthead>span{font-size:clamp(40px,10vw,57px)}
+ .og-magazine-coverstory h2{font-size:clamp(50px,11vw,66px)}
+ .og-magazine-stories a strong{font-size:13px}
+ .og-magazine-meta{font-size:8px}
+ .og-sticker{bottom:2%;left:2%;font-size:11px;transform:rotate(-8deg)}
+ .og-questions{gap:58px}
+ .og-questions-growing span{font-size:clamp(90px,22vw,145px);letter-spacing:-3px}
+}
+@media(max-width:430px){
+ .og-hero-graphic{padding:25px 17px 37px}
+ .og-magazine{min-height:525px;padding:13px 14px 15px;transform:rotate(1.5deg)}
+ .og-magazine-masthead>span{font-size:clamp(37px,10vw,50px)}
+ .og-magazine-masthead small{font-size:7px;max-width:62px}
+ .og-magazine-coverstory{padding:17px 0 11px}
+ .og-magazine-coverstory h2{font-size:clamp(48px,11.7vw,60px)}
+ .og-magazine-layers{margin:10px -4px 9px}
+ .og-magazine-stories a{padding:6px 3px}
+ .og-magazine-stories a strong{font-size:12px}
+ .og-magazine-bottom{gap:7px}
+ .og-magazine-question-tease strong{font-size:11px}
+ .og-magazine-new{font-size:7px}
+ .og-questions-growing span{font-size:clamp(80px,24vw,112px)}
+}
+@media(prefers-reduced-motion:reduce){.og-magazine-stories a{transition:none}}
+</style>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
