@@ -270,3 +270,13 @@ button:disabled{opacity:.55;cursor:not-allowed}
 @media(prefers-reduced-motion:reduce){
   .profile-edit-section .classic-choice{transition:none}
 }
+
+
+/* Canonical city/town search and private distance preference controls. */
+.profile-field{position:relative}
+.profile-field select{width:100%;min-width:0;padding:12px 14px;border:2px solid var(--ink);border-radius:0;background:#fff;color:var(--ink);font:inherit}
+.profile-field select:focus-visible{outline:3px solid var(--yellow);outline-offset:1px}
+.locality-results{position:absolute;z-index:8;top:calc(100% - 22px);left:0;right:0;max-height:255px;overflow:auto;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);background:var(--white)}
+.locality-option{display:block;width:100%;padding:10px 12px;border:0;border-bottom:1px solid #d8d4e0;background:#fff;text-align:left;font:700 13px/1.35 "Trebuchet MS",Verdana,sans-serif;color:var(--ink)}
+.locality-option:last-child{border-bottom:0}
+.locality-option:hover,.locality-option:focus-visible{background:var(--mint);outline:2px solid var(--blue);outline-offset:-2px}
