@@ -1,0 +1,17 @@
+# Secrets / Neon environment files. Never commit real credentials.
+.env
+.env.*
+!.env.example
+
+# Neon CLI branch link and local generated state
+.neon/
+
+# Node dependencies and build output
+node_modules/
+dist/
+coverage/
+*.log
+
+# OS/editor temporary files
+.DS_Store
+Thumbs.db
