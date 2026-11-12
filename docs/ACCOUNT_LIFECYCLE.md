@@ -267,6 +267,61 @@ log behavior, session/JWT behavior after deletion, uploads/media and future
 associated records, abusive retry defenses, and production rollout controls.
 The website is **not yet ready for public registration**.
 
+## Deleted-member JWT hardening — prepared and SQL-tested (2026-11-12)
+
+**Risk:** a cryptographically valid, short-lived JWT can outlive its
+originating Auth user and session database rows. After our verified
+self-service deletion, the existing profile API would return
+`{profile:null}` for `GET /profile` and a generic database error for
+`PUT /profile`. These results are misleading and do not explicitly reject a
+deleted member identity.
+
+**Fix in development feature branch:**
+
+- Migration `004_active_member_guard.sql` defines
+  `app_private.current_member_is_active()`, a narrow no-argument
+  `SECURITY DEFINER` function that checks whether the authenticated
+  request's transaction-local JWT subject still has a matching
+  `neon_auth."user"` row.
+- `ogcupid_member_api` may execute this function but still cannot read the
+  Neon Auth user table directly. `ogcupid_delete_api` has no permission to
+  execute the liveness function; it retains only its separate scoped
+  deletion permission.
+- The profile API calls the liveness function after validating the JWT and
+  before **either** profile read or profile write. If absent, it responds
+  `401 {"error":"Account no longer active"}`.
+- On any profile API HTTP 401, the browser clears its cached profile,
+  guest/member state, and attempts best-effort Auth signout. This avoids
+  displaying the deleted profile on a stale browser tab.
+
+**Tests completed (isolated development database, no new deletion):**
+
+| Restricted role/context | `current_member_is_active()` |
+|---|---|
+| No member identity set | **false** |
+| UUID of the account deleted in prior browser test | **false** |
+| UUID of an existing synthetic test account | **true** |
+
+Permission queries confirm that the ordinary role still has **no direct
+SELECT** on `neon_auth."user"`; its execute grant is narrowly scoped to
+the boolean helper. The separate deletion role cannot use it. User/profile
+totals remain **4/4**. Frontend source passed JavaScript parsing and the
+backend's GET/PUT 401 guard placement was checked.
+
+**Deployment:** the migration has been applied to the development database.
+The GitHub API and browser changes have **not yet been compiled/deployed** to
+Neon Function and local Vite, respectively. The development deletion and
+reauth diagnostics remain **disabled** (Function deployment #13). No
+production changes were made.
+
+**What this does not prove:** actual rejection of a *previously issued,
+cryptographically valid JWT* by the deployed HTTP service, or immediate
+revocation of a token by Neon Auth itself. Existing profile foreign keys
+already prevent a deleted user from recreating the profile at database level.
+An HTTP regression needs a safely captured disposable-token fixture in a
+future isolated test with explicit permission. Never request or store the
+owner's login tokens, passwords or OTPs in Notion.
+
 ## Safety / deployment state
 
 - Development and production signup are **disabled server-side**.
