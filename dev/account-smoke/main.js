@@ -70,15 +70,16 @@ function showProfile(profile) {
 
 $("register").addEventListener("submit", (event) => {
   event.preventDefault();
+  const form = event.currentTarget;
   run("Register", async () => {
-    const fields = formData(event.currentTarget);
+    const fields = formData(form);
     if (fields.adult !== "on") throw new Error("Must be at least 18");
     const { data, error } = await auth.signUp.email({
       name: fields.name.trim(), email: fields.email.trim(), password: fields.password,
     });
     if (error) throw new Error(error.message || "Sign-up failed");
     $("verify").elements.email.value = fields.email.trim();
-    event.currentTarget.reset();
+    form.reset();
     say("Registration submitted. Check your email for a verification code. Do not share the code.");
     await refresh();
   });
@@ -86,13 +87,14 @@ $("register").addEventListener("submit", (event) => {
 
 $("verify").addEventListener("submit", (event) => {
   event.preventDefault();
+  const form = event.currentTarget;
   run("Verify email", async () => {
-    const fields = formData(event.currentTarget);
+    const fields = formData(form);
     const { error } = await auth.emailOtp.verifyEmail({
       email: fields.email.trim(), otp: fields.otp.trim(),
     });
     if (error) throw new Error(error.message || "Verification failed");
-    event.currentTarget.reset();
+    form.reset();
     say("Email verification succeeded. Sign in if needed.");
     await refresh();
   });
@@ -100,11 +102,12 @@ $("verify").addEventListener("submit", (event) => {
 
 $("login").addEventListener("submit", (event) => {
   event.preventDefault();
+  const form = event.currentTarget;
   run("Sign in", async () => {
-    const fields = formData(event.currentTarget);
+    const fields = formData(form);
     const { error } = await auth.signIn.email({ email: fields.email.trim(), password: fields.password });
     if (error) throw new Error(error.message || "Sign-in failed");
-    event.currentTarget.elements.password.value = "";
+    form.elements.password.value = "";
     await refresh();
     say("Sign-in succeeded.");
   });
