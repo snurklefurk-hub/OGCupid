@@ -322,6 +322,64 @@ An HTTP regression needs a safely captured disposable-token fixture in a
 future isolated test with explicit permission. Never request or store the
 owner's login tokens, passwords or OTPs in Notion.
 
+## Stale, once-valid JWT replay — prepared, NOT yet executed (2026-11-12)
+
+**Why another disposable member is required:** the prior successful
+self-service account deletion removed its Auth sessions, and no previously
+issued JWT was retained. Fabricating a token from the deleted user's ID
+would not prove the authentication path. To test this end to end we need a
+legitimate, **unexpired JWT that was accepted for a profile read BEFORE its
+account was deleted**, then replay that exact bearer JWT afterward.
+
+Created a fresh **disposable development Neon Auth user only**, with
+member UUID `e948d6c8-192a-4c07-9e5b-a18c53b57bae`, named
+`DISPOSABLE STALE JWT TEST`. The address is a test alias delivered to
+the existing owner inbox; **do not store it, a code or password in
+Notion/docs**. Neon Auth reports it as not yet email-verified, with one
+linked Auth account but no session or profile. Preexisting accounts and
+private profiles were untouched; DB now has five users and four profiles.
+
+The isolated dev GitHub branch has a new browser-only,
+`VITE_OGC_DELETE_TEST=true`-gated, exact-user-ID-gated **Stale token
+security test** panel. Stage 1 obtains a legitimate JWT from the
+member's authenticated browser session, checks subject/expiry, and proves
+that exact JWT can `GET /profile` with HTTP 200. The JWT is held **only
+in the JavaScript heap in that single browser tab**: no web storage,
+network logging or transcript. Stage 2, from the still-open first tab,
+replays the same JWT after the disposable member has been deleted from
+another tab, expecting `GET /profile` and `PUT /profile` to each
+return HTTP **401** while the JWT's `exp` remains in the future.
+A `GET` response other than 401 stops before any write probe.
+If token expiry is too close, the test is **inconclusive** rather than
+being called a pass. No valid JWT string is printed to UI/logs.
+
+**Safety before test:** the UI's destructive submit button is **disabled**
+while setting up the account; the privileged eraser remains gated by its
+old deleted account UUID in the dev SQL function, so it cannot delete
+the fresh or existing accounts; Neon Function deployment **#15 completed**
+with `OGC_ACCOUNT_DELETION_ENABLED=false` and
+`OGC_REAUTH_TEST_ENABLED=false`. The four established member accounts
+remain untouched. Static checks confirmed browser JS parses, all
+referenced HTML IDs exist, and the negative test handles read and write
+separately.
+
+**Steps still pending:**
+
+1. Owner updates the local Vite `index.html`/`main.js` from feature
+   branch, confirms email and establishes a password for the new
+   disposable account, then signs into it.
+2. Owner uses the first browser tab to arm the valid-token test.
+3. **Only after explicit readiness and permission** update the
+   development-only SQL erase allowlist to this new UUID, restore its
+   delete button, briefly enable only the dev deletion endpoint, then
+   owner deletes this disposable member in another tab.
+4. Owner immediately replays the cached original JWT from tab one; the
+   assistant must independently inspect Auth+profile/session cleanup
+   and disable the dev deletion endpoint immediately after receiving
+   the deletion result.
+5. Record HTTP GET/PUT status and whether the JWT was still unexpired.
+   Maintain separation from public registration/production.
+
 ## Safety / deployment state
 
 - Development and production signup are **disabled server-side**.
