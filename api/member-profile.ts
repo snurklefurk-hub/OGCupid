@@ -142,7 +142,10 @@ export default {
     const url = new URL(request.url);
     const profilePath = url.pathname === "/profile" || url.pathname === "/profile/";
     const deletePath = url.pathname === "/account/delete" || url.pathname === "/account/delete/";
-    if (!profilePath && !deletePath) {
+    // A credential check that can NEVER call the privileged eraser.
+    // Only enabled for the one disposable development account.
+    const verifyPath = url.pathname === "/account/reauth-check" || url.pathname === "/account/reauth-check/";
+    if (!profilePath && !deletePath && !verifyPath) {
       return json(request, { error: "Not found" }, 404);
     }
     // Strictly separate development-only destructive operations from profiles.
@@ -153,7 +156,14 @@ export default {
          !deletionPool)) {
       return json(request, { error: "Not found" }, 404);
     }
-    if (deletePath ? request.method !== "POST" :
+    if (verifyPath &&
+        (process.env.NEON_BRANCH !== "dev/private-member-accounts" ||
+         process.env.OGC_REAUTH_TEST_ENABLED !== "true" ||
+         process.env.OGC_REAUTH_TEST_USER_ID !==
+           "5b03f41b-29b7-4a7a-9c72-71744dd8b2f2")) {
+      return json(request, { error: "Not found" }, 404);
+    }
+    if (deletePath || verifyPath ? request.method !== "POST" :
         request.method !== "GET" && request.method !== "PUT") {
       return json(request, { error: "Method not allowed" }, 405);
     }
@@ -162,7 +172,10 @@ export default {
     if (!userId) return json(request, { error: "Unauthorized" }, 401);
 
     try {
-      if (deletePath) {
+      if (deletePath || verifyPath) {
+        if (verifyPath && userId !== process.env.OGC_REAUTH_TEST_USER_ID) {
+          return json(request, { error: "Not found" }, 404);
+        }
         // The bearer JWT establishes who the member is. The password is
         // independently reverified *server-side* with managed Neon Auth.
         // Neither the browser-supplied email nor any user ID can pick a
@@ -186,10 +199,10 @@ export default {
         }
         const email = typeof body.email === "string" ? body.email.trim() : "";
         const password = typeof body.password === "string" ? body.password : "";
-        if (body.confirm !== "DELETE" ||
+        if (body.confirm !== (verifyPath ? "VERIFY" : "DELETE") ||
             email.length < 3 || email.length > 256 ||
             password.length < 12 || password.length > 256) {
-          return json(request, { error: "Confirm DELETE and supply the account email and current password" }, 400);
+          return json(request, { error: "Confirmation, account email and current password required" }, 400);
         }
 
         const attempt = await withMember(userId, client =>
@@ -202,23 +215,56 @@ export default {
         // Better Auth verifies the submitted password. We accept success
         // ONLY when the server-confirmed identity matches the signed JWT sub.
         // Never forward Auth cookies, tokens, passwords, or error details.
-        const baseUrl = process.env.NEON_AUTH_BASE_URL!.replace(/\/$/, "");
+        const baseUrl = process.env.NEON_AUTH_BASE_URL!.trim().replace(/\/$/, "");
+        // The successful browser sign-in originates at localhost:5173.
+        // Use this fixed, known-trusted dev origin for the server-side call,
+        // not an Origin supplied by the browser.
         const verification = await fetch(baseUrl + "/sign-in/email", {
           method: "POST",
           redirect: "error",
           cache: "no-store",
-          headers: { "Content-Type": "application/json", "Accept": "application/json" },
-          body: JSON.stringify({ email, password }),
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Origin": "http://localhost:5173",
+          },
+          body: JSON.stringify({ email, password, rememberMe: false }),
           signal: AbortSignal.timeout(12000),
         });
+        // Read only the provider's allowlisted, non-secret *error code*.
+        // Never log the password, response body, token, email, cookie or user ID.
+        const authBody = await verification.json().catch(() => null) as
+          { user?: { id?: unknown }, data?: { user?: { id?: unknown } },
+            code?: unknown, error?: { code?: unknown } } | null;
         if (!verification.ok) {
+          if (verifyPath) {
+            const rawCode = typeof authBody?.code === "string" ? authBody.code :
+              typeof authBody?.error?.code === "string" ? authBody.error.code : "";
+            const allowedCodes = new Set([
+              "MISSING_OR_NULL_ORIGIN", "INVALID_ORIGIN", "ORIGIN_NOT_ALLOWED",
+              "INVALID_EMAIL_OR_PASSWORD", "INVALID_CREDENTIALS",
+              "EMAIL_NOT_VERIFIED", "TOO_MANY_REQUESTS",
+            ]);
+            return json(request, {
+              verified: false,
+              stage: "provider-http",
+              httpStatus: verification.status,
+              providerCode: allowedCodes.has(rawCode) ? rawCode : "OTHER",
+            }, 403);
+          }
           return json(request, { error: "Identity confirmation failed. Account not deleted." }, 403);
         }
-        const verified = await verification.json().catch(() => null) as
-          { user?: { id?: unknown } } | null;
-        if (typeof verified?.user?.id !== "string" ||
-            verified.user.id.toLowerCase() !== userId) {
+        const confirmedUser = authBody?.user ?? authBody?.data?.user;
+        if (typeof confirmedUser?.id !== "string" ||
+            confirmedUser.id.toLowerCase() !== userId) {
+          if (verifyPath) {
+            return json(request, { verified: false, stage: "provider-identity" }, 403);
+          }
           return json(request, { error: "Identity confirmation failed. Account not deleted." }, 403);
+        }
+        if (verifyPath) {
+          // This route cannot reach the deletion code below.
+          return json(request, { verified: true, deleted: false, stage: "confirmed" });
         }
 
         const deletion = await withDeletionAuthority(userId, client =>
