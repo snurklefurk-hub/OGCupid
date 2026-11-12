@@ -1,0 +1,43 @@
+name: Bundle Neon member API (no credentials)
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'api/member-profile.ts'
+      - '.github/workflows/bundle-member-function.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - name: Install locked backend dependencies and bundler
+        run: |
+          npm ci
+          npm install --no-save esbuild@0.25.12
+      - name: Bundle private member API without environment files
+        run: |
+          npx esbuild api/member-profile.ts --bundle --platform=node --target=node24 --format=esm --banner:js="import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);" --outfile="$RUNNER_TEMP/index.mjs"
+          node --check "$RUNNER_TEMP/index.mjs"
+          cd "$RUNNER_TEMP"
+          zip -9 members.zip index.mjs
+          base64 -w0 members.zip > "$GITHUB_WORKSPACE/dev/members-function-bundle.b64"
+      - name: Commit bundle for connected Neon deployment
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A dev/members-function-bundle.b64
+          if ! git diff --cached --quiet; then
+            git commit -m 'build: package private member API for Neon'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
