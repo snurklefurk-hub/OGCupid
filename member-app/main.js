@@ -222,6 +222,7 @@ function clearMemberView() {
   show("question-view", false);
   show("question-locked", true);
   $("profile-form").reset();
+  renderProfilePreview();
   populateEmailOptions($("email-settings-form"), necessaryEmailOnly);
   $("email-preferences-status").textContent = "";
   $("saved-info").textContent = "";
@@ -236,6 +237,7 @@ function renderAuthenticated(member) {
   show("member-view", authenticated);
   show("profile-locked", !authenticated);
   show("profile-form", authenticated);
+  show("profile-preview-panel", authenticated);
   show("question-view", authenticated);
   show("question-locked", !authenticated);
   show("member-persona-panel", authenticated);
@@ -412,6 +414,76 @@ function renderQuestion() {
   $("question-private").checked = previous?.isPrivate ?? false;
 }
 
+// OG Cupid's classic long-form profile is entirely owner-editable. The
+// preview uses textContent and DOM nodes, never member-submitted HTML.
+const longProfileFields = Object.freeze(["cityRegion","gender","pronouns","orientation","relationshipGoal","lookingFor","work","education","height","kids","pets","smoking","drinking","diet","languages","lifeDirection","goodAt","favorites","sixThings","fridayNight","messageMeIf"]);
+const previewEssays = Object.freeze([["aboutMe","about","about-section"],["lifeDirection","life-direction","life-direction-section"],["goodAt","good-at","good-at-section"],["favorites","favorites","favorites-section"],["sixThings","six-things","six-things-section"],["fridayNight","friday-night","friday-night-section"],["messageMeIf","message-me-if","message-me-if-section"]]);
+const previewDetails = Object.freeze([["Work","work"],["Education","education"],["Height","height"],["Kids","kids"],["Pets","pets"],["Smokes","smoking"],["Drinks","drinking"],["Diet","diet"],["Speaks","languages"],["Orientation","orientation"]]);
+
+function readProfileDraft(form = $("profile-form")) {
+  const ageValue = form.elements.age.value.trim();
+  const draft = {
+    displayName: form.elements.displayName.value.trim(),
+    aboutMe: form.elements.aboutMe.value.trim(),
+    age: ageValue ? Number(ageValue) : null,
+    adultConfirmed: form.elements.adultConfirmed.checked,
+  };
+  for (const field of longProfileFields) draft[field] = form.elements[field].value.trim();
+  return draft;
+}
+
+function renderProfilePreview() {
+  const draft = readProfileDraft();
+  $("bio-count").textContent = String($("profile-form").elements.aboutMe.value.length);
+  $("preview-display-name").textContent = draft.displayName || "Your name goes here";
+
+  const introBits = [];
+  if (Number.isInteger(draft.age) && draft.age >= 18 && draft.age <= 120) introBits.push(String(draft.age));
+  if (draft.cityRegion) introBits.push(draft.cityRegion);
+  if (draft.pronouns) introBits.push(draft.pronouns);
+  $("preview-one-line").textContent = introBits.join(" · ") || "Add your age, general area, or pronouns.";
+
+  const tags = $("preview-tags");
+  tags.replaceChildren();
+  for (const text of [draft.gender, draft.relationshipGoal].filter(Boolean)) {
+    const tag = document.createElement("span");
+    tag.textContent = text;
+    tags.appendChild(tag);
+  }
+
+  const looking = $("preview-looking-for");
+  looking.textContent = draft.lookingFor || "The kind of connection you're hoping to find.";
+
+  const details = $("preview-details");
+  details.replaceChildren();
+  for (const [label, field] of previewDetails) {
+    if (!draft[field]) continue;
+    const term = document.createElement("dt");
+    const description = document.createElement("dd");
+    term.textContent = label;
+    description.textContent = draft[field];
+    details.append(term, description);
+  }
+  if (!details.childElementCount) {
+    const note = document.createElement("dd");
+    note.textContent = "Add a few details so people have something to ask you about.";
+    details.appendChild(note);
+  }
+
+  for (const [field, targetId, sectionId] of previewEssays) {
+    const value = draft[field];
+    const body = $("preview-" + targetId);
+    body.textContent = value || (field === "aboutMe"
+      ? "Your self-summary will appear here as you write."
+      : "");
+    if (field !== "aboutMe") show("preview-" + sectionId, Boolean(value));
+  }
+
+  const filled = previewEssays.filter(([field]) => draft[field].length >= 40).length;
+  $("profile-progress").textContent = `${filled} of 7 writing sections started (40+ characters). ` +
+    (filled < 3 ? "A few real paragraphs go a long way." : "Nice. People have something to read.");
+}
+
 function showStoredProfile(profile) {
   const form = $("profile-form");
   cachedProfile = profile;
@@ -419,7 +491,10 @@ function showStoredProfile(profile) {
     ? currentUser.name.trim().slice(0, 60) : "";
   form.elements.displayName.value = profile?.displayName ?? fallback;
   form.elements.aboutMe.value = profile?.aboutMe ?? "";
-  $("bio-count").textContent = String(form.elements.aboutMe.value.length);
+  form.elements.age.value = profile?.age == null ? "" : String(profile.age);
+  for (const field of longProfileFields) form.elements[field].value = profile?.[field] ?? "";
+  form.elements.adultConfirmed.checked = Boolean(profile);
+  renderProfilePreview();
   const savedInfo = $("saved-info");
   if (profile) {
     savedInfo.textContent = "Saved privately to OG Cupid. Last updated " +
@@ -674,24 +749,17 @@ function wireForms() {
     });
   });
 
-  $("profile-about").addEventListener("input", (event) => {
-    $("bio-count").textContent = String(event.currentTarget.value.length);
-  });
+  $("profile-form").addEventListener("input", renderProfilePreview);
+  $("profile-form").addEventListener("change", renderProfilePreview);
 
   $("profile-form").addEventListener("submit", (event) => {
     event.preventDefault();
     const form = event.currentTarget;
     if (!form.reportValidity()) return;
     operation(form.querySelector('button[type="submit"]'), "Saving your profile", async () => {
-      const input = fields(form);
-      if (input.adultConfirmed !== "on") {
-        throw new Error("You must confirm that you are at least 18.");
-      }
-      const result = await requestProfile("PUT", {
-        displayName: String(input.displayName).trim(),
-        aboutMe: String(input.aboutMe || "").trim(),
-        adultConfirmed: true,
-      });
+      const draft = readProfileDraft(form);
+      if (!draft.adultConfirmed) throw new Error("You must confirm that you are at least 18.");
+      const result = await requestProfile("PUT", draft);
       showStoredProfile(result.profile);
       message("Your profile has been saved privately to PostgreSQL.", "ok");
     });
