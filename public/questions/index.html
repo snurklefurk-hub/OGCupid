@@ -1,43 +1,30 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Match Questions & Personality Awards | OG Cupid</title><meta name="theme-color" content="#fff6e5"><meta name="description" content="410 curated match questions, randomized launch sets, and compatibility with old-web personality."><style>
-:root{--ink:#24204b;--blue:#444ac6;--rose:#e44765;--yellow:#ffd361;--mint:#ccf3df;--paper:#fff9eb;--white:#fffefd}
-*{box-sizing:border-box}body{margin:0;min-width:320px;background:var(--paper);background-image:radial-gradient(#e8decc 1px,transparent 1px);background-size:24px 24px;color:var(--ink);font:16px/1.5 "Trebuchet MS",Verdana,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}a{color:var(--blue)}[hidden]{display:none!important}:focus-visible{outline:3px solid var(--rose);outline-offset:3px}
-.wrap{max-width:1120px;margin:24px auto 65px;padding:0 13px}.ticker{background:var(--yellow);border:3px solid var(--ink);border-bottom:0;padding:9px 16px;display:flex;justify-content:space-between;gap:15px;font-size:11px;letter-spacing:1px;font-weight:900;text-transform:uppercase;flex-wrap:wrap}.shell{background:var(--white);border:3px solid var(--ink);box-shadow:10px 10px 0 var(--ink)}
-header{padding:19px 29px;border-bottom:3px solid var(--ink);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px}.brand{font-weight:900;font-size:28px;letter-spacing:-1px}.brand b{color:var(--rose)}.brand small{font-size:10px;display:block;letter-spacing:2px;text-transform:uppercase}.tabs{display:flex;gap:8px;flex-wrap:wrap}.tabs button{border:2px solid var(--ink);background:#fff8e9;padding:9px 13px;font-weight:900;font-size:12px;text-transform:uppercase}.tabs button[aria-selected=true]{background:var(--yellow)}
-h1,h2{font-family:Impact,"Arial Black",sans-serif;font-weight:900;text-transform:uppercase;line-height:1.04;margin:0 0 17px}h1{font-size:clamp(45px,7vw,82px)}h1 em{color:var(--rose);font-style:normal}h2{font-size:clamp(29px,4vw,45px)}h3{font-size:21px;margin:0 0 14px}.hero{padding:40px 42px;background:#ffe2e9;border-bottom:3px solid var(--ink)}.hero p{font-size:18px;max-width:750px}.eyebrow{font-size:11px;letter-spacing:2px;font-weight:900;text-transform:uppercase;color:var(--rose)}
-.notice{padding:13px 20px;background:#f0edff;border-bottom:2px solid #d4cce4;font-size:13px}.content{padding:34px 39px 45px}
-.toprow{display:flex;gap:14px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;margin-bottom:20px}.filters{display:flex;flex-wrap:wrap;gap:9px}.filters label{font-size:11px;font-weight:900;display:flex;flex-direction:column;text-transform:uppercase;gap:5px}.filters select,.filters input{border:2px solid var(--ink);background:white;padding:8px;max-width:220px;min-width:145px}.progress{height:12px;background:#e7e0ee;border:2px solid var(--ink);margin:10px 0 22px}.progress span{height:100%;background:var(--rose);display:block}
-.card{border:3px solid var(--ink);padding:23px;box-shadow:5px 5px 0 var(--ink)}.card-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:7px}.tag{font-size:11px;font-weight:900;text-transform:uppercase;background:var(--mint);border:2px solid var(--ink);padding:5px 8px}.question{font-size:24px;line-height:1.25;font-weight:900;margin:16px 0 19px}.choice{display:flex;gap:11px;align-items:center;padding:9px 12px;border:2px solid #ded6e7;margin:7px 0;cursor:pointer}.choice:has(input:checked){background:var(--mint);border-color:var(--ink)}.choice input{width:18px;height:18px;accent-color:var(--blue);flex-shrink:0}
-.subsection{border-top:2px solid #e1dceb;margin-top:22px;padding-top:18px}.subsection>strong{display:block;margin-bottom:11px}.prefgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.pref{display:flex;gap:8px;align-items:center;font-size:13px}.pref input{width:17px;height:17px;accent-color:var(--rose)}.weights{display:flex;flex-wrap:wrap;gap:7px}.weight{display:flex;gap:5px;align-items:center;border:2px solid #dad1e9;padding:7px 9px;background:#f7f3ff;font-size:12px;font-weight:800;cursor:pointer}.weight:has(input:checked){border-color:var(--ink);background:var(--yellow)}.weight input{accent-color:var(--blue)}textarea{width:100%;border:2px solid #bbb2ce;resize:vertical;padding:10px;min-height:70px}
-.actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:21px}.btn{background:var(--blue);border:3px solid var(--ink);color:white;padding:11px 17px;font-weight:900;text-transform:uppercase;box-shadow:4px 4px 0 var(--ink)}.btn.alt{color:var(--ink);background:white}.btn.warn{color:var(--ink);background:#fff0d5}.btn:disabled{opacity:.45;cursor:not-allowed}.btn:hover:not(:disabled){transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
-.small{font-size:12px;color:#665f78}.tilegrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin:18px 0}.tile{border:2px solid var(--ink);background:#f5f1ff;padding:16px}.tile.active{background:#fff1cc}.tile h3{font-size:18px;margin:4px 0}.tile p{font-size:12px;margin:6px 0}.track{height:9px;background:#dcd5e7;border:1px solid #a8a0bb;position:relative;margin-top:12px}.track:after{content:"";position:absolute;left:50%;top:0;bottom:0;border-left:1px solid var(--ink)}.track span{position:absolute;top:0;bottom:0;background:var(--blue)}
-.samplebar{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}.samplebar button{padding:8px 14px;border:2px solid var(--ink);background:white;font-weight:900}.samplebar button[aria-pressed=true]{background:var(--mint)}
-.summary{border:3px solid #274b81;background:#eff6ff;padding:20px;margin:17px 0}.score{display:grid;grid-template-columns:160px 1fr;align-items:center;gap:18px}.circle{border:4px solid var(--ink);border-radius:50%;background:var(--yellow);width:160px;height:160px;display:grid;place-content:center;text-align:center;font:900 48px Impact,"Arial Black",sans-serif}.circle small{font:900 12px "Trebuchet MS",sans-serif}.stat{display:inline-block;border:2px solid #ccc6db;padding:5px 8px;margin:3px;font-size:12px;font-weight:900}.comparison{padding:12px 0;border-bottom:1px solid #d5cddd;font-size:13px}.comparison b{display:block}
-.data{border-top:2px solid #ddd5e8;padding-top:22px;margin-top:34px}footer{background:var(--ink);color:white;padding:17px 28px;font-size:12px}
-@media(max-width:700px){.hero{padding:31px 21px}.content{padding:24px 19px}.prefgrid,.tilegrid,.score{grid-template-columns:1fr}.card{padding:17px}.score .circle{margin:auto}.filters label{flex:1}.filters select,.filters input{max-width:none;min-width:0;width:100%}}
-@media(max-width:440px){.wrap{margin:10px auto 34px;padding:0 8px}.tabs button{flex:1}header{padding:16px}.card .question{font-size:21px}.btn{flex:1}}
-</style></head>
-<body><div class="wrap"><div class="ticker"><span>♥ OG CUPID / THE MATCH LAB ♥</span><span>EST. 2026 · WORKING PREVIEW</span></div><div class="shell">
-<header><div class="brand">OG <b>Cupid</b><small>Match questions & personality awards</small></div><nav class="tabs" aria-label="Match lab sections"><button type="button" id="tab-questions" aria-selected="true">Questions</button><button type="button" id="tab-awards" aria-selected="false">Personality</button><button type="button" id="tab-match" aria-selected="false">Match preview</button></nav></header>
-<div class="hero"><p class="eyebrow">The good stuff is coming back</p><h1>BE MORE THAN<br><em>A PROFILE PHOTO.</em></h1><p>Answer what matters. Choose what you'd accept from someone else. Tell us how strongly you feel. Let your answers do the talking.</p></div>
-<div class="notice"><b>Interactive prototype, not a real account:</b> Answers are saved only in your browser, not on our servers. People in the comparison preview are fictional. This collection contains 410 selected questions. Personality scoring for this collection is still to come.</div>
-<main class="content">
-<section id="view-questions"><div class="toprow"><div><p class="eyebrow">Answer at your own pace</p><h2>MATCH QUESTIONS.</h2><b id="total">0 / 410 answered</b></div><div class="filters"><label>Review topic<select id="category"></select></label><label>Show<select id="answer-filter"><option value="todo">Continue questions</option><option value="done">Review answered</option></select></label><label>Search answered<input id="search" type="search" placeholder="Search your answers"></label></div></div>
-<div class="summary" aria-live="polite"><h3 id="stage-label"></h3><p id="stage-copy"></p><p class="small" id="stage-counts"></p></div>
-<div class="progress" aria-hidden="true"><span id="filled"></span></div><p id="no-questions" hidden>Nothing matches your filters.</p>
-<div id="question-box" class="card"><div class="card-top"><span id="topic" class="tag"></span><span id="index" class="small"></span></div><div id="prompt" class="question"></div>
-<p class="eyebrow">Your answer</p><div id="my-answers" role="radiogroup" aria-label="Your answer"></div>
-<div class="subsection"><strong>Answer(s) you'd accept from a partner</strong><div class="prefgrid" id="acceptable"></div><p class="small">Pick any number of answers, including zero. Your own answer doesn't have to be acceptable in a partner.</p></div>
-<div class="subsection"><strong>How important is their answer?</strong><div id="importance" class="weights"></div><p class="small">Irrelevant = 0, a little = 1, somewhat = 10, very = 50, mandatory = 250. Weight affects matching, not your personality awards.</p></div>
-<div class="subsection"><label for="note"><strong>Explain your answer (optional)</strong></label><textarea id="note" maxlength="400" placeholder="The story behind your answer..."></textarea><label class="pref"><input type="checkbox" id="private"> Keep my answer private on a future profile (still use it for matching)</label></div>
-<div class="actions"><button id="prev" class="btn alt" type="button">← Previous</button><button id="clear" class="btn warn" type="button">Clear</button><button id="skip" class="btn alt" type="button">Skip</button><button id="next" class="btn" type="button">Next →</button></div></div>
-<div class="actions"><button type="button" class="btn" id="see-awards">See personality awards →</button><button type="button" class="btn alt" id="see-matches">Try sample matching →</button></div></section>
-<section id="view-awards" hidden><p class="eyebrow">A little personality goes a long way</p><h2>PERSONALITY AWARDS.</h2><p id="award-header"></p><p class="small">The curated question collection is ready for matching. Personality awards will return after these questions have a defined scoring system.</p><div class="tilegrid" id="award-grid"></div><div class="actions"><button type="button" class="btn" id="more-questions">Answer more questions →</button></div></section>
-<section id="view-match" hidden><p class="eyebrow">The two of us</p><h2>COMPATIBILITY PREVIEW.</h2><div class="summary"><h3>Choose a fictional profile</h3><p class="small">These are sample answers, not registered users. Compare how much you satisfy each other's preferences.</p><div class="samplebar" id="demos"></div><p id="demo-desc"></p></div>
-<div class="score"><div class="circle"><span id="match-score">–</span><small>MATCH</small></div><div><h3 id="match-copy">Answer questions to get a match.</h3><div class="stat">Friend <b id="friend-score">–</b></div><div class="stat">Conflict <b id="conflict-score">–</b></div><div class="stat">Common questions <b id="common-score">0</b></div><p class="small">Match = geometric mean of both people's weighted accepted-answer rates. If you weight all shared questions Irrelevant, your direction is neutral (not a hidden penalty). Friend = percentage of identical answers. Conflict = percentage where at least one person's accepted-answer test fails. All three use only shared answered questions; thin evidence shouldn't be treated as reliable.</p></div></div>
-<div class="subsection"><h3>Questions you share</h3><div id="shared"></div></div></section>
-<div class="data"><h3>YOUR ANSWERS, YOUR CALL.</h3><p class="small" id="save-state">Changes save locally on this device.</p><div class="actions"><button id="export" class="btn alt" type="button">Export JSON</button><label class="btn alt" for="import">Import JSON</label><input id="import" type="file" accept=".json,application/json" hidden><button id="erase" class="btn warn" type="button">Erase local answers</button></div></div>
-</main><footer>OG Cupid · Independent Match Questions prototype. No login, server-side answer storage, or actual member matching yet.<br>Independent project. Not affiliated with OkCupid or Match Group.<br>AI was used to assist in composition, research, editing, and data gathering.</footer></div></div>
-<script src="./question-bank.js?v=20261108"></script>
-<script src="./question-order.js?v=20261108"></script>
-<script src="./match-questions.js?v=20261108"></script><script defer src="/visit-counter.js"></script>
-</body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta http-equiv="refresh" content="0;url=/account/#question-title">
+  <link rel="canonical" href="https://ogcupid.onrender.com/account/#question-title">
+  <title>Match questions — Members | OG Cupid</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;display:grid;place-items:center;
+      background:#f8f4ec;color:#24203e;font:16px/1.55 "Trebuchet MS",sans-serif;padding:20px}
+    main{width:min(100%,440px);border:2px solid #24203e;background:#fffdf9;
+      padding:32px;box-shadow:5px 5px 0 #24203e}
+    img{display:block;width:200px;max-width:100%;height:auto}
+    h1{font:900 37px/.98 Impact,"Arial Black",sans-serif;text-transform:uppercase}
+    a{display:inline-block;background:#f15c7b;color:#24203e;padding:11px 15px;
+      border:2px solid #24203e;font-weight:900;text-decoration:none}
+  </style>
+</head>
+<body>
+ <main>
+   <a href="/" aria-label="OG Cupid home" style="padding:0;background:transparent;border:0"><img src="/brand/og-cupid-arrow.svg" alt="OG Cupid" width="720" height="174"></a>
+   <h1>Match questions are for members.</h1>
+   <p>Sign in or create a free account to continue.</p>
+   <a href="/account/#question-title">Go to OG Cupid members ↗</a>
+ </main>
+</body>
+</html>
