@@ -142,11 +142,12 @@ export default {
     const url = new URL(request.url);
     const profilePath = url.pathname === "/profile" || url.pathname === "/profile/";
     const answersPath = url.pathname === "/answers" || url.pathname === "/answers/";
+    const emailPreferencesPath = url.pathname === "/email-preferences" || url.pathname === "/email-preferences/";
     const deletePath = url.pathname === "/account/delete" || url.pathname === "/account/delete/";
     // A credential check that can NEVER call the privileged eraser.
     // Only enabled for the one disposable development account.
     const verifyPath = url.pathname === "/account/reauth-check" || url.pathname === "/account/reauth-check/";
-    if (!profilePath && !answersPath && !deletePath && !verifyPath) {
+    if (!profilePath && !answersPath && !emailPreferencesPath && !deletePath && !verifyPath) {
       return json(request, { error: "Not found" }, 404);
     }
     // Self-service deletion is allowed only on the explicitly configured
@@ -176,7 +177,7 @@ export default {
     if (!userId) return json(request, { error: "Unauthorized" }, 401);
 
     try {
-      if (profilePath || answersPath) {
+      if (profilePath || answersPath || emailPreferencesPath) {
         // A signed JWT can outlive the account/session that issued it.
         // Do not allow a deleted identity to read an empty profile as if it
         // were still a member, or attempt to recreate a profile via PUT.
@@ -296,6 +297,78 @@ export default {
         // All user-linked rows, including sessions and member profiles, have
         // ON DELETE CASCADE. This cannot erase already-retained backups.
         return json(request, { deleted: true });
+      }
+
+      if (emailPreferencesPath) {
+        // Optional email choices are stored separately from the profile
+        // and accessible only through a live authenticated owner's RLS.
+        if (request.method === "GET") {
+          const result = await withMember(userId, client => client.query(
+            `SELECT unread_messages, unseen_activity, site_updates, necessary_only, updated_at
+             FROM app_private.member_email_preferences WHERE user_id = $1::uuid`,
+            [userId],
+          ));
+          const row = result.rows[0];
+          return json(request, { preferences: row ? {
+            unreadMessages: row.unread_messages === true,
+            unseenActivity: row.unseen_activity === true,
+            siteUpdates: row.site_updates === true,
+            necessaryOnly: row.necessary_only === true,
+            updatedAt: row.updated_at,
+          } : {
+            unreadMessages: false,
+            unseenActivity: false,
+            siteUpdates: false,
+            necessaryOnly: true,
+            updatedAt: null,
+          } });
+        }
+        if (!(request.headers.get("content-type") ?? "").toLowerCase().startsWith("application/json")) {
+          return json(request, { error: "Expected JSON" }, 415);
+        }
+        const raw = await request.text();
+        if (new TextEncoder().encode(raw).byteLength > 2048) {
+          return json(request, { error: "Request too large" }, 413);
+        }
+        let fields: Record<string, unknown>;
+        try {
+          const parsed: unknown = JSON.parse(raw);
+          if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+            return json(request, { error: "Invalid email preferences" }, 400);
+          }
+          fields = parsed as Record<string, unknown>;
+        } catch {
+          return json(request, { error: "Invalid JSON" }, 400);
+        }
+        const expected = ["unreadMessages", "unseenActivity", "siteUpdates", "necessaryOnly"];
+        if (Object.keys(fields).length !== expected.length ||
+            !expected.every(key => typeof fields[key] === "boolean")) {
+          return json(request, { error: "Choose valid email preferences" }, 400);
+        }
+        // Necessary-only overrides every optional category. With none
+        // selected we automatically fall back to necessary-only.
+        const necessaryOnly = fields.necessaryOnly === true ||
+          !(fields.unreadMessages || fields.unseenActivity || fields.siteUpdates);
+        const unreadMessages = !necessaryOnly && fields.unreadMessages === true;
+        const unseenActivity = !necessaryOnly && fields.unseenActivity === true;
+        const siteUpdates = !necessaryOnly && fields.siteUpdates === true;
+        const saved = await withMember(userId, client => client.query(
+          `INSERT INTO app_private.member_email_preferences
+             (user_id, unread_messages, unseen_activity, site_updates, necessary_only)
+           VALUES ($1::uuid,$2,$3,$4,$5)
+           ON CONFLICT (user_id) DO UPDATE SET
+             unread_messages = EXCLUDED.unread_messages,
+             unseen_activity = EXCLUDED.unseen_activity,
+             site_updates = EXCLUDED.site_updates,
+             necessary_only = EXCLUDED.necessary_only,
+             updated_at = now()
+           RETURNING updated_at`,
+          [userId, unreadMessages, unseenActivity, siteUpdates, necessaryOnly],
+        ));
+        return json(request, { saved: true, preferences: {
+          unreadMessages, unseenActivity, siteUpdates, necessaryOnly,
+          updatedAt: saved.rows[0].updated_at,
+        } });
       }
 
       if (answersPath) {
