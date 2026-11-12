@@ -813,6 +813,15 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #f15c
  .og-magazine-new{font-size:7px}
  .og-questions-growing span{font-size:clamp(80px,24vw,112px)}
 }
+/* A narrow phone has less room in the cover masthead. Keep the article
+   links and cover lines legible rather than letting the brand overflow. */
+@media(max-width:390px){
+ .og-magazine-masthead{display:block}
+ .og-magazine-masthead>span{display:block;font-size:clamp(38px,11vw,46px)}
+ .og-magazine-masthead small{display:block;max-width:none;margin-top:7px;text-align:left;font-size:7px}
+ .og-magazine-coverstory h2{font-size:clamp(45px,12.2vw,53px)}
+ .og-magazine-new{max-width:96px}
+}
 @media(prefers-reduced-motion:reduce){.og-magazine-stories a{transition:none}}
 </style>
 </head>
