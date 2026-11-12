@@ -85,7 +85,9 @@ function renderAuthenticated(member) {
   show("member-view", authenticated);
   show("profile-locked", !authenticated);
   show("profile-form", authenticated);
-  show("deletion-test", authenticated && deletionTestEnabled);
+  // Never display the dangerous test controls for either real test account.
+  show("deletion-test", authenticated && deletionTestEnabled &&
+    member?.id === "5b03f41b-29b7-4a7a-9c72-71744dd8b2f2");
   if (!member) return;
   $("member-welcome").textContent = member.name || "OG Cupid member";
   $("member-email").textContent = member.email || "";
@@ -358,6 +360,47 @@ function wireForms() {
 
   $("reload-profile").addEventListener("click", (event) =>
     operation(event.currentTarget, "Loading your profile", () => loadProfile()));
+
+  $("reauth-check-button").addEventListener("click", (event) => {
+    if (!deletionTestEnabled || !currentUser ||
+        currentUser.id !== "5b03f41b-29b7-4a7a-9c72-71744dd8b2f2") {
+      message("Password-check testing is available only on the disposable development account.", "error");
+      return;
+    }
+    const form = $("delete-account-form");
+    if (!form.elements.password.reportValidity()) return;
+    operation(event.currentTarget, "Checking your password safely", async () => {
+      const password = form.elements.password.value;
+      const jwt = await getAccessToken();
+      const endpoint = new URL(memberApiUrl);
+      endpoint.pathname = "/account/reauth-check";
+      endpoint.search = "";
+      const response = await fetch(endpoint.toString(), {
+        method: "POST",
+        credentials: "omit",
+        cache: "no-store",
+        headers: {
+          "Authorization": "Bearer " + jwt,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: currentUser.email,
+          password,
+          confirm: "VERIFY",
+        }),
+      });
+      form.elements.password.value = "";
+      const result = await response.json().catch(() => ({}));
+      if (response.ok && result.verified === true && result.deleted === false) {
+        message("Password check PASSED. Your account was NOT deleted.", "ok");
+        return;
+      }
+      const stage = typeof result.stage === "string" ? result.stage : "unknown";
+      const status = typeof result.httpStatus === "number" ? result.httpStatus : response.status;
+      const code = typeof result.providerCode === "string" ? result.providerCode : "UNKNOWN";
+      throw new Error("Password check failed: " + stage + " / HTTP " + status + " / " + code + ". Account NOT deleted.");
+    });
+  });
 
   $("delete-account-form").addEventListener("submit", (event) => {
     event.preventDefault();
