@@ -1,9 +1,9 @@
-name: Publish OG Cupid member profile updates
+name: Build and publish OG Cupid member site
 on:
   push:
     branches: [main]
     paths:
-      - member-app/styles.css
+      - 'member-app/**'
 permissions:
   contents: write
 jobs:
