@@ -35,7 +35,7 @@ async function refresh() {
 // is called, so fall back to the managed Auth /token endpoint if necessary.
 function isJwt(value) {
   return typeof value === "string" &&
-    /^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$/.test(value);
+    /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test(value);
 }
 
 async function token() {
@@ -48,7 +48,7 @@ async function token() {
 
   let response;
   try {
-    response = await fetch(AUTH_BASE.replace(/\\/$/, "") + "/token", {
+    response = await fetch(AUTH_BASE.replace(/\/$/, "") + "/token", {
       method: "GET",
       credentials: "include",
       cache: "no-store",
