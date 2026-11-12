@@ -132,6 +132,7 @@ function renderAuthenticated(member) {
   show("profile-form", authenticated);
   show("question-view", authenticated);
   show("question-locked", !authenticated);
+  show("member-persona-panel", authenticated);
   // Normal owner-controlled account deletion in the development site.
   show("deletion-test", authenticated && accountDeletionInUi);
   if (!member) return;
