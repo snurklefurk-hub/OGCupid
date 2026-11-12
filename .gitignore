@@ -15,3 +15,6 @@ coverage/
 # OS/editor temporary files
 .DS_Store
 Thumbs.db
+
+# Built member application. Render will generate this from member-app/.
+/public/account/
