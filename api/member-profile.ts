@@ -35,7 +35,7 @@ function headersFor(request: Request): Headers {
   const origin = request.headers.get("origin");
   if (origin && allowedOrigins.has(origin)) {
     h.set("Access-Control-Allow-Origin", origin);
-    h.set("Access-Control-Allow-Methods", "GET, PUT, OPTIONS");
+    h.set("Access-Control-Allow-Methods", "GET, PUT, POST, OPTIONS");
     h.set("Access-Control-Allow-Headers", "Authorization, Content-Type");
     h.set("Access-Control-Max-Age", "600");
   }
@@ -112,10 +112,20 @@ export default {
     }
 
     const url = new URL(request.url);
-    if (url.pathname !== "/profile" && url.pathname !== "/profile/") {
+    const profilePath = url.pathname === "/profile" || url.pathname === "/profile/";
+    const deletePath = url.pathname === "/account/delete" || url.pathname === "/account/delete/";
+    if (!profilePath && !deletePath) {
       return json(request, { error: "Not found" }, 404);
     }
-    if (request.method !== "GET" && request.method !== "PUT") {
+    // Strictly separate development-only destructive operations from profiles.
+    // The endpoint is absent in production, even if an env flag is mis-set.
+    if (deletePath &&
+        (process.env.NEON_BRANCH !== "dev/private-member-accounts" ||
+         process.env.OGC_ACCOUNT_DELETION_ENABLED !== "true")) {
+      return json(request, { error: "Not found" }, 404);
+    }
+    if (deletePath ? request.method !== "POST" :
+        request.method !== "GET" && request.method !== "PUT") {
       return json(request, { error: "Method not allowed" }, 405);
     }
 
@@ -123,6 +133,76 @@ export default {
     if (!userId) return json(request, { error: "Unauthorized" }, 401);
 
     try {
+      if (deletePath) {
+        // The bearer JWT establishes who the member is. The password is
+        // independently reverified *server-side* with managed Neon Auth.
+        // Neither the browser-supplied email nor any user ID can pick a
+        // different account for the privileged database deletion.
+        if (!(request.headers.get("content-type") ?? "").toLowerCase().startsWith("application/json")) {
+          return json(request, { error: "Expected JSON" }, 415);
+        }
+        const raw = await request.text();
+        if (new TextEncoder().encode(raw).byteLength > 4096) {
+          return json(request, { error: "Request too large" }, 413);
+        }
+        let body: Record<string, unknown>;
+        try {
+          const parsed: unknown = JSON.parse(raw);
+          if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+            return json(request, { error: "Invalid request" }, 400);
+          }
+          body = parsed as Record<string, unknown>;
+        } catch {
+          return json(request, { error: "Invalid JSON" }, 400);
+        }
+        const email = typeof body.email === "string" ? body.email.trim() : "";
+        const password = typeof body.password === "string" ? body.password : "";
+        if (body.confirm !== "DELETE" ||
+            email.length < 3 || email.length > 256 ||
+            password.length < 12 || password.length > 256) {
+          return json(request, { error: "Confirm DELETE and supply the account email and current password" }, 400);
+        }
+
+        const attempt = await withMember(userId, client =>
+          client.query("SELECT app_private.reserve_member_deletion_attempt() AS permitted"),
+        );
+        if (attempt.rows[0]?.permitted !== true) {
+          return json(request, { error: "Too many deletion attempts. Try again later." }, 429);
+        }
+
+        // Better Auth verifies the submitted password. We accept success
+        // ONLY when the server-confirmed identity matches the signed JWT sub.
+        // Never forward Auth cookies, tokens, passwords, or error details.
+        const baseUrl = process.env.NEON_AUTH_BASE_URL!.replace(/\/$/, "");
+        const verification = await fetch(baseUrl + "/sign-in/email", {
+          method: "POST",
+          redirect: "error",
+          cache: "no-store",
+          headers: { "Content-Type": "application/json", "Accept": "application/json" },
+          body: JSON.stringify({ email, password }),
+          signal: AbortSignal.timeout(12000),
+        });
+        if (!verification.ok) {
+          return json(request, { error: "Identity confirmation failed. Account not deleted." }, 403);
+        }
+        const verified = await verification.json().catch(() => null) as
+          { user?: { id?: unknown } } | null;
+        if (typeof verified?.user?.id !== "string" ||
+            verified.user.id.toLowerCase() !== userId) {
+          return json(request, { error: "Identity confirmation failed. Account not deleted." }, 403);
+        }
+
+        const deletion = await withMember(userId, client =>
+          client.query("SELECT app_private.erase_current_member_after_reauth() AS deleted"),
+        );
+        if (deletion.rows[0]?.deleted !== true) {
+          return json(request, { error: "Account could not be deleted" }, 409);
+        }
+        // All user-linked rows, including sessions and member profiles, have
+        // ON DELETE CASCADE. This cannot erase already-retained backups.
+        return json(request, { deleted: true });
+      }
+
       if (request.method === "GET") {
         const result = await withMember(userId, client =>
           client.query(
