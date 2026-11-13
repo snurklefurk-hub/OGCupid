@@ -108,14 +108,14 @@ try {
     "I'm a test account with a short self summary, interested in proving this new onboarding flow works.");
   await page.locator('#ogc-summary button[type=submit]').click();
   await visible("#ogc-tile-0");
-  assert.equal(await page.locator("#ogc-tile-1").getAttribute("aria-disabled"),"false");
-  assert.equal(await page.locator("#ogc-tile-2").getAttribute("aria-disabled"),"true");
+  assert.equal(await page.locator("#ogc-tile-1").getAttribute("data-locked"),"false");
+  assert.equal(await page.locator("#ogc-tile-2").getAttribute("data-locked"),"true");
   console.log("PASS summary returns to welcome with profile check and photo unlocked");
   await screenshot("06-photos-unlocked");
 
   await page.reload({waitUntil:"domcontentloaded"});
   await visible("#ogc-tile-1");
-  assert.equal(await page.locator("#ogc-tile-1").getAttribute("aria-disabled"),"false");
+  assert.equal(await page.locator("#ogc-tile-1").getAttribute("data-locked"),"false");
   console.log("PASS saved onboarding progress survives full page reload");
 
   await page.locator("#ogc-delete").click();
