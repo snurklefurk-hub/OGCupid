@@ -1,0 +1,41 @@
+name: Validate canonical onboarding API and schema
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'api/**'
+      - 'db/migrations/015_canonical_onboarding.sql'
+      - 'member-app/onboarding-ui.js'
+      - 'member-app/persona-onboarding.js'
+      - '.github/workflows/verify-canonical-onboarding.yml'
+  push:
+    branches: [feature/canonical-onboarding]
+    paths:
+      - 'api/**'
+      - 'db/migrations/015_canonical_onboarding.sql'
+      - '.github/workflows/verify-canonical-onboarding.yml'
+permissions:
+  contents: read
+jobs:
+  verify-onboarding-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Run backend validation tests
+        run: node --test api/onboarding.test.js api/profile-choices.test.js api/profile-query.test.js api/job-moderation.test.js
+      - name: Parse server TypeScript with bundler
+        run: |
+          npm install --no-save esbuild@0.25.12
+          npx esbuild api/member-profile.ts --bundle --platform=node --target=node24 --format=esm --external:@neon/functions --external:pg --external:jose --outfile=/tmp/ogc-member-api.mjs
+          node --check /tmp/ogc-member-api.mjs
+      - name: Ensure exact two-column deletion marker
+        run: |
+          grep -q 'CREATE TABLE app_private.previously_registered_emails' db/migrations/015_canonical_onboarding.sql
+          grep -q 'previously_registered boolean' db/migrations/015_canonical_onboarding.sql
