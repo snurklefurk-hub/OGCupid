@@ -6,6 +6,7 @@ import { attachDatabasePool } from "@neon/functions";
 import { isPhotoPath, photoMethodAllowed, handlePhotoRequest } from "./member-photos.js";
 import { removePhoto } from "./photo-storage.js";
 import { isKrustyKrabCookJob } from "./job-moderation.js";
+import { validProfileChoice } from "./profile-choices.js";
 
 const required = ["DATABASE_URL", "NEON_AUTH_JWKS_URL", "NEON_AUTH_BASE_URL"] as const;
 for (const name of required) {
@@ -705,7 +706,11 @@ export default {
       // SQL identifiers are always sourced from the constant profileTextFields
       // above. Only values are supplied by the member, via parameters.
       const columns = profileTextFields.map(([, column]) => column);
-      const fieldUpdates = columns.map(column => `${column} = EXCLUDED.${column}`);
+      // An older cached client omits new fields. Preserve those columns;
+      // an explicitly supplied empty string still clears a field.
+      const fieldUpdates = profileTextFields
+        .filter(([key]) => Object.prototype.hasOwnProperty.call(fields, key))
+        .map(([, column]) => `${column} = EXCLUDED.${column}`);
       const paramList = columns.map((_, index) => `${index + 5}`);
       const allReturned = ["user_id", "display_name", "about_me", "age", ...columns, "created_at", "updated_at"];
       const sql = `INSERT INTO app_private.member_profiles
@@ -715,7 +720,7 @@ export default {
            -- Display name is account identity; profile setup cannot rename it.
            about_me = EXCLUDED.about_me,
            age = EXCLUDED.age,
-           ${fieldUpdates.join(", ")},
+           ${fieldUpdates.length ? fieldUpdates.join(", ") + "," : ""}
            updated_at = now()
          RETURNING ${allReturned.join(", ")}`;
       const result = await withMember(userId, async client => {
@@ -725,9 +730,14 @@ export default {
         // names are retained; a first profile reads the verified Auth name
         // through the narrowly scoped SECURITY DEFINER helper in migration 014.
         const existing = await client.query(
-          "SELECT display_name FROM app_private.member_profiles WHERE user_id = $1::uuid",
+          `SELECT display_name, ${columns.join(", ")} FROM app_private.member_profiles WHERE user_id = $1::uuid`,
           [userId],
         );
+        for (const [index, [key, column]] of profileTextFields.entries()) {
+          if (!validProfileChoice(key, extraValues[index], existing.rows[0]?.[column])) {
+            throw new Error("Invalid controlled profile choice");
+          }
+        }
         const displayName = existing.rows[0]?.display_name == null
           ? String((await client.query("SELECT app_private.current_member_display_name() AS display_name")).rows[0]?.display_name ?? "").trim()
           : String(existing.rows[0].display_name).trim();
@@ -770,6 +780,9 @@ export default {
         founderStatus: result.founderStatus,
       } });
     } catch (error) {
+      if (error instanceof Error && error.message === "Invalid controlled profile choice") {
+        return json(request, { error: "Choose a valid profile option" }, 400);
+      }
       // Do not echo SQL errors, tokens, or personally identifiable information.
       console.error("Private profile request failed", error instanceof Error ? error.name : "unknown");
       return json(request, { error: "Service unavailable" }, 503);

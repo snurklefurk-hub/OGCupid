@@ -614,7 +614,8 @@ function readProfileDraft(form = $("profile-form")) {
     // Existing private text columns are sufficient for the classic fixed choices.
     // Store stable comma-separated option values; no new schema or public access.
     orientation: form.elements.orientation.value,
-    relationshipGoal: "",
+    relationshipGoal: [...form.querySelectorAll('input[name="openTo"]:checked')].map(input => input.value).join(", "),
+    pronouns: cachedProfile?.pronouns ?? "",
   };
   for (const field of longProfileFields) draft[field] = form.elements[field].value.trim();
   draft.ethnicity = selectedValues(form.elements.ethnicity);
@@ -719,6 +720,9 @@ function showStoredProfile(profile) {
   form.elements.searchRadiusMiles.value = profile?.searchRadiusMiles == null ? "" : String(profile.searchRadiusMiles);
   form.querySelectorAll('input[name="gender"]').forEach(input => {
     input.checked = input.value === String(profile?.gender ?? "").toLowerCase();
+  });
+  form.querySelectorAll('input[name="openTo"]').forEach(input => {
+    input.checked = String(profile?.relationshipGoal ?? "").split(", ").includes(input.value);
   });
   setValue("orientation", profile?.orientation);
   setValue("ethnicity", "");

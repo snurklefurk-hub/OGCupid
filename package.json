@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "npm --prefix member-app test && node --test api/job-moderation.test.js",
+    "test": "npm --prefix member-app test && node --test member-app/profile-form.test.js api/job-moderation.test.js api/profile-choices.test.js",
     "build:member": "npm --prefix member-app run build"
   },
   "dependencies": {
