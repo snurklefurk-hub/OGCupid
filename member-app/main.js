@@ -1,6 +1,7 @@
 import { createAuthClient } from "@neon/auth";
 import { nextCompatibilityQuestion } from "./question-flow.js";
 import { createLocalityPicker } from "./locality-picker.js";
+import { createPhotoUI } from "./photo-uploads.js";
 import "../public/questions/question-bank.js";
 import "./styles.css";
 
@@ -31,6 +32,8 @@ let sessionUserId = null;
 let cachedProfile = null;
 let homeCityPicker = null;
 let searchCityPicker = null;
+let photoUI = null;
+let savedPhotoCount = 0;
 const questions = window.OGCQuestionBank.questions.map(question => ({
   ...question, tier: question.tier,
 }));
@@ -234,14 +237,21 @@ function clearMemberView() {
   show("saved-info", false);
   $("member-welcome").textContent = "";
   $("member-email").textContent = "";
+  photoUI?.reset();
+  savedPhotoCount = 0;
 }
 
 function renderHomework() {
   const profileSaved = Boolean(cachedProfile?.updatedAt);
   const answered = Math.min(savedAnswers.size, 10);
   const questionsStarted = answered >= 10;
-  const completed = Number(profileSaved) + Number(questionsStarted);
-  $("homework-progress-count").textContent = completed + " of 2";
+  const hasPhotos = savedPhotoCount > 0;
+  const completed = Number(profileSaved) + Number(hasPhotos) + Number(questionsStarted);
+  $("homework-progress-count").textContent = completed + " of 3";
+  $("homework-photos-state").textContent = hasPhotos
+    ? "✓ " + savedPhotoCount + " of 5 photos"
+    : "0 of 5 photos";
+  $("homework-photos").classList.toggle("is-complete",hasPhotos);
   $("homework-profile-state").textContent = profileSaved ? "✓ Saved" : "Start here";
   $("homework-profile").classList.toggle("is-complete", profileSaved);
   $("homework-questions-state").textContent = questionsStarted
@@ -249,9 +259,11 @@ function renderHomework() {
   $("homework-questions").classList.toggle("is-complete", questionsStarted);
   $("homework-next").textContent = !profileSaved
     ? "Start with your written profile. The pictures can come later."
-    : !questionsStarted
-      ? "Your profile is saved. Photos are next on our build list; meanwhile, get started on your match questions."
-      : "Nice work. You've done everything available right now. We'll add photos and member discovery as they're ready.";
+    : !hasPhotos
+      ? "Your profile is saved. Next, add a photo that looks like you."
+      : !questionsStarted
+        ? "Pictures: check. Now get started on your match questions."
+        : "Nice work. You can always return to your profile and keep answering questions.";
 }
 
 function renderMemberPage() {
@@ -259,6 +271,7 @@ function renderMemberPage() {
     show("homework-dashboard", false);
     show("member-view", false);
     show("profile-panel", true);
+    show("photo-panel", false);
     show("questions-panel", true);
     show("profile-preview-panel", false);
     show("member-persona-panel", false);
@@ -266,18 +279,21 @@ function renderMemberPage() {
   }
   const hash = window.location.hash;
   const page = hash === "#profile-title" || hash === "#preview-title"
-    ? "profile" : hash === "#question-title" ? "questions" : "home";
+    ? "profile" : hash === "#photos-title"
+      ? "photos" : hash === "#question-title" ? "questions" : "home";
   const home = page === "home";
   show("homework-dashboard", home);
   show("member-view", home);
   show("profile-panel", page === "profile");
   show("profile-preview-panel", page === "profile");
+  show("photo-panel", page === "photos");
   show("questions-panel", page === "questions");
   show("member-persona-panel", home);
   $("member-columns").dataset.memberPage = page;
   document.querySelectorAll(".classic-member-tabs a[href^='#']").forEach(link => {
     if ((link.hash === "#member-title" && home) ||
         (link.hash === "#profile-title" && page === "profile") ||
+        (link.hash === "#photos-title" && page === "photos") ||
         (link.hash === "#question-title" && page === "questions")) {
       link.setAttribute("aria-current", "page");
     } else {
@@ -341,6 +357,8 @@ async function refreshMember(options = {}) {
   if (member && options.loadProfile) {
     await loadProfile({ silent: true });
     await loadAnswers();
+    try { await photoUI?.load(member.id); }
+    catch { message("Photo album temporarily unavailable.", "error"); }
     try { await loadEmailOptions(); }
     catch { $("email-preferences-status").textContent = "Could not load email preferences. Try saving them again."; }
   }
@@ -380,6 +398,37 @@ async function getAccessToken() {
   const token = json?.token ?? json?.data?.token;
   if (!isJwt(token)) throw new Error("Neon Auth did not issue a valid member token.");
   return token;
+}
+
+async function requestProfileImage(path) {
+  const token=await getAccessToken();
+  const url=new URL(memberApiUrl);
+  url.pathname=path;
+  const res=await fetch(url.toString(),{
+    method:"GET",
+    headers:{Authorization:"Bearer "+token},
+    cache:"no-store",credentials:"omit",
+  });
+  if(!res.ok) throw new Error("Photo couldn't be retrieved");
+  if(!(res.headers.get("content-type")||"").startsWith("image/jpeg")) {
+    throw new Error("Photo server returned an unexpected format");
+  }
+  const blob=await res.blob();
+  if(blob.size>2_500_000) throw new Error("Photo exceeded size limit");
+  return blob;
+}
+async function uploadProfileJpeg(blob) {
+  const token=await getAccessToken();
+  const url=new URL(memberApiUrl);
+  url.pathname="/photos";
+  const res=await fetch(url.toString(),{
+    method:"POST",
+    headers:{"Authorization":"Bearer "+token,"Content-Type":"image/jpeg"},
+    body:blob,cache:"no-store",credentials:"omit",
+  });
+  const data=await res.json().catch(()=>({}));
+  if(!res.ok) throw new Error(data.error||"Upload wasn't saved");
+  return data;
 }
 
 async function requestPrivate(path, method, body) {
@@ -955,6 +1004,15 @@ async function start() {
   }
   show("app-view", true);
   chooseAuthTab("signin");
+  photoUI = createPhotoUI({
+    requestJson: (method,path,body) => requestPrivate(path,method,body),
+    requestImage: requestProfileImage,
+    uploadJpeg: uploadProfileJpeg,
+    onPhotosChanged: count => {
+      savedPhotoCount = count;
+      renderHomework();
+    },
+  });
   wireForms();
   window.addEventListener("hashchange", () => {
     renderMemberPage();
