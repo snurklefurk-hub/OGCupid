@@ -74,9 +74,11 @@ try {
   await visible("#ogc-location-ready");
   await page.locator('#ogc-location button[type=submit]').click();
   await visible("#ogc-tile-0");
-  assert.equal(await page.locator("#ogc-tile-1").getAttribute("aria-disabled"),"true");
+  assert.equal(await page.locator("#ogc-tile-1").getAttribute("data-locked"),"true");
   await page.locator("#ogc-tile-2").click();
-  assert.match(await value("#ogc-onboard-error"),/Getting ahead of yourself/);
+  await visible("#ogc-locked-dialog");
+  assert.match(await value("#ogc-locked-title"),/Getting ahead of yourself/);
+  await page.locator("#ogc-locked-dialog button").click();
   console.log("PASS birthdate/location, city confirmation, disabled quadrants and teasing popup");
   await screenshot("03-locked-quadrants");
 
