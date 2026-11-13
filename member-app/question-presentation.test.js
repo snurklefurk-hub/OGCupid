@@ -51,8 +51,8 @@ test("classic question screen is dense, scoped to signed-in users, and preserves
   assert.match(panel, /name="importance" value="250"/);
   assert.match(panel, /aria-label="Your answer"/);
   assert.match(panel, /aria-label="Answers you will accept"/);
-  assert.match(css, /body\\.is-authenticated #questions-panel \\.og-question-answer-grid/);
-  assert.match(css, /@media \\(max-width: 760px\\)/);
+  assert.match(css, /body\.is-authenticated #questions-panel \.og-question-answer-grid/);
+  assert.match(css, /@media \(max-width: 760px\)/);
   assert.doesNotMatch(panel, /first10|next50|next100|next250|410 questions required/i);
 });
 
@@ -64,10 +64,10 @@ test("new and saved answers get distinct UI labels without changing persistence 
   assert.match(render, /Update saved answer/);
   assert.match(render, /question-headline/);
   assert.match(render, /question-prompt/);
-  assert.match(render, /nextCompatibilityQuestion\\(remaining, savedAnswers\\.keys\\(\\)\\)/);
+  assert.match(render, /nextCompatibilityQuestion\(remaining, savedAnswers\.keys\(\)\)/);
   assert.match(render, /focusTier !== "first10"/);
   const saving = js.slice(js.indexOf('$("question-form").addEventListener("submit"'));
-  assert.match(saving, /requestPrivate\\("\/answers", "PUT", answer\\)/);
-  assert.match(saving, /savedAnswers\\.set\\(question\\.id, answer\\)/);
+  assert.match(saving, /requestPrivate\("\/answers", "PUT", answer\)/);
+  assert.match(saving, /savedAnswers\.set\(question\.id, answer\)/);
   assert.match(saving, /question-headline/);
 });
