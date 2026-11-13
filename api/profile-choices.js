@@ -1,6 +1,7 @@
 // Server validation for newly introduced controlled fields. Existing values
 // remain saveable verbatim so a legacy profile is never silently erased.
-const habits = ['Never', 'Sometimes', 'Often', 'Just weed'];
+const habits = ['Never', 'Sometimes', 'Often', 'Just weed',
+  'Just weed · Sometimes', 'Just weed · Often', 'Just weed · Never'];
 const choices = {
   bodyType: ['Thin', 'Athletic', 'Average', 'Jacked', 'Chubby', 'Overweight'],
   vaping: habits,
