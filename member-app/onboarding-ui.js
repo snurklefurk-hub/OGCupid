@@ -441,6 +441,36 @@ export function createOnboardingUI({
   function openEmbedded(section) {
     if(section!=="photos"&&section!=="questions")return;
     native=section;root.hidden=true;
+    const panel=byId(section==="photos"?"photo-panel":"questions-panel");
+    if(!panel) throw Error("This section is unavailable.");
+    let controls=panel.querySelector(".ogc-native-controls");
+    if(!controls){
+      controls=document.createElement("nav");
+      controls.className="ogc-native-controls";
+      controls.setAttribute("aria-label","Onboarding controls");
+      const addButton=(label,job)=>{
+        const b=document.createElement("button");b.type="button";b.textContent=label;
+        b.addEventListener("click",async()=>{
+          if(busy)return;
+          try {await job();} catch(e) {fail(e);}
+        });
+        controls.appendChild(b);
+      };
+      addButton("← Back to onboarding",async()=>{native=null;go("hub");});
+      addButton("Sign out",async()=>{busy=true;try{await signOut();hide();}finally{busy=false;}});
+      addButton("Delete account",async()=>{native=null;go("delete");});
+      addButton("Verify email",async()=>{
+        await requestVerification();
+        const note=panel.querySelector(".ogc-native-notice");
+        if(note)note.textContent="Check your inbox for your verification link.";
+      });
+      const contact=document.createElement("a");contact.href="/contact/";contact.textContent="Contact";
+      const legal=document.createElement("a");legal.href="/terms/";legal.textContent="Legal / Terms";
+      controls.append(contact,legal);
+      const note=document.createElement("span");note.className="ogc-native-notice";note.setAttribute("role","status");
+      controls.append(note);panel.prepend(controls);
+    }
+    controls.querySelectorAll("button")[3].hidden=Boolean(status?.verified);
     document.body.classList.remove("ogc-onboarding-active");
     document.body.classList.add("ogc-onboarding-native");
     openNative(section);
