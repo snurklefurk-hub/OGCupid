@@ -1,0 +1,95 @@
+/* OG Cupid classic visual system — inspired by the early 2010s member experience. */
+:root{--ink:#344a60;--blue:#315f91;--rose:#dc477e;--yellow:#f4d9e6;--mint:#e4eff8;--paper:#f8f9fb;--white:#fff;--shadow:0 2px 8px #18375522}
+body{background:#2d5f99;color:#485762;font:13px/1.55 Arial,Helvetica,sans-serif}
+a{color:#315f91}
+:focus-visible{outline:3px solid #ec79aa;outline-offset:2px}
+.shell{max-width:1120px;margin:16px auto 40px;padding:0;display:grid;grid-template-columns:190px minmax(0,1fr);align-items:start;box-shadow:0 5px 22px #102f5660}
+.topline{grid-column:1/-1;padding:7px 15px;background:#234d80;color:#d9e8f7;border:0;font-size:10px;font-weight:normal;letter-spacing:.4px}
+.masthead{grid-column:1;grid-row:2;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;padding:0;gap:0;background:linear-gradient(110deg,#193b72,#142c5e);border:0;min-height:100%;color:#d9e7fb}
+.masthead .brand-original{display:flex;min-height:94px;justify-content:center;padding:14px 9px;background:#fff;border-bottom:4px solid #386da7}
+.masthead .brand-original img{width:166px;max-width:100%;mix-blend-mode:normal}
+.masthead nav{display:flex;flex-direction:column;align-items:stretch;gap:0;font-size:12px;font-weight:normal;text-transform:none}
+.masthead nav a{padding:14px 17px;border:0;border-bottom:1px solid #102750;text-decoration:none;color:#d9e7fb}
+.masthead nav a:hover,.masthead nav a:focus-visible{background:#102750;border-color:#102750}
+main{grid-column:2;grid-row:2;background:#f9fafb;border:0;box-shadow:none;min-width:0}
+.intro{padding:25px 28px 22px;background:linear-gradient(#fff,#eef0f2);border-bottom:1px solid #d2dae1}
+.stamp{transform:none;padding:0;background:none;border:0;color:#8995a0;font-size:10px;font-weight:bold;letter-spacing:.5px}
+h1{max-width:none;font:normal clamp(27px,3.8vw,43px)/1.15 Georgia,serif;text-transform:none;color:#345e8a;margin:9px 0 7px}
+h1 em{color:var(--rose);font-style:normal;text-decoration:none}
+.intro p{max-width:680px;font-size:13px;font-weight:normal;color:#7b8790}
+h2{font:normal clamp(22px,2.8vw,30px)/1.2 Georgia,serif;color:#d94a80;margin:0 0 14px;letter-spacing:-.3px}
+h3{color:#37638f;font: bold 16px Georgia,serif}
+.eyebrow{color:#8396a6;font-size:10px;letter-spacing:.6px}
+.notice{margin:16px 24px 0;padding:10px 13px;background:#e8f2fa;border:1px solid #c6d9ea;border-radius:2px;color:#416789;font-size:12px;font-weight:normal}
+.notice.ok{background:#eaf4e7;border-color:#c6dfc3}.notice.error{background:#fff0f3;border-color:#eac0cf}
+.columns{gap:17px;padding:19px 24px 25px}
+.paper{background:white;border:1px solid #dce3e9;box-shadow:0 1px 2px #1837550a;padding:20px;min-width:0}
+.profile-panel,.member-persona-panel,.question-panel,.profile-preview-panel{background:#fff}
+#unavailable-view{margin:20px 24px}
+.switcher{border-bottom:1px solid #d2dce5;gap:5px}
+.switcher button{font-size:12px;font-weight:bold;text-transform:none;color:#6f8497;border-bottom-width:3px}
+.switcher button[aria-pressed=true]{border-color:var(--rose);color:#335f90}
+form label:not(.checkrow){font-size:12px;font-weight:bold;color:#60788d}
+form input:not([type=checkbox]),form textarea,.profile-field select{border:1px solid #c4d1dc;border-radius:3px;padding:9px 11px;color:#344a60}
+form input:focus,form textarea:focus,.profile-field select:focus-visible{outline:2px solid #e87ea7}
+.button,.persona-btn{background:linear-gradient(#fff,#e8edf2);border:1px solid #c8d3dd;border-radius:3px;box-shadow:inset 0 1px #fff;padding:9px 15px;color:#335f8e;font-size:12px;font-weight:bold;text-transform:none;letter-spacing:0}
+.button.primary{background:linear-gradient(#5a95c9,#2d69a6);border-color:#2d639a;color:white;text-shadow:0 1px #245584}
+.button:hover:not(:disabled){transform:none;box-shadow:inset 0 1px #fff;filter:brightness(.97)}
+.quiet-button{color:#3c6690;font-size:12px;font-weight:normal}
+.hint,.footnote{color:#7d8994}
+.email-options,.profile-edit-section{border:1px solid #ccd9e4;background:#f9fbfd}
+.email-options legend,.profile-edit-section legend{color:#426c94;font: bold 14px Georgia,serif;letter-spacing:0;text-transform:none}
+.email-options .email-option,.profile-edit-section .classic-choice{border:1px solid #cbd8e3;border-radius:3px}
+.email-options .email-option:has(input:checked),.profile-edit-section .classic-choice:has(input:checked){background:#e5f0f9;border-color:#87add0}
+.profile-editor-intro,.teaser,.save-info{background:#e9f2fa;border-color:#76a5cc;color:#496478}
+.profile-progress,.question-progress{color:#37699a}
+.profile-preview-panel,.question-panel,.member-persona-panel{margin:0 24px 25px}
+.profile-preview-heading{padding:22px 22px 12px}.profile-preview-heading h2{font:normal 27px Georgia,serif}
+.og-profile-preview{margin:0 16px 18px;border:1px solid #d4dee8;box-shadow:none;background:#fff}
+.og-preview-hero{background:linear-gradient(#fff,#f0f3f6);border-bottom:1px solid #d2dce5;padding:18px 22px}
+.og-preview-avatar{transform:none;border:2px solid #d1dce7;box-shadow:none;background:#e1eaf4;color:#4775a1}
+.og-preview-identity h3{font:bold clamp(25px,3vw,35px) Georgia,serif;color:#315e8d;text-transform:none}
+.og-preview-identity p{color:#7b8793;font-size:12px;font-weight:normal}
+.og-preview-status{color:#76a64c;font-size:10px;letter-spacing:0}
+.og-preview-tags span{border:1px solid #d1dee8;background:#edf4fa;color:#597895;font-weight:normal}
+.og-preview-layout{grid-template-columns:minmax(0,1.75fr) minmax(195px,.8fr)}
+.og-preview-essays{padding:24px}.og-preview-essay{border-bottom:1px solid #e7edf2}
+.og-preview-essay h4{font:bold 17px Georgia,serif;color:#345f8a;letter-spacing:0}
+.og-preview-essay p{font:13px/1.75 Arial,Helvetica,sans-serif;color:#5a6873}
+.og-preview-aside{padding:17px;background:#f2f6f9;border-left:1px solid #dce5ec;display:block}
+.og-preview-sidebox{border:1px solid #dce4eb;padding:0 0 12px;background:#fff}
+.og-preview-sidebox h4{font:bold 13px Georgia,serif;color:#416a91;background:#e4eff8;padding:9px 12px}
+.og-preview-sidebox p,.og-preview-sidebox dl{padding:0 12px;color:#61717f}
+.og-preview-sidebox dt,.og-preview-sidebox dd{border-bottom:1px solid #eef1f4;padding:4px 0}
+.question-panel fieldset label{border:1px solid #dce4ec;background:#fbfcfd;border-radius:2px;font-weight:normal}
+.question-panel fieldset label:has(input:checked){background:#e7f2fa;border-color:#91b7d4}
+.question-panel legend{font:bold 20px Georgia,serif;color:#37618a}
+.question-panel select{border:1px solid #bfd1df;border-radius:16px;background:#e6f0f9;color:#416a91}
+.bottom-mark{border-top:1px solid #dce4ea;background:#eef2f6;color:#7e93a6;font-size:10px;font-weight:normal}
+.member-legal-footer{grid-column:1/-1;background:#f6f8fa;border:0;border-top:1px solid #d7e0e8;color:#788897;font-size:11px;font-weight:normal}
+.member-legal-footer a{font-weight:normal}
+@media(max-width:760px){
+ .shell{display:block;margin:9px 7px 25px;padding:0}
+ .topline{padding:7px 11px}
+ .masthead{min-height:0;display:block}
+ .masthead .brand-original{min-height:63px;justify-content:flex-start;padding:7px 15px}
+ .masthead .brand-original img{width:154px;max-width:none}
+ .masthead nav{display:flex;flex-direction:row;flex-wrap:wrap}
+ .masthead nav a{flex:1 1 33.333%;text-align:center;padding:10px 4px;font-size:11px;border-color:#244371}
+ main{border:0;box-shadow:none}
+ .intro{padding:18px 15px}.intro h1{font-size:29px}
+ .notice{margin:12px 13px 0}
+ .columns{padding:14px 13px 20px;gap:14px}
+ .paper{padding:16px;box-shadow:none}
+ .profile-preview-panel,.question-panel,.member-persona-panel{margin:0 13px 19px}
+ .profile-preview-heading{padding:18px 15px 12px}
+ .og-profile-preview{margin:0 10px 12px}
+ .og-preview-hero{padding:14px;gap:12px}
+ .og-preview-identity h3{font-size:26px}
+ .og-preview-essays{padding:18px 15px}
+ .og-preview-aside{border-left:0;border-top:1px solid #dce5ec;display:grid;grid-template-columns:1fr 1fr;gap:9px}
+ .og-preview-sidebox{margin:0}
+ .og-preview-sidebox:last-child{grid-column:1/-1}
+ .member-legal-footer{padding:15px}
+}
+@media(max-width:490px){.og-preview-aside{grid-template-columns:1fr}.og-preview-sidebox:last-child{grid-column:auto}}

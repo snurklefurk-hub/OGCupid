@@ -1,0 +1,30 @@
+/* Shared early-2010s OG Cupid visual language for public/editorial and Persona pages. */
+:root{--ink:#354f6d;--blue:#315f91;--rose:#dd477f;--yellow:#f0dce6;--mint:#e6f0f8;--paper:#f8f9fb;--white:#fff;--shadow:0 3px 16px #142f5040}
+body{background:#2d5f99;color:#4b5b68;font-family:Arial,Helvetica,sans-serif}
+a{color:#315f91}
+:focus-visible{outline:3px solid #e878a4;outline-offset:2px}
+.wrap{max-width:1120px;margin:17px auto 40px;padding:0 9px}
+.ticker{background:#234d80;color:#dce8f5;border:0;padding:8px 15px;font-size:10px;font-weight:normal;letter-spacing:.4px;text-transform:none}
+.site{border:0;background:#f9fafb;box-shadow:0 5px 22px #102f5660}
+.og-header,header.member-quiz-header{background:#fff;border:0;border-bottom:4px solid #356ca5;padding:13px 22px}
+.og-brand-original img,.member-quiz-header img{mix-blend-mode:normal}
+.og-nav a{color:#315d8b}
+.og-hero{background:linear-gradient(#fff,#eef1f4);color:#344d66;border-color:#d6e0e9}
+.og-hero h1,.og-hero h1 em{color:#315d8d;text-shadow:none}
+.og-hero h1 em{color:#dd477f}
+.og-hero-lede{color:#576c7e}
+.og-btn,.persona-btn{border:1px solid #b9cad9;border-radius:3px;background:linear-gradient(#fff,#e8edf2);box-shadow:inset 0 1px white;color:#315f91;text-transform:none;transform:none}
+.og-btn--pink,.persona-btn:not(.persona-btn-alt){background:linear-gradient(#5a95c9,#2d69a6);border-color:#2d639a;color:#fff;text-shadow:0 1px #245584}
+.og-btn:hover,.persona-btn:hover{transform:none;filter:brightness(.96);box-shadow:inset 0 1px white}
+.og-section,.og-endcap{background:#fff;border-color:#dbe3ea}
+.og-section-title,.og-endcap h2,.persona-heading h2{color:#315d8d;text-shadow:none}
+.og-principle,.og-magazine{border:1px solid #d4e0ea;box-shadow:0 1px 2px #152b4414}
+.og-principle{background:#fff}
+.og-footer{background:#e8eef5;color:#5b7187;border-color:#d0dce7}
+.og-footer a{color:#315d8d}
+.persona-zone{background:linear-gradient(#fff,#eef2f6);border-color:#d5e0e9}
+.persona-app,.persona-how,.persona-catalog-intro{background:#fff;border-color:#d7e1e9;box-shadow:0 1px 4px #15375518}
+.persona-titlebar{background:#e7f0f8;color:#325f8d;border-color:#c9dcea}
+.persona-choice-title,.persona-name{color:#315d8d}
+.persona-meter-fill{background:#de4b83}
+@media(max-width:760px){.wrap{margin:8px auto 25px;padding:0 7px}.og-header,header.member-quiz-header{padding:12px 14px}.og-hero{padding:25px 17px}.og-section{padding:25px 17px}}
