@@ -6,10 +6,10 @@ import { createAuthClient } from "@neon/auth";
 
 const local = ["localhost", "127.0.0.1"].includes(window.location.hostname);
 const authBaseUrl = local
-  ? "https://ep-blue-credit-bbfdwceu.neonauth.c-15.us-east-1.aws.neon.tech/neondb/auth"
+  ? (import.meta.env.VITE_OGC_AUTH_URL || "https://ep-blue-credit-bbfdwceu.neonauth.c-15.us-east-1.aws.neon.tech/neondb/auth")
   : (import.meta.env.VITE_OGC_AUTH_URL || "");
 const memberApiUrl = local
-  ? "https://br-tiny-wave-bbnpjp0m-members.compute.c-15.us-east-1.aws.neon.tech/profile"
+  ? (import.meta.env.VITE_OGC_MEMBER_API_URL || "https://br-tiny-wave-bbnpjp0m-members.compute.c-15.us-east-1.aws.neon.tech/profile")
   : (import.meta.env.VITE_OGC_MEMBER_API_URL || "");
 
 function returnToAccount() {
