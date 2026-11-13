@@ -317,6 +317,17 @@ function renderProfileEditorStep() {
 }
 
 function renderMemberPage() {
+  // Hide unfinished member features even when somebody types a deep link.
+  // The server separately checks all private mutations and progress unlocks.
+  if (currentUser && onboarding?.active && !onboarding.complete) {
+    const target=memberSectionFromHash(window.location.hash);
+    const permitted=onboarding.nativeSection==="photos" ? "photos" :
+      onboarding.nativeSection==="questions" ? "questions" : "welcome";
+    if (target!==permitted && !(target==="home" && permitted==="welcome")) {
+      if(window.location.hash!==SIGNUP_WELCOME_HASH)window.location.hash=SIGNUP_WELCOME_HASH;
+      return;
+    }
+  }
   if (!currentUser) {
     document.body.classList.remove("is-profile-setup");
     document.body.classList.remove("is-welcome-flow");
