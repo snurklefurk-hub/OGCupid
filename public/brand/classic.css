@@ -70,3 +70,44 @@ a{color:#315f91}
 .site>footer.og-footer{background:#e7eef5;color:#60758a;padding:22px 30px;border-top:1px solid #cbd8e4}.og-footer-note{color:#60758a}.site>footer.og-footer a{color:#315d8d}
 @media(min-width:1024px){.wrap{max-width:1120px;margin:17px auto 40px;padding:0 9px}.site{box-shadow:0 5px 22px #102f5660}.site>header.og-header{min-height:76px;padding:13px 24px}.og-original-logo{width:220px}.og-hero{grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr)}.og-hero-copy{padding:51px 39px 48px}.og-hero h1{font-size:clamp(35px,4vw,51px)}.og-hero-graphic{min-height:0;padding:30px}.og-poster{transform:none;min-height:0}.og-section{padding:42px 38px}.og-principle{min-height:175px}}
 @media(max-width:760px){.site>header.og-header{gap:12px;padding:13px 16px}.og-hero-copy{padding:35px 22px 31px}.og-hero h1{font-size:clamp(33px,8vw,49px)}.og-hero-graphic{min-height:0;padding:18px;border-left:0;border-top:1px solid #cbd9e6}.og-poster{min-height:0}.og-poster-main span{font-size:clamp(28px,7vw,39px)}.og-section{padding:34px 20px}.og-section-title{font-size:clamp(26px,7vw,37px)}.og-principle{min-height:0}.og-endcap{padding:35px 20px}}
+
+
+/* Structural classic shell shared by public pages. Mirrors Astra's navy rail
+ * without publishing fictional member records or replacing real page content. */
+.site.ogc-classic-with-rail{position:relative;padding-left:190px;background:#f8f9fb;min-height:670px}
+.ogc-classic-rail{position:absolute;inset:0 auto 0 0;width:190px;background:linear-gradient(110deg,#193968,#142b5a);color:#bed0e6;font:12px/1.55 Arial,Helvetica,sans-serif}
+.ogc-rail-logo{height:91px;display:flex;align-items:center;justify-content:center;padding:12px 10px;background:#fff;border-bottom:5px solid #356da6}
+.ogc-rail-logo img{display:block;width:166px;max-width:100%;height:auto}
+.ogc-rail-intro{margin:0;padding:18px 17px 16px;font-size:11px;color:#d6e3f7}
+.ogc-rail-nav{display:flex;flex-direction:column;border-top:1px solid #ffffff16}
+.ogc-rail-nav a{display:flex;gap:10px;align-items:center;padding:13px 16px;color:#c6d7f1;text-decoration:none;border-bottom:1px solid #0b244b;font-size:13px;font-weight:normal}
+.ogc-rail-nav a:hover,.ogc-rail-nav a:focus-visible{color:#fff;background:#10264e;text-decoration:none}
+.ogc-rail-nav a[aria-current=page]{color:#fff;background:#10264e;box-shadow:inset 4px 0 #e76c9f}
+.ogc-rail-icon{font-size:19px;color:#93b6e1;line-height:1;width:19px;flex:none;text-align:center}
+.ogc-rail-section-heading{margin:20px 16px 7px;color:#e1edfb;font-size:12px}
+.ogc-rail-section-note{margin:0 16px;color:#b4c8df;font-size:11px;line-height:1.65}
+.ogc-rail-tagline{margin:28px 16px 18px;padding-top:16px;border-top:1px solid #526a8e;color:#aebfda;font:italic 14px/1.5 Georgia,serif}
+.ogc-classic-with-rail>header.og-header,
+.ogc-classic-with-rail>header:not(.og-header){min-height:40px!important;padding:9px 19px!important;background:#234d80!important;border:0!important;border-bottom:1px solid #183e6c!important;box-shadow:none!important;color:#d6e6f7!important}
+.ogc-classic-with-rail>header .og-brand-original,
+.ogc-classic-with-rail>header .brand,
+.ogc-classic-with-rail>header .logo{display:none!important}
+.ogc-classic-with-rail>header nav,.ogc-classic-with-rail>header .og-nav{display:flex;flex-wrap:wrap;gap:7px 14px;align-items:center;margin-left:auto}
+.ogc-classic-with-rail>header nav a:not(.og-nav-join),
+.ogc-classic-with-rail>header .og-nav a:not(.og-nav-join){padding:3px 4px!important;margin:0!important;border:0!important;background:transparent!important;box-shadow:none!important;color:#d8e7f7!important;font:normal 11px Arial,sans-serif!important;text-decoration:none!important}
+.ogc-classic-with-rail>header nav a:not(.og-nav-join):hover{color:white!important;text-decoration:underline!important}
+.ogc-classic-with-rail>header .og-nav-join{padding:6px 12px!important;font:700 11px Arial,sans-serif!important}
+.ogc-classic-with-rail .og-hero,.ogc-classic-with-rail .hero{border-color:#cddbe6}
+.ogc-classic-with-rail .og-footer,.ogc-classic-with-rail .footer{background:#edf2f7}
+@media(max-width:760px){
+ .site.ogc-classic-with-rail{padding-left:0!important;min-height:0}
+ .ogc-classic-rail{position:relative;inset:auto;width:100%;height:auto;display:flex;flex-direction:column}
+ .ogc-rail-logo{height:67px;justify-content:flex-start;padding:7px 14px}
+ .ogc-rail-logo img{width:159px}
+ .ogc-rail-intro{padding:8px 13px}
+ .ogc-rail-nav{flex-flow:row wrap}
+ .ogc-rail-nav a{flex:1 1 31%;justify-content:center;gap:6px;padding:9px 5px;font-size:11px;text-align:center}
+ .ogc-rail-icon{font-size:14px;width:14px}
+ .ogc-rail-section-heading,.ogc-rail-section-note,.ogc-rail-tagline{display:none}
+ .ogc-classic-with-rail>header.og-header,.ogc-classic-with-rail>header:not(.og-header){display:none!important}
+}
