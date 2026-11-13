@@ -418,11 +418,16 @@
         <section class="paper profile-preview-panel" id="profile-preview-panel" hidden aria-labelledby="preview-title">
           <div class="profile-preview-heading">
             <div><p class="eyebrow">YOUR PROFILE / PRIVATE PREVIEW</p><h2 id="preview-title">THE CLASSIC PROFILE, REBORN.</h2></div>
-            <p>Exactly your words. No fake references, no invented photos, and nothing public until discovery controls are ready.</p>
+            <p>Exactly your words and your photos. Pictures are intended for signed-in members; wider profile discovery remains under development.</p>
           </div>
           <article class="og-profile-preview" aria-label="How your profile will look to members">
             <header class="og-preview-hero">
-              <div id="preview-avatar" class="og-preview-avatar" aria-hidden="true">♥</div>
+              <div class="og-preview-photo-column" aria-label="Your profile pictures">
+                <button id="preview-primary-photo" class="og-preview-main-photo" type="button" disabled aria-label="No profile photos yet">
+                  <span class="og-preview-photo-placeholder" aria-hidden="true">&#9829;</span>
+                </button>
+                <div id="preview-photo-thumbnails" class="og-preview-photo-thumbnails" aria-label="More profile photos"></div>
+              </div>
               <div class="og-preview-identity">
                 <span class="og-preview-status">PRIVATE DRAFT / ONLY YOU CAN VIEW THIS</span>
                 <h3 id="preview-display-name">Your name goes here</h3>
@@ -457,6 +462,18 @@
             </div>
           </article>
         </section>
+        <dialog id="profile-photo-viewer" class="og-photo-viewer" aria-label="Profile photo viewer">
+          <div class="og-photo-viewer-header">
+            <span>PROFILE PHOTOS <strong id="profile-photo-viewer-count">1 of 1</strong></span>
+            <button id="profile-photo-viewer-close" class="og-photo-viewer-close" type="button">Close <span aria-hidden="true">×</span></button>
+          </div>
+          <div class="og-photo-viewer-stage">
+            <button id="profile-photo-viewer-prev" class="og-photo-viewer-arrow" type="button" aria-label="Previous photo">‹</button>
+            <img id="profile-photo-viewer-image" alt="">
+            <button id="profile-photo-viewer-next" class="og-photo-viewer-arrow" type="button" aria-label="Next photo">›</button>
+          </div>
+          <p class="og-photo-viewer-tip">Use the arrows to browse, or Escape to close.</p>
+        </dialog>
         <section class="paper photo-panel" id="photo-panel" hidden aria-labelledby="photos-title">
           <p class="eyebrow">03 / THE PHOTO ALBUM</p>
           <div class="panel-head">
