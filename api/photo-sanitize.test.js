@@ -9,7 +9,7 @@ function jpeg({metadata=true,width=1200,height=1200}={}){
   const frame=Uint8Array.of(8,height>>8,height&255,width>>8,width&255,3,1,0x11,0,2,0x11,0,3,0x11,0);
   parts.push(segment(0xC0,frame));
   parts.push(segment(0xDA,Uint8Array.of(3,1,0,2,0x11,3,0x11,0,0x3F,0)));
-  parts.push(Uint8Array.of(1,2,0xFF,0,3,0xFF,0xD9));
+  parts.push(Uint8Array.of(...Array(65).fill(1),0xFF,0,3,0xFF,0xD9));
   const output=new Uint8Array(parts.reduce((n,p)=>n+p.length,0));
   let off=0;for(const part of parts){output.set(part,off);off+=part.length}
   return output;
