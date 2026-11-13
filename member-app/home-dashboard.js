@@ -5,6 +5,21 @@
  * account gate. Everything uses persisted profile, photo and answer data.
  * Editorial question tiers are private and never appear in member-facing UI.
  */
+/**
+ * A saved row by itself is not a usable starter profile.
+ * These are deliberately light onboarding milestones, not API or discovery gates.
+ * City, essays, and optional details can be added later.
+ */
+export function starterProfileReady(profile) {
+  if (!profile?.updatedAt) return false;
+  const age = Number(profile.age);
+  const filled = value => typeof value === "string" && value.trim().length > 0;
+  return filled(profile.displayName) &&
+    Number.isInteger(age) && age >= 18 && age <= 120 &&
+    (profile.gender === "man" || profile.gender === "woman") &&
+    filled(profile.interestedIn) && filled(profile.relationshipGoal);
+}
+
 export function memberHomeState({
   profileSaved = false,
   photoCount = 0,
