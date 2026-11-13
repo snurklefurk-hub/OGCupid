@@ -8,9 +8,9 @@
   <meta name="referrer" content="no-referrer">
   <meta name="description" content="OG Cupid member accounts and profiles. Bringing back people, not swipes.">
   <title>Your corner of the internet | OG Cupid</title>
-  <script type="module" crossorigin src="./assets/index-DnP9Ntf6.js"></script>
+  <script type="module" crossorigin src="./assets/index-Bqz0Zubz.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/neon-auth-BIaN13e0.js">
-  <link rel="stylesheet" crossorigin href="./assets/index-CW08pI51.css">
+  <link rel="stylesheet" crossorigin href="./assets/index-DLFE-pN0.css">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -28,6 +28,7 @@
       <div class="classic-rail-guest" id="classic-rail-guest">The good internet is making a comeback.<br><b>Make yourself at home.</b></div>
       <nav aria-label="Member navigation" class="classic-rail-nav">
         <a href="#member-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#8962;</span> My home</a>
+        <a href="#welcome-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#10022;</span> Getting started</a>
         <a href="#settings-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#9881;</span> Account settings</a>
         <a href="#profile-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#9825;</span> My profile</a>
         <a href="#photos-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#10064;</span> My photos</a>
@@ -55,7 +56,7 @@
         <span class="stamp">OG CUPID / YOUR CORNER OF THE INTERNET</span>
         <h1>A little more <em>you.</em></h1>
         <p>Remember when a dating profile told you something about a person? Your page. Your words. Your weird little corner of the internet.</p>
-        <nav class="classic-member-tabs" aria-label="Member sections"><a href="#member-title">Home</a><a href="#profile-title">My profile</a><a href="#photos-title">Photos</a><a href="#question-title">Questions</a><a href="#settings-title" data-classic-auth hidden>Account settings</a><a href="/account/persona.html">Dating persona</a></nav>
+        <nav class="classic-member-tabs" aria-label="Member sections"><a href="#member-title">Home</a><a href="#welcome-title" data-classic-auth hidden>Getting started</a><a href="#profile-title">My profile</a><a href="#photos-title">Photos</a><a href="#question-title">Questions</a><a href="#settings-title" data-classic-auth hidden>Account settings</a><a href="/account/persona.html">Dating persona</a></nav>
       </div>
 
       <div id="notice" class="notice" role="status" aria-live="polite">Checking membership availability.</div>
@@ -117,56 +118,77 @@
                 <a href="#question-title" class="button primary">Answer another question &rarr;</a>
               </section>
               <details class="member-home-compact-homework" id="dashboard-homework-details">
-                <summary><span>Profile setup</span><small id="dashboard-homework-count">3 of 3 starting steps</small></summary>
+                <summary><span>Getting started</span><small id="dashboard-homework-count">Keep exploring</small></summary>
                 <div class="member-home-homework-links">
-                  <a href="#profile-title"><span aria-hidden="true">&#10003;</span> My written profile</a>
-                  <a href="#photos-title"><span aria-hidden="true">&#10003;</span> My photos</a>
-                  <a href="#question-title"><span aria-hidden="true">&#10003;</span> My questions</a>
+                  <a href="#profile-title">Profile basics</a>
+                  <a href="#photos-title">Photos</a>
+                  <a href="/account/persona.html">Dating Persona Quiz</a>
+                  <a href="#question-title">Match questions</a>
+                  <a href="#welcome-title">View my getting-started steps</a>
                   <p>Member discovery is coming later. You can keep polishing your profile anytime.</p>
                 </div>
               </details>
             </aside>
           </div>
         </section>
-        <section class="paper homework-dashboard" id="homework-dashboard" hidden aria-labelledby="homework-title">
-          <div class="homework-header">
+        <section class="paper homework-dashboard welcome-checklist" id="homework-dashboard" hidden aria-labelledby="welcome-title">
+          <div class="homework-header welcome-header">
             <div>
-              <p class="eyebrow">WELCOME TO YOUR NEW OLD INTERNET</p>
-              <h2 id="homework-title">Set up your profile.</h2>
-              <p>Start telling your story. Find the people who want to read it.</p>
+              <p class="eyebrow">HEY, YOU MADE IT. WELCOME TO OG CUPID.</p>
+              <h2 id="welcome-title">Your corner of the internet starts here.</h2>
+              <p>We missed dating sites that actually wanted you to get to know someone. Here are a few good places to start.</p>
             </div>
-            <div class="homework-tally" aria-live="polite"><strong id="homework-progress-count">0 of 3</strong><span>things you can do now</span></div>
+            <div class="welcome-illustration" aria-hidden="true"><span>&#9829;</span></div>
           </div>
-          <p id="homework-next" class="homework-next">First, give us the real you.</p>
-          <ol class="homework-list">
+          <p id="homework-next" class="homework-next">First up: tell us the basics about yourself.</p>
+          <ol class="homework-list welcome-list">
             <li class="homework-item" id="homework-profile">
               <span class="homework-number" aria-hidden="true">01</span>
-              <div class="homework-copy"><h3>Fill out your profile</h3><p>Your story comes first. Introduce yourself, add the details, and write the good stuff.</p></div>
+              <div class="homework-copy">
+                <h3>Fill out your profile basics</h3>
+                <p>Give people the essentials. The details and essays are there whenever you feel like writing more.</p>
+              </div>
               <span class="homework-state" id="homework-profile-state">Start here</span>
-              <a class="button" href="#profile-title">Edit my profile &rarr;</a>
+              <a class="button" href="#profile-title">Set up my profile &rarr;</a>
             </li>
             <li class="homework-item" id="homework-photos">
               <span class="homework-number" aria-hidden="true">02</span>
-              <div class="homework-copy"><h3>Add some photos</h3><p>Show a little of your life. Your pictures are visible to logged-in OG Cupid members.</p></div>
-              <span class="homework-state" id="homework-photos-state">0 of 5 photos</span>
-              <a class="button" href="#photos-title">Add photos &rarr;</a>
+              <div class="homework-copy">
+                <h3>Add photos</h3>
+                <p>Put a face to your words. You can add up to five pictures and choose your main photo.</p>
+              </div>
+              <span class="homework-state" id="homework-photos-state">No photos yet</span>
+              <a class="button" href="#photos-title">Add my photos &rarr;</a>
             </li>
-            <li class="homework-item" id="homework-questions">
+            <li class="homework-item welcome-two-actions" id="homework-questions">
               <span class="homework-number" aria-hidden="true">03</span>
-              <div class="homework-copy"><h3>Answer match questions</h3><p>Answer questions about yourself and what matters to you. Keep going whenever you like.</p></div>
-              <span class="homework-state" id="homework-questions-state">0 answered</span>
-              <a class="button" href="#question-title">Answer questions &rarr;</a>
+              <div class="homework-copy">
+                <h3>Take the Dating Persona Quiz and answer match questions</h3>
+                <p>Discover your persona, then tell us what matters to you. Match questions come from one big, varied pool—answer as many as you like.</p>
+                <p class="welcome-quiz-note">The quiz and match questions are separate activities; both are worth trying.</p>
+              </div>
+              <span class="homework-state" id="homework-questions-state">0 match questions answered</span>
+              <div class="welcome-actions">
+                <a class="button" href="/account/persona.html">Take the Dating Persona Quiz &rarr;</a>
+                <a class="button" href="#question-title">Answer match questions &rarr;</a>
+              </div>
             </li>
-            <li class="homework-item" id="homework-meet">
+            <li class="homework-item welcome-two-actions" id="homework-meet">
               <span class="homework-number" aria-hidden="true">04</span>
-              <div class="homework-copy"><h3>Rate people</h3><p>Discover members and show some appreciation when member browsing opens.</p></div>
-              <span class="homework-state">Coming later</span>
-              <span class="homework-unavailable">Member discovery not open yet</span>
+              <div class="homework-copy">
+                <h3>Explore, match, and have fun</h3>
+                <p>Make yourself at home and explore what's already here. Member browsing and compatibility matching are coming as those features launch.</p>
+              </div>
+              <span class="homework-state">Explore now</span>
+              <div class="welcome-actions">
+                <a class="button" href="#member-title">Explore my home &rarr;</a>
+                <a class="welcome-quiet-link" href="/ogtrends/">Read OgTrends</a>
+              </div>
             </li>
           </ol>
-          <p class="homework-footer">No rush. Explore the site whenever you like; this list will be here when you come back.</p>
+          <p class="homework-footer">There's no test to pass before you can look around. Come back to <a href="#welcome-title">Getting started</a> any time.</p>
         </section>
-        <div class="columns" id="member-columns">
+                <div class="columns" id="member-columns">
           <section class="paper" id="guest-view" aria-labelledby="account-title">
             <p class="eyebrow">01 / ACCOUNT</p>
             <div class="panel-head">
