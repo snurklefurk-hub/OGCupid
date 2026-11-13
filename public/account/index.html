@@ -8,7 +8,7 @@
   <meta name="referrer" content="no-referrer">
   <meta name="description" content="OG Cupid member accounts and profiles. Bringing back people, not swipes.">
   <title>Your corner of the internet | OG Cupid</title>
-  <script type="module" crossorigin src="./assets/index-DCvNByVH.js"></script>
+  <script type="module" crossorigin src="./assets/index-DZKj5Cgd.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/neon-auth-BIaN13e0.js">
   <link rel="stylesheet" crossorigin href="./assets/index-DrXaCBk_.css">
 </head>
@@ -117,7 +117,7 @@
                 <a href="#question-title" class="button primary">Answer another question &rarr;</a>
               </section>
               <details class="member-home-compact-homework" id="dashboard-homework-details">
-                <summary><span>My homework</span><small id="dashboard-homework-count">3 of 3 starting steps</small></summary>
+                <summary><span>Profile setup</span><small id="dashboard-homework-count">3 of 3 starting steps</small></summary>
                 <div class="member-home-homework-links">
                   <a href="#profile-title"><span aria-hidden="true">&#10003;</span> My written profile</a>
                   <a href="#photos-title"><span aria-hidden="true">&#10003;</span> My photos</a>
@@ -132,7 +132,7 @@
           <div class="homework-header">
             <div>
               <p class="eyebrow">WELCOME TO YOUR NEW OLD INTERNET</p>
-              <h2 id="homework-title">Your homework.</h2>
+              <h2 id="homework-title">Set up your profile.</h2>
               <p>Start telling your story. Find the people who want to read it.</p>
             </div>
             <div class="homework-tally" aria-live="polite"><strong id="homework-progress-count">0 of 3</strong><span>things you can do now</span></div>
@@ -312,25 +312,18 @@
               </div>
             </div>
             <form id="profile-form" hidden novalidate>
+              <input id="profile-name" name="displayName" type="hidden">
               <div class="profile-editor-intro">
                 <p><strong>Build a profile worth reading.</strong> These fields are private for now. You'll get a live preview below as you write.</p>
                 <p id="profile-progress" class="profile-progress">Start with your introduction.</p>
               </div>
               <fieldset class="profile-edit-section">
-                <legend>01 / MY SELF-SUMMARY</legend>
-                <label for="profile-name">Display name</label>
-                <input id="profile-name" name="displayName" type="text" required minlength="2" maxlength="60" autocomplete="nickname">
-                <label for="profile-about">My self-summary</label>
-                <textarea id="profile-about" name="aboutMe" rows="7" maxlength="5000" placeholder="Who are you when nobody's forcing you to write a bio?"></textarea>
-                <span class="hint"><span id="bio-count">0</span> / 5000 characters</span>
-              </fieldset>
-              <fieldset class="profile-edit-section">
-                <legend>02 / BASICS</legend>
+                <legend>01 / BASICS</legend>
                 <p class="profile-fieldset-intro">Enough detail to recognize a person, not enough to find their front door.</p>
                 <div class="profile-field-grid">
                   <div class="profile-field ">
                     <label for="profile-age">Age</label>
-                    <input id="profile-age" name="age" type="number" min="18" max="120" step="1" placeholder="18–120 (self-reported)" inputmode="numeric">
+                    <select id="profile-age" name="age"><option value="">Select age</option></select>
                   </div>
                   <div class="profile-field ">
                     <label for="profile-city-region">My city or town</label>
@@ -362,22 +355,12 @@
                       <label class="classic-choice"><input type="checkbox" name="openTo" value="activity partners"><span>Activity partners</span></label>
                     </div>
                   </fieldset>
-                  <div class="profile-field profile-field-wide">
-                    <label for="profile-looking-for">I'm looking for</label>
-                    <textarea id="profile-looking-for" name="lookingFor" rows="4" maxlength="500" placeholder="Who or what kind of connection are you interested in?"></textarea>
-                  </div>
                 </div>
               </fieldset>
               <fieldset class="profile-edit-section">
-                <legend>03 / MATCH DISTANCE</legend>
+                <legend>02 / MATCH DISTANCE</legend>
                 <p class="profile-fieldset-intro">Private preferences for finding people later. These do not publish your profile or make it discoverable.</p>
                 <div class="profile-field-grid">
-                  <div class="profile-field profile-field-wide">
-                    <label for="search-origin">Search around</label>
-                    <input id="search-origin" name="searchOriginLabel" type="search" maxlength="100" placeholder="My city (leave blank to use my location)" autocomplete="off" spellcheck="false" aria-controls="search-origin-options" aria-autocomplete="list">
-                    <div id="search-origin-options" class="locality-results" role="listbox" aria-label="Search origin towns" hidden></div>
-                    <p id="search-origin-hint" class="hint">Optional: choose a different city to search around.</p>
-                  </div>
                   <div class="profile-field profile-field-wide">
                     <label for="search-radius">Maximum distance</label>
                     <select id="search-radius" name="searchRadiusMiles">
@@ -388,57 +371,47 @@
                       <option value="100">100 miles</option>
                       <option value="250">250 miles</option>
                     </select>
-                    <p class="hint">Straight-line distance between approximate town centers—not driving miles.</p>
+                    <p class="hint">This uses the city or town in your profile. Matching is not live yet.</p>
                   </div>
-                  <p class="profile-field-wide hint">Place data from <a href="https://www.geonames.org/" target="_blank" rel="noopener noreferrer">GeoNames</a> (CC BY 4.0). Matching is not live yet; these preferences are saved privately.</p>
                 </div>
               </fieldset>
               <fieldset class="profile-edit-section">
-                <legend>04 / LIFE & DETAILS</legend>
-                <p class="profile-fieldset-intro">These are conversation starters, not a checklist for human worth.</p>
+                <legend>03 / DETAILS</legend>
+                <p class="profile-fieldset-intro">These appear in the same order as your profile details. All are optional.</p>
                 <div class="profile-field-grid">
-                  <div class="profile-field ">
-                    <label for="profile-work">Work / what you do</label>
-                    <input id="profile-work" name="work" type="text" maxlength="160" placeholder="Your occupation, passions, or projects">
-                  </div>
+                  <div class="profile-field"><label for="profile-orientation">Orientation</label><select id="profile-orientation" name="orientation"><option value="">Select</option><option>Straight</option><option>Gay</option><option>Lesbian</option><option>Bisexual</option><option>Queer</option><option>Pansexual</option><option>Asexual</option><option>Other</option></select></div>
+                  <div class="profile-field"><label for="profile-ethnicity">Ethnicity</label><select id="profile-ethnicity" name="ethnicity" multiple size="4"><option>Asian</option><option>Black</option><option>Hispanic / Latin</option><option>Indigenous</option><option>Middle Eastern</option><option>Pacific Islander</option><option>White</option><option>Other</option></select></div>
+                  <div class="profile-field"><label for="profile-height">Height</label><select id="profile-height" name="height"><option value="">Select</option></select></div>
+                  <div class="profile-field"><label for="profile-body-type">Body type</label><select id="profile-body-type" name="bodyType"><option value="">Select</option><option>Thin</option><option>Athletic</option><option>Average</option><option>Jacked</option><option>Chubby</option><option>Overweight</option></select></div>
+                  <div class="profile-field"><label for="profile-diet">Diet</label><select id="profile-diet" name="diet"><option value="">Select</option><option>Vegan</option><option>Vegetarian</option><option>Carnivore</option><option>Omnivore</option><option>Takis</option></select><label class="checkrow"><input name="dietStrict" type="checkbox"><span>Strictly</span></label></div>
+                  <div class="profile-field"><label for="profile-smoking">Smokes</label><select id="profile-smoking" name="smoking"><option value="">Select</option><option>Never</option><option>Sometimes</option><option>Often</option><option>Just weed</option></select></div>
+                  <div class="profile-field"><label for="profile-vaping">Vapes</label><select id="profile-vaping" name="vaping"><option value="">Select</option><option>Never</option><option>Sometimes</option><option>Often</option><option>Just weed</option></select></div>
+                  <div class="profile-field"><label for="profile-drinking">Drinks</label><select id="profile-drinking" name="drinking"><option value="">Select</option><option>Never</option><option>Sometimes</option><option>Often</option></select></div>
+                  <div class="profile-field"><label for="profile-drugs">Drugs</label><select id="profile-drugs" name="drugs"><option value="">Select</option><option>Never</option><option>Sometimes</option><option>Often</option><option>Just weed</option></select></div>
+                  <div class="profile-field"><label for="profile-religion">Religion</label><select id="profile-religion" name="religion"><option value="">Select</option><option>Agnosticism</option><option>Atheism</option><option>Buddhism</option><option>Christianity</option><option>Hinduism</option><option>Islam</option><option>Judaism</option><option>Sikhism</option><option>Other</option></select><select name="religionImportance"><option value="">Importance</option><option>but it doesn't matter</option><option>and it's kinda important</option><option>and it's really important</option></select></div>
+                  <div class="profile-field"><label for="profile-sign">Sign</label><select id="profile-sign" name="sign"><option value="">Select</option><option>Aries</option><option>Taurus</option><option>Gemini</option><option>Cancer</option><option>Leo</option><option>Virgo</option><option>Libra</option><option>Scorpio</option><option>Sagittarius</option><option>Capricorn</option><option>Aquarius</option><option>Pisces</option></select><select name="signImportance"><option value="">Importance</option><option>but it doesn't matter</option><option>and it's kinda important</option><option>and it's really important</option></select></div>
                   <div class="profile-field ">
                     <label for="profile-education">Education</label>
-                    <input id="profile-education" name="education" type="text" maxlength="120" placeholder="Optional">
+                    <select id="profile-education" name="education"><option value="">Select</option><option>High school dropout</option><option>High school</option><option>Some college</option><option>Associate degree</option><option>Bachelor's degree</option><option>Master's degree</option><option>PhD</option></select><label class="checkrow"><input name="educationWorkingOn" type="checkbox"><span>Working on</span></label>
                   </div>
-                  <div class="profile-field ">
-                    <label for="profile-height">Height</label>
-                    <input id="profile-height" name="height" type="text" maxlength="50" placeholder="Optional">
-                  </div>
-                  <div class="profile-field ">
-                    <label for="profile-kids">Kids</label>
-                    <input id="profile-kids" name="kids" type="text" maxlength="80" placeholder="Optional">
-                  </div>
-                  <div class="profile-field ">
-                    <label for="profile-pets">Pets</label>
-                    <input id="profile-pets" name="pets" type="text" maxlength="80" placeholder="Cats, dogs, houseplants...">
-                  </div>
-                  <div class="profile-field ">
-                    <label for="profile-smoking">Smoking</label>
-                    <input id="profile-smoking" name="smoking" type="text" maxlength="60" placeholder="Optional">
-                  </div>
-                  <div class="profile-field ">
-                    <label for="profile-drinking">Drinking</label>
-                    <input id="profile-drinking" name="drinking" type="text" maxlength="60" placeholder="Optional">
-                  </div>
-                  <div class="profile-field ">
-                    <label for="profile-diet">Diet</label>
-                    <input id="profile-diet" name="diet" type="text" maxlength="100" placeholder="Optional">
-                  </div>
-                  <div class="profile-field ">
-                    <label for="profile-languages">Languages</label>
-                    <input id="profile-languages" name="languages" type="text" maxlength="160" placeholder="Languages you speak">
-                  </div>
+                  <div class="profile-field"><label for="profile-work">Job</label><input id="profile-work" name="work" type="text" maxlength="160"></div>
+                  <div class="profile-field"><label for="profile-income">Income</label><select id="profile-income" name="income"><option value="">Select</option><option>Broke</option><option>Pocket money</option><option>Fuck you money</option></select></div>
+                  <div class="profile-field"><label for="profile-status">Status</label><select id="profile-status" name="status"><option value="">Select</option><option>Single</option><option>Seeing someone</option><option>Married</option></select></div>
+                  <div class="profile-field"><label for="profile-type">Type</label><select id="profile-type" name="relationshipType"><option value="">Select</option><option>Monogamous</option><option>Polyamorous</option></select><label class="checkrow"><input name="relationshipStrict" type="checkbox"><span>Strictly</span></label></div>
+                  <div class="profile-field"><label for="profile-kids">Offspring</label><select id="profile-kids" name="kids"><option value="">Select</option><option>Has kids</option><option>Doesn't have kids</option></select><select name="wantsKids"><option value="">Wants kids?</option><option>Wants kids</option><option>Doesn't want kids</option><option>Open to more kids</option></select></div>
+                  <div class="profile-field"><label for="profile-pets">Pets</label><select id="profile-pets" name="pets" multiple size="4"><option>Has dogs</option><option>Likes dogs</option><option>Has cats</option><option>Likes cats</option><option>Has exotics</option><option>Likes exotics</option></select></div>
+                  <div class="profile-field profile-field-wide"><label>Speaks</label><div class="profile-field-grid"><div class="profile-field"><select name="languageName1" aria-label="First language"><option value="">Select language</option><option>English</option><option>Spanish</option><option>French</option><option>German</option><option>Italian</option><option>Portuguese</option><option>Russian</option><option>Arabic</option><option>Hindi</option><option>Mandarin</option><option>Japanese</option><option>Korean</option><option>Pig Latin</option><option>Other</option></select><select name="languageLevel1" aria-label="First language proficiency"><option value="">Proficiency</option><option>Fluently</option><option>Okay</option><option>Poorly</option></select></div><div class="profile-field"><select name="languageName2" aria-label="Second language"><option value="">Select language</option><option>English</option><option>Spanish</option><option>French</option><option>German</option><option>Italian</option><option>Portuguese</option><option>Russian</option><option>Arabic</option><option>Hindi</option><option>Mandarin</option><option>Japanese</option><option>Korean</option><option>Pig Latin</option><option>Other</option></select><select name="languageLevel2" aria-label="Second language proficiency"><option value="">Proficiency</option><option>Fluently</option><option>Okay</option><option>Poorly</option></select></div><div class="profile-field"><select name="languageName3" aria-label="Third language"><option value="">Select language</option><option>English</option><option>Spanish</option><option>French</option><option>German</option><option>Italian</option><option>Portuguese</option><option>Russian</option><option>Arabic</option><option>Hindi</option><option>Mandarin</option><option>Japanese</option><option>Korean</option><option>Pig Latin</option><option>Other</option></select><select name="languageLevel3" aria-label="Third language proficiency"><option value="">Proficiency</option><option>Fluently</option><option>Okay</option><option>Poorly</option></select></div></div><p class="hint">Choose up to three languages and how well you speak each one.</p></div>
                 </div>
               </fieldset>
               <fieldset class="profile-edit-section">
-                <legend>05 / THE ESSAYS</legend>
+                <legend>04 / THE ESSAYS</legend>
                 <p class="profile-fieldset-intro">The good stuff. The old site had room for actual words; so do we.</p>
                 <div class="profile-field-grid">
+                  <div class="profile-field profile-field-wide">
+                    <label for="profile-about">My self-summary</label>
+                    <textarea id="profile-about" name="aboutMe" rows="7" maxlength="5000"></textarea>
+                    <span class="hint"><span id="bio-count">0</span> / 5000 characters</span>
+                  </div>
                   <div class="profile-field profile-field-wide">
                     <label for="profile-life-direction">What I'm doing with my life</label>
                     <textarea id="profile-life-direction" name="lifeDirection" rows="4" maxlength="2000" placeholder="Projects, dreams, detours, things you're figuring out."></textarea>
@@ -465,10 +438,6 @@
                   </div>
                 </div>
               </fieldset>
-              <label class="checkrow" for="profile-adult">
-                <input id="profile-adult" name="adultConfirmed" type="checkbox" required>
-                <span>I confirm I'm at least 18 years old.</span>
-              </label>
               <button class="button primary" type="submit">Save my profile <span aria-hidden="true">&#9829;</span></button>
               <p class="hint">Your profile is private and is not discoverable yet. No photos or references are published in this phase.</p>
               <div id="saved-info" class="save-info" hidden></div>
@@ -507,9 +476,6 @@
                 <section class="og-preview-essay" id="preview-message-me-if-section" hidden><h4>You should message me if…</h4><p id="preview-message-me-if"></p></section>
               </div>
               <aside class="og-preview-aside">
-                <section class="og-preview-sidebox">
-                  <h4>I'm looking for</h4><p id="preview-looking-for"></p>
-                </section>
                 <section class="og-preview-sidebox">
                   <h4>My details</h4>
                   <dl id="preview-details"></dl>
