@@ -17,6 +17,7 @@ export function createPhotoUI({ requestJson, requestImage, uploadJpeg, onPhotosC
   let generation = 0;
   let activeUser = null;
   let pending = false;
+  let profileReady = false;
 
   function setStatus(text, isError=false) {
     status.textContent = text;
@@ -31,21 +32,23 @@ export function createPhotoUI({ requestJson, requestImage, uploadJpeg, onPhotosC
     gallery.replaceChildren();
     if (!userId) { photos=[]; reportChanged(); setStatus(""); return; }
     setStatus("Loading your photos…");
+    const tempUrls=[];
     try {
       const data = await requestJson("GET", "/photos");
       if (loadId !== generation) return;
       const records = Array.isArray(data.photos) ? data.photos : [];
-      const rendered = await Promise.all(records.map(async photo => {
+      const rendered=[];
+      for(const photo of records){
         const blob = await requestImage("/photos/" + encodeURIComponent(photo.id) + "/bytes");
-        return { ...photo, url: URL.createObjectURL(blob) };
-      }));
-      if (loadId !== generation) {
-        rendered.forEach(item=>URL.revokeObjectURL(item.url));
-        return;
+        if(loadId !== generation) return;
+        const url=URL.createObjectURL(blob);
+        tempUrls.push(url);
+        rendered.push({...photo,url});
       }
       clearUrls();
       photos = rendered;
-      urls = rendered.map(item=>item.url);
+      urls = [...tempUrls];
+      tempUrls.length=0;
       render();
       reportChanged();
       setStatus("");
@@ -56,12 +59,14 @@ export function createPhotoUI({ requestJson, requestImage, uploadJpeg, onPhotosC
         reportChanged();
         setStatus("Couldn't load your photos. Please try refreshing the page.",true);
       }
+    } finally {
+      tempUrls.forEach(url=>URL.revokeObjectURL(url));
     }
   }
   function render() {
     gallery.replaceChildren();
     el("photo-count").textContent = photos.length + " of 5 photos";
-    chooser.disabled = photos.length >= 5;
+    chooser.disabled = !profileReady || photos.length >= 5;
     for (const [index,photo] of photos.entries()) {
       const card = document.createElement("article");
       card.className = "photo-gallery-item";
@@ -131,6 +136,7 @@ export function createPhotoUI({ requestJson, requestImage, uploadJpeg, onPhotosC
   chooser.addEventListener("change", async()=> {
     const file=chooser.files?.[0];
     if (!file) return;
+    if(!profileReady) { setStatus("Save your written profile before adding pictures.",true); chooser.value=""; return; }
     if (photos.length>=5) { setStatus("Five photos is the limit for now.",true); chooser.value=""; return; }
     try {
       await cropper.open(file);
@@ -172,9 +178,19 @@ export function createPhotoUI({ requestJson, requestImage, uploadJpeg, onPhotosC
     chooser.value="";
     clearUrls();
     photos=[];
+    profileReady=false;
+    chooser.disabled=true;
     gallery.replaceChildren();
     setStatus("");
     reportChanged();
   }
-  return { load, reset, get count(){return photos.length;} };
+  function setProfileReady(value) {
+    profileReady = value === true;
+    chooser.disabled = !profileReady || photos.length >= 5;
+    el("photo-file-hint").textContent = profileReady
+      ? "JPEG, PNG or WebP; up to 15 MB before cropping. Your final picture will be a JPEG."
+      : "Save your written profile first, then come back to add photos.";
+  }
+  return { load, reset, setProfileReady, get count(){return photos.length;},
+    get primaryUrl(){return photos.find(photo=>photo.isPrimary)?.url || null;} };
 }
