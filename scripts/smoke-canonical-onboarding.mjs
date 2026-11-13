@@ -94,7 +94,26 @@ async function run(){
   if(!state.photo || state.quiz)throw Error("Primary-photo confirmation or quiz lock incorrect");
   console.log("PASS photo upload and primary-photo confirmation");
 
-  await apiCall("/onboarding","PUT",{step:"persona",answers:Array(28).fill(2)});
+  if(process.argv.includes("--questions")) {
+    const {readFileSync}=await import("node:fs");
+    const contents=readFileSync(new URL("../public/questions/question-bank.js",import.meta.url),"utf8");
+    const bank=JSON.parse(contents.slice(contents.indexOf("{"),contents.lastIndexOf(";")).trim());
+    const first10=bank.questions.filter(q=>q.tier===10).slice(0,10);
+    const next50=bank.questions.filter(q=>q.tier===50).slice(0,15);
+    const selected=[...first10,...next50];
+    if(first10.length!==10 || selected.length!==25)throw Error("Missing required question tiers");
+    for(let i=0;i<selected.length;i++){
+      const q=selected[i];
+      await apiCall("/answers","PUT",{questionId:q.id,optionId:q.optionIds[0],
+        acceptableOptions:[q.optionIds[0]],importance:1,isPrivate:false,note:""});
+      if(i===23 && (await apiCall("/onboarding")).quiz)
+        throw Error("Premature 24-answer unlock");
+    }
+    if((await apiCall("/answers")).answers.length!==25)throw Error("25 answers did not persist");
+    console.log("PASS 25 distinct match questions and 24-answer lock");
+  } else {
+    await apiCall("/onboarding","PUT",{step:"persona",answers:Array(28).fill(2)});
+  }
   state=await apiCall("/onboarding");
   if(!state.quiz || state.verified)throw Error("Persona completion or unverified status incorrect");
   console.log("PASS saved 28-question Persona completion; email remains unverified");
