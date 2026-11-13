@@ -500,6 +500,7 @@ export function createOnboardingUI({
   }
   return {load, refresh, hide, photoChanged, answeredQuestion,
     get active(){return !root.hidden || native!==null;},
+    get nativeSection(){return native;},
     get complete(){return Boolean(status?.explored);},
     get state(){return status;},
   };
