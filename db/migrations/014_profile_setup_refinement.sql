@@ -9,6 +9,7 @@ ALTER TABLE app_private.member_profiles ADD COLUMN IF NOT EXISTS sign text;
 ALTER TABLE app_private.member_profiles ADD COLUMN IF NOT EXISTS income text;
 ALTER TABLE app_private.member_profiles ADD COLUMN IF NOT EXISTS status text;
 ALTER TABLE app_private.member_profiles ADD COLUMN IF NOT EXISTS relationship_type text;
+ALTER TABLE app_private.member_profiles ADD COLUMN IF NOT EXISTS interested_in text;
 
 -- display_name is account identity once a profile has been saved. Profile PUTs
 -- may not rename an existing account/profile.

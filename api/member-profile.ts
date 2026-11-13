@@ -193,6 +193,7 @@ type MemberProfile = {
   gender: string;
   pronouns: string;
   orientation: string;
+  interestedIn: string;
   relationshipGoal: string;
   lookingFor: string;
   work: string;
@@ -226,6 +227,7 @@ function present(row: Record<string, unknown>): MemberProfile {
     gender: String(row.gender ?? ""),
     pronouns: String(row.pronouns ?? ""),
     orientation: String(row.orientation ?? ""),
+    interestedIn: String(row.interested_in ?? ""),
     relationshipGoal: String(row.relationship_goal ?? ""),
     lookingFor: String(row.looking_for ?? ""),
     work: String(row.work ?? ""),
@@ -261,6 +263,7 @@ const profileTextFields = [
   ["gender", "gender", 60],
   ["pronouns", "pronouns", 40],
   ["orientation", "orientation", 60],
+  ["interestedIn", "interested_in", 30],
   ["relationshipGoal", "relationship_goal", 100],
   ["work", "work", 160],
   ["education", "education", 120],
@@ -612,7 +615,7 @@ export default {
       if (request.method === "GET") {
         const result = await withMember(userId, async client => {
           const profile = await client.query(
-            `SELECT user_id, display_name, about_me, age, city_region, gender, pronouns, orientation, relationship_goal, looking_for, work, education, height, kids, pets, smoking, drinking, diet, languages, ethnicity, body_type, vaping, drugs, religion, sign, income, status, relationship_type, life_direction, good_at, favorites, six_things, friday_night, message_me_if, created_at, updated_at FROM app_private.member_profiles WHERE user_id = $1::uuid`,
+            `SELECT user_id, display_name, about_me, age, city_region, gender, pronouns, orientation, interested_in, relationship_goal, work, education, height, kids, pets, smoking, drinking, diet, languages, ethnicity, body_type, vaping, drugs, religion, sign, income, status, relationship_type, life_direction, good_at, favorites, six_things, friday_night, message_me_if, created_at, updated_at FROM app_private.member_profiles WHERE user_id = $1::uuid`,
             [userId],
           );
           const geo = await client.query(

@@ -599,6 +599,16 @@ function restorePairedChoice(form, field, qualifier, value) {
   form.elements[qualifier].value = rest.join(", ");
 }
 
+function updateOffspringOptions() {
+  const form = $("profile-form");
+  const more = form.elements.kids.value === "Has kids" ? " more" : "";
+  const select = form.elements.wantsKids;
+  const previous = select.selectedIndex;
+  select.replaceChildren(new Option("Wants kids?", ""),
+    ...[`Wants${more} kids`, `Doesn't want${more} kids`, `Might want${more} kids`].map(text => new Option(text, text)));
+  select.selectedIndex = Math.max(0, previous);
+}
+
 function readProfileDraft(form = $("profile-form")) {
   const ageValue = form.elements.age.value.trim();
   const draft = {
@@ -614,6 +624,7 @@ function readProfileDraft(form = $("profile-form")) {
     // Existing private text columns are sufficient for the classic fixed choices.
     // Store stable comma-separated option values; no new schema or public access.
     orientation: form.elements.orientation.value,
+    interestedIn: [...form.querySelectorAll('input[name="interestedIn"]:checked')].map(input => input.value).join(", "),
     relationshipGoal: [...form.querySelectorAll('input[name="openTo"]:checked')].map(input => input.value).join(", "),
     pronouns: cachedProfile?.pronouns ?? "",
   };
@@ -640,11 +651,11 @@ function updateClassicRailProgress() {
   const completed = [
     exists("displayName"), exists("aboutMe"), exists("age"), exists("cityRegion"),
     exists("gender"), data.getAll("interestedIn").length > 0,
-    data.getAll("openTo").length > 0, exists("lookingFor"), essay,
+    data.getAll("openTo").length > 0, essay,
   ].filter(Boolean).length;
-  const percentage = Math.round(completed / 9 * 100);
+  const percentage = Math.round(completed / 8 * 100);
   $("classic-rail-progress-fill").style.width = percentage + "%";
-  $("classic-rail-progress-label").textContent = completed + " of 9 starting details";
+  $("classic-rail-progress-label").textContent = completed + " of 8 starting details";
 }
 
 function renderProfilePreview() {
@@ -716,6 +727,8 @@ function showStoredProfile(profile) {
   restorePairedChoice(form, "religion", "religionImportance", profile?.religion);
   restorePairedChoice(form, "sign", "signImportance", profile?.sign);
   restorePairedChoice(form, "kids", "wantsKids", profile?.kids);
+  updateOffspringOptions();
+  form.elements.wantsKids.value = String(profile?.kids ?? "").split(", ")[1] || "";
   homeCityPicker?.restore(profile?.localityId, profile?.localityKey, profile?.cityRegion || "");
   form.elements.searchRadiusMiles.value = profile?.searchRadiusMiles == null ? "" : String(profile.searchRadiusMiles);
   form.querySelectorAll('input[name="gender"]').forEach(input => {
@@ -723,6 +736,9 @@ function showStoredProfile(profile) {
   });
   form.querySelectorAll('input[name="openTo"]').forEach(input => {
     input.checked = String(profile?.relationshipGoal ?? "").split(", ").includes(input.value);
+  });
+  form.querySelectorAll('input[name="interestedIn"]').forEach(input => {
+    input.checked = String(profile?.interestedIn ?? "").split(", ").includes(input.value);
   });
   setValue("orientation", profile?.orientation);
   setValue("ethnicity", "");
@@ -755,6 +771,8 @@ async function loadProfile({ silent = false } = {}) {
 }
 
 function wireForms() {
+  $("profile-kids").addEventListener("change", updateOffspringOptions);
+  updateOffspringOptions();
   const age = $("profile-age");
   for (let value = 18; value <= 120; value += 1) age.add(new Option(String(value), String(value)));
   const height = $("profile-height");
