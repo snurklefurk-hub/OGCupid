@@ -1,0 +1,255 @@
+/*
+ * Signed-in member shell — first integration from the early-2010s visual brief.
+ * Presentation only: do not replace Neon-backed auth/profile/question behavior.
+ * The welcome checklist remains a real, separate signed-in destination.
+ */
+body.is-authenticated {
+  background: #2963a4;
+}
+body.is-authenticated .shell,
+body.is-authenticated.is-welcome-flow .shell,
+body.is-authenticated.is-profile-setup .shell {
+  display: grid;
+  grid-template-columns: 205px minmax(0, 1fr);
+  max-width: 1180px;
+  margin: 12px auto 28px;
+  align-items: stretch;
+}
+body.is-authenticated .topline,
+body.is-authenticated main > .classic-member-topbar,
+body.is-authenticated main > .classic-member-announcement,
+body.is-authenticated main > .intro,
+body.is-authenticated main > .bottom-mark {
+  display: none !important;
+}
+body.is-authenticated .masthead,
+body.is-authenticated.is-welcome-flow .masthead,
+body.is-authenticated.is-profile-setup .masthead {
+  display: flex;
+  grid-row: 1;
+  grid-column: 1;
+  flex-direction: column;
+  background: linear-gradient(165deg, #193d70, #142e56);
+  min-height: 100%;
+}
+body.is-authenticated .masthead .brand-original,
+body.is-authenticated.is-welcome-flow .masthead .brand-original,
+body.is-authenticated.is-profile-setup .masthead .brand-original {
+  display: flex;
+  min-height: 78px;
+  padding: 11px;
+  justify-content: center;
+  background: #fff;
+  border-bottom: 4px solid #477aab;
+}
+body.is-authenticated .masthead .brand-original img,
+body.is-authenticated.is-welcome-flow .masthead .brand-original img,
+body.is-authenticated.is-profile-setup .masthead .brand-original img {
+  width: 165px;
+  filter: none;
+  mix-blend-mode: normal;
+}
+body.is-authenticated .masthead .classic-rail-member {
+  display: flex !important;
+  padding: 14px 12px !important;
+}
+body.is-authenticated .masthead .classic-rail-section,
+body.is-authenticated .masthead .classic-rail-note,
+body.is-authenticated .masthead .classic-rail-pending,
+body.is-authenticated .welcome-side-panel {
+  display: none !important;
+}
+body.is-authenticated .masthead nav.classic-rail-nav {
+  border-top: 1px solid #ffffff18;
+  margin: 0;
+}
+body.is-authenticated .masthead nav.classic-rail-nav a {
+  display: flex;
+  justify-content: flex-start;
+  text-align: left;
+  min-height: 43px;
+  padding: 11px 14px;
+  font-size: 12px;
+  border-bottom: 1px solid #0c274d;
+  color: #d4e5f8;
+}
+body.is-authenticated .masthead nav.classic-rail-nav a[aria-current="page"],
+body.is-authenticated.is-profile-setup .masthead nav.classic-rail-nav a[aria-current="page"] {
+  background: #275589;
+  color: #fff;
+  border-left: 3px solid #f07ba6;
+  padding-left: 11px;
+}
+body.is-authenticated main,
+body.is-authenticated.is-welcome-flow main,
+body.is-authenticated.is-profile-setup main {
+  grid-row: 1;
+  grid-column: 2;
+  min-width: 0;
+  min-height: 70vh;
+  background: #f7f8fa;
+}
+body.is-authenticated .member-legal-footer {
+  grid-column: 1 / -1;
+  grid-row: 2;
+}
+body.is-authenticated .notice:not([hidden]) {
+  margin: 10px 18px;
+}
+body.is-authenticated #member-columns[data-member-page] {
+  padding: 14px 18px 22px;
+}
+body.is-authenticated #member-home-dashboard {
+  margin: 12px 18px 24px;
+}
+body.is-authenticated .member-home-header {
+  padding-top: 13px;
+  padding-bottom: 12px;
+}
+body.is-authenticated.is-profile-setup #member-columns {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 25px 28px 38px;
+}
+body.is-authenticated.is-welcome-flow .welcome-checklist {
+  min-height: 0;
+}
+body.is-authenticated.is-welcome-flow .welcome-page-tabs {
+  display: none;
+}
+body.is-authenticated.is-welcome-flow .welcome-center {
+  max-width: 790px;
+  margin: 0 auto;
+  padding: 24px 30px 36px;
+}
+body.is-authenticated.is-welcome-flow .welcome-center-intro {
+  margin-bottom: 14px;
+  text-align: left;
+}
+body.is-authenticated.is-welcome-flow .welcome-center-intro h2 {
+  font-size: clamp(25px, 3vw, 34px);
+}
+body.is-authenticated.is-welcome-flow .welcome-current-step {
+  margin: 14px 0;
+}
+@media (max-width: 760px) {
+  body.is-authenticated .shell,
+  body.is-authenticated.is-welcome-flow .shell,
+  body.is-authenticated.is-profile-setup .shell {
+    display: block;
+    margin: 7px 7px 25px;
+    width: auto;
+    max-width: none;
+  }
+  body.is-authenticated .masthead,
+  body.is-authenticated.is-welcome-flow .masthead,
+  body.is-authenticated.is-profile-setup .masthead {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(120px, auto);
+    align-items: center;
+    min-height: 0;
+  }
+  body.is-authenticated .masthead .brand-original,
+  body.is-authenticated.is-welcome-flow .masthead .brand-original,
+  body.is-authenticated.is-profile-setup .masthead .brand-original {
+    grid-column: 1;
+    min-height: 0;
+    padding: 8px 11px;
+    border-bottom: 0;
+    justify-content: flex-start;
+  }
+  body.is-authenticated .masthead .brand-original img,
+  body.is-authenticated.is-welcome-flow .masthead .brand-original img,
+  body.is-authenticated.is-profile-setup .masthead .brand-original img {
+    width: min(145px, 100%);
+  }
+  body.is-authenticated .masthead .classic-rail-member {
+    grid-column: 2;
+    display: flex !important;
+    min-width: 0;
+    padding: 8px 10px !important;
+    font-size: 11px;
+  }
+  body.is-authenticated .classic-rail-member .classic-rail-avatar {
+    display: none;
+  }
+  body.is-authenticated .classic-rail-welcome strong {
+    max-width: 128px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  body.is-authenticated .masthead nav.classic-rail-nav,
+  body.is-authenticated.is-welcome-flow .masthead nav.classic-rail-nav,
+  body.is-authenticated.is-profile-setup .masthead nav.classic-rail-nav {
+    grid-column: 1 / -1;
+    display: flex !important;
+    flex-direction: row;
+    flex-wrap: nowrap !important;
+    grid-template-columns: none !important;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    border-top: 1px solid #3e628e;
+    margin: 0;
+  }
+  body.is-authenticated .masthead nav.classic-rail-nav a,
+  body.is-authenticated.is-welcome-flow .masthead nav.classic-rail-nav a,
+  body.is-authenticated.is-profile-setup .masthead nav.classic-rail-nav a {
+    display: flex !important;
+    flex: 0 0 auto !important;
+    width: auto !important;
+    padding: 10px 12px !important;
+    min-height: 43px;
+    white-space: nowrap;
+    text-align: center;
+    justify-content: center;
+    font-size: 12px !important;
+    border: 0;
+    border-right: 1px solid #254972;
+  }
+  body.is-authenticated .masthead nav.classic-rail-nav a[aria-current="page"] {
+    box-shadow: inset 0 -3px #f07ba6;
+    border-left: 0;
+    background: #2c6096;
+  }
+  body.is-authenticated .masthead .classic-rail-icon,
+  body.is-authenticated.is-welcome-flow .masthead .classic-rail-icon,
+  body.is-authenticated.is-profile-setup .masthead .classic-rail-icon {
+    display: none !important;
+  }
+  body.is-authenticated .masthead nav.classic-rail-nav a[href="/"],
+  body.is-authenticated .masthead nav.classic-rail-nav a[href="/ogtrends/"] {
+    display: none !important;
+  }
+  body.is-authenticated #member-columns[data-member-page],
+  body.is-authenticated.is-profile-setup #member-columns {
+    max-width: none;
+    padding: 12px 10px 22px;
+  }
+  body.is-authenticated #member-home-dashboard {
+    margin: 10px 10px 20px;
+  }
+  body.is-authenticated.is-welcome-flow .welcome-center {
+    padding: 19px 16px 30px;
+  }
+  body.is-authenticated.is-welcome-flow .welcome-center-intro {
+    text-align: left;
+  }
+  body.is-authenticated.is-welcome-flow main {
+    min-height: 0;
+  }
+  body.is-authenticated .notice:not([hidden]) {
+    margin: 9px 10px;
+  }
+}
+@media (max-width: 420px) {
+  body.is-authenticated .masthead nav.classic-rail-nav a {
+    font-size: 11px !important;
+  }
+  body.is-authenticated.is-welcome-flow .welcome-step-content h3 {
+    font-size: 15px;
+  }
+}
