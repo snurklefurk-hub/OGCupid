@@ -28,6 +28,7 @@
       <div class="classic-rail-guest" id="classic-rail-guest">The good internet is making a comeback.<br><b>Make yourself at home.</b></div>
       <nav aria-label="Member navigation" class="classic-rail-nav">
         <a href="#member-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#8962;</span> My home</a>
+        <a href="#settings-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#9881;</span> Account settings</a>
         <a href="#profile-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#9825;</span> My profile</a>
         <a href="#photos-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#10064;</span> My photos</a>
         <span class="classic-rail-pending"><span class="classic-rail-icon" aria-hidden="true">&#9734;</span> Matches <small>soon</small></span>
@@ -54,7 +55,7 @@
         <span class="stamp">OG CUPID / YOUR CORNER OF THE INTERNET</span>
         <h1>A little more <em>you.</em></h1>
         <p>Remember when a dating profile told you something about a person? Your page. Your words. Your weird little corner of the internet.</p>
-        <nav class="classic-member-tabs" aria-label="Member sections"><a href="#member-title">Home</a><a href="#profile-title">My profile</a><a href="#photos-title">Photos</a><a href="#question-title">Questions</a><a href="/account/persona.html">Dating persona</a></nav>
+        <nav class="classic-member-tabs" aria-label="Member sections"><a href="#member-title">Home</a><a href="#profile-title">My profile</a><a href="#photos-title">Photos</a><a href="#question-title">Questions</a><a href="#settings-title" data-classic-auth hidden>Account settings</a><a href="/account/persona.html">Dating persona</a></nav>
       </div>
 
       <div id="notice" class="notice" role="status" aria-live="polite">Checking membership availability.</div>
@@ -67,6 +68,66 @@
       </section>
 
       <div id="app-view" hidden>
+
+        <div id="member-title" class="classic-home-anchor" tabindex="-1"></div>
+        <section class="paper member-home-dashboard" id="member-home-dashboard" hidden aria-labelledby="dashboard-title">
+          <header class="member-home-header">
+            <p class="eyebrow">YOUR CORNER OF THE INTERNET</p>
+            <div class="member-home-welcome">
+              <div>
+                <h2 id="dashboard-title">Welcome back, <span id="dashboard-member-name">friend</span>.</h2>
+                <p>The good stuff is in the people. Make yourself at home.</p>
+              </div>
+              <a class="member-home-settings" href="#settings-title">Account settings</a>
+            </div>
+          </header>
+          <div class="member-home-grid">
+            <div class="member-home-primary">
+              <section class="member-home-section member-home-matches" aria-labelledby="dashboard-matches-title">
+                <div class="member-home-section-head">
+                  <h3 id="dashboard-matches-title">You might like...</h3>
+                  <span class="member-home-section-tag">MATCHES</span>
+                </div>
+                <div class="member-home-empty">
+                  <p>Good matches will show up here when member discovery and compatibility matching are ready.</p>
+                  <p>We'd rather introduce you to real people than make up a list.</p>
+                </div>
+              </section>
+              <section class="member-home-section" aria-labelledby="dashboard-community-title">
+                <div class="member-home-section-head">
+                  <h3 id="dashboard-community-title">What's happening?</h3>
+                  <span class="member-home-section-tag">COMMUNITY</span>
+                </div>
+                <p class="member-home-section-intro">Community conversations, member-made quizzes, and new activity will live here once those features launch. For now, there are still good rabbit holes to explore.</p>
+                <div class="member-home-link-grid">
+                  <a href="/ogtrends/" class="member-home-discovery-link"><strong>OgTrends</strong><span>Read something worth thinking about.</span></a>
+                  <a href="/account/persona.html" class="member-home-discovery-link"><strong>Dating Persona Test</strong><span>28 questions. A little self-discovery.</span></a>
+                </div>
+              </section>
+            </div>
+            <aside class="member-home-aside" aria-label="More to explore">
+              <section class="member-home-section" aria-labelledby="dashboard-nearby-title">
+                <h3 id="dashboard-nearby-title">Who's around?</h3>
+                <p class="member-home-side-note">Recently active members and their last-online status will appear when member browsing is available.</p>
+              </section>
+              <section class="member-home-section member-home-questions" aria-labelledby="dashboard-questions-title">
+                <h3 id="dashboard-questions-title">Keep answering.</h3>
+                <p><strong id="dashboard-question-count">0</strong> <span id="dashboard-question-label">questions answered</span></p>
+                <p class="member-home-side-note">It's amazing what you can learn about someone from one little question.</p>
+                <a href="#question-title" class="button primary">Answer another question &rarr;</a>
+              </section>
+              <details class="member-home-compact-homework" id="dashboard-homework-details">
+                <summary><span>My homework</span><small id="dashboard-homework-count">3 of 3 starting steps</small></summary>
+                <div class="member-home-homework-links">
+                  <a href="#profile-title"><span aria-hidden="true">&#10003;</span> My written profile</a>
+                  <a href="#photos-title"><span aria-hidden="true">&#10003;</span> My photos</a>
+                  <a href="#question-title"><span aria-hidden="true">&#10003;</span> My questions</a>
+                  <p>Member discovery is coming later. You can keep polishing your profile anytime.</p>
+                </div>
+              </details>
+            </aside>
+          </div>
+        </section>
         <section class="paper homework-dashboard" id="homework-dashboard" hidden aria-labelledby="homework-title">
           <div class="homework-header">
             <div>
@@ -193,10 +254,10 @@
             <p class="footnote">Your email and sign-in details are never shown on a public profile. Recovery uses email codes.</p>
           </section>
 
-          <section class="paper" id="member-view" hidden aria-labelledby="member-title">
+          <section class="paper" id="member-view" hidden aria-labelledby="settings-title">
             <p class="eyebrow">01 / ACCOUNT</p>
             <div class="panel-head">
-              <h2 id="member-title">WELCOME BACK.</h2>
+              <h2 id="settings-title">ACCOUNT SETTINGS.</h2>
               <span class="mini-heart" aria-hidden="true">&#9829;</span>
             </div>
             <p id="member-welcome" class="member-name"></p>
