@@ -1203,7 +1203,7 @@ async function start() {
     return;
   }
   show("app-view", true);
-  chooseAuthTab("signin");
+  chooseAuthTab(new URLSearchParams(location.search).get("join")==="1" ? "signup" : "signin");
   profileGallery = createProfilePhotoGallery({
     primaryButton: $("preview-primary-photo"),
     thumbnailStrip: $("preview-photo-thumbnails"),
