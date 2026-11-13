@@ -8,9 +8,9 @@
   <meta name="referrer" content="no-referrer">
   <meta name="description" content="OG Cupid member accounts and profiles. Bringing back people, not swipes.">
   <title>Your corner of the internet | OG Cupid</title>
-  <script type="module" crossorigin src="./assets/index-DwA3sif2.js"></script>
+  <script type="module" crossorigin src="./assets/index-DCvNByVH.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/neon-auth-BIaN13e0.js">
-  <link rel="stylesheet" crossorigin href="./assets/index-BnaJjrKu.css">
+  <link rel="stylesheet" crossorigin href="./assets/index-DrXaCBk_.css">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -28,7 +28,9 @@
       <div class="classic-rail-guest" id="classic-rail-guest">The good internet is making a comeback.<br><b>Make yourself at home.</b></div>
       <nav aria-label="Member navigation" class="classic-rail-nav">
         <a href="#member-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#8962;</span> My home</a>
+        <a href="#settings-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#9881;</span> Account settings</a>
         <a href="#profile-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#9825;</span> My profile</a>
+        <a href="#photos-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#10064;</span> My photos</a>
         <span class="classic-rail-pending"><span class="classic-rail-icon" aria-hidden="true">&#9734;</span> Matches <small>soon</small></span>
         <span class="classic-rail-pending"><span class="classic-rail-icon" aria-hidden="true">&#9993;</span> Messages <small>soon</small></span>
         <a href="#question-title"><span class="classic-rail-icon" aria-hidden="true">&#9678;</span> Questions</a>
@@ -53,7 +55,7 @@
         <span class="stamp">OG CUPID / YOUR CORNER OF THE INTERNET</span>
         <h1>A little more <em>you.</em></h1>
         <p>Remember when a dating profile told you something about a person? Your page. Your words. Your weird little corner of the internet.</p>
-        <nav class="classic-member-tabs" aria-label="Member sections"><a href="#member-title">Home</a><a href="#profile-title">My profile</a><a href="#question-title">Questions</a><a href="/account/persona.html">Dating persona</a></nav>
+        <nav class="classic-member-tabs" aria-label="Member sections"><a href="#member-title">Home</a><a href="#profile-title">My profile</a><a href="#photos-title">Photos</a><a href="#question-title">Questions</a><a href="#settings-title" data-classic-auth hidden>Account settings</a><a href="/account/persona.html">Dating persona</a></nav>
       </div>
 
       <div id="notice" class="notice" role="status" aria-live="polite">Checking membership availability.</div>
@@ -66,6 +68,66 @@
       </section>
 
       <div id="app-view" hidden>
+
+        <div id="member-title" class="classic-home-anchor" tabindex="-1"></div>
+        <section class="paper member-home-dashboard" id="member-home-dashboard" hidden aria-labelledby="dashboard-title">
+          <header class="member-home-header">
+            <p class="eyebrow">YOUR CORNER OF THE INTERNET</p>
+            <div class="member-home-welcome">
+              <div>
+                <h2 id="dashboard-title">Welcome back, <span id="dashboard-member-name">friend</span>.</h2>
+                <p>The good stuff is in the people. Make yourself at home.</p>
+              </div>
+              <a class="member-home-settings" href="#settings-title">Account settings</a>
+            </div>
+          </header>
+          <div class="member-home-grid">
+            <div class="member-home-primary">
+              <section class="member-home-section member-home-matches" aria-labelledby="dashboard-matches-title">
+                <div class="member-home-section-head">
+                  <h3 id="dashboard-matches-title">You might like...</h3>
+                  <span class="member-home-section-tag">MATCHES</span>
+                </div>
+                <div class="member-home-empty">
+                  <p>Good matches will show up here when member discovery and compatibility matching are ready.</p>
+                  <p>We'd rather introduce you to real people than make up a list.</p>
+                </div>
+              </section>
+              <section class="member-home-section" aria-labelledby="dashboard-community-title">
+                <div class="member-home-section-head">
+                  <h3 id="dashboard-community-title">What's happening?</h3>
+                  <span class="member-home-section-tag">COMMUNITY</span>
+                </div>
+                <p class="member-home-section-intro">Community conversations, member-made quizzes, and new activity will live here once those features launch. For now, there are still good rabbit holes to explore.</p>
+                <div class="member-home-link-grid">
+                  <a href="/ogtrends/" class="member-home-discovery-link"><strong>OgTrends</strong><span>Read something worth thinking about.</span></a>
+                  <a href="/account/persona.html" class="member-home-discovery-link"><strong>Dating Persona Test</strong><span>28 questions. A little self-discovery.</span></a>
+                </div>
+              </section>
+            </div>
+            <aside class="member-home-aside" aria-label="More to explore">
+              <section class="member-home-section" aria-labelledby="dashboard-nearby-title">
+                <h3 id="dashboard-nearby-title">Who's around?</h3>
+                <p class="member-home-side-note">Recently active members and their last-online status will appear when member browsing is available.</p>
+              </section>
+              <section class="member-home-section member-home-questions" aria-labelledby="dashboard-questions-title">
+                <h3 id="dashboard-questions-title">Keep answering.</h3>
+                <p><strong id="dashboard-question-count">0</strong> <span id="dashboard-question-label">questions answered</span></p>
+                <p class="member-home-side-note">It's amazing what you can learn about someone from one little question.</p>
+                <a href="#question-title" class="button primary">Answer another question &rarr;</a>
+              </section>
+              <details class="member-home-compact-homework" id="dashboard-homework-details">
+                <summary><span>My homework</span><small id="dashboard-homework-count">3 of 3 starting steps</small></summary>
+                <div class="member-home-homework-links">
+                  <a href="#profile-title"><span aria-hidden="true">&#10003;</span> My written profile</a>
+                  <a href="#photos-title"><span aria-hidden="true">&#10003;</span> My photos</a>
+                  <a href="#question-title"><span aria-hidden="true">&#10003;</span> My questions</a>
+                  <p>Member discovery is coming later. You can keep polishing your profile anytime.</p>
+                </div>
+              </details>
+            </aside>
+          </div>
+        </section>
         <section class="paper homework-dashboard" id="homework-dashboard" hidden aria-labelledby="homework-title">
           <div class="homework-header">
             <div>
@@ -73,7 +135,7 @@
               <h2 id="homework-title">Your homework.</h2>
               <p>Start telling your story. Find the people who want to read it.</p>
             </div>
-            <div class="homework-tally" aria-live="polite"><strong id="homework-progress-count">0 of 2</strong><span>things you can do now</span></div>
+            <div class="homework-tally" aria-live="polite"><strong id="homework-progress-count">0 of 3</strong><span>things you can do now</span></div>
           </div>
           <p id="homework-next" class="homework-next">First, give us the real you.</p>
           <ol class="homework-list">
@@ -85,14 +147,14 @@
             </li>
             <li class="homework-item" id="homework-photos">
               <span class="homework-number" aria-hidden="true">02</span>
-              <div class="homework-copy"><h3>Add some photos</h3><p>Your words first, your pictures second. Private photo uploads are being built.</p></div>
-              <span class="homework-state">Coming soon</span>
-              <span class="homework-unavailable">Photo uploads not available yet</span>
+              <div class="homework-copy"><h3>Add some photos</h3><p>Show a little of your life. Your pictures are visible to logged-in OG Cupid members.</p></div>
+              <span class="homework-state" id="homework-photos-state">0 of 5 photos</span>
+              <a class="button" href="#photos-title">Add photos &rarr;</a>
             </li>
             <li class="homework-item" id="homework-questions">
               <span class="homework-number" aria-hidden="true">03</span>
-              <div class="homework-copy"><h3>Answer match questions</h3><p>Start with ten questions. Your answers will help us figure out who gets you.</p></div>
-              <span class="homework-state" id="homework-questions-state">0 of 10 answered</span>
+              <div class="homework-copy"><h3>Answer match questions</h3><p>Answer questions about yourself and what matters to you. Keep going whenever you like.</p></div>
+              <span class="homework-state" id="homework-questions-state">0 answered</span>
               <a class="button" href="#question-title">Answer questions &rarr;</a>
             </li>
             <li class="homework-item" id="homework-meet">
@@ -192,10 +254,10 @@
             <p class="footnote">Your email and sign-in details are never shown on a public profile. Recovery uses email codes.</p>
           </section>
 
-          <section class="paper" id="member-view" hidden aria-labelledby="member-title">
+          <section class="paper" id="member-view" hidden aria-labelledby="settings-title">
             <p class="eyebrow">01 / ACCOUNT</p>
             <div class="panel-head">
-              <h2 id="member-title">WELCOME BACK.</h2>
+              <h2 id="settings-title">ACCOUNT SETTINGS.</h2>
               <span class="mini-heart" aria-hidden="true">&#9829;</span>
             </div>
             <p id="member-welcome" class="member-name"></p>
@@ -417,11 +479,16 @@
         <section class="paper profile-preview-panel" id="profile-preview-panel" hidden aria-labelledby="preview-title">
           <div class="profile-preview-heading">
             <div><p class="eyebrow">YOUR PROFILE / PRIVATE PREVIEW</p><h2 id="preview-title">THE CLASSIC PROFILE, REBORN.</h2></div>
-            <p>Exactly your words. No fake references, no invented photos, and nothing public until discovery controls are ready.</p>
+            <p>Exactly your words and your photos. Pictures are intended for signed-in members; wider profile discovery remains under development.</p>
           </div>
           <article class="og-profile-preview" aria-label="How your profile will look to members">
             <header class="og-preview-hero">
-              <div class="og-preview-avatar" aria-hidden="true">♥</div>
+              <div class="og-preview-photo-column" aria-label="Your profile pictures">
+                <button id="preview-primary-photo" class="og-preview-main-photo" type="button" disabled aria-label="No profile photos yet">
+                  <span class="og-preview-photo-placeholder" aria-hidden="true">&#9829;</span>
+                </button>
+                <div id="preview-photo-thumbnails" class="og-preview-photo-thumbnails" aria-label="More profile photos"></div>
+              </div>
               <div class="og-preview-identity">
                 <span class="og-preview-status">PRIVATE DRAFT / ONLY YOU CAN VIEW THIS</span>
                 <h3 id="preview-display-name">Your name goes here</h3>
@@ -456,33 +523,107 @@
             </div>
           </article>
         </section>
-        <section class="paper question-panel" id="questions-panel" aria-labelledby="question-title">
-          <p class="eyebrow">03 / MATCH QUESTIONS</p>
-          <h2 id="question-title">THE GOOD QUESTIONS.</h2>
-          <p id="question-locked">Sign in to answer the curated match questions. Your answers stay attached to your account.</p>
-          <div id="question-view" hidden>
-            <p id="question-progress" class="question-progress"></p>
-            <label for="answered-review">Review a saved answer</label>
-            <select id="answered-review"><option value="">Continue with unanswered questions</option></select>
-            <form id="question-form" novalidate>
-              <fieldset id="question-choices">
-                <legend id="question-prompt"></legend>
-              </fieldset>
-              <fieldset id="acceptable-choices">
-                <legend>Answers you would accept from someone else</legend>
-              </fieldset>
-              <label for="question-importance">How much does this matter?</label>
-              <select id="question-importance" name="importance">
-                <option value="0">Irrelevant</option><option value="1" selected>A little</option>
-                <option value="10">Somewhat</option><option value="50">Very</option><option value="250">Mandatory</option>
+        <dialog id="profile-photo-viewer" class="og-photo-viewer" aria-label="Profile photo viewer">
+          <div class="og-photo-viewer-header">
+            <span>PROFILE PHOTOS <strong id="profile-photo-viewer-count">1 of 1</strong></span>
+            <button id="profile-photo-viewer-close" class="og-photo-viewer-close" type="button">Close <span aria-hidden="true">×</span></button>
+          </div>
+          <div class="og-photo-viewer-stage">
+            <button id="profile-photo-viewer-prev" class="og-photo-viewer-arrow" type="button" aria-label="Previous photo">‹</button>
+            <img id="profile-photo-viewer-image" alt="">
+            <button id="profile-photo-viewer-next" class="og-photo-viewer-arrow" type="button" aria-label="Next photo">›</button>
+          </div>
+          <p class="og-photo-viewer-tip">Use the arrows to browse, or Escape to close.</p>
+        </dialog>
+        <section class="paper photo-panel" id="photo-panel" hidden aria-labelledby="photos-title">
+          <p class="eyebrow">03 / THE PHOTO ALBUM</p>
+          <div class="panel-head">
+            <h2 id="photos-title">ADD SOME PHOTOS.</h2>
+            <span class="mini-heart" aria-hidden="true">&#10064;</span>
+          </div>
+          <p>Five photos, including your main picture. Every photo can be viewed by signed-in members visiting your profile. Photos shared in private messages are separate.</p>
+          <p class="photo-guidance">Crop each picture before uploading. Move it around, zoom, then choose square, portrait or landscape. We keep the finished crop, not the original file.</p>
+          <div class="photo-upload-controls">
+            <label class="button primary photo-file-control" for="photo-file">Choose a photo <span aria-hidden="true">&rarr;</span></label>
+            <input id="photo-file" name="photo-file" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="photo-file-hint">
+            <p class="hint" id="photo-file-hint">JPEG, PNG or WebP; up to 15 MB before cropping. Your final picture will be a JPEG.</p>
+          </div>
+          <div class="photo-gallery-header">
+            <h3>Your photo album</h3>
+            <span id="photo-count" aria-live="polite">No photos yet</span>
+          </div>
+          <div id="photo-gallery" class="photo-gallery" aria-live="polite"></div>
+          <p id="photo-status" class="hint" role="status" aria-live="polite"></p>
+          <dialog id="photo-crop-dialog" class="photo-crop-dialog" aria-labelledby="photo-crop-title">
+            <div class="photo-crop-heading">
+              <h3 id="photo-crop-title">Crop your photo</h3>
+              <button type="button" id="photo-crop-close" class="quiet-button" aria-label="Close cropper">Close</button>
+            </div>
+            <p>Drag the picture to reposition it, or use the zoom slider.</p>
+            <div class="photo-crop-preview"><canvas id="photo-crop-canvas" width="600" height="600" aria-label="Photo cropping preview; drag to reposition"></canvas></div>
+            <div class="photo-crop-settings">
+              <label for="photo-crop-ratio">Crop shape</label>
+              <select id="photo-crop-ratio">
+                <option value="square">Square (1:1)</option>
+                <option value="portrait">Portrait (4:5)</option>
+                <option value="landscape">Landscape (3:2)</option>
               </select>
-              <label for="question-note">Anything to add? (private, optional)</label>
-              <textarea id="question-note" name="note" rows="2" maxlength="400"></textarea>
-              <label class="checkrow" for="question-private"><input id="question-private" name="private" type="checkbox"><span>Keep this answer private</span></label>
-              <button class="button primary" type="submit">Save answer and continue &rarr;</button>
-              <button id="question-skip" class="quiet-button" type="button" hidden>Skip for now</button>
+              <label for="photo-crop-zoom">Zoom</label>
+              <input id="photo-crop-zoom" type="range" min="1" max="3" step=".05" value="1">
+            </div>
+            <div class="photo-crop-actions">
+              <button id="photo-crop-cancel" type="button" class="button">Cancel</button>
+              <button id="photo-crop-save" type="button" class="button primary">Crop &amp; upload</button>
+            </div>
+          </dialog>
+        </section>
+        <section class="paper question-panel" id="questions-panel" aria-labelledby="question-title">
+          <p class="eyebrow">04 / THE GOOD QUESTIONS</p>
+          <h2 id="question-title">A LITTLE MORE THAN SMALL TALK.</h2>
+          <p class="classic-questions-intro">Answer what matters to you. Tell us what you'd be happy to hear from someone else. The good matches start with the good questions.</p>
+          <p id="question-locked">Sign in to answer match questions. Your answers are saved to your account.</p>
+          <div id="question-view" hidden>
+            <div class="classic-question-status">
+              <p id="question-progress" class="question-progress" aria-live="polite"></p>
+            </div>
+            <div class="classic-question-review">
+              <label for="answered-review">Want to change an old answer?</label>
+              <select id="answered-review"><option value="">Keep answering new questions</option></select>
+            </div>
+            <form id="question-form" class="classic-question-form" novalidate>
+              <div class="classic-question-card">
+                <p class="classic-question-step">01 <span>YOUR ANSWER</span></p>
+                <fieldset id="question-choices" class="classic-question-options">
+                  <legend id="question-prompt"></legend>
+                </fieldset>
+                <fieldset id="acceptable-choices" class="classic-question-options classic-acceptable-options">
+                  <legend>02 <span>ANSWERS I'LL ACCEPT</span></legend>
+                  <p id="acceptable-hint" class="classic-question-helper">Choose any answers you'd be happy to get from someone you're matched with.</p>
+                </fieldset>
+                <fieldset class="classic-question-importance">
+                  <legend>03 <span>HOW IMPORTANT IS THIS TO ME?</span></legend>
+                  <div class="classic-question-rating-options">
+                    <label><input type="radio" name="importance" value="0"><span>Irrelevant</span></label>
+                    <label><input type="radio" name="importance" value="1" checked><span>A little important</span></label>
+                    <label><input type="radio" name="importance" value="10"><span>Somewhat important</span></label>
+                    <label><input type="radio" name="importance" value="50"><span>Very important</span></label>
+                    <label><input type="radio" name="importance" value="250"><span>Dealbreaker</span></label>
+                  </div>
+                </fieldset>
+                <div class="classic-question-explain">
+                  <label for="question-note"><span class="classic-question-step">04 <span>EXPLAIN YOUR ANSWER</span></span><small>Optional private note, for your own reference</small></label>
+                  <textarea id="question-note" name="note" rows="3" maxlength="400" placeholder="Anything you'd like to remember about your answer?"></textarea>
+                </div>
+                <label class="checkrow classic-question-private" for="question-private"><input id="question-private" name="private" type="checkbox"><span>Keep this answer private</span></label>
+                <p id="question-answer-error" class="classic-question-error" role="alert" hidden></p>
+              </div>
+              <div class="classic-question-actions">
+                <button class="button primary" type="submit">Save answer &amp; next question &rarr;</button>
+                <button id="question-skip" class="quiet-button" type="button" hidden>Skip this question</button>
+              </div>
             </form>
-            <p id="question-complete" hidden>You've answered the full curated set. Come back as we build matching.</p>
+            <p id="question-complete" class="classic-question-complete" hidden>You've answered every question in the curated set. Come back as we build matching.</p>
+            <p id="question-pause" class="classic-question-complete" hidden>That's everything left in this session. Return later to revisit skipped questions, or select a saved answer above.</p>
           </div>
         </section>
         <section class="paper member-persona-panel" id="member-persona-panel" hidden aria-labelledby="member-persona-title">
