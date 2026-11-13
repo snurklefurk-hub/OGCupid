@@ -312,3 +312,104 @@ form input:focus,form textarea:focus,.profile-field select:focus-visible{outline
 @media(prefers-reduced-motion:reduce){
   .og-preview-main-photo,.og-preview-photo-thumb{scroll-behavior:auto}
 }
+
+
+/* Early OkCupid-style match questions — real question bank and saved answers. */
+.classic-questions-intro{
+  max-width:650px;margin:0 0 20px;color:#61788d;font:13px/1.65 Arial,Helvetica,sans-serif
+}
+.classic-question-status{padding:15px 18px 12px;background:#f0f5f9;border:1px solid #d3e0ea}
+.classic-question-status-line{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.question-panel .classic-question-status .question-progress{
+  margin:0 0 7px;color:#305f90;font:700 12px/1.5 Arial,Helvetica,sans-serif;
+  letter-spacing:0;text-transform:none
+}
+.classic-question-tier{font:700 10px/1.3 Arial,Helvetica,sans-serif;color:#8a5b77;letter-spacing:.07em}
+.classic-question-status progress{display:block;width:100%;height:7px;margin:0;appearance:none;accent-color:#e8659a;border:0;border-radius:20px;background:#dce8f1;overflow:hidden}
+.classic-question-status progress::-webkit-progress-bar{background:#dce8f1}
+.classic-question-status progress::-webkit-progress-value{background:#e8659a}
+.classic-question-status progress::-moz-progress-bar{background:#e8659a}
+.classic-question-review{display:flex;align-items:center;justify-content:space-between;gap:10px 20px;flex-wrap:wrap;padding:15px 0 18px;border-bottom:1px solid #dbe6ed}
+.classic-question-review label{color:#5a7592;font:700 12px Arial,Helvetica,sans-serif}
+.question-panel .classic-question-review #answered-review{
+  width:min(100%,420px);margin:0;padding:8px 11px;
+  border:1px solid #c4d3e0;border-radius:3px;color:#345d85;background:#fff;
+  font:12px Arial,Helvetica,sans-serif
+}
+.classic-question-card{padding:25px 26px 22px;background:#fff;border:1px solid #d6e2e9;border-top:4px solid #376da0;margin:19px 0 0}
+.classic-question-step,.question-panel .classic-question-importance legend,
+.question-panel .classic-acceptable-options legend{
+  margin:0 0 11px;color:#da578c;font:700 11px/1.4 Arial,Helvetica,sans-serif;
+  letter-spacing:.09em
+}
+.classic-question-step span,
+.question-panel .classic-question-importance legend span,
+.question-panel .classic-acceptable-options legend span{color:#375f88}
+.question-panel .classic-question-form fieldset{
+  border:0;padding:0;margin:0 0 25px;min-width:0
+}
+.question-panel .classic-question-options#question-choices legend{
+  display:block;width:100%;margin:0 0 17px;color:#305b83;
+  font:normal clamp(23px,2.7vw,29px)/1.28 Georgia,"Times New Roman",serif;
+  letter-spacing:-.25px;overflow-wrap:anywhere
+}
+.question-panel .classic-question-form .classic-question-options#acceptable-choices legend{
+  margin:0 0 6px;font:700 11px/1.4 Arial,Helvetica,sans-serif;color:#da578c;
+  letter-spacing:.09em
+}
+.classic-question-helper{margin:3px 0 13px;font:12px/1.55 Arial,Helvetica,sans-serif;color:#718699}
+.question-panel .classic-question-options .classic-question-choice,
+.question-panel .classic-question-importance .classic-question-rating-options label{
+  display:flex;align-items:center;gap:11px;margin:6px 0;padding:10px 12px;
+  border:1px solid #d4e0e9;border-radius:3px;background:#fdfefe;
+  font:normal 13px/1.5 Arial,Helvetica,sans-serif;color:#355775;cursor:pointer;
+  min-height:43px;transition:background-color .1s ease,border-color .1s ease
+}
+.question-panel .classic-question-options .classic-question-choice:hover,
+.question-panel .classic-question-importance .classic-question-rating-options label:hover{
+  background:#f0f7fd;border-color:#adc8dd
+}
+.question-panel .classic-question-options .classic-question-choice:has(input:checked),
+.question-panel .classic-question-importance .classic-question-rating-options label:has(input:checked){
+  background:#e9f2fa;border-color:#8ab1d4;color:#254e79
+}
+.question-panel .classic-question-choice input,
+.question-panel .classic-question-rating-options input{width:18px;height:18px;flex:none;margin:0;accent-color:#326da3}
+.classic-question-choice span{min-width:0;overflow-wrap:anywhere}
+.question-panel .classic-question-importance .classic-question-rating-options{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 11px
+}
+.question-panel .classic-question-importance .classic-question-rating-options label:last-child{
+  grid-column:1/-1;border-color:#ecc9d9
+}
+.classic-question-explain{margin:0 0 16px}
+.classic-question-explain>label{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 13px}
+.classic-question-explain .classic-question-step{margin:0}
+.classic-question-explain small{font:11px/1.5 Arial,Helvetica,sans-serif;color:#8092a2}
+.question-panel .classic-question-explain textarea{
+  width:100%;min-height:76px;max-width:100%;margin:11px 0 0;
+  padding:10px 12px;border:1px solid #cbd8e2;border-radius:3px;
+  color:#344f6d;background:white;font:13px/1.5 Arial,Helvetica,sans-serif;
+  resize:vertical
+}
+.question-panel .classic-question-private{display:flex;align-items:center;gap:9px;margin:4px 0 5px}
+.question-panel .classic-question-private span{font:12px Arial,Helvetica,sans-serif;color:#60788a}
+.classic-question-error{margin:14px 0 0;color:#af3157;font:700 12px/1.4 Arial,Helvetica,sans-serif}
+.classic-question-actions{display:flex;align-items:center;gap:9px 16px;flex-wrap:wrap;padding:19px 0 5px}
+.classic-question-actions .button{min-height:40px;padding:11px 16px;font:700 12px Arial,Helvetica,sans-serif}
+.classic-question-actions .quiet-button{font:12px Arial,Helvetica,sans-serif;color:#5d7891}
+.classic-question-complete{padding:22px 20px;margin:18px 0 0;border:1px solid #d6e3ec;color:#406486;background:#f3f8fc;font:13px/1.6 Arial,Helvetica,sans-serif}
+@media(max-width:760px){
+  .classic-question-card{padding:20px 15px 17px;margin-top:14px}
+  .classic-question-status{padding:12px 13px}
+  .classic-question-review{padding:13px 0}
+  .question-panel .classic-question-review #answered-review{width:100%}
+  .question-panel .classic-question-form .classic-question-options#question-choices legend{font-size:23px}
+  .question-panel .classic-question-importance .classic-question-rating-options{grid-template-columns:1fr}
+  .question-panel .classic-question-importance .classic-question-rating-options label:last-child{grid-column:auto}
+  .classic-question-actions .button{width:100%;justify-content:center}
+}
+@media(prefers-reduced-motion:reduce){
+ .question-panel .classic-question-options .classic-question-choice,
+ .question-panel .classic-question-importance .classic-question-rating-options label{transition:none}
+}
