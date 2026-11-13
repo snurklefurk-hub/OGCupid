@@ -28,3 +28,45 @@ a{color:#315f91}
 .persona-choice-title,.persona-name{color:#315d8d}
 .persona-meter-fill{background:#de4b83}
 @media(max-width:760px){.wrap{margin:8px auto 25px;padding:0 7px}.og-header,header.member-quiz-header{padding:12px 14px}.og-hero{padding:25px 17px}.og-section{padding:25px 17px}}
+
+/* Public home: bring the actual landing page into the same compact 2011 frame. */
+.site>header.og-header{padding:13px 24px;min-height:76px;background:linear-gradient(#fff,#f3f5f7);border-bottom:1px solid #cbd7e2}
+.site>header.og-header .og-nav{gap:8px}
+.site>header.og-header .og-nav a:not(.og-nav-join){padding:8px 12px;border:1px solid transparent;font:700 12px Arial,sans-serif}
+.site>header.og-header .og-nav a:not(.og-nav-join):hover{background:#e8f0f7;border-color:#c7d8e7;text-decoration:none}
+.site>header.og-header .og-nav .og-nav-join{padding:8px 15px;background:linear-gradient(#f9e7ee,#f4d8e3);border:1px solid #dfbfd0;box-shadow:none;color:#b7356c;font:700 12px Arial,sans-serif}
+.site>header.og-header .og-nav .og-nav-join:hover{background:#f8e0eb;box-shadow:none;transform:none}
+.og-hero{grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);background:linear-gradient(#fff,#f3f6f9);border-bottom:1px solid #d1dce6}
+.og-hero:before,.og-hero-graphic:before,.og-hero-graphic:after,.og-sticker,.og-tape{display:none}
+.og-hero-copy{padding:51px 39px 48px}
+.og-kicker{font:700 11px Arial,sans-serif;letter-spacing:.4px;color:#72859a}
+.og-kicker:before{width:10px;height:10px;border:0;background:#dd477f}
+.og-hero h1{font:normal clamp(35px,4vw,51px)/1.08 Georgia,'Times New Roman',serif;letter-spacing:-1.7px;text-transform:none;max-width:610px;margin:16px 0 21px;color:#315d8d}
+.og-hero h1 span{display:inline}
+.og-hero h1 em{font:italic normal .85em/1.12 Georgia,'Times New Roman',serif;letter-spacing:-1px;margin-top:10px;color:#d5477f}
+.og-hero-lede{font:normal 16px/1.55 Arial,sans-serif;color:#51677b;max-width:530px;margin-bottom:23px}
+.og-hero-foot{font:700 10px Arial,sans-serif;letter-spacing:.5px;color:#73859a}
+.og-actions{gap:9px}.og-btn{min-height:39px;padding:9px 15px;font:700 12px Arial,sans-serif;letter-spacing:0}
+.og-hero-graphic{min-height:0;padding:30px;background:#e7eff6;background-image:none;border-left:1px solid #cbd9e6}
+.og-poster{transform:none;min-height:0;width:min(430px,100%);padding:16px 19px 18px;background:#fff;border:1px solid #cbd6e0;box-shadow:0 2px 7px #24456720}
+.og-poster-top{font:700 10px Arial,sans-serif;letter-spacing:.3px;color:#728499;border-bottom:1px solid #ccd8e4}
+.og-poster-heart{font-size:125px;right:6px;top:45px;color:#eab8ca;text-shadow:none;opacity:.5}
+.og-poster-main{padding-top:17px}.og-poster-main span{font:700 clamp(29px,3.5vw,43px)/1.05 Georgia,serif;letter-spacing:-1px;text-transform:none;color:#315f91;background:transparent}
+.og-poster-main span:nth-child(2){background:#e9f1f8;color:#d5477f;padding:2px 7px;margin:5px 0 0 -6px;transform:none}
+.og-poster-bottom{margin-top:26px;padding-top:13px;border-top:1px solid #ccd8e4}
+.og-poster-bottom b{font:700 41px/1 Georgia,serif;letter-spacing:-2px;color:#315d8d}
+.og-poster-bottom small{font:700 9px Arial,sans-serif;letter-spacing:.4px;color:#7c8da0}
+.og-poster-note{font:italic 17px/1.1 Georgia,serif;transform:none;color:#d5477f}
+.og-marquee{padding:9px;background:#e6eff7;border-bottom:1px solid #cfdae5;font:700 11px Arial,sans-serif;letter-spacing:.4px;color:#315d8d}
+.og-section{padding:42px 38px;border-bottom:1px solid #d9e2ea}
+.og-section-label{font:700 10px Arial,sans-serif;letter-spacing:.5px;color:#7d8da1;margin-bottom:10px}
+.og-section-title,.og-endcap .og-section-title{font:normal clamp(27px,3vw,38px)/1.15 Georgia,serif;letter-spacing:-.5px;text-transform:none}
+.og-principles-intro{margin-bottom:21px}.og-principles-intro>p{font:14px/1.5 Arial,sans-serif;color:#66798b}
+.og-principle-grid{gap:11px}.og-principle,.og-principle:nth-child(2),.og-principle:nth-child(3){min-height:175px;padding:18px;background:#f9fbfd;border:1px solid #d5e1eb;box-shadow:none}
+.og-principle-num{margin-bottom:20px;font:700 10px Arial,sans-serif;color:#d5477f;letter-spacing:.5px}
+.og-principle h3{font:700 18px/1.2 Georgia,serif;color:#315d8d;text-transform:none}.og-principle p{font:13px/1.5 Arial,sans-serif;color:#586e81}
+.og-principle-tag{right:12px;top:12px;background:#e9f1f8;border:1px solid #cadae8;color:#466b93;font:700 9px Arial,sans-serif;letter-spacing:0}
+.og-endcap{padding:42px 38px;background:#f1f6fa}.og-endcap p{font:14px/1.5 Arial,sans-serif;color:#60768a}
+.site>footer.og-footer{background:#e7eef5;color:#60758a;padding:22px 30px;border-top:1px solid #cbd8e4}.og-footer-note{color:#60758a}.site>footer.og-footer a{color:#315d8d}
+@media(min-width:1024px){.wrap{max-width:1120px;margin:17px auto 40px;padding:0 9px}.site{box-shadow:0 5px 22px #102f5660}.site>header.og-header{min-height:76px;padding:13px 24px}.og-original-logo{width:220px}.og-hero{grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr)}.og-hero-copy{padding:51px 39px 48px}.og-hero h1{font-size:clamp(35px,4vw,51px)}.og-hero-graphic{min-height:0;padding:30px}.og-poster{transform:none;min-height:0}.og-section{padding:42px 38px}.og-principle{min-height:175px}}
+@media(max-width:760px){.site>header.og-header{gap:12px;padding:13px 16px}.og-hero-copy{padding:35px 22px 31px}.og-hero h1{font-size:clamp(33px,8vw,49px)}.og-hero-graphic{min-height:0;padding:18px;border-left:0;border-top:1px solid #cbd9e6}.og-poster{min-height:0}.og-poster-main span{font-size:clamp(28px,7vw,39px)}.og-section{padding:34px 20px}.og-section-title{font-size:clamp(26px,7vw,37px)}.og-principle{min-height:0}.og-endcap{padding:35px 20px}}
