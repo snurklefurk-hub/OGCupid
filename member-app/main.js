@@ -6,6 +6,8 @@ import { SIGNUP_WELCOME_HASH, memberSectionFromHash, welcomeQuestionStatus } fro
 import { PROFILE_EDITOR_STEPS, profileStepFromHash, profileDestination } from "./profile-editor-flow.js";
 import { createLocalityPicker } from "./locality-picker.js";
 import { createPhotoUI } from "./photo-uploads.js";
+import { createOnboardingUI } from "./onboarding-ui.js";
+import "./onboarding.css";
 import { createProfilePhotoGallery } from "./profile-photo-gallery.js";
 import "../public/questions/question-bank.js";
 import "./styles.css";
@@ -38,6 +40,7 @@ let cachedProfile = null;
 let homeCityPicker = null;
 let photoUI = null;
 let profileGallery = null;
+let onboarding = null;
 let savedPhotoCount = 0;
 const questions = window.OGCQuestionBank.questions.map(question => ({
   ...question, tier: question.tier,
@@ -283,7 +286,8 @@ function renderHomework() {
   $("dashboard-homework-count").textContent = welcomeQuestionStatus(state.answeredCount);
   const page = $("member-columns").dataset.memberPage;
   const onHome = Boolean(currentUser && page === "home");
-  const onWelcome = Boolean(currentUser && (page === "welcome" || (onHome && !state.showRegularHome)));
+  const showRegularHome = state.showRegularHome || Boolean(onboarding?.complete);
+  const onWelcome = Boolean(currentUser && (page === "welcome" || (onHome && !showRegularHome)));
   // The semi-walled onboarding layout is scoped to this view only. Other
   // member views keep their normal navigation, account settings and layout.
   document.body.classList.toggle("is-welcome-flow", onWelcome);
@@ -294,7 +298,7 @@ function renderHomework() {
     : "No photos yet";
   $("welcome-side-questions-status").textContent = welcomeQuestionStatus(state.answeredCount);
   show("welcome-side-panel", onWelcome);
-  show("member-home-dashboard", onHome && state.showRegularHome);
+  show("member-home-dashboard", onHome && showRegularHome);
   show("homework-dashboard", onWelcome);
   // The quiz is already a visible action in welcome step three.
   show("member-persona-panel", false);
@@ -417,6 +421,8 @@ async function refreshMember(options = {}) {
     catch { message("Photo album temporarily unavailable.", "error"); }
     try { await loadEmailOptions(); }
     catch { $("email-preferences-status").textContent = "Could not load email preferences. Try saving them again."; }
+    try { await onboarding?.load(); }
+    catch { message("Onboarding is temporarily unavailable; your account is safe.", "error"); }
   }
   return member;
 }
@@ -826,6 +832,28 @@ async function loadProfile({ silent = false } = {}) {
   return data.profile || null;
 }
 
+
+async function deleteAccountFromOnboarding(password) {
+  if (!accountDeletionInUi || !currentUser) throw new Error("Account deletion unavailable.");
+  const jwt = await getAccessToken();
+  const url = new URL(memberApiUrl);
+  url.pathname = "/account/delete"; url.search = "";
+  const response = await fetch(url.toString(), {
+    method:"POST",cache:"no-store",credentials:"omit",
+    headers:{"Authorization":"Bearer "+jwt,"Content-Type":"application/json"},
+    body:JSON.stringify({email:currentUser.email,password,confirm:"DELETE"})
+  });
+  const result = await response.json().catch(()=>({}));
+  if (!response.ok || result.deleted !== true) {
+    throw new Error(result.error || "Deletion was not completed.");
+  }
+  try { await auth.signOut(); } catch { /* Its session was deleted. */ }
+  sessionUserId=null;currentUser=null;
+  clearMemberView();renderAuthenticated(null);
+  chooseAuthTab("signin");
+  message("Your account was deleted. Only the minimal historical email marker remains in the application.", "ok");
+}
+
 function wireForms() {
   $("profile-kids").addEventListener("change", updateOffspringOptions);
   updateOffspringOptions();
@@ -853,19 +881,18 @@ function wireForms() {
   $("open-verify").addEventListener("click", () => {
     $("verify-form").elements.email.value = $("signin-form").elements.email.value;
     chooseAuthTab("verify");
-    message("Enter your email and request a verification code.");
+    message("Request a one-click verification link; no codes to type.");
   });
   $("send-verify-code").addEventListener("click", (event) => {
     const form = $("verify-form");
     if (!form.elements.email.reportValidity()) return;
-    operation(event.currentTarget, "Sending verification code", async () => {
+    operation(event.currentTarget, "Sending verification link", async () => {
       const email = form.elements.email.value.trim();
-      const { error } = await auth.emailOtp.sendVerificationOtp({
-        email,
-        type: "email-verification",
+      const { error } = await auth.sendVerificationEmail({
+        email, callbackURL: location.origin + "/account/#welcome-title",
       });
-      if (error) throw new Error(asError(error, "Could not send verification code"));
-      message("Check your inbox for an OG Cupid email verification code.", "ok");
+      if (error) throw new Error(asError(error, "Could not send verification link"));
+      message("Check your inbox for a one-click verification link.", "ok");
     });
   });
   $("send-another-code").addEventListener("click", () => {
@@ -955,7 +982,7 @@ function wireForms() {
     if (!form.reportValidity()) return;
     operation(form.querySelector('button[type="submit"]'), "Creating your account", async () => {
       const input = fields(form);
-      if (input.adult !== "on") throw new Error("You must confirm that you are at least 18.");
+      // Date of birth and adult eligibility are validated at the next step.
       const email = String(input.email).trim();
       const { error } = await auth.signUp.email({
         name: String(input.name).trim(),
@@ -965,36 +992,18 @@ function wireForms() {
       form.elements.password.value = "";
       if (error) throw new Error(asError(error, "Account creation failed"));
       stageSignupEmailOptions(email, readEmailOptions(form));
-      $("verify-form").elements.email.value = email;
-      chooseAuthTab("verify");
-      // Remember the welcome destination through email verification, even
-      // if the new account is not signed in until a separate login.
+      // Account comes first. Verification is nonblocking and can happen later.
       if (window.location.hash !== SIGNUP_WELCOME_HASH) window.location.hash = SIGNUP_WELCOME_HASH;
-      message("Check your inbox for a verification code from OG Cupid.", "ok");
+      const member = await refreshMember({ loadProfile: true });
+      if (!member) throw new Error("Account saved, but the session is unavailable. Sign in to resume.");
+      message("");
     });
   });
 
   $("verify-form").addEventListener("submit", (event) => {
     event.preventDefault();
-    const form = event.currentTarget;
-    if (!form.reportValidity()) return;
-    operation(form.querySelector('button[type="submit"]'), "Verifying your email", async () => {
-      const input = fields(form);
-      const { error } = await auth.emailOtp.verifyEmail({
-        email: String(input.email).trim(),
-        otp: String(input.otp).trim(),
-      });
-      form.elements.otp.value = "";
-      if (error) throw new Error(asError(error, "Email verification failed"));
-      const member = await refreshMember({ loadProfile: true });
-      if (!member) chooseAuthTab("signin");
-      // A completed new signup must never land in Account Settings.
-      if (window.location.hash !== SIGNUP_WELCOME_HASH) window.location.hash = SIGNUP_WELCOME_HASH;
-      else if (member) renderMemberPage();
-      message(member
-        ? "Email verified! Start with your profile basics."
-        : "Email verified. Sign in to see your getting-started page.", "ok");
-    });
+    if (!event.currentTarget.reportValidity()) return;
+    $("send-verify-code").click();
   });
 
   $("signout").addEventListener("click", (event) =>
@@ -1163,6 +1172,7 @@ function wireForms() {
       renderQuestion();
       $("question-headline").scrollIntoView({ block: "start", behavior: "auto" });
       message("Answer saved to your account.", "ok");
+      await onboarding?.answeredQuestion();
     });
   });
 }
@@ -1189,6 +1199,37 @@ async function start() {
     nextButton: $("profile-photo-viewer-next"),
     closeButton: $("profile-photo-viewer-close"),
   });
+  onboarding = createOnboardingUI({
+    getUser:()=>currentUser,
+    getProfile:()=>cachedProfile,
+    saveProfile:async data=>{
+      const result=await requestProfile("PUT",data);
+      showStoredProfile(result.profile);
+      return result.profile;
+    },
+    request:(method,path,body)=>requestPrivate(path,method,body),
+    signOut:async()=>{
+      const {error}=await auth.signOut();
+      if(error)throw new Error(asError(error,"Could not sign out"));
+      await refreshMember();
+      chooseAuthTab("signin");
+      message("Signed out. Your progress is saved.", "ok");
+    },
+    deleteAccount:deleteAccountFromOnboarding,
+    verifyEmail:async (email,callbackURL)=>{
+      const {error}=await auth.sendVerificationEmail({email,callbackURL});
+      if(error)throw new Error(asError(error,"Could not send verification link"));
+    },
+    openNative:section=>{
+      window.location.hash=section==="photos"?"#photos-title":"#question-title";
+      renderMemberPage();
+    },
+    leaveToHome:()=>{
+      if(window.location.hash!=="#member-title")window.location.hash="#member-title";
+      renderMemberPage();
+    },
+    getPhotoCount:()=>savedPhotoCount
+  });
   photoUI = createPhotoUI({
     requestJson: (method,path,body) => requestPrivate(path,method,body),
     requestImage: requestProfileImage,
@@ -1197,6 +1238,7 @@ async function start() {
       savedPhotoCount = count;
       profileGallery?.setPhotos(photos);
       renderHomework();
+      onboarding?.photoChanged();
     },
   });
   wireForms();
