@@ -40,7 +40,8 @@
   for (const [href, glyph, label] of links) {
     const a = document.createElement("a");
     a.href = href;
-    const active = path === href.replace(/\/$/, "") || (href === "/ogtrends/" && path.startsWith("/ogtrends/"));
+    const destination = href === "/" ? "/" : href.replace(/\/$/, "");
+    const active = path === destination || (href === "/ogtrends/" && path.startsWith("/ogtrends/"));
     if (active) a.setAttribute("aria-current", "page");
     const icon = document.createElement("span");
     icon.className = "ogc-rail-icon";
