@@ -714,7 +714,7 @@ export default {
       const fieldUpdates = profileTextFields
         .filter(([key]) => Object.prototype.hasOwnProperty.call(fields, key))
         .map(([, column]) => `${column} = EXCLUDED.${column}`);
-      const paramList = columns.map((_, index) => `${index + 5}`);
+      const paramList = columns.map((_, index) => `$${index + 5}`);
       const allReturned = ["user_id", "display_name", "about_me", "age", ...columns, "created_at", "updated_at"];
       const sql = `INSERT INTO app_private.member_profiles
            (user_id, display_name, about_me, adult_attested_at, age, ${columns.join(", ")})
