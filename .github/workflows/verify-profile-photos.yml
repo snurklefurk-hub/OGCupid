@@ -1,0 +1,35 @@
+name: Verify profile photo feature
+on:
+  push:
+    branches:
+      - feature/profile-photos-crop
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  photo-feature-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            member-app/package-lock.json
+      - name: Install backend and member dependencies
+        run: |
+          npm ci
+          npm --prefix member-app ci
+      - name: Test image crop geometry, metadata sanitizer and existing app
+        run: |
+          npm --prefix member-app test
+          node --test api/photo-sanitize.test.js
+      - name: Build member frontend
+        run: npm --prefix member-app run build
+      - name: Bundle backend with photo API modules
+        run: |
+          npm install --no-save esbuild@0.25.12
+          npx esbuild api/member-profile.ts --bundle --platform=node --target=node24 --format=esm --banner:js="import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);" --outfile="$RUNNER_TEMP/ogc-member-photos.mjs"
+          node --check "$RUNNER_TEMP/ogc-member-photos.mjs"

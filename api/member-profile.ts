@@ -3,6 +3,8 @@
 import { createRemoteJWKSet, jwtVerify } from "jose";
 import { Pool, type PoolClient } from "pg";
 import { attachDatabasePool } from "@neon/functions";
+import { isPhotoPath, photoMethodAllowed, handlePhotoRequest } from "./member-photos.js";
+import { removePhoto } from "./photo-storage.js";
 
 const required = ["DATABASE_URL", "NEON_AUTH_JWKS_URL", "NEON_AUTH_BASE_URL"] as const;
 for (const name of required) {
@@ -43,7 +45,7 @@ function headersFor(request: Request): Headers {
   const origin = request.headers.get("origin");
   if (origin && allowedOrigins.has(origin)) {
     h.set("Access-Control-Allow-Origin", origin);
-    h.set("Access-Control-Allow-Methods", "GET, PUT, POST, OPTIONS");
+    h.set("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
     h.set("Access-Control-Allow-Headers", "Authorization, Content-Type");
     h.set("Access-Control-Max-Age", "600");
   }
@@ -283,12 +285,13 @@ export default {
     const url = new URL(request.url);
     const profilePath = url.pathname === "/profile" || url.pathname === "/profile/";
     const answersPath = url.pathname === "/answers" || url.pathname === "/answers/";
+    const photoPath = isPhotoPath(url.pathname);
     const emailPreferencesPath = url.pathname === "/email-preferences" || url.pathname === "/email-preferences/";
     const deletePath = url.pathname === "/account/delete" || url.pathname === "/account/delete/";
     // A credential check that can NEVER call the privileged eraser.
     // Only enabled for the one disposable development account.
     const verifyPath = url.pathname === "/account/reauth-check" || url.pathname === "/account/reauth-check/";
-    if (!profilePath && !answersPath && !emailPreferencesPath && !deletePath && !verifyPath) {
+    if (!profilePath && !answersPath && !emailPreferencesPath && !deletePath && !verifyPath && !photoPath) {
       return json(request, { error: "Not found" }, 404);
     }
     // Self-service deletion is allowed only on the explicitly configured
@@ -309,8 +312,12 @@ export default {
            "5b03f41b-29b7-4a7a-9c72-71744dd8b2f2")) {
       return json(request, { error: "Not found" }, 404);
     }
-    if (deletePath || verifyPath ? request.method !== "POST" :
-        request.method !== "GET" && request.method !== "PUT") {
+    const methodAllowed = photoPath
+      ? photoMethodAllowed(url.pathname, request.method)
+      : deletePath || verifyPath
+        ? request.method === "POST"
+        : request.method === "GET" || request.method === "PUT";
+    if (!methodAllowed) {
       return json(request, { error: "Method not allowed" }, 405);
     }
 
@@ -318,7 +325,7 @@ export default {
     if (!userId) return json(request, { error: "Unauthorized" }, 401);
 
     try {
-      if (profilePath || answersPath || emailPreferencesPath) {
+      if (profilePath || answersPath || emailPreferencesPath || photoPath) {
         // A signed JWT can outlive the account/session that issued it.
         // Do not allow a deleted identity to read an empty profile as if it
         // were still a member, or attempt to recreate a profile via PUT.
@@ -330,6 +337,10 @@ export default {
         if (liveness.rows[0]?.active !== true) {
           return json(request, { error: "Account no longer active" }, 401);
         }
+      }
+
+      if (photoPath) {
+        return await handlePhotoRequest(request,userId,url,withMember,json);
       }
 
       if (deletePath || verifyPath) {
@@ -429,6 +440,18 @@ export default {
           return json(request, { verified: true, deleted: false, stage: "confirmed" });
         }
 
+        // On account deletion, also remove private S3 pictures before
+        // cascading the user's DB rows. Failure aborts deletion rather than
+        // silently retaining those uploaded photo objects indefinitely.
+        try {
+          const photoRows = await withMember(userId, client => client.query(
+            "SELECT object_key FROM app_private.member_photos WHERE user_id=$1::uuid",
+            [userId],
+          ));
+          for (const row of photoRows.rows) await removePhoto(row.object_key);
+        } catch {
+          return json(request, { error: "Could not remove account photos. Account not deleted; try again." }, 503);
+        }
         const deletion = await withDeletionAuthority(userId, client =>
           client.query("SELECT app_private.erase_current_member_after_reauth() AS deleted"),
         );

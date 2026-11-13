@@ -1,0 +1,43 @@
+name: Package photo-member API for isolated Neon verification
+on:
+  push:
+    branches: [feature/profile-photos-crop]
+    paths:
+      - 'api/**'
+      - '.github/workflows/build-feature-member-bundle.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  bundle-feature:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - name: Install backend packages and bundler
+        run: |
+          npm ci
+          npm install --no-save esbuild@0.25.12
+      - name: Bundle Neon member API on feature branch
+        run: |
+          npx esbuild api/member-profile.ts --bundle --platform=node --target=node24 --format=esm --banner:js="import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);" --outfile="$RUNNER_TEMP/index.mjs"
+          node --check "$RUNNER_TEMP/index.mjs"
+          cd "$RUNNER_TEMP"
+          zip -9 members.zip index.mjs
+          base64 -w0 members.zip > "$GITHUB_WORKSPACE/dev/members-function-bundle.b64"
+      - name: Commit feature-branch bundle for Neon staging verification
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A dev/members-function-bundle.b64
+          if ! git diff --cached --quiet; then
+            git commit -m 'build: package photo API for isolated Neon branch'
+            git pull --rebase origin feature/profile-photos-crop
+            git push origin HEAD:feature/profile-photos-crop
+          fi

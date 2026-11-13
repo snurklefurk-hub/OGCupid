@@ -1,6 +1,10 @@
 import { createAuthClient } from "@neon/auth";
 import { nextCompatibilityQuestion } from "./question-flow.js";
+import { displayQuestionProgress, acceptedAnswerSuggestion } from "./question-presentation.js";
+import { memberHomeState } from "./home-dashboard.js";
 import { createLocalityPicker } from "./locality-picker.js";
+import { createPhotoUI } from "./photo-uploads.js";
+import { createProfilePhotoGallery } from "./profile-photo-gallery.js";
 import "../public/questions/question-bank.js";
 import "./styles.css";
 
@@ -31,6 +35,9 @@ let sessionUserId = null;
 let cachedProfile = null;
 let homeCityPicker = null;
 let searchCityPicker = null;
+let photoUI = null;
+let profileGallery = null;
+let savedPhotoCount = 0;
 const questions = window.OGCQuestionBank.questions.map(question => ({
   ...question, tier: question.tier,
 }));
@@ -234,31 +241,53 @@ function clearMemberView() {
   show("saved-info", false);
   $("member-welcome").textContent = "";
   $("member-email").textContent = "";
+  photoUI?.reset();
+  savedPhotoCount = 0;
 }
 
 function renderHomework() {
-  const profileSaved = Boolean(cachedProfile?.updatedAt);
-  const answered = Math.min(savedAnswers.size, 10);
-  const questionsStarted = answered >= 10;
-  const completed = Number(profileSaved) + Number(questionsStarted);
-  $("homework-progress-count").textContent = completed + " of 2";
-  $("homework-profile-state").textContent = profileSaved ? "✓ Saved" : "Start here";
-  $("homework-profile").classList.toggle("is-complete", profileSaved);
-  $("homework-questions-state").textContent = questionsStarted
-    ? "✓ First 10 answered" : answered + " of 10 answered";
-  $("homework-questions").classList.toggle("is-complete", questionsStarted);
-  $("homework-next").textContent = !profileSaved
+  const state = memberHomeState({
+    profileSaved: Boolean(cachedProfile?.updatedAt),
+    photoCount: savedPhotoCount,
+    answeredCount: savedAnswers.size,
+  });
+  $("homework-progress-count").textContent = state.completed + " of " + state.available;
+  $("homework-photos-state").textContent = state.hasPhoto
+    ? "✓ " + state.photoCount + " of 5 photos"
+    : "0 of 5 photos";
+  $("homework-photos").classList.toggle("is-complete",state.hasPhoto);
+  $("homework-profile-state").textContent = state.hasProfile ? "✓ Saved" : "Start here";
+  $("homework-profile").classList.toggle("is-complete",state.hasProfile);
+  $("homework-questions-state").textContent = state.hasAnswers
+    ? "✓ Getting to know you" : state.answeredCount + " answered";
+  $("homework-questions").classList.toggle("is-complete",state.hasAnswers);
+  $("homework-next").textContent = !state.hasProfile
     ? "Start with your written profile. The pictures can come later."
-    : !questionsStarted
-      ? "Your profile is saved. Photos are next on our build list; meanwhile, get started on your match questions."
-      : "Nice work. You've done everything available right now. We'll add photos and member discovery as they're ready.";
+    : !state.hasPhoto
+      ? "Your profile is saved. Next, add a photo that looks like you."
+      : !state.hasAnswers
+        ? "Pictures: check. Now get started on your match questions."
+        : "Nice work. You can always return to your profile and keep answering questions.";
+  $("dashboard-member-name").textContent =
+    String(cachedProfile?.displayName || currentUser?.name || "friend").slice(0, 60);
+  $("dashboard-question-count").textContent = String(state.answeredCount);
+  $("dashboard-question-label").textContent =
+    state.answeredCount === 1 ? "question answered" : "questions answered";
+  $("dashboard-homework-count").textContent =
+    state.completed + " of " + state.available + " starting steps";
+  const onHome = Boolean(currentUser && $("member-columns").dataset.memberPage === "home");
+  show("member-home-dashboard", onHome && state.showRegularHome);
+  show("homework-dashboard", onHome && !state.showRegularHome);
+  show("member-persona-panel", onHome && !state.showRegularHome);
 }
 
 function renderMemberPage() {
   if (!currentUser) {
     show("homework-dashboard", false);
+    show("member-home-dashboard", false);
     show("member-view", false);
     show("profile-panel", true);
+    show("photo-panel", false);
     show("questions-panel", true);
     show("profile-preview-panel", false);
     show("member-persona-panel", false);
@@ -266,19 +295,22 @@ function renderMemberPage() {
   }
   const hash = window.location.hash;
   const page = hash === "#profile-title" || hash === "#preview-title"
-    ? "profile" : hash === "#question-title" ? "questions" : "home";
+    ? "profile" : hash === "#photos-title"
+      ? "photos" : hash === "#question-title" ? "questions"
+        : hash === "#settings-title" ? "settings" : "home";
   const home = page === "home";
-  show("homework-dashboard", home);
-  show("member-view", home);
+  show("member-view", page === "settings");
   show("profile-panel", page === "profile");
   show("profile-preview-panel", page === "profile");
+  show("photo-panel", page === "photos");
   show("questions-panel", page === "questions");
-  show("member-persona-panel", home);
   $("member-columns").dataset.memberPage = page;
   document.querySelectorAll(".classic-member-tabs a[href^='#']").forEach(link => {
     if ((link.hash === "#member-title" && home) ||
         (link.hash === "#profile-title" && page === "profile") ||
-        (link.hash === "#question-title" && page === "questions")) {
+        (link.hash === "#photos-title" && page === "photos") ||
+        (link.hash === "#question-title" && page === "questions") ||
+        (link.hash === "#settings-title" && page === "settings")) {
       link.setAttribute("aria-current", "page");
     } else {
       link.removeAttribute("aria-current");
@@ -341,6 +373,8 @@ async function refreshMember(options = {}) {
   if (member && options.loadProfile) {
     await loadProfile({ silent: true });
     await loadAnswers();
+    try { await photoUI?.load(member.id); }
+    catch { message("Photo album temporarily unavailable.", "error"); }
     try { await loadEmailOptions(); }
     catch { $("email-preferences-status").textContent = "Could not load email preferences. Try saving them again."; }
   }
@@ -380,6 +414,37 @@ async function getAccessToken() {
   const token = json?.token ?? json?.data?.token;
   if (!isJwt(token)) throw new Error("Neon Auth did not issue a valid member token.");
   return token;
+}
+
+async function requestProfileImage(path) {
+  const token=await getAccessToken();
+  const url=new URL(memberApiUrl);
+  url.pathname=path;
+  const res=await fetch(url.toString(),{
+    method:"GET",
+    headers:{Authorization:"Bearer "+token},
+    cache:"no-store",credentials:"omit",
+  });
+  if(!res.ok) throw new Error("Photo couldn't be retrieved");
+  if(!(res.headers.get("content-type")||"").startsWith("image/jpeg")) {
+    throw new Error("Photo server returned an unexpected format");
+  }
+  const blob=await res.blob();
+  if(blob.size>2_500_000) throw new Error("Photo exceeded size limit");
+  return blob;
+}
+async function uploadProfileJpeg(blob) {
+  const token=await getAccessToken();
+  const url=new URL(memberApiUrl);
+  url.pathname="/photos";
+  const res=await fetch(url.toString(),{
+    method:"POST",
+    headers:{"Authorization":"Bearer "+token,"Content-Type":"image/jpeg"},
+    body:blob,cache:"no-store",credentials:"omit",
+  });
+  const data=await res.json().catch(()=>({}));
+  if(!res.ok) throw new Error(data.error||"Upload wasn't saved");
+  return data;
 }
 
 async function requestPrivate(path, method, body) {
@@ -446,31 +511,35 @@ function renderQuestion() {
     writePendingQuestion(currentQuestion.id, focusTier);
   }
   show("question-form", !!currentQuestion);
-  show("question-complete", !currentQuestion && savedAnswers.size >= questions.length);
   const count = savedAnswers.size;
-  $("question-progress").textContent = currentQuestion
-    ? `${count} / ${questions.length} answered | ${editingQuestionId ? "Reviewing saved answer" : focusTier.replace("next", "Next ").replace("first", "First ")}`
-    : `${count} / ${questions.length} answered`;
-  if (!currentQuestion) {
-    if (count < questions.length) $("question-progress").textContent += " | Come back to skipped questions after refreshing.";
-    return;
-  }
+  show("question-complete", !currentQuestion && count >= questions.length);
+  show("question-pause", !currentQuestion && count < questions.length);
+  show("question-answer-error", false);
+  const progress = displayQuestionProgress(count);
+  $("question-progress").textContent = progress.label;
+  if (!currentQuestion) return;
   $("question-prompt").textContent = currentQuestion.prompt;
   const own = $("question-choices");
   const acceptable = $("acceptable-choices");
   own.replaceChildren($("question-prompt"));
-  acceptable.replaceChildren(acceptable.querySelector("legend"));
+  acceptable.replaceChildren(acceptable.querySelector("legend"), $("acceptable-hint"));
   currentQuestion.options.forEach((label, index) => {
     const id = currentQuestion.optionIds[index];
     const ownLabel = document.createElement("label");
+    ownLabel.className = "classic-question-choice";
     const radio = document.createElement("input");
     radio.type = "radio"; radio.name = "answer"; radio.value = id; radio.required = true;
-    ownLabel.append(radio, document.createTextNode(label));
+    const ownText = document.createElement("span");
+    ownText.textContent = label;
+    ownLabel.append(radio, ownText);
     own.append(ownLabel);
     const partnerLabel = document.createElement("label");
+    partnerLabel.className = "classic-question-choice";
     const check = document.createElement("input");
     check.type = "checkbox"; check.name = "acceptable"; check.value = id;
-    partnerLabel.append(check, document.createTextNode(label));
+    const partnerText = document.createElement("span");
+    partnerText.textContent = label;
+    partnerLabel.append(check, partnerText);
     acceptable.append(partnerLabel);
   });
   show("question-skip", !editingQuestionId && focusTier !== "first10");
@@ -481,7 +550,10 @@ function renderQuestion() {
       input.checked = previous.acceptableOptions.includes(input.value);
     });
   }
-  $("question-importance").value = String(previous?.importance ?? 1);
+  const importance = String(previous?.importance ?? 1);
+  document.querySelectorAll('input[name="importance"]').forEach(input => {
+    input.checked = input.value === importance;
+  });
   $("question-note").value = previous?.note ?? "";
   $("question-private").checked = previous?.isPrivate ?? false;
 }
@@ -595,6 +667,7 @@ function renderProfilePreview() {
 function showStoredProfile(profile) {
   const form = $("profile-form");
   cachedProfile = profile;
+  photoUI?.setProfileReady(Boolean(profile));
   renderHomework();
   const fallback = typeof currentUser?.name === "string"
     ? currentUser.name.trim().slice(0, 60) : "";
@@ -911,6 +984,22 @@ function wireForms() {
     editingQuestionId = event.currentTarget.value || null;
     renderQuestion();
   });
+  $("question-choices").addEventListener("change", event => {
+    const input = event.target;
+    if (!input?.matches?.('input[name="answer"]')) return;
+    const acceptable = $("acceptable-choices");
+    const accepted = [...acceptable.querySelectorAll('input[name="acceptable"]:checked')].map(option => option.value);
+    const suggested = acceptedAnswerSuggestion(input.value, accepted);
+    if (suggested) {
+      const sameAnswer = [...acceptable.querySelectorAll('input[name="acceptable"]')]
+        .find(option => option.value === suggested);
+      if (sameAnswer) sameAnswer.checked = true;
+    }
+    show("question-answer-error", false);
+  });
+  $("acceptable-choices").addEventListener("change", () => {
+    show("question-answer-error", false);
+  });
   $("question-form").addEventListener("submit", (event) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -920,15 +1009,18 @@ function wireForms() {
     if (!own) return;
     const accepted = [...form.querySelectorAll('input[name="acceptable"]:checked')].map(input => input.value);
     if (!accepted.length) {
-      message("Select at least one answer you would accept from someone else.", "error");
+      $("question-answer-error").textContent = "Choose at least one answer you'd accept from a match.";
+      show("question-answer-error", true);
+      $("acceptable-choices").scrollIntoView({ block: "center", behavior: "auto" });
       return;
     }
+    show("question-answer-error", false);
     operation(form.querySelector('button[type="submit"]'), "Saving your answer", async () => {
       const answer = {
         questionId: question.id,
         optionId: own.value,
         acceptableOptions: accepted,
-        importance: Number($("question-importance").value),
+        importance: Number(form.querySelector('input[name="importance"]:checked')?.value ?? 1),
         isPrivate: $("question-private").checked,
         note: $("question-note").value.trim(),
       };
@@ -938,7 +1030,8 @@ function wireForms() {
       if (!editingQuestionId) clearPendingQuestion();
       editingQuestionId = null;
       renderQuestion();
-      message("Answer saved privately to your account.", "ok");
+      $("question-prompt").scrollIntoView({ block: "start", behavior: "auto" });
+      message("Answer saved to your account.", "ok");
     });
   });
 }
@@ -955,6 +1048,26 @@ async function start() {
   }
   show("app-view", true);
   chooseAuthTab("signin");
+  profileGallery = createProfilePhotoGallery({
+    primaryButton: $("preview-primary-photo"),
+    thumbnailStrip: $("preview-photo-thumbnails"),
+    dialog: $("profile-photo-viewer"),
+    image: $("profile-photo-viewer-image"),
+    counter: $("profile-photo-viewer-count"),
+    previousButton: $("profile-photo-viewer-prev"),
+    nextButton: $("profile-photo-viewer-next"),
+    closeButton: $("profile-photo-viewer-close"),
+  });
+  photoUI = createPhotoUI({
+    requestJson: (method,path,body) => requestPrivate(path,method,body),
+    requestImage: requestProfileImage,
+    uploadJpeg: uploadProfileJpeg,
+    onPhotosChanged: (count, photos) => {
+      savedPhotoCount = count;
+      profileGallery?.setPhotos(photos);
+      renderHomework();
+    },
+  });
   wireForms();
   window.addEventListener("hashchange", () => {
     renderMemberPage();
