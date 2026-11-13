@@ -20,7 +20,7 @@ const choices = {
   status: ["Single", "Seeing someone", "Married"],
   relationshipType: ["Monogamous", "Polyamorous"],
   kids: ["Has kids", "Doesn't have kids"],
-  wantsKids: ["Wants kids", "Doesn't want kids", "Might want kids"],
+  wantsKids: ["Wants kids", "Doesn't want kids", "Might want kids", "Wants more kids", "Doesn't want more kids", "Might want more kids"],
   pets: ["Has dogs", "Likes dogs", "Has cats", "Likes cats", "Has exotics", "Likes exotics"],
 };
 const multi = new Set(["ethnicity", "pets"]);
@@ -287,7 +287,7 @@ export function createOnboardingUI({
     const gender=s.gender||"",orientation=s.orientation||"";
     const radiusOptions=[["10","Near me"],["25","25 miles"],["50","50 miles"],["100","100 miles"],["250","250 miles"]];
     const pref = String(saved.interestedIn||"").split(", ").filter(Boolean);
-    const ageOptions=Array.from({length:83},(_,i)=>18+i);
+    const ageOptions=Array.from({length:103},(_,i)=>18+i);
     shell('<h1>Let’s fill out your profile.</h1><p>A few checkboxes, then we’ll give you the microphone.</p>' +
       '<form id="ogc-details" class="ogc-details"><h2>I’m looking for</h2>' +
       choiceRow("interestedIn","Interested in",genders,pref.join(", "),true) +
@@ -298,7 +298,16 @@ export function createOnboardingUI({
       choiceRow("openTo","I’m open to",goals,saved.relationshipGoal,true) +
       '<h2>My details</h2><p class="ogc-identity-line" id="ogc-identity-description"></p>' +
       '<p>My age: shown in profile headers only. Zodiac: <strong id="ogc-zodiac"></strong> (from your birthdate).</p>' +
-      Object.entries(choices).map(([field,optionList])=>choiceRow(field,field === "relationshipType"?"Monogamy / polyamory":field[0].toUpperCase()+field.slice(1),optionList,saved[field],multi.has(field))).join("") +
+      Object.entries(choices).map(([field,optionList])=>{
+        const stored=field==="wantsKids" ? String(saved.kids||"").split(", ").slice(1).join(", ") :
+          field==="diet" ? String(saved.diet||"").replace(/^Strictly /,"") :
+          field==="education" ? String(saved.education||"").replace(/^Working on /,"") :
+          field==="religion" ? String(saved.religion||"").split(", ")[0] : saved[field];
+        return choiceRow(field,field==="relationshipType"?"Monogamy / polyamory":field[0].toUpperCase()+field.slice(1),optionList,stored,multi.has(field));
+      }).join("") +
+      '<label class="ogc-check-extra"><input type="checkbox" name="dietStrict"> Diet: strictly this</label>' +
+      '<label class="ogc-check-extra"><input type="checkbox" name="educationWorkingOn"> Education: working on it</label>' +
+      choiceRow("religionImportance","Religion importance",["but it doesn't matter","and it's kinda important","and it's really important"],String(saved.religion||"").split(", ").slice(1).join(", ")) +
       '<label class="ogc-check-extra"><input type="checkbox" name="smokingWeed"> Smokes: Just weed</label>' +
       '<label class="ogc-check-extra"><input type="checkbox" name="vapingWeed"> Vapes: Just weed</label>' +
       '<label class="ogc-check-extra"><input type="checkbox" name="justWeed"> Drugs: Just weed (independent of frequency)</label>' +
@@ -310,6 +319,8 @@ export function createOnboardingUI({
     text(byId("ogc-zodiac"),zodiac(s.birth_date));
     const f=byId("ogc-details");
     f.elements.work.value=saved.work||"";
+    f.elements.dietStrict.checked=String(saved.diet||"").startsWith("Strictly ");
+    f.elements.educationWorkingOn.checked=String(saved.education||"").startsWith("Working on ");
     f.elements.radius.value=String(saved.searchRadiusMiles||10);
     for(let inches=48;inches<=84;inches++){
       const label=Math.floor(inches/12)+"' "+inches%12+'" ('+Math.round(inches*2.54)+' cm)';
@@ -369,6 +380,12 @@ export function createOnboardingUI({
           interestedIn:interestedIn.join(", "),relationshipGoal:openTo.join(", "),
           height:f.elements.height.value,work:f.elements.work.value.trim(),sign:zodiac(s.birth_date)};
         for(const name of Object.keys(choices))detail[name]=values(f,name).join(", ");
+        detail.kids=[detail.kids,detail.wantsKids].filter(Boolean).join(", ");
+        delete detail.wantsKids;
+        if(f.elements.dietStrict.checked&&detail.diet) detail.diet="Strictly "+detail.diet;
+        if(f.elements.educationWorkingOn.checked&&detail.education) detail.education="Working on "+detail.education;
+        const importance=values(f,"religionImportance").join(", ");
+        if(importance&&detail.religion)detail.religion+=", "+importance;
         if(f.elements.justWeed.checked)detail.drugs="Just weed"+(detail.drugs?" · "+detail.drugs:"");
         for(const name of ["smoking","vaping"]) {
           if(f.elements[name+"Weed"].checked)detail[name]="Just weed"+(detail[name]?" · "+detail[name]:"");
