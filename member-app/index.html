@@ -323,10 +323,11 @@
           </section>
 
           <section class="paper profile-panel" id="profile-panel" aria-labelledby="profile-title">
-            <p class="eyebrow">02 / YOUR PROFILE</p>
-            <div class="panel-head">
-              <h2 id="profile-title">TELL US YOUR STORY.</h2>
-              <span class="mini-heart" aria-hidden="true">&#10022;</span>
+            <div class="panel-head profile-setup-heading">
+              <div>
+                <p class="eyebrow">YOUR PROFILE</p>
+                <h2 id="profile-title">Let's start with the basics.</h2>
+              </div>
             </div>
             <div id="profile-locked">
               <p>A real profile, not a swipe card. Sign in to start making yours.</p>
@@ -342,13 +343,14 @@
             </div>
             <form id="profile-form" hidden novalidate>
               <input id="profile-name" name="displayName" type="hidden">
-              <div class="profile-editor-intro">
-                <p><strong>Build a profile worth reading.</strong> These fields are private for now. You'll get a live preview below as you write.</p>
-                <p id="profile-progress" class="profile-progress">Start with your introduction.</p>
-              </div>
-              <fieldset class="profile-edit-section">
-                <legend>01 / BASICS</legend>
-                <p class="profile-fieldset-intro">Enough detail to recognize a person, not enough to find their front door.</p>
+              <nav class="profile-editor-steps" id="profile-edit-step-nav" aria-label="Profile editor sections">
+                <button type="submit" data-target-profile-step="basics" aria-current="step">Basics</button>
+                <button type="submit" data-target-profile-step="details">Details</button>
+                <button type="submit" data-target-profile-step="essays">Essays</button>
+              </nav>
+              <p id="profile-progress" class="profile-progress" hidden></p>
+              <fieldset class="profile-edit-section" data-profile-section="basics">
+                <legend>About you</legend>
                 <div class="profile-field-grid">
                   <div class="profile-field ">
                     <label for="profile-age">Age</label>
@@ -386,9 +388,8 @@
                   </fieldset>
                 </div>
               </fieldset>
-              <fieldset class="profile-edit-section">
-                <legend>02 / MATCH DISTANCE</legend>
-                <p class="profile-fieldset-intro">Private preferences for finding people later. These do not publish your profile or make it discoverable.</p>
+              <fieldset class="profile-edit-section profile-distance-section" data-profile-section="basics">
+                <legend>How far away?</legend>
                 <div class="profile-field-grid">
                   <div class="profile-field profile-field-wide">
                     <label for="search-radius">Maximum distance</label>
@@ -404,9 +405,8 @@
                   </div>
                 </div>
               </fieldset>
-              <fieldset class="profile-edit-section">
-                <legend>03 / DETAILS</legend>
-                <p class="profile-fieldset-intro">These appear in the same order as your profile details. All are optional.</p>
+              <fieldset class="profile-edit-section" data-profile-section="details">
+                <legend>My details</legend>
                 <div class="profile-field-grid">
                   <div class="profile-field"><label for="profile-orientation">Orientation</label><select id="profile-orientation" name="orientation"><option value="">Select</option><option>Straight</option><option>Gay</option><option>Lesbian</option><option>Bisexual</option><option>Queer</option><option>Pansexual</option><option>Asexual</option><option>Other</option></select></div>
                   <div class="profile-field"><label for="profile-ethnicity">Ethnicity</label><select id="profile-ethnicity" name="ethnicity" multiple size="4"><option>Asian</option><option>Black</option><option>Hispanic / Latin</option><option>Indigenous</option><option>Middle Eastern</option><option>Pacific Islander</option><option>White</option><option>Other</option></select></div>
@@ -432,9 +432,8 @@
                   <div class="profile-field profile-field-wide"><label>Speaks</label><div class="profile-field-grid"><div class="profile-field"><select name="languageName1" aria-label="First language"><option value="">Select language</option><option>English</option><option>Spanish</option><option>French</option><option>German</option><option>Italian</option><option>Portuguese</option><option>Russian</option><option>Arabic</option><option>Hindi</option><option>Mandarin</option><option>Japanese</option><option>Korean</option><option>Pig Latin</option><option>Other</option></select><select name="languageLevel1" aria-label="First language proficiency"><option value="">Proficiency</option><option>Fluently</option><option>Okay</option><option>Poorly</option></select></div><div class="profile-field"><select name="languageName2" aria-label="Second language"><option value="">Select language</option><option>English</option><option>Spanish</option><option>French</option><option>German</option><option>Italian</option><option>Portuguese</option><option>Russian</option><option>Arabic</option><option>Hindi</option><option>Mandarin</option><option>Japanese</option><option>Korean</option><option>Pig Latin</option><option>Other</option></select><select name="languageLevel2" aria-label="Second language proficiency"><option value="">Proficiency</option><option>Fluently</option><option>Okay</option><option>Poorly</option></select></div><div class="profile-field"><select name="languageName3" aria-label="Third language"><option value="">Select language</option><option>English</option><option>Spanish</option><option>French</option><option>German</option><option>Italian</option><option>Portuguese</option><option>Russian</option><option>Arabic</option><option>Hindi</option><option>Mandarin</option><option>Japanese</option><option>Korean</option><option>Pig Latin</option><option>Other</option></select><select name="languageLevel3" aria-label="Third language proficiency"><option value="">Proficiency</option><option>Fluently</option><option>Okay</option><option>Poorly</option></select></div></div><p class="hint">Choose up to three languages and how well you speak each one.</p></div>
                 </div>
               </fieldset>
-              <fieldset class="profile-edit-section">
-                <legend>04 / THE ESSAYS</legend>
-                <p class="profile-fieldset-intro">The good stuff. The old site had room for actual words; so do we.</p>
+              <fieldset class="profile-edit-section" data-profile-section="essays">
+                <legend>My essays</legend>
                 <div class="profile-field-grid">
                   <div class="profile-field profile-field-wide">
                     <label for="profile-about">My self-summary</label>
@@ -467,8 +466,10 @@
                   </div>
                 </div>
               </fieldset>
-              <button class="button primary" type="submit">Save my profile <span aria-hidden="true">&#9829;</span></button>
-              <p class="hint">Your profile is private and is not discoverable yet. No photos or references are published in this phase.</p>
+              <div class="profile-editor-actions">
+                <button class="button primary" id="profile-save-button" type="submit">Save basics &amp; continue</button>
+                <span class="profile-save-indicator" id="profile-save-indicator" aria-live="polite"></span>
+              </div>
               <div id="saved-info" class="save-info" hidden></div>
             </form>
           </section>
