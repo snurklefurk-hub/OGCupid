@@ -143,3 +143,52 @@ form input:focus,form textarea:focus,.profile-field select:focus-visible{outline
  .intro{padding:19px 16px 0}
  .classic-member-tabs a{padding:9px 10px;font-size:11px}
 }
+
+
+/* Signed-in classic OkCupid-style homework dashboard, using real account state. */
+#member-columns[data-member-page]{grid-template-columns:minmax(0,1fr);padding:20px 24px 26px}
+#member-columns[data-member-page] .paper{width:100%}
+.classic-member-tabs a[aria-current="page"]{border-color:#cfdbe5;background:#f9fafb;color:#315f90;font-weight:700}
+.classic-member-tabs a:first-child:not([aria-current="page"]){border-color:transparent;background:transparent;color:#6a8196;font-weight:400}
+.homework-dashboard{margin:22px 24px 0;padding:0;background:#fff;border:1px solid #d5e1ec;box-shadow:0 1px 4px #19375712}
+.homework-header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:25px 25px 20px;border-bottom:1px solid #d5e0ea;background:linear-gradient(#fff,#eef3f8)}
+.homework-header .eyebrow{margin-bottom:7px;color:#8a9bad;letter-spacing:.8px}
+.homework-header h2{margin:0 0 5px;color:#315e8d;font:normal 33px/1.18 Georgia,serif}
+.homework-header p:not(.eyebrow){margin:0;color:#647c90;font-size:13px}
+.homework-tally{flex:none;text-align:center;background:#f9fcff;border:1px solid #c8d7e5;padding:10px 15px;min-width:118px;color:#557793}
+.homework-tally strong{display:block;color:#d64a81;font:normal 25px Georgia,serif}
+.homework-tally span{display:block;font-size:10px;margin-top:3px}
+.homework-next{margin:0;padding:12px 25px;background:#f9eaf1;border-bottom:1px solid #eed2df;color:#8c4969;font-size:12px}
+.homework-list{padding:0;margin:0;list-style:none}
+.homework-item{display:grid;grid-template-columns:40px minmax(0,1fr) auto;align-items:center;gap:9px 16px;padding:21px 25px;border-bottom:1px solid #e2eaf0}
+.homework-item:nth-child(even){background:#f9fbfd}
+.homework-number{align-self:start;color:#d64c84;font:normal 25px/1 Georgia,serif}
+.homework-copy h3{margin:0 0 7px;color:#315e89;font:normal 21px/1.2 Georgia,serif;letter-spacing:0}
+.homework-copy p{margin:0;color:#697b88;font-size:12px;line-height:1.6}
+.homework-state{grid-column:3;grid-row:1;color:#6a8498;font-size:11px;text-align:right;white-space:nowrap}
+.homework-item>a.button,.homework-unavailable{grid-column:3;grid-row:2;justify-self:end}
+.homework-item>a.button{display:inline-flex;align-items:center;min-height:36px;padding:7px 12px;white-space:nowrap}
+.homework-unavailable{max-width:160px;text-align:right;color:#8597a7;font-size:11px;line-height:1.35}
+.homework-item.is-complete .homework-number,.homework-item.is-complete .homework-state{color:#4b8b66}
+.homework-item.is-complete .homework-copy h3{color:#476f86}
+.homework-footer{margin:0;padding:15px 25px 18px;color:#8496a4;font-size:11px;line-height:1.5}
+@media(max-width:880px){
+ .homework-item{grid-template-columns:34px minmax(0,1fr);gap:8px 13px}
+ .homework-state{grid-column:2;grid-row:auto;text-align:left}
+ .homework-item>a.button,.homework-unavailable{grid-column:2;grid-row:auto;justify-self:start}
+ .homework-unavailable{text-align:left;max-width:none}
+}
+@media(max-width:760px){
+ #member-columns[data-member-page]{padding:13px 13px 18px}
+ .homework-dashboard{margin:14px 13px 0}
+ .homework-header{padding:20px 16px 16px;gap:12px}
+ .homework-header h2{font-size:28px}
+ .homework-header p:not(.eyebrow){font-size:12px}
+ .homework-tally{min-width:85px;padding:8px}
+ .homework-tally strong{font-size:20px}
+ .homework-next{padding:10px 16px}
+ .homework-item{padding:18px 16px}
+ .homework-copy h3{font-size:19px}
+ .homework-footer{padding:14px 16px}
+}
+@media(max-width:410px){.homework-header{align-items:start;flex-direction:column}.homework-tally{align-self:stretch;text-align:left}}
