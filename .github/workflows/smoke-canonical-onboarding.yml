@@ -1,0 +1,26 @@
+name: Canonical onboarding isolated Neon end-to-end smoke
+on:
+  push:
+    branches: [feature/canonical-onboarding]
+    paths:
+      - 'scripts/smoke-canonical-onboarding.mjs'
+      - '.github/workflows/smoke-canonical-onboarding.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  staging-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install image encoder
+        run: |
+          npm ci
+          npm install --no-save sharp@0.34.4
+      - name: Exercise actual isolated Neon signup profile photos Persona and deletion
+        run: node scripts/smoke-canonical-onboarding.mjs
