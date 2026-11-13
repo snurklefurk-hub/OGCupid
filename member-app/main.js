@@ -688,7 +688,7 @@ function readProfileDraft(form = $("profile-form")) {
   draft.pets = selectedValues(form.elements.pets);
   draft.diet = qualified(draft.diet, form.elements.dietStrict.checked);
   draft.education = qualified(draft.education, form.elements.educationWorkingOn.checked, "Working on");
-  draft.relationshipType = qualified(draft.relationshipType, form.elements.relationshipStrict.checked);
+  // Monogamy/polyamory no longer includes a strictly modifier.
   draft.religion = [draft.religion, form.elements.religionImportance.value].filter(Boolean).join(", ");
   draft.sign = [draft.sign, form.elements.signImportance.value].filter(Boolean).join(", ");
   draft.kids = [draft.kids, form.elements.wantsKids.value].filter(Boolean).join(", ");
@@ -785,7 +785,7 @@ function showStoredProfile(profile) {
   restoreLanguages(form, profile?.languages);
   restoreQualifiedChoice(form, "diet", "dietStrict", profile?.diet, "Strictly ");
   restoreQualifiedChoice(form, "education", "educationWorkingOn", profile?.education, "Working on ");
-  restoreQualifiedChoice(form, "relationshipType", "relationshipStrict", profile?.relationshipType, "Strictly ");
+  form.elements.relationshipType.value = String(profile?.relationshipType ?? "").replace(/^Strictly /, "");
   restorePairedChoice(form, "religion", "religionImportance", profile?.religion);
   restorePairedChoice(form, "sign", "signImportance", profile?.sign);
   restorePairedChoice(form, "kids", "wantsKids", profile?.kids);
