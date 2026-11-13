@@ -34,3 +34,24 @@ test('profile changes retain the deployed photo and home interfaces', () => {
   assert.ok(html.includes('id="homework-dashboard"'));
   assert.ok(!html.includes('Your homework.'));
 });
+
+test('profile submit saves without the removed search-origin control', async () => {
+  let submit;
+  let pending;
+  let saved;
+  const draft = { cityRegion: '', locality: null, searchOrigin: null, work: 'QA' };
+  const form = { elements: {}, reportValidity: () => true, querySelector: () => ({}) };
+  const handler = source.slice(source.indexOf('  $("profile-form").addEventListener("submit"'), source.indexOf('  $("question-skip").addEventListener'));
+  vm.runInNewContext(handler, {
+    $: () => ({ addEventListener: (_event, callback) => { submit = callback; } }),
+    operation: (_button, _label, callback) => { pending = callback(); },
+    readProfileDraft: () => draft,
+    cachedProfile: null,
+    requestProfile: async (method, payload) => { assert.equal(method, 'PUT'); assert.equal(payload, draft); return { profile: payload }; },
+    showStoredProfile: profile => { saved = profile; },
+    message: () => {},
+  });
+  submit({ preventDefault() {}, currentTarget: form });
+  await pending;
+  assert.equal(saved, draft);
+});

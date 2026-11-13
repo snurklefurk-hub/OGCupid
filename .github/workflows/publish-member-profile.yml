@@ -21,7 +21,9 @@ jobs:
       - name: Install locked dependencies
         run: npm ci --prefix member-app
       - name: Run member regression tests
-        run: npm test --prefix member-app
+        run: |
+          npm test --prefix member-app
+          node --test member-app/profile-form.test.js
       - name: Build production member site
         run: npm run build --prefix member-app
         env:

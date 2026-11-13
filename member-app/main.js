@@ -1029,11 +1029,6 @@ function wireForms() {
           draft.cityRegion !== String(cachedProfile?.cityRegion ?? "").trim()) {
         throw new Error("Choose your city or town from the search results.");
       }
-      const originText = form.elements.searchOriginLabel.value.trim();
-      if (originText && !draft.searchOrigin &&
-          originText !== String(cachedProfile?.searchOriginLabel ?? "").trim()) {
-        throw new Error("Choose the search-around city from the results, or leave it blank.");
-      }
       const result = await requestProfile("PUT", draft);
       showStoredProfile(result.profile);
       message("Your profile has been saved privately to PostgreSQL.", "ok");
