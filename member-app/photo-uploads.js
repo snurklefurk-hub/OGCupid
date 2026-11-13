@@ -24,7 +24,7 @@ export function createPhotoUI({ requestJson, requestImage, uploadJpeg, onPhotosC
     status.classList.toggle("photo-error", isError);
   }
   function clearUrls() { urls.forEach(url => URL.revokeObjectURL(url)); urls=[]; }
-  function reportChanged(){ onPhotosChanged?.(photos.length); }
+  function reportChanged(){ onPhotosChanged?.(photos.length, photos); }
   async function load(userId) {
     const loadId = ++generation;
     activeUser = userId;
