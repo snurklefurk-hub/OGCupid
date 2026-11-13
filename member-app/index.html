@@ -10,6 +10,7 @@
   <title>Your corner of the internet | OG Cupid</title>
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./classic.css">
+  <link rel="stylesheet" href="./member-shell.css">
   <script type="module" src="./main.js"></script>
 </head>
 <body>
@@ -32,8 +33,6 @@
         <a href="#settings-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#9881;</span> Account settings</a>
         <a href="#profile-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#9825;</span> My profile</a>
         <a href="#photos-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#10064;</span> My photos</a>
-        <span class="classic-rail-pending"><span class="classic-rail-icon" aria-hidden="true">&#9734;</span> Matches <small>soon</small></span>
-        <span class="classic-rail-pending"><span class="classic-rail-icon" aria-hidden="true">&#9993;</span> Messages <small>soon</small></span>
         <a href="#question-title"><span class="classic-rail-icon" aria-hidden="true">&#9678;</span> Questions</a>
         <a href="/account/persona.html"><span class="classic-rail-icon" aria-hidden="true">&#10022;</span> Persona test</a>
         <a href="/ogtrends/"><span class="classic-rail-icon" aria-hidden="true">&#9998;</span> OgTrends</a>
@@ -86,12 +85,13 @@
             <div class="member-home-primary">
               <section class="member-home-section member-home-matches" aria-labelledby="dashboard-matches-title">
                 <div class="member-home-section-head">
-                  <h3 id="dashboard-matches-title">You might like...</h3>
-                  <span class="member-home-section-tag">MATCHES</span>
+                  <h3 id="dashboard-matches-title">Your profile</h3>
+                  <span class="member-home-section-tag">YOUR PAGE</span>
                 </div>
                 <div class="member-home-empty">
-                  <p>Good matches will show up here when member discovery and compatibility matching are ready.</p>
-                  <p>We'd rather introduce you to real people than make up a list.</p>
+                  <p>Start with the profile people will actually read. Your saved words, not a fake match feed.</p>
+                  <p><a href="#preview-title">View your private profile preview</a> · <a href="#profile-title">Edit your profile</a></p>
+                  <p>Real member discovery will appear here once privacy controls and matching are ready.</p>
                 </div>
               </section>
               <section class="member-home-section" aria-labelledby="dashboard-community-title">
@@ -139,8 +139,8 @@
           <div class="welcome-center">
             <header class="welcome-center-intro">
               <p class="eyebrow">A GOOD PLACE TO START</p>
-              <h2 id="welcome-title">Welcome to OG Cupid</h2>
-              <p>Follow this quick guide to get the best out of the site. The interesting people are the whole point.</p>
+              <h2 id="welcome-title">Get your profile ready.</h2>
+              <p>Three quick milestones: save your basics, add a photo, answer ten match questions. That's enough to get started; the novels can wait.</p>
             </header>
             <p id="homework-next" class="welcome-current-step" aria-live="polite">First up: tell us the basics about yourself.</p>
             <ol class="welcome-steps">
@@ -150,7 +150,7 @@
                 </span>
                 <div class="welcome-step-content">
                   <h3><a href="#profile-title">Fill out your profile basics</a></h3>
-                  <p>The essentials first. Let people know who you are; the little details and essays can come later.</p>
+                  <p>Your name, age, identity, and what you're looking for. That's the starter profile; cities, essays, and details can wait.</p>
                   <span class="welcome-step-state" id="homework-profile-state">Start here</span>
                 </div>
               </li>
@@ -170,7 +170,7 @@
                 </span>
                 <div class="welcome-step-content">
                   <h3>Take the Dating Persona Quiz and answer match questions</h3>
-                  <p>Find out your dating persona, then tell us what matters to you. There aren't any visible question sets—just questions.</p>
+                  <p>Answer ten compatibility questions to finish the starter set. The Dating Persona Quiz is a fun optional detour, not a roadblock.</p>
                   <div class="welcome-step-links">
                     <a href="/account/persona.html">Dating Persona Quiz</a>
                     <a href="#question-title">Match questions</a>
