@@ -111,3 +111,120 @@ a{color:#315f91}
  .ogc-rail-section-heading,.ogc-rail-section-note,.ogc-rail-tagline{display:none}
  .ogc-classic-with-rail>header.og-header,.ogc-classic-with-rail>header:not(.og-header){display:none!important}
 }
+
+
+/* Mobile spacing pass: 2026-11-12 screenshot review */
+@media (max-width: 760px) {
+  /* Consistent two-column tap targets instead of flex items changing widths. */
+  .ogc-classic-rail .ogc-rail-logo {
+    min-height: 66px;
+    padding: 8px 15px;
+  }
+  .ogc-classic-rail .ogc-rail-intro {
+    margin: 0;
+    padding: 9px 15px;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  .ogc-classic-rail .ogc-rail-nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+  }
+  .ogc-classic-rail .ogc-rail-nav a {
+    width: auto;
+    min-width: 0;
+    min-height: 44px;
+    flex: none;
+    justify-content: flex-start;
+    gap: 8px;
+    padding: 10px 12px;
+    border-right: 1px solid #ffffff15;
+    border-bottom: 1px solid #ffffff15;
+    font: 12px/1.25 Arial, Helvetica, sans-serif;
+    text-align: left;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .ogc-classic-rail .ogc-rail-nav a:nth-child(2n) { border-right: 0; }
+  .ogc-classic-rail .ogc-rail-icon {
+    display: inline-block;
+    width: 17px;
+    min-width: 17px;
+    font-size: 16px;
+    line-height: 1;
+  }
+  /* Less empty runway under the nav, and more even editorial spacing. */
+  .site.ogc-classic-with-rail .og-hero-copy {
+    padding: 27px 20px 27px;
+  }
+  .site.ogc-classic-with-rail .og-hero h1 {
+    margin-top: 12px;
+    margin-bottom: 17px;
+  }
+  .site.ogc-classic-with-rail .og-hero-lede {
+    margin-bottom: 18px;
+    line-height: 1.55;
+  }
+  .site.ogc-classic-with-rail .og-actions {
+    gap: 9px;
+  }
+  .site.ogc-classic-with-rail .og-actions .og-btn {
+    min-height: 42px;
+  }
+  .site.ogc-classic-with-rail .og-hero-graphic {
+    padding: 17px;
+  }
+  .site.ogc-classic-with-rail .og-section {
+    padding: 32px 20px 34px;
+  }
+  .site.ogc-classic-with-rail .og-section-label {
+    margin-bottom: 8px;
+  }
+  .site.ogc-classic-with-rail .og-principles-intro {
+    gap: 10px;
+    margin-bottom: 21px;
+  }
+  .site.ogc-classic-with-rail .og-principle-grid {
+    gap: 11px;
+  }
+  .site.ogc-classic-with-rail .og-principle {
+    min-height: 0;
+    padding: 18px 16px 19px;
+  }
+  .site.ogc-classic-with-rail .og-principle-num {
+    margin-bottom: 10px;
+  }
+  .site.ogc-classic-with-rail .og-principle h3 {
+    margin-bottom: 8px;
+  }
+  .site.ogc-classic-with-rail .og-principle p {
+    line-height: 1.55;
+  }
+  .site.ogc-classic-with-rail .og-endcap {
+    padding: 32px 20px 34px;
+    gap: 22px;
+  }
+  .site.ogc-classic-with-rail .og-endcap p {
+    margin-top: 12px;
+  }
+  .site.ogc-classic-with-rail .og-endcap-action {
+    gap: 13px;
+  }
+  .site.ogc-classic-with-rail > footer.og-footer {
+    padding: 23px 20px 25px;
+    gap: 14px;
+  }
+  .site.ogc-classic-with-rail .og-footer-links {
+    gap: 7px 15px;
+  }
+  .site.ogc-classic-with-rail .og-footer-links a {
+    display: inline-block;
+    padding: 3px 0;
+    line-height: 1.45;
+  }
+}
+@media (max-width: 360px) {
+  .ogc-classic-rail .ogc-rail-nav a { padding: 10px 9px; gap: 6px; font-size: 11.5px; }
+  .site.ogc-classic-with-rail .og-hero-copy { padding-inline: 19px; }
+}
