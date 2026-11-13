@@ -29,3 +29,41 @@ test("bad counts do not invent progress", () => {
   assert.equal(welcomeQuestionStatus(-5), "0 match questions answered");
   assert.equal(welcomeQuestionStatus(NaN), "0 match questions answered");
 });
+
+import { readFileSync } from "node:fs";
+
+test("the welcome page has the four approved activities in the requested order", () => {
+  const html = readFileSync(new URL("./index.html", import.meta.url), "utf8");
+  const steps = [
+    "Fill out your profile basics",
+    "Add photos",
+    "Take the Dating Persona Quiz and answer match questions",
+    "Explore, match, and have fun",
+  ];
+  const indexes = steps.map(step => html.indexOf(step));
+  assert.ok(indexes.every(index => index >= 0), "all four approved steps are visible");
+  assert.deepEqual([...indexes].sort((a,b) => a-b), indexes);
+  assert.match(html, /id="welcome-title"/);
+  assert.match(html, /href="\/account\/persona\.html"/);
+  assert.match(html, /href="#question-title"/);
+  assert.match(html, /href="#welcome-title"/);
+});
+
+test("signup and email verification deliberately route to welcome", () => {
+  const js = readFileSync(new URL("./main.js", import.meta.url), "utf8");
+  const signup = js.slice(js.indexOf('"signup-form").addEventListener'),js.indexOf('"verify-form").addEventListener'));
+  const verification = js.slice(js.indexOf('"verify-form").addEventListener'),js.indexOf('"signout").addEventListener'));
+  assert.match(signup, /window\.location\.hash\s*!==\s*SIGNUP_WELCOME_HASH/);
+  assert.match(verification, /window\.location\.hash\s*!==\s*SIGNUP_WELCOME_HASH/);
+  assert.doesNotMatch(signup + verification, /window\.location\.hash\s*=\s*["']#settings-title/);
+});
+
+test("no unverified persona completion marker or false match feeds on welcome",()=>{
+  const html=readFileSync(new URL("./index.html",import.meta.url),"utf8");
+  const start=html.indexOf('class="paper homework-dashboard welcome-checklist"');
+  const end=html.indexOf('id="member-columns"',start);
+  const welcome=html.slice(start,end);
+  assert.doesNotMatch(welcome,/persona (quiz )?(complete|finished|done)/i);
+  assert.match(welcome,/member browsing and compatibility matching are coming/i);
+  assert.doesNotMatch(welcome,/\bhomework\b/i);
+});
