@@ -2,10 +2,10 @@ import { createAuthClient } from "@neon/auth";
 
 const local = ["localhost","127.0.0.1"].includes(location.hostname);
 const authBaseUrl = local
-  ? "https://ep-blue-credit-bbfdwceu.neonauth.c-15.us-east-1.aws.neon.tech/neondb/auth"
+  ? (import.meta.env.VITE_OGC_AUTH_URL || "https://ep-blue-credit-bbfdwceu.neonauth.c-15.us-east-1.aws.neon.tech/neondb/auth")
   : (import.meta.env.VITE_OGC_AUTH_URL || "");
 const apiBaseUrl = local
-  ? "https://br-empty-lab-bbjb0q1u-members.compute.c-15.us-east-1.aws.neon.tech/profile"
+  ? (import.meta.env.VITE_OGC_MEMBER_API_URL || "https://br-empty-lab-bbjb0q1u-members.compute.c-15.us-east-1.aws.neon.tech/profile")
   : (import.meta.env.VITE_OGC_MEMBER_API_URL || "");
 const auth = authBaseUrl && apiBaseUrl ? createAuthClient(authBaseUrl) : null;
 let lastAnswers = null, saving = false;
