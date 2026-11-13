@@ -241,6 +241,21 @@ function clearMemberView() {
   savedPhotoCount = 0;
 }
 
+function updatePrimaryPhotoPreview() {
+  const avatar = $("preview-avatar");
+  if(!avatar) return;
+  avatar.replaceChildren();
+  const imageUrl = photoUI?.primaryUrl;
+  if(imageUrl) {
+    const image=document.createElement("img");
+    image.src=imageUrl;
+    image.alt="";
+    avatar.appendChild(image);
+  } else {
+    avatar.textContent="♥";
+  }
+}
+
 function renderHomework() {
   const profileSaved = Boolean(cachedProfile?.updatedAt);
   const answered = Math.min(savedAnswers.size, 10);
@@ -644,6 +659,7 @@ function renderProfilePreview() {
 function showStoredProfile(profile) {
   const form = $("profile-form");
   cachedProfile = profile;
+  photoUI?.setProfileReady(Boolean(profile));
   renderHomework();
   const fallback = typeof currentUser?.name === "string"
     ? currentUser.name.trim().slice(0, 60) : "";
@@ -1010,6 +1026,7 @@ async function start() {
     uploadJpeg: uploadProfileJpeg,
     onPhotosChanged: count => {
       savedPhotoCount = count;
+      updatePrimaryPhotoPreview();
       renderHomework();
     },
   });
