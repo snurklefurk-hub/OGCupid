@@ -2,21 +2,27 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { displayQuestionProgress, acceptedAnswerSuggestion } from "./question-presentation.js";
 
-test("question progress labels are accurate, not invented onboarding percentages", () => {
-  assert.deepEqual(displayQuestionProgress(2, 410, "first10"), {
-    answered:2,total:410,label:"2 of 410 questions answered",tier:"FIRST 10",
-  });
-  assert.equal(displayQuestionProgress(63,410,"next100").tier, "NEXT 100");
-  assert.equal(displayQuestionProgress(11,410,"next50").tier, "NEXT 50");
-  assert.equal(displayQuestionProgress(169,410,"next250").tier, "NEXT 250");
-  assert.equal(displayQuestionProgress(410,410,"other").answered,410);
-  assert.equal(displayQuestionProgress(12,410,"first10",true).tier,"REVIEWING AN ANSWER");
+test("questions appear as one continuous pool with count only", () => {
+  assert.deepEqual(displayQuestionProgress(0), { answered:0,label:"0 questions answered" });
+  assert.deepEqual(displayQuestionProgress(1), { answered:1,label:"1 question answered" });
+  assert.deepEqual(displayQuestionProgress(63), { answered:63,label:"63 questions answered" });
+  assert.deepEqual(displayQuestionProgress(410), { answered:410,label:"410 questions answered" });
 });
-test("untrusted counts cannot make progress exceed its actual question total",()=>{
-  assert.equal(displayQuestionProgress(999,410,"first10").answered,410);
-  assert.equal(displayQuestionProgress(-9,410,"first10").answered,0);
-  assert.equal(displayQuestionProgress(NaN,410,"first10").answered,0);
+
+test("progress does not reveal internal stages, denominators or private tier names", () => {
+  for(const count of [0,1,10,11,60,61,160,410]) {
+    const progress=displayQuestionProgress(count);
+    assert.equal(Object.hasOwn(progress,"tier"),false);
+    assert.equal(Object.hasOwn(progress,"total"),false);
+    assert.doesNotMatch(progress.label,/first|next|tier|\/|of 410/i);
+  }
 });
+
+test("untrusted counts cannot yield negative or NaN progress",()=>{
+  assert.equal(displayQuestionProgress(-9).answered,0);
+  assert.equal(displayQuestionProgress(NaN).answered,0);
+});
+
 test("accept-own-answer suggestion never overwrites existing acceptable choices",()=>{
   assert.equal(acceptedAnswerSuggestion("option-0", []),"option-0");
   assert.equal(acceptedAnswerSuggestion("option-0", ["option-2"]),null);
