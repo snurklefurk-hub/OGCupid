@@ -53,7 +53,7 @@
         <span class="stamp">OG CUPID / YOUR CORNER OF THE INTERNET</span>
         <h1>A little more <em>you.</em></h1>
         <p>Remember when a dating profile told you something about a person? Your page. Your words. Your weird little corner of the internet.</p>
-        <nav class="classic-member-tabs" aria-label="Member sections"><a href="#member-title">Account</a><a href="#profile-title">My profile</a><a href="#question-title">Questions</a><a href="/account/persona.html">Dating persona</a></nav>
+        <nav class="classic-member-tabs" aria-label="Member sections"><a href="#member-title">Home</a><a href="#profile-title">My profile</a><a href="#question-title">Questions</a><a href="/account/persona.html">Dating persona</a></nav>
       </div>
 
       <div id="notice" class="notice" role="status" aria-live="polite">Checking membership availability.</div>
@@ -66,7 +66,45 @@
       </section>
 
       <div id="app-view" hidden>
-        <div class="columns">
+        <section class="paper homework-dashboard" id="homework-dashboard" hidden aria-labelledby="homework-title">
+          <div class="homework-header">
+            <div>
+              <p class="eyebrow">WELCOME TO YOUR NEW OLD INTERNET</p>
+              <h2 id="homework-title">Your homework.</h2>
+              <p>Start telling your story. Find the people who want to read it.</p>
+            </div>
+            <div class="homework-tally" aria-live="polite"><strong id="homework-progress-count">0 of 2</strong><span>things you can do now</span></div>
+          </div>
+          <p id="homework-next" class="homework-next">First, give us the real you.</p>
+          <ol class="homework-list">
+            <li class="homework-item" id="homework-profile">
+              <span class="homework-number" aria-hidden="true">01</span>
+              <div class="homework-copy"><h3>Fill out your profile</h3><p>Your story comes first. Introduce yourself, add the details, and write the good stuff.</p></div>
+              <span class="homework-state" id="homework-profile-state">Start here</span>
+              <a class="button" href="#profile-title">Edit my profile &rarr;</a>
+            </li>
+            <li class="homework-item" id="homework-photos">
+              <span class="homework-number" aria-hidden="true">02</span>
+              <div class="homework-copy"><h3>Add some photos</h3><p>Your words first, your pictures second. Private photo uploads are being built.</p></div>
+              <span class="homework-state">Coming soon</span>
+              <span class="homework-unavailable">Photo uploads not available yet</span>
+            </li>
+            <li class="homework-item" id="homework-questions">
+              <span class="homework-number" aria-hidden="true">03</span>
+              <div class="homework-copy"><h3>Answer match questions</h3><p>Start with ten questions. Your answers will help us figure out who gets you.</p></div>
+              <span class="homework-state" id="homework-questions-state">0 of 10 answered</span>
+              <a class="button" href="#question-title">Answer questions &rarr;</a>
+            </li>
+            <li class="homework-item" id="homework-meet">
+              <span class="homework-number" aria-hidden="true">04</span>
+              <div class="homework-copy"><h3>Rate people</h3><p>Discover members and show some appreciation when member browsing opens.</p></div>
+              <span class="homework-state">Coming later</span>
+              <span class="homework-unavailable">Member discovery not open yet</span>
+            </li>
+          </ol>
+          <p class="homework-footer">No rush. Explore the site whenever you like; this list will be here when you come back.</p>
+        </section>
+        <div class="columns" id="member-columns">
           <section class="paper" id="guest-view" aria-labelledby="account-title">
             <p class="eyebrow">01 / ACCOUNT</p>
             <div class="panel-head">
@@ -193,10 +231,10 @@
           </section>
           </section>
 
-          <section class="paper profile-panel" aria-labelledby="profile-title">
+          <section class="paper profile-panel" id="profile-panel" aria-labelledby="profile-title">
             <p class="eyebrow">02 / YOUR PROFILE</p>
             <div class="panel-head">
-              <h2 id="profile-title">TELL US SOMETHING.</h2>
+              <h2 id="profile-title">TELL US YOUR STORY.</h2>
               <span class="mini-heart" aria-hidden="true">&#10022;</span>
             </div>
             <div id="profile-locked">
@@ -418,7 +456,7 @@
             </div>
           </article>
         </section>
-        <section class="paper question-panel" aria-labelledby="question-title">
+        <section class="paper question-panel" id="questions-panel" aria-labelledby="question-title">
           <p class="eyebrow">03 / MATCH QUESTIONS</p>
           <h2 id="question-title">THE GOOD QUESTIONS.</h2>
           <p id="question-locked">Sign in to answer the curated match questions. Your answers stay attached to your account.</p>
