@@ -7,8 +7,6 @@ export function createPhotoUI({ requestJson, requestImage, uploadJpeg, onPhotosC
   const chooser = el("photo-file");
   const cropDialog = el("photo-crop-dialog");
   const cropper = new ProfilePhotoCropper(el("photo-crop-canvas"));
-  const ratio = el("photo-crop-ratio");
-  const zoom = el("photo-crop-zoom");
   const save = el("photo-crop-save");
   const gallery = el("photo-gallery");
   const status = el("photo-status");
@@ -140,11 +138,7 @@ export function createPhotoUI({ requestJson, requestImage, uploadJpeg, onPhotosC
     if (photos.length>=5) { setStatus("Five photos is the limit for now.",true); chooser.value=""; return; }
     try {
       await cropper.open(file);
-      ratio.value="square";
-      // The first uploaded picture is the primary square crop. Additional
-      // gallery pictures can be portrait or landscape.
-      ratio.disabled = photos.length === 0;
-      zoom.value="1";
+      el("photo-crop-error").textContent = "";
       cropDialog.showModal();
       setStatus("");
     } catch(err) {
@@ -152,15 +146,14 @@ export function createPhotoUI({ requestJson, requestImage, uploadJpeg, onPhotosC
       chooser.value="";
     }
   });
-  ratio.addEventListener("change",()=>cropper.setRatio(ratio.value));
-  zoom.addEventListener("input",()=>cropper.setZoom(zoom.value));
-  el("photo-crop-close").addEventListener("click",close);
+  el("photo-crop-reset").addEventListener("click",()=>cropper.reset());
   el("photo-crop-cancel").addEventListener("click",close);
   cropDialog.addEventListener("close",()=>{cropper.dispose();chooser.value="";});
   save.addEventListener("click",async()=>{
     if (pending || !activeUser || photos.length>=5) return;
     pending=true;
     save.disabled=true;
+    el("photo-crop-error").textContent = "";
     setStatus("Saving your cropped photo…");
     try {
       const jpeg=await cropper.exportJpeg();
@@ -169,7 +162,9 @@ export function createPhotoUI({ requestJson, requestImage, uploadJpeg, onPhotosC
       await load(activeUser);
       setStatus("Photo saved to your album.");
     } catch(err) {
-      setStatus(err instanceof Error ? err.message : "Couldn't save photo",true);
+      const error = err instanceof Error ? err.message : "Couldn't save photo";
+      el("photo-crop-error").textContent = error;
+      setStatus(error,true);
     } finally { pending=false; save.disabled=false; }
   });
 
