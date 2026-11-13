@@ -317,6 +317,10 @@ function renderProfileEditorStep() {
 }
 
 function renderMemberPage() {
+  if(currentUser && onboarding?.complete && !onboarding.active && window.location.hash===SIGNUP_WELCOME_HASH) {
+    onboarding.showHub();
+    return;
+  }
   // Hide unfinished member features even when somebody types a deep link.
   // The server separately checks all private mutations and progress unlocks.
   if (currentUser && onboarding?.active && !onboarding.complete) {
