@@ -249,7 +249,18 @@ function renderAuthenticated(member) {
   show("email-settings-form", authenticated);
   // Normal owner-controlled account deletion in the development site.
   show("deletion-test", authenticated && accountDeletionInUi);
+  // The classic sidebar is real account navigation, not a demo profile.
+  $("classic-rail-member").hidden = !authenticated;
+  $("classic-rail-guest").hidden = authenticated;
+  $("classic-rail-progress-section").hidden = !authenticated;
+  document.querySelectorAll("[data-classic-auth]").forEach(link => {
+    link.hidden = !authenticated;
+  });
+  $("classic-member-greeting").textContent = authenticated
+    ? "Hi, " + String(member.name || "member").slice(0, 60)
+    : "Welcome to OG Cupid";
   if (!member) return;
+  $("classic-rail-member-name").textContent = member.name || "OG Cupid member";
   $("member-welcome").textContent = member.name || "OG Cupid member";
   $("member-email").textContent = member.email || "";
   if (!cachedProfile && !$("profile-name").value.trim()) {
@@ -447,7 +458,25 @@ function readProfileDraft(form = $("profile-form")) {
   return draft;
 }
 
+function updateClassicRailProgress() {
+  // Count genuine draft details, never a fictitious 72% completion.
+  const form = $("profile-form");
+  const data = new FormData(form);
+  const exists = name => String(data.get(name) || "").trim().length > 0;
+  const essay = ["lifeDirection", "goodAt", "favorites", "sixThings", "fridayNight", "messageMeIf"]
+    .some(exists);
+  const completed = [
+    exists("displayName"), exists("aboutMe"), exists("age"), exists("cityRegion"),
+    exists("gender"), data.getAll("interestedIn").length > 0,
+    data.getAll("openTo").length > 0, exists("lookingFor"), essay,
+  ].filter(Boolean).length;
+  const percentage = Math.round(completed / 9 * 100);
+  $("classic-rail-progress-fill").style.width = percentage + "%";
+  $("classic-rail-progress-label").textContent = completed + " of 9 starting details";
+}
+
 function renderProfilePreview() {
+  updateClassicRailProgress();
   const draft = readProfileDraft();
   $("bio-count").textContent = String($("profile-form").elements.aboutMe.value.length);
   $("preview-display-name").textContent = draft.displayName || "Your name goes here";
