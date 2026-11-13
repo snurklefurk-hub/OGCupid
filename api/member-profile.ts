@@ -320,7 +320,8 @@ export default {
     // development or production branch, and only with its dedicated
     // server-side deletion credential and deliberate feature flag.
     const productionBranch = process.env.NEON_BRANCH === "production";
-    const developmentBranch = process.env.NEON_BRANCH === "dev/private-member-accounts";
+    const developmentBranch = process.env.NEON_BRANCH === "dev/private-member-accounts" ||
+      process.env.NEON_BRANCH === "dev/canonical-onboarding-2026-11-13";
     if (deletePath &&
         (!(productionBranch || developmentBranch) ||
          process.env.OGC_ACCOUNT_DELETION_ENABLED !== "true" ||
