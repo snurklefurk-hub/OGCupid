@@ -61,3 +61,9 @@ details{border:2px solid #a69dac;margin:14px 0;background:#fff}summary{padding:1
 .research-figure{break-inside:avoid}
 .research-figure .fig-caption{max-width:780px}
 @media(max-width:760px){.prose .rule{padding:16px;margin:28px 0 34px;box-shadow:3px 3px 0 var(--ink)}}
+
+
+/* Contact, privacy, and terms appear in every OgTrends footer. */
+.legal-footer-links{display:flex;align-items:center;gap:12px 18px;flex-wrap:wrap;flex-basis:100%;border-top:1px solid #d7cade;margin-top:5px;padding-top:12px}
+.legal-footer-links a{font-size:12px;font-weight:900;color:var(--ink);text-underline-offset:3px}
+.legal-footer-links a:hover{color:var(--rose)}
