@@ -41,9 +41,11 @@ test("exact four quadrants progressively unlock from persisted server status",()
 
 test("onboarding copy and server routes follow owner's canonical plan",()=>{
   const js=readFileSync(new URL("./onboarding-ui.js",import.meta.url),"utf8");
-  for(const label of ["DONE!","FINISHED!","getting ahead","25 match questions","Now would be a good time to verify","Just weed","Something else","Delete account","My Self Summary"]){
+  const html=readFileSync(new URL("./index.html",import.meta.url),"utf8");
+  for(const label of ["DONE!","getting ahead","25 match questions","Now would be a good time to verify","Just weed","Something else","Delete account","My Self Summary"]){
     assert.match(js,new RegExp(label,"i"),label);
   }
+  assert.match(html,/FINISHED!/);
   assert.match(js,/request\("PUT",\s*"\/onboarding"/);
   assert.doesNotMatch(js,/emailOtp/);
 });
