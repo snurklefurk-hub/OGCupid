@@ -7,6 +7,7 @@ import { isPhotoPath, photoMethodAllowed, handlePhotoRequest } from "./member-ph
 import { removePhoto } from "./photo-storage.js";
 import { isKrustyKrabCookJob } from "./job-moderation.js";
 import { validProfileChoice } from "./profile-choices.js";
+import { handleOnboarding } from "./onboarding.js";
 
 const required = ["DATABASE_URL", "NEON_AUTH_JWKS_URL", "NEON_AUTH_BASE_URL"] as const;
 for (const name of required) {
@@ -306,12 +307,13 @@ export default {
     const profilePath = url.pathname === "/profile" || url.pathname === "/profile/";
     const answersPath = url.pathname === "/answers" || url.pathname === "/answers/";
     const photoPath = isPhotoPath(url.pathname);
+    const onboardingPath = url.pathname === "/onboarding" || url.pathname === "/onboarding/";
     const emailPreferencesPath = url.pathname === "/email-preferences" || url.pathname === "/email-preferences/";
     const deletePath = url.pathname === "/account/delete" || url.pathname === "/account/delete/";
     // A credential check that can NEVER call the privileged eraser.
     // Only enabled for the one disposable development account.
     const verifyPath = url.pathname === "/account/reauth-check" || url.pathname === "/account/reauth-check/";
-    if (!profilePath && !answersPath && !emailPreferencesPath && !deletePath && !verifyPath && !photoPath) {
+    if (!profilePath && !answersPath && !emailPreferencesPath && !deletePath && !verifyPath && !photoPath && !onboardingPath) {
       return json(request, { error: "Not found" }, 404);
     }
     // Self-service deletion is allowed only on the explicitly configured
@@ -345,7 +347,7 @@ export default {
     if (!userId) return json(request, { error: "Unauthorized" }, 401);
 
     try {
-      if (profilePath || answersPath || emailPreferencesPath || photoPath) {
+      if (profilePath || answersPath || emailPreferencesPath || photoPath || onboardingPath) {
         // A signed JWT can outlive the account/session that issued it.
         // Do not allow a deleted identity to read an empty profile as if it
         // were still a member, or attempt to recreate a profile via PUT.
@@ -361,6 +363,9 @@ export default {
 
       if (photoPath) {
         return await handlePhotoRequest(request,userId,url,withMember,json);
+      }
+      if (onboardingPath) {
+        return await handleOnboarding(request,userId,withMember,json,verifiedPlace);
       }
 
       if (deletePath || verifyPath) {
