@@ -22,7 +22,7 @@ test("portrait and landscape crops never exceed source bounds", () => {
   }
 });
 test("zoom shrinks the crop window; panning shifts without overflow", () => {
-  const a=cropRect(1200,1600,"square",1);
+  const a=cropRect(1200,1600,"square",1.5);
   const b=cropRect(1200,1600,"square",2,-1,1);
   assert.ok(b.width<a.width && b.height<a.height);
   assert.ok(b.x < a.x && b.y > a.y);
