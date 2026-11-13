@@ -2,6 +2,7 @@ import { createAuthClient } from "@neon/auth";
 import { nextCompatibilityQuestion } from "./question-flow.js";
 import { displayQuestionProgress, acceptedAnswerSuggestion } from "./question-presentation.js";
 import { memberHomeState } from "./home-dashboard.js";
+import { SIGNUP_WELCOME_HASH, memberSectionFromHash, welcomeQuestionStatus } from "./welcome-flow.js";
 import { createLocalityPicker } from "./locality-picker.js";
 import { createPhotoUI } from "./photo-uploads.js";
 import { createProfilePhotoGallery } from "./profile-photo-gallery.js";
@@ -249,34 +250,36 @@ function renderHomework() {
     photoCount: savedPhotoCount,
     answeredCount: savedAnswers.size,
   });
-  $("homework-progress-count").textContent = state.completed + " of " + state.available;
   $("homework-photos-state").textContent = state.hasPhoto
-    ? "✓ " + state.photoCount + " of 5 photos"
-    : "0 of 5 photos";
+    ? "✓ " + state.photoCount + (state.photoCount === 1 ? " photo added" : " photos added")
+    : "No photos yet";
   $("homework-photos").classList.toggle("is-complete",state.hasPhoto);
-  $("homework-profile-state").textContent = state.hasProfile ? "✓ Saved" : "Start here";
+  $("homework-profile-state").textContent = state.hasProfile ? "✓ Profile saved" : "Start here";
   $("homework-profile").classList.toggle("is-complete",state.hasProfile);
-  $("homework-questions-state").textContent = state.hasAnswers
-    ? "✓ Getting to know you" : state.answeredCount + " answered";
-  $("homework-questions").classList.toggle("is-complete",state.hasAnswers);
+  $("homework-questions-state").textContent = welcomeQuestionStatus(state.answeredCount);
+  // Do not mark the combined quiz + questions step complete: persona-quiz
+  // completion has no authenticated persistence yet.
+  $("homework-questions").classList.remove("is-complete");
   $("homework-next").textContent = !state.hasProfile
-    ? "Start with your written profile. The pictures can come later."
+    ? "First up: fill out your profile basics."
     : !state.hasPhoto
-      ? "Your profile is saved. Next, add a photo that looks like you."
-      : !state.hasAnswers
-        ? "Pictures: check. Now get started on your match questions."
-        : "Nice work. You can always return to your profile and keep answering questions.";
+      ? "Profile saved. Next, add a photo."
+      : state.answeredCount === 0
+        ? "Looking good. Try the Dating Persona Quiz and answer some match questions."
+        : "Keep answering questions, explore the site, and have fun.";
   $("dashboard-member-name").textContent =
     String(cachedProfile?.displayName || currentUser?.name || "friend").slice(0, 60);
   $("dashboard-question-count").textContent = String(state.answeredCount);
   $("dashboard-question-label").textContent =
     state.answeredCount === 1 ? "question answered" : "questions answered";
-  $("dashboard-homework-count").textContent =
-    state.completed + " of " + state.available + " starting steps";
-  const onHome = Boolean(currentUser && $("member-columns").dataset.memberPage === "home");
+  $("dashboard-homework-count").textContent = welcomeQuestionStatus(state.answeredCount);
+  const page = $("member-columns").dataset.memberPage;
+  const onHome = Boolean(currentUser && page === "home");
+  const onWelcome = Boolean(currentUser && (page === "welcome" || (onHome && !state.showRegularHome)));
   show("member-home-dashboard", onHome && state.showRegularHome);
-  show("homework-dashboard", onHome && !state.showRegularHome);
-  show("member-persona-panel", onHome && !state.showRegularHome);
+  show("homework-dashboard", onWelcome);
+  // The quiz is already a visible action in welcome step three.
+  show("member-persona-panel", false);
 }
 
 function renderMemberPage() {
@@ -291,11 +294,7 @@ function renderMemberPage() {
     show("member-persona-panel", false);
     return;
   }
-  const hash = window.location.hash;
-  const page = hash === "#profile-title" || hash === "#preview-title"
-    ? "profile" : hash === "#photos-title"
-      ? "photos" : hash === "#question-title" ? "questions"
-        : hash === "#settings-title" ? "settings" : "home";
+  const page = memberSectionFromHash(window.location.hash);
   const home = page === "home";
   show("member-view", page === "settings");
   show("profile-panel", page === "profile");
@@ -305,6 +304,7 @@ function renderMemberPage() {
   $("member-columns").dataset.memberPage = page;
   document.querySelectorAll(".classic-member-tabs a[href^='#']").forEach(link => {
     if ((link.hash === "#member-title" && home) ||
+        (link.hash === SIGNUP_WELCOME_HASH && page === "welcome") ||
         (link.hash === "#profile-title" && page === "profile") ||
         (link.hash === "#photos-title" && page === "photos") ||
         (link.hash === "#question-title" && page === "questions") ||
@@ -911,6 +911,9 @@ function wireForms() {
       stageSignupEmailOptions(email, readEmailOptions(form));
       $("verify-form").elements.email.value = email;
       chooseAuthTab("verify");
+      // Remember the welcome destination through email verification, even
+      // if the new account is not signed in until a separate login.
+      if (window.location.hash !== SIGNUP_WELCOME_HASH) window.location.hash = SIGNUP_WELCOME_HASH;
       message("Check your inbox for a verification code from OG Cupid.", "ok");
     });
   });
@@ -929,9 +932,12 @@ function wireForms() {
       if (error) throw new Error(asError(error, "Email verification failed"));
       const member = await refreshMember({ loadProfile: true });
       if (!member) chooseAuthTab("signin");
+      // A completed new signup must never land in Account Settings.
+      if (window.location.hash !== SIGNUP_WELCOME_HASH) window.location.hash = SIGNUP_WELCOME_HASH;
+      else if (member) renderMemberPage();
       message(member
-        ? "Email verified! Welcome to OG Cupid."
-        : "Email verified. Please sign in to build your profile.", "ok");
+        ? "Email verified! Start with your profile basics."
+        : "Email verified. Sign in to see your getting-started page.", "ok");
     });
   });
 
