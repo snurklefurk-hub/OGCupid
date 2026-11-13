@@ -49,7 +49,8 @@ export function nextRequired(status) {
   return "hub";
 }
 export function unlockedStages(status) {
-  return [true, Boolean(status?.profile), Boolean(status?.photo), Boolean(status?.quiz)];
+  return [true, Boolean(status?.profile), Boolean(status?.profile && status?.photo),
+    Boolean(status?.profile && status?.photo && status?.quiz)];
 }
 function choiceRow(name, title, options, saved, multiple = false) {
   const selected = splitSaved(saved);
