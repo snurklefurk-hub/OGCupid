@@ -226,7 +226,7 @@
               <input id="signup-email" name="email" type="email" maxlength="256" required autocomplete="email">
               <label for="signup-password">Password <span class="hint">(12 characters minimum)</span></label>
               <input id="signup-password" name="password" type="password" minlength="12" required autocomplete="new-password">
-              <fieldset class="email-options" id="signup-email-options">
+              <fieldset class="email-options" id="signup-email-options" hidden aria-hidden="true">
                 <legend>What emails do you want from OG Cupid?</legend>
                 <p class="email-options-lead">Choose any combination of the first three, or necessary emails only.</p>
                 <label class="checkrow email-option" for="signup-email-messages"><input id="signup-email-messages" name="emailMessages" type="checkbox" data-email-option="messages"><span><strong>Unread messages</strong><small>Give me a heads-up if someone has messaged me.</small></span></label>
@@ -235,24 +235,17 @@
                 <label class="checkrow email-option email-option-necessary" for="signup-email-necessary"><input id="signup-email-necessary" name="emailNecessaryOnly" type="checkbox" data-email-option="necessary" checked><span><strong>Necessary site emails only</strong><small>Only verification, account recovery, security, and other essential account messages. This overrides the choices above.</small></span></label>
                 <p class="email-options-promise">One optional email at most between logins, not one for every message or event. We won't baja blast your inbox.</p>
               </fieldset>
-              <label class="checkrow" for="signup-adult">
-                <input id="signup-adult" name="adult" type="checkbox" required>
-                <span>I confirm I'm at least 18 years old.</span>
-              </label>
               <p class="hint">By creating an account, you agree to our <a href="/terms/" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</a> and acknowledge the <a href="/privacy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a>. Questions? <a href="/contact/" target="_blank" rel="noopener noreferrer">Contact us</a>.</p>
               <button class="button primary" id="signup-submit" type="submit">Create my account <span aria-hidden="true">&rarr;</span></button>
-              <p class="hint">We'll email you a one-time verification code. No public profile is created automatically.</p>
+              <p class="hint">We'll create your account immediately. Verify your email whenever you're ready; your profile stays private until then.</p>
             </form>
 
             <form id="verify-form" hidden novalidate>
               <h3>Verify your email</h3>
-              <p>Check your inbox for a one-time code from OG Cupid. Never share it with anyone.</p>
+              <p>We'll email you a secure one-click link. No codes to copy or type.</p>
               <label for="verify-email">Email</label>
               <input id="verify-email" name="email" type="email" required autocomplete="email">
-              <label for="verify-code">Verification code</label>
-              <input id="verify-code" name="otp" type="text" required autocomplete="one-time-code" inputmode="numeric">
-              <button id="send-verify-code" class="quiet-button" type="button">Send verification code</button>
-              <button class="button primary" type="submit">Verify email</button>
+              <button id="send-verify-code" class="button primary" type="button">Send verification link</button>
               <button class="quiet-button" id="back-to-signin" type="button">Back to sign in</button>
             </form>
 
@@ -355,8 +348,8 @@
                 <legend>About you</legend>
                 <div class="profile-field-grid">
                   <div class="profile-field ">
-                    <label for="profile-age">Age</label>
-                    <select id="profile-age" name="age"><option value="">Select age</option></select>
+                    <label for="profile-age" hidden>Age (automatically calculated)</label>
+                    <select id="profile-age" name="age" hidden><option value="">Select age</option></select>
                   </div>
                   <div class="profile-field ">
                     <label for="profile-city-region">My city or town</label>
@@ -367,15 +360,21 @@
                   <fieldset class="classic-choice-group profile-field-wide">
                     <legend>I am a</legend>
                     <div class="classic-choice-options">
-                      <label class="classic-choice"><input type="radio" name="gender" value="man"><span>Man</span></label>
-                      <label class="classic-choice"><input type="radio" name="gender" value="woman"><span>Woman</span></label>
+                      <label class="classic-choice"><input type="radio" name="gender" value="Man"><span>Man</span></label>
+                      <label class="classic-choice"><input type="radio" name="gender" value="Woman"><span>Woman</span></label>
+                      <label class="classic-choice"><input type="radio" name="gender" value="Transman"><span>Transman</span></label>
+                      <label class="classic-choice"><input type="radio" name="gender" value="Transwoman"><span>Transwoman</span></label>
+                      <label class="classic-choice"><input type="radio" name="gender" value="Something else"><span>Something else</span></label>
                     </div>
                   </fieldset>
                   <fieldset class="classic-choice-group profile-field-wide">
                     <legend>Interested in</legend>
                     <div class="classic-choice-options">
-                      <label class="classic-choice"><input type="checkbox" name="interestedIn" value="men"><span>Men</span></label>
-                      <label class="classic-choice"><input type="checkbox" name="interestedIn" value="women"><span>Women</span></label>
+                      <label class="classic-choice"><input type="checkbox" name="interestedIn" value="Man"><span>Man</span></label>
+                      <label class="classic-choice"><input type="checkbox" name="interestedIn" value="Woman"><span>Woman</span></label>
+                      <label class="classic-choice"><input type="checkbox" name="interestedIn" value="Transman"><span>Transman</span></label>
+                      <label class="classic-choice"><input type="checkbox" name="interestedIn" value="Transwoman"><span>Transwoman</span></label>
+                      <label class="classic-choice"><input type="checkbox" name="interestedIn" value="Something else"><span>Something else</span></label>
                     </div>
                   </fieldset>
                   <fieldset class="classic-choice-group profile-field-wide">
@@ -397,7 +396,7 @@
                     <label for="search-radius">Maximum distance</label>
                     <select id="search-radius" name="searchRadiusMiles">
                       <option value="">Anywhere</option>
-                      <option value="10">10 miles</option>
+                      <option value="10">Near me</option>
                       <option value="25">25 miles</option>
                       <option value="50">50 miles</option>
                       <option value="100">100 miles</option>
@@ -410,11 +409,11 @@
               <fieldset class="profile-edit-section" data-profile-section="details">
                 <legend>My details</legend>
                 <div class="profile-field-grid">
-                  <div class="profile-field"><label for="profile-orientation">Orientation</label><select id="profile-orientation" name="orientation"><option value="">Select</option><option>Straight</option><option>Gay</option><option>Lesbian</option><option>Bisexual</option><option>Queer</option><option>Pansexual</option><option>Asexual</option><option>Other</option></select></div>
+                  <div class="profile-field"><label for="profile-orientation">Orientation</label><select id="profile-orientation" name="orientation"><option value="">Select</option><option>Gay</option><option>Straight</option><option>Bi</option><option>Something else</option></select></div>
                   <div class="profile-field"><label for="profile-ethnicity">Ethnicity</label><select id="profile-ethnicity" name="ethnicity" multiple size="4"><option>Asian</option><option>Black</option><option>Hispanic / Latin</option><option>Indigenous</option><option>Middle Eastern</option><option>Pacific Islander</option><option>White</option><option>Other</option></select></div>
                   <div class="profile-field"><label for="profile-height">Height</label><select id="profile-height" name="height"><option value="">Select</option></select></div>
                   <div class="profile-field"><label for="profile-body-type">Body type</label><select id="profile-body-type" name="bodyType"><option value="">Select</option><option>Thin</option><option>Athletic</option><option>Average</option><option>Jacked</option><option>Chubby</option><option>Overweight</option></select></div>
-                  <div class="profile-field"><label for="profile-diet">Diet</label><select id="profile-diet" name="diet"><option value="">Select</option><option>Vegan</option><option>Vegetarian</option><option>Carnivore</option><option>Omnivore</option><option>Takis</option></select><label class="checkrow"><input name="dietStrict" type="checkbox"><span>Strictly</span></label></div>
+                  <div class="profile-field"><label for="profile-diet">Diet</label><select id="profile-diet" name="diet"><option value="">Select</option><option>Vegan</option><option>Vegetarian</option><option>Carnivore</option><option>Omnivore</option><option>Takis</option><option>Other</option></select><label class="checkrow"><input name="dietStrict" type="checkbox"><span>Strictly</span></label></div>
                   <div class="profile-field"><label for="profile-smoking">Smokes</label><select id="profile-smoking" name="smoking"><option value="">Select</option><option>Never</option><option>Sometimes</option><option>Often</option><option>Just weed</option></select></div>
                   <div class="profile-field"><label for="profile-vaping">Vapes</label><select id="profile-vaping" name="vaping"><option value="">Select</option><option>Never</option><option>Sometimes</option><option>Often</option><option>Just weed</option></select></div>
                   <div class="profile-field"><label for="profile-drinking">Drinks</label><select id="profile-drinking" name="drinking"><option value="">Select</option><option>Never</option><option>Sometimes</option><option>Often</option></select></div>
@@ -428,7 +427,7 @@
                   <div class="profile-field"><label for="profile-work">Job</label><input id="profile-work" name="work" type="text" maxlength="160"></div>
                   <div class="profile-field"><label for="profile-income">Income</label><select id="profile-income" name="income"><option value="">Select</option><option>Broke</option><option>Pocket money</option><option>Fuck you money</option></select></div>
                   <div class="profile-field"><label for="profile-status">Status</label><select id="profile-status" name="status"><option value="">Select</option><option>Single</option><option>Seeing someone</option><option>Married</option></select></div>
-                  <div class="profile-field"><label for="profile-type">Type</label><select id="profile-type" name="relationshipType"><option value="">Select</option><option>Monogamous</option><option>Polyamorous</option></select><label class="checkrow"><input name="relationshipStrict" type="checkbox"><span>Strictly</span></label></div>
+                  <div class="profile-field"><label for="profile-type">Type</label><select id="profile-type" name="relationshipType"><option value="">Select</option><option>Monogamous</option><option>Polyamorous</option></select></div>
                   <div class="profile-field"><label for="profile-kids">Offspring</label><select id="profile-kids" name="kids"><option value="">Select</option><option>Has kids</option><option>Doesn't have kids</option></select><select name="wantsKids"><option value="">Wants kids?</option><option>Wants kids</option><option>Doesn't want kids</option><option>Open to more kids</option></select></div>
                   <div class="profile-field"><label for="profile-pets">Pets</label><select id="profile-pets" name="pets" multiple size="4"><option>Has dogs</option><option>Likes dogs</option><option>Has cats</option><option>Likes cats</option><option>Has exotics</option><option>Likes exotics</option></select></div>
                   <div class="profile-field profile-field-wide"><label>Speaks</label><div class="profile-field-grid"><div class="profile-field"><select name="languageName1" aria-label="First language"><option value="">Select language</option><option>English</option><option>Spanish</option><option>French</option><option>German</option><option>Italian</option><option>Portuguese</option><option>Russian</option><option>Arabic</option><option>Hindi</option><option>Mandarin</option><option>Japanese</option><option>Korean</option><option>Pig Latin</option><option>Other</option></select><select name="languageLevel1" aria-label="First language proficiency"><option value="">Proficiency</option><option>Fluently</option><option>Okay</option><option>Poorly</option></select></div><div class="profile-field"><select name="languageName2" aria-label="Second language"><option value="">Select language</option><option>English</option><option>Spanish</option><option>French</option><option>German</option><option>Italian</option><option>Portuguese</option><option>Russian</option><option>Arabic</option><option>Hindi</option><option>Mandarin</option><option>Japanese</option><option>Korean</option><option>Pig Latin</option><option>Other</option></select><select name="languageLevel2" aria-label="Second language proficiency"><option value="">Proficiency</option><option>Fluently</option><option>Okay</option><option>Poorly</option></select></div><div class="profile-field"><select name="languageName3" aria-label="Third language"><option value="">Select language</option><option>English</option><option>Spanish</option><option>French</option><option>German</option><option>Italian</option><option>Portuguese</option><option>Russian</option><option>Arabic</option><option>Hindi</option><option>Mandarin</option><option>Japanese</option><option>Korean</option><option>Pig Latin</option><option>Other</option></select><select name="languageLevel3" aria-label="Third language proficiency"><option value="">Proficiency</option><option>Fluently</option><option>Okay</option><option>Poorly</option></select></div></div><p class="hint">Choose up to three languages and how well you speak each one.</p></div>
@@ -582,6 +581,11 @@
               <button id="photo-crop-save" type="button" class="button primary">Upload photo</button>
             </div>
           </dialog>
+          <div id="ogc-photo-footer" hidden>
+            <p>Upload at least one actual pic of yourself for your main thumbnail. You can fill the rest with your dogs, anime PFPs, memes, whatever you want. But we gotta have one of that <strong id="ogc-photo-looks">gorgeous</strong> mug.</p>
+            <label class="checkrow"><input id="ogc-photo-confirm" type="checkbox"> I confirm my main thumbnail is an actual photo of me.</label>
+            <button id="ogc-photo-finished" type="button" disabled>FINISHED!</button>
+          </div>
         </section>
         <section class="paper question-panel" id="questions-panel" aria-labelledby="question-title">
           <header class="og-question-page-header">
