@@ -557,6 +557,13 @@ function renderQuestion() {
   show("question-answer-error", false);
   const progress = displayQuestionProgress(count);
   $("question-progress").textContent = progress.label;
+  // The question presentation is driven by the real pending/saved record;
+  // these labels are UI-only and never alter the question-serving algorithm.
+  $("question-view").dataset.mode = editingQuestionId ? "review" : "new";
+  $("question-mode").textContent = editingQuestionId ? "Editing a saved answer" : "New question";
+  $("question-save-button").textContent = editingQuestionId
+    ? "Update saved answer" : "Save answer & next question →";
+  $("question-headline").textContent = currentQuestion?.prompt || "";
   if (!currentQuestion) return;
   $("question-prompt").textContent = currentQuestion.prompt;
   const own = $("question-choices");
@@ -1154,7 +1161,7 @@ function wireForms() {
       if (!editingQuestionId) clearPendingQuestion();
       editingQuestionId = null;
       renderQuestion();
-      $("question-prompt").scrollIntoView({ block: "start", behavior: "auto" });
+      $("question-headline").scrollIntoView({ block: "start", behavior: "auto" });
       message("Answer saved to your account.", "ok");
     });
   });
