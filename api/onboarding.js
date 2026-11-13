@@ -41,7 +41,9 @@ export async function handleOnboarding(request,userId,withMember,json,verifiedPl
         const [state,profile,photos,answers,verified]=await Promise.all([
           client.query('SELECT gender,orientation,birth_date,country_code,zip_code,locality_id,locality_shard,city_label,details_complete,match_age_min,match_age_max,explored_at,primary_self_photo_id,persona_code FROM app_private.member_onboarding WHERE user_id=$1::uuid',[userId]),
           client.query('SELECT about_me, interested_in, relationship_goal FROM app_private.member_profiles WHERE user_id=$1::uuid',[userId]),
-          client.query('SELECT count(*)::int AS total, bool_or(is_primary) AS primary FROM app_private.member_photos WHERE user_id=$1::uuid',[userId]),
+          client.query(`SELECT count(*)::int AS total,
+            bool_or(is_primary AND id = (SELECT primary_self_photo_id FROM app_private.member_onboarding WHERE user_id=$1::uuid)) AS primary
+            FROM app_private.member_photos WHERE user_id=$1::uuid`,[userId]),
           client.query('SELECT count(*)::int AS total FROM app_private.member_match_answers WHERE user_id=$1::uuid',[userId]),
           client.query('SELECT app_private.current_member_email_verified() AS value'),
         ]);
