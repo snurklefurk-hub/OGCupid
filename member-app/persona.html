@@ -471,6 +471,7 @@ body { min-width:320px; }
 </style>
   <style>html.member-gated{visibility:hidden}body{overflow-x:clip}</style>
   <script type="module" src="./persona-gate.js"></script>
+  <script type="module" src="./persona-onboarding.js"></script>
 
   <style>
     .member-quiz-header{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;
@@ -1051,7 +1052,9 @@ body { min-width:320px; }
     e.preventDefault();
     if(!readyPage()){$("persona-warning").textContent="Answer all seven questions on this page to continue.";return;}
     if(page<3){page++;renderPage();$("quiz").scrollIntoView({behavior:"smooth"});return;}
-    const scored=scoreTest();code=scored.code;scores=scored.sum;renderResult();$("quiz").scrollIntoView({behavior:"smooth"});
+    const scored=scoreTest();code=scored.code;scores=scored.sum;renderResult();
+    window.dispatchEvent(new CustomEvent("ogc:persona-finished",{detail:{answers:answers.slice()}}));
+    $("quiz").scrollIntoView({behavior:"smooth"});
   });
   $("persona-switch").addEventListener("click",function(){style=style==="m"?"f":"m";renderResult();});
   $("persona-show-source").addEventListener("click",function(){
