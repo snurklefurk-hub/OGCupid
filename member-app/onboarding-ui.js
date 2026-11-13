@@ -136,6 +136,7 @@ export function createOnboardingUI({
     status = current;
     if (status.explored) { hide(); leaveToHome(); return; }
     stage = nextRequired(status);
+    if(stage==="hub" && status.state?.details_complete && !status.profile)stage="summary";
     render();
   }
   async function refresh() {
@@ -273,7 +274,7 @@ export function createOnboardingUI({
     titles.forEach((_,i)=>byId("ogc-tile-"+i).addEventListener("click",async()=>{
       if(busy) return;
       if(!unlocked[i]) { text(byId("ogc-onboard-error"),"Getting ahead of yourself, huh?"); return; }
-      if(i===0) go(status.profile?"details":"details");
+      if(i===0) go(status.state?.details_complete && !status.profile?"summary":"details");
       if(i===1) openEmbedded("photos");
       if(i===2) go("quiz-choice");
       if(i===3) await submit(byId("ogc-tile-3"),async()=>{
