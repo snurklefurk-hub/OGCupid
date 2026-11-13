@@ -24,3 +24,5 @@ jobs:
           npm install --no-save sharp@0.34.4
       - name: Exercise actual isolated Neon signup profile photos Persona and deletion
         run: node scripts/smoke-canonical-onboarding.mjs
+      - name: Exercise 25-question alternative and its completion boundary
+        run: node scripts/smoke-canonical-onboarding.mjs --questions
