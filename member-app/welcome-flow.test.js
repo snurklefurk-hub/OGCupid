@@ -12,7 +12,9 @@ test("existing signed-in destinations remain accessible", () => {
   assert.equal(memberSectionFromHash("#member-title"), "home");
   assert.equal(memberSectionFromHash(""), "home");
   assert.equal(memberSectionFromHash("#profile-title"), "profile");
-  assert.equal(memberSectionFromHash("#preview-title"), "profile");
+  assert.equal(memberSectionFromHash("#preview-title"), "preview");
+  assert.equal(memberSectionFromHash("#profile-details-title"), "profile");
+  assert.equal(memberSectionFromHash("#profile-essays-title"), "profile");
   assert.equal(memberSectionFromHash("#photos-title"), "photos");
   assert.equal(memberSectionFromHash("#question-title"), "questions");
   assert.equal(memberSectionFromHash("#settings-title"), "settings");

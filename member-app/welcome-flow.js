@@ -9,7 +9,8 @@ export const SIGNUP_WELCOME_HASH = "#welcome-title";
 
 export function memberSectionFromHash(hash) {
   if (hash === SIGNUP_WELCOME_HASH) return "welcome";
-  if (hash === "#profile-title" || hash === "#preview-title") return "profile";
+  if (hash === "#profile-title" || hash === "#profile-details-title" || hash === "#profile-essays-title") return "profile";
+  if (hash === "#preview-title") return "preview";
   if (hash === "#photos-title") return "photos";
   if (hash === "#question-title") return "questions";
   if (hash === "#settings-title") return "settings";

@@ -3,6 +3,7 @@ import { nextCompatibilityQuestion } from "./question-flow.js";
 import { displayQuestionProgress, acceptedAnswerSuggestion } from "./question-presentation.js";
 import { memberHomeState } from "./home-dashboard.js";
 import { SIGNUP_WELCOME_HASH, memberSectionFromHash, welcomeQuestionStatus } from "./welcome-flow.js";
+import { PROFILE_EDITOR_STEPS, profileStepFromHash, profileDestination } from "./profile-editor-flow.js";
 import { createLocalityPicker } from "./locality-picker.js";
 import { createPhotoUI } from "./photo-uploads.js";
 import { createProfilePhotoGallery } from "./profile-photo-gallery.js";
@@ -292,8 +293,21 @@ function renderHomework() {
   show("member-persona-panel", false);
 }
 
+function renderProfileEditorStep() {
+  const step = profileStepFromHash(window.location.hash);
+  const form = $("profile-form");
+  form.dataset.profileStep = step;
+  $("profile-title").textContent = PROFILE_EDITOR_STEPS[step].heading;
+  $("profile-save-button").textContent = PROFILE_EDITOR_STEPS[step].button;
+  for (const button of $("profile-edit-step-nav").querySelectorAll("button[data-target-profile-step]")) {
+    if (button.dataset.targetProfileStep === step) button.setAttribute("aria-current", "step");
+    else button.removeAttribute("aria-current");
+  }
+}
+
 function renderMemberPage() {
   if (!currentUser) {
+    document.body.classList.remove("is-profile-setup");
     document.body.classList.remove("is-welcome-flow");
     show("welcome-side-panel", false);
     show("homework-dashboard", false);
@@ -308,16 +322,18 @@ function renderMemberPage() {
   }
   const page = memberSectionFromHash(window.location.hash);
   const home = page === "home";
+  document.body.classList.toggle("is-profile-setup",page === "profile");
+  if (page === "profile") renderProfileEditorStep();
   show("member-view", page === "settings");
   show("profile-panel", page === "profile");
-  show("profile-preview-panel", page === "profile");
+  show("profile-preview-panel", page === "preview");
   show("photo-panel", page === "photos");
   show("questions-panel", page === "questions");
   $("member-columns").dataset.memberPage = page;
   document.querySelectorAll(".classic-member-tabs a[href^='#']").forEach(link => {
     if ((link.hash === "#member-title" && home) ||
         (link.hash === SIGNUP_WELCOME_HASH && page === "welcome") ||
-        (link.hash === "#profile-title" && page === "profile") ||
+        (link.hash === "#profile-title" && (page === "profile" || page === "preview")) ||
         (link.hash === "#photos-title" && page === "photos") ||
         (link.hash === "#question-title" && page === "questions") ||
         (link.hash === "#settings-title" && page === "settings")) {
@@ -1039,17 +1055,25 @@ function wireForms() {
     event.preventDefault();
     const form = event.currentTarget;
     if (!form.reportValidity()) return;
-    operation(form.querySelector('button[type="submit"]'), "Saving your profile", async () => {
+    const step = form.dataset.profileStep || "basics";
+    const explicitStep = event.submitter?.dataset.targetProfileStep;
+    const nextStep = explicitStep || PROFILE_EDITOR_STEPS[step].next;
+    const trigger = event.submitter || $("profile-save-button");
+    operation(trigger, "Saving your profile", async () => {
       const draft = readProfileDraft(form);
-      // Old free-text places are kept unchanged until the owner selects a
-      // canonical town. Newly entered places must come from the lookup.
+      // Preserve the whole existing profile on every step: hidden panels
+      // stay mounted, and server-side locality validation is unchanged.
       if (draft.cityRegion && !draft.locality &&
           draft.cityRegion !== String(cachedProfile?.cityRegion ?? "").trim()) {
         throw new Error("Choose your city or town from the search results.");
       }
       const result = await requestProfile("PUT", draft);
       showStoredProfile(result.profile);
-      message("Your profile has been saved privately to PostgreSQL.", "ok");
+      $("profile-save-indicator").textContent = "Saved.";
+      if (nextStep && nextStep !== step) {
+        window.location.hash = profileDestination(nextStep);
+      }
+      message("Your profile changes have been saved.", "ok");
     });
   });
 
