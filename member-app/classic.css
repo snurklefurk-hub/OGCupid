@@ -534,3 +534,57 @@ form input:focus,form textarea:focus,.profile-field select:focus-visible{outline
 @media(prefers-reduced-motion:reduce){
  .member-home-discovery-link{transition:none}
 }
+
+
+/* Classic-inspired welcome screen: the first destination after registration.
+   The four activities are visible even when browsing/matching are not live. */
+.welcome-checklist{border-color:#c2d5e5}
+.welcome-header{align-items:center;background:linear-gradient(115deg,#f7fbff 0%,#e9f3fb 100%)}
+.welcome-header>div:first-child{min-width:0;flex:1 1 auto}
+.welcome-header h2{font-size:clamp(28px,3vw,39px);letter-spacing:-.4px}
+.welcome-header p:not(.eyebrow){max-width:610px;line-height:1.7}
+.welcome-illustration{
+  flex:0 0 106px;display:grid;place-items:center;width:106px;height:106px;
+  color:#e55a8c;background:#fff;border:2px solid #bdd4e7;border-radius:50%;
+  box-shadow:3px 3px 0 #a9c5dc
+}
+.welcome-illustration span{font:normal 68px/1 Georgia,serif}
+.welcome-list .homework-item{grid-template-columns:40px minmax(0,1fr) auto;align-items:start}
+.welcome-list .homework-item:nth-child(2){background:#fafcfe}
+.welcome-list .homework-number{padding-top:3px}
+.welcome-list .homework-copy h3{font-size:23px;line-height:1.25}
+.welcome-list .homework-copy>p{max-width:590px}
+.welcome-list .homework-copy .welcome-quiz-note{
+  margin-top:8px;color:#8d6380;font-size:11px
+}
+.welcome-actions{
+  grid-column:3;grid-row:2;display:flex;flex-direction:column;
+  align-items:flex-end;gap:9px;min-width:205px
+}
+.welcome-actions a.button{
+  display:inline-flex;justify-content:center;width:100%;min-height:37px;
+  padding:9px 11px;white-space:normal;text-align:center
+}
+.welcome-actions .welcome-quiet-link{
+  padding:6px 1px;color:#4774a0;font:12px Arial,Helvetica,sans-serif;
+  text-decoration:underline;text-underline-offset:2px
+}
+.welcome-list .homework-item>a.button{max-width:230px;white-space:normal;text-align:center}
+.welcome-list .homework-state{margin-top:2px}
+.welcome-checklist .homework-footer a{color:#356b97;text-decoration:underline}
+@media(max-width:880px){
+  .welcome-list .homework-item{grid-template-columns:34px minmax(0,1fr)}
+  .welcome-list .homework-state{grid-column:2;grid-row:auto;text-align:left}
+  .welcome-actions{grid-column:2;grid-row:auto;align-items:flex-start;min-width:0;width:min(100%,390px)}
+  .welcome-list .homework-item>a.button{grid-column:2;grid-row:auto;justify-self:start}
+}
+@media(max-width:760px){
+  .welcome-header{padding:23px 17px 18px}
+  .welcome-illustration{flex-basis:65px;width:65px;height:65px}
+  .welcome-illustration span{font-size:42px}
+  .welcome-list .homework-copy h3{font-size:20px}
+}
+@media(max-width:420px){
+ .welcome-illustration{display:none}
+ .welcome-header h2{font-size:27px}
+}
