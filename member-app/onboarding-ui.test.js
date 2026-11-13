@@ -37,6 +37,8 @@ test("exact four quadrants progressively unlock from persisted server status",()
   assert.deepEqual(unlockedStages({profile:true,photo:false,quiz:false}),[true,true,false,false]);
   assert.deepEqual(unlockedStages({profile:true,photo:true,quiz:false}),[true,true,true,false]);
   assert.deepEqual(unlockedStages({profile:true,photo:true,quiz:true}),[true,true,true,true]);
+  assert.deepEqual(unlockedStages({profile:false,photo:true,quiz:true}),[true,false,false,false]);
+  assert.deepEqual(unlockedStages({profile:true,photo:false,quiz:true}),[true,true,false,false]);
 });
 
 test("onboarding copy and server routes follow owner's canonical plan",()=>{
