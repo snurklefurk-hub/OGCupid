@@ -59,7 +59,7 @@ function choiceRow(name, title, options, saved, multiple = false) {
 }
 function selectField(name,label,options,saved) {
   return '<label class="ogc-control">' + label + '<select name="' + name + '"><option value="">Select</option>' +
-    options.map(option => '<option value="' + option.replace(/"/g,"&quot;") + '"' + (saved === option ? ' selected' : '') + '>' + option + '</option>').join("") +
+    options.map(option => '<option value="' + option.replace(/"/g,"&quot;") + '"' + (String(saved) === String(option) ? ' selected' : '') + '>' + option + '</option>').join("") +
     '</select></label>';
 }
 const languages = ["English","Spanish","French","German","Italian","Portuguese","Russian","Arabic","Hindi","Mandarin","Japanese","Korean","Pig Latin","Other"];
@@ -72,7 +72,7 @@ function unpackLanguages(saved) {
 }
 export function createOnboardingUI({
   getUser, getProfile, saveProfile, request, signOut, deleteAccount,
-  getPhotoCount, openNative, leaveToHome
+  getPhotoCount, openNative, leaveToHome, verifyEmail
 }) {
   const root = document.createElement("section");
   root.id = "ogc-onboarding";
@@ -127,9 +127,8 @@ export function createOnboardingUI({
     const button = byId("ogc-email");
     if (!getUser()?.email || !button) throw Error("Sign in before requesting email verification.");
     const url = location.origin + "/account/#welcome-title";
-    const auth = window.ogcSendVerificationEmail;
-    if (typeof auth !== "function") throw Error("Verification service is unavailable.");
-    await auth(getUser().email, url);
+    if (typeof verifyEmail !== "function") throw Error("Verification service is unavailable.");
+    await verifyEmail(getUser().email, url);
   }
   async function load() {
     if (!getUser()) { hide(); return; }
