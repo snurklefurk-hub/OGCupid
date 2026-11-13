@@ -21,17 +21,39 @@
     </div>
     <header class="masthead">
       <a class="brand brand-original" href="/" aria-label="OG Cupid homepage"><img src="/brand/og-cupid-arrow.svg" alt="OG Cupid" width="720" height="174" decoding="async"></a>
-      <nav aria-label="Member navigation">
-        <a href="/">Home</a>
-        <a href="/ogtrends/">OgTrends</a>
-        <a href="#question-title">Match questions</a>
+      <div class="classic-rail-member" id="classic-rail-member" hidden>
+        <span class="classic-rail-avatar" aria-hidden="true">&#9829;</span>
+        <span class="classic-rail-welcome">Welcome back,<strong id="classic-rail-member-name">OG Cupid member</strong></span>
+      </div>
+      <div class="classic-rail-guest" id="classic-rail-guest">The good internet is making a comeback.<br><b>Make yourself at home.</b></div>
+      <nav aria-label="Member navigation" class="classic-rail-nav">
+        <a href="#member-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#8962;</span> My home</a>
+        <a href="#profile-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#9825;</span> My profile</a>
+        <span class="classic-rail-pending"><span class="classic-rail-icon" aria-hidden="true">&#9734;</span> Matches <small>soon</small></span>
+        <span class="classic-rail-pending"><span class="classic-rail-icon" aria-hidden="true">&#9993;</span> Messages <small>soon</small></span>
+        <a href="#question-title"><span class="classic-rail-icon" aria-hidden="true">&#9678;</span> Questions</a>
+        <a href="/account/persona.html"><span class="classic-rail-icon" aria-hidden="true">&#10022;</span> Persona test</a>
+        <a href="/ogtrends/"><span class="classic-rail-icon" aria-hidden="true">&#9998;</span> OgTrends</a>
+        <a href="/"><span class="classic-rail-icon" aria-hidden="true">&#8962;</span> Public home</a>
       </nav>
+      <section class="classic-rail-section" id="classic-rail-progress-section" hidden aria-label="Your profile progress">
+        <h2>Your profile is getting there.</h2>
+        <div class="classic-rail-progress"><span id="classic-rail-progress-fill" style="width:0%"></span></div>
+        <p><span id="classic-rail-progress-label">0 of 9 starting details</span><br><a href="#profile-title">Add a little more you</a></p>
+      </section>
+      <div class="classic-rail-note">Less swiping.<br>More “wait, you too?”</div>
     </header>
     <main id="main">
+      <div class="classic-member-topbar">
+        <div><a href="/">Home</a><a href="/ogtrends/">OgTrends</a><a href="/contact/">Contact</a></div>
+        <span id="classic-member-greeting">Welcome to OG Cupid</span>
+      </div>
+      <div class="classic-member-announcement">Real profiles. Better questions. Room for a little weird.</div>
       <div class="intro">
-        <span class="stamp">LET'S MAKE THIS PERSONAL</span>
-        <h1>BE MORE THAN <em>A THUMBNAIL.</em></h1>
+        <span class="stamp">OG CUPID / YOUR CORNER OF THE INTERNET</span>
+        <h1>A little more <em>you.</em></h1>
         <p>Remember when a dating profile told you something about a person? Your page. Your words. Your weird little corner of the internet.</p>
+        <nav class="classic-member-tabs" aria-label="Member sections"><a href="#member-title">Account</a><a href="#profile-title">My profile</a><a href="#question-title">Questions</a><a href="/account/persona.html">Dating persona</a></nav>
       </div>
 
       <div id="notice" class="notice" role="status" aria-live="polite">Checking membership availability.</div>
