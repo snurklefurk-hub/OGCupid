@@ -40,18 +40,30 @@ test('profile submit saves without the removed search-origin control', async () 
   let pending;
   let saved;
   const draft = { cityRegion: '', locality: null, searchOrigin: null, work: 'QA' };
-  const form = { elements: {}, reportValidity: () => true, querySelector: () => ({}) };
+  // This is a staged editor now: the form owns a current step, and a save
+  // advances the hash route only after the persisted profile succeeds.
+  const form = { elements: {}, dataset: { profileStep: 'basics' },
+    reportValidity: () => true, querySelector: () => ({}) };
+  const savedIndicator = { textContent: '' };
+  const location = { hash: '#profile-title' };
   const handler = source.slice(source.indexOf('  $("profile-form").addEventListener("submit"'), source.indexOf('  $("question-skip").addEventListener'));
   vm.runInNewContext(handler, {
-    $: () => ({ addEventListener: (_event, callback) => { submit = callback; } }),
+    $: id => id === 'profile-form'
+      ? { addEventListener: (_event, callback) => { submit = callback; } }
+      : id === 'profile-save-indicator' ? savedIndicator : { disabled: false },
     operation: (_button, _label, callback) => { pending = callback(); },
+    PROFILE_EDITOR_STEPS: { basics: { next: 'details' } },
+    profileDestination: step => '#profile-' + step + '-title',
+    window: { location },
     readProfileDraft: () => draft,
     cachedProfile: null,
     requestProfile: async (method, payload) => { assert.equal(method, 'PUT'); assert.equal(payload, draft); return { profile: payload }; },
     showStoredProfile: profile => { saved = profile; },
     message: () => {},
   });
-  submit({ preventDefault() {}, currentTarget: form });
+  submit({ preventDefault() {}, currentTarget: form, submitter: null });
   await pending;
   assert.equal(saved, draft);
+  assert.equal(savedIndicator.textContent, 'Saved.');
+  assert.equal(location.hash, '#profile-details-title');
 });
