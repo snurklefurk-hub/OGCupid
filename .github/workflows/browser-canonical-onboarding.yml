@@ -11,7 +11,7 @@ permissions:
   contents: read
 jobs:
   chromium-staging-onboarding:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 12
     env:
       VITE_OGC_AUTH_URL: https://ep-wild-term-bbvgmd5y.neonauth.c-15.us-east-1.aws.neon.tech/neondb/auth
