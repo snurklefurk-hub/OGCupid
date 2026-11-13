@@ -29,6 +29,7 @@
       <nav aria-label="Member navigation" class="classic-rail-nav">
         <a href="#member-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#8962;</span> My home</a>
         <a href="#profile-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#9825;</span> My profile</a>
+        <a href="#photos-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#10064;</span> My photos</a>
         <span class="classic-rail-pending"><span class="classic-rail-icon" aria-hidden="true">&#9734;</span> Matches <small>soon</small></span>
         <span class="classic-rail-pending"><span class="classic-rail-icon" aria-hidden="true">&#9993;</span> Messages <small>soon</small></span>
         <a href="#question-title"><span class="classic-rail-icon" aria-hidden="true">&#9678;</span> Questions</a>
@@ -53,7 +54,7 @@
         <span class="stamp">OG CUPID / YOUR CORNER OF THE INTERNET</span>
         <h1>A little more <em>you.</em></h1>
         <p>Remember when a dating profile told you something about a person? Your page. Your words. Your weird little corner of the internet.</p>
-        <nav class="classic-member-tabs" aria-label="Member sections"><a href="#member-title">Home</a><a href="#profile-title">My profile</a><a href="#question-title">Questions</a><a href="/account/persona.html">Dating persona</a></nav>
+        <nav class="classic-member-tabs" aria-label="Member sections"><a href="#member-title">Home</a><a href="#profile-title">My profile</a><a href="#photos-title">Photos</a><a href="#question-title">Questions</a><a href="/account/persona.html">Dating persona</a></nav>
       </div>
 
       <div id="notice" class="notice" role="status" aria-live="polite">Checking membership availability.</div>
@@ -85,9 +86,9 @@
             </li>
             <li class="homework-item" id="homework-photos">
               <span class="homework-number" aria-hidden="true">02</span>
-              <div class="homework-copy"><h3>Add some photos</h3><p>Your words first, your pictures second. Private photo uploads are being built.</p></div>
-              <span class="homework-state">Coming soon</span>
-              <span class="homework-unavailable">Photo uploads not available yet</span>
+              <div class="homework-copy"><h3>Add some photos</h3><p>Show a little of your life. Your pictures are visible to logged-in OG Cupid members.</p></div>
+              <span class="homework-state" id="homework-photos-state">0 of 5 photos</span>
+              <a class="button" href="#photos-title">Add photos &rarr;</a>
             </li>
             <li class="homework-item" id="homework-questions">
               <span class="homework-number" aria-hidden="true">03</span>
@@ -455,6 +456,48 @@
               </aside>
             </div>
           </article>
+        </section>
+        <section class="paper photo-panel" id="photo-panel" hidden aria-labelledby="photos-title">
+          <p class="eyebrow">03 / THE PHOTO ALBUM</p>
+          <div class="panel-head">
+            <h2 id="photos-title">ADD SOME PHOTOS.</h2>
+            <span class="mini-heart" aria-hidden="true">&#10064;</span>
+          </div>
+          <p>Five photos, including your main picture. Every photo can be viewed by signed-in members visiting your profile. Photos shared in private messages are separate.</p>
+          <p class="photo-guidance">Crop each picture before uploading. Move it around, zoom, then choose square, portrait or landscape. We keep the finished crop, not the original file.</p>
+          <div class="photo-upload-controls">
+            <label class="button primary photo-file-control" for="photo-file">Choose a photo <span aria-hidden="true">&rarr;</span></label>
+            <input id="photo-file" name="photo-file" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="photo-file-hint">
+            <p class="hint" id="photo-file-hint">JPEG, PNG or WebP; up to 15 MB before cropping. Your final picture will be a JPEG.</p>
+          </div>
+          <div class="photo-gallery-header">
+            <h3>Your photo album</h3>
+            <span id="photo-count" aria-live="polite">No photos yet</span>
+          </div>
+          <div id="photo-gallery" class="photo-gallery" aria-live="polite"></div>
+          <p id="photo-status" class="hint" role="status" aria-live="polite"></p>
+          <dialog id="photo-crop-dialog" class="photo-crop-dialog" aria-labelledby="photo-crop-title">
+            <div class="photo-crop-heading">
+              <h3 id="photo-crop-title">Crop your photo</h3>
+              <button type="button" id="photo-crop-close" class="quiet-button" aria-label="Close cropper">Close</button>
+            </div>
+            <p>Drag the picture to reposition it, or use the zoom slider.</p>
+            <div class="photo-crop-preview"><canvas id="photo-crop-canvas" width="600" height="600" aria-label="Photo cropping preview; drag to reposition"></canvas></div>
+            <div class="photo-crop-settings">
+              <label for="photo-crop-ratio">Crop shape</label>
+              <select id="photo-crop-ratio">
+                <option value="square">Square (1:1)</option>
+                <option value="portrait">Portrait (4:5)</option>
+                <option value="landscape">Landscape (3:2)</option>
+              </select>
+              <label for="photo-crop-zoom">Zoom</label>
+              <input id="photo-crop-zoom" type="range" min="1" max="3" step=".05" value="1">
+            </div>
+            <div class="photo-crop-actions">
+              <button id="photo-crop-cancel" type="button" class="button">Cancel</button>
+              <button id="photo-crop-save" type="button" class="button primary">Crop &amp; upload</button>
+            </div>
+          </dialog>
         </section>
         <section class="paper question-panel" id="questions-panel" aria-labelledby="question-title">
           <p class="eyebrow">03 / MATCH QUESTIONS</p>
