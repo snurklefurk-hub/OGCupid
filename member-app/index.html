@@ -31,7 +31,8 @@
         <a href="#member-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#8962;</span> My home</a>
         <a href="#welcome-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#10022;</span> Getting started</a>
         <a href="#settings-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#9881;</span> Account settings</a>
-        <a href="#profile-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#9825;</span> My profile</a>
+        <a href="#preview-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#9825;</span> My profile</a>
+        <a href="#profile-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#9998;</span> Edit profile</a>
         <a href="#photos-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#10064;</span> My photos</a>
         <a href="#question-title"><span class="classic-rail-icon" aria-hidden="true">&#9678;</span> Questions</a>
         <a href="/account/persona.html"><span class="classic-rail-icon" aria-hidden="true">&#10022;</span> Persona test</a>
@@ -89,7 +90,7 @@
                   <span class="member-home-section-tag">YOUR PAGE</span>
                 </div>
                 <div class="member-home-empty">
-                  <p>Start with the profile people will actually read. Your saved words, not a fake match feed.</p>
+                  <p>See your own writing and photos together, or add what makes you, you.</p>
                   <p><a href="#preview-title">View your private profile preview</a> · <a href="#profile-title">Edit your profile</a></p>
                   <p>Real member discovery will appear here once privacy controls and matching are ready.</p>
                 </div>
@@ -328,6 +329,7 @@
                 <p class="eyebrow">YOUR PROFILE</p>
                 <h2 id="profile-title">Let's start with the basics.</h2>
               </div>
+              <a class="og-profile-edit-preview-link" href="#preview-title">View my profile</a>
             </div>
             <div id="profile-locked">
               <p>A real profile, not a swipe card. Sign in to start making yours.</p>
@@ -478,8 +480,12 @@
         </div>
         <section class="paper profile-preview-panel" id="profile-preview-panel" hidden aria-labelledby="preview-title">
           <div class="profile-preview-heading">
-            <div><p class="eyebrow">YOUR PROFILE / PRIVATE PREVIEW</p><h2 id="preview-title">THE CLASSIC PROFILE, REBORN.</h2></div>
-            <p>Exactly your words and your photos. Pictures are intended for signed-in members; wider profile discovery remains under development.</p>
+            <div>
+              <p class="eyebrow">YOUR PROFILE · PRIVATE PREVIEW</p>
+              <h2 id="preview-title">My profile</h2>
+              <p class="og-preview-heading-note">This is what your profile looks like. Save edits to keep them; member discovery isn't public yet.</p>
+            </div>
+            <a class="og-preview-edit-button" href="#profile-title">Edit my profile</a>
           </div>
           <article class="og-profile-preview" aria-label="How your profile will look to members">
             <header class="og-preview-hero">
@@ -496,6 +502,12 @@
                 <div id="preview-tags" class="og-preview-tags"></div>
               </div>
             </header>
+            <nav class="og-preview-tabs" aria-label="Your profile sections">
+              <a href="#preview-title" aria-current="page">About</a>
+              <a href="#photos-title">Photos</a>
+              <a href="#question-title">Questions</a>
+              <a href="#profile-title">Edit profile</a>
+            </nav>
             <div class="og-preview-layout">
               <div class="og-preview-essays">
                 <section class="og-preview-essay" id="preview-about-section"><h4>My self-summary</h4><p id="preview-about"></p></section>
@@ -507,14 +519,19 @@
                 <section class="og-preview-essay" id="preview-message-me-if-section" hidden><h4>You should message me if…</h4><p id="preview-message-me-if"></p></section>
               </div>
               <aside class="og-preview-aside">
+                <section class="og-preview-sidebox" aria-labelledby="preview-looking-for-title">
+                  <h4 id="preview-looking-for-title">I'm looking for</h4>
+                  <p id="preview-looking-for">Choose what you're looking for in profile basics.</p>
+                </section>
                 <section class="og-preview-sidebox">
                   <h4>My details</h4>
                   <dl id="preview-details"></dl>
                 </section>
                 <section class="og-preview-sidebox">
-                  <h4>Tests &amp; personality</h4>
-                  <p>Compatibility questions and Dating Persona results will appear here when linked to member profiles.</p>
-                  <a href="/account/persona.html">Take the Dating Persona Test ↗</a>
+                  <h4>Questions &amp; personality</h4>
+                  <p><strong id="preview-question-count">0</strong> match questions answered so far.</p>
+                  <a href="#question-title">Answer more questions</a>
+                  <a href="/account/persona.html">Take the Dating Persona Test</a>
                 </section>
               </aside>
             </div>
