@@ -277,6 +277,7 @@ function renderHomework() {
   $("dashboard-member-name").textContent =
     String(cachedProfile?.displayName || currentUser?.name || "friend").slice(0, 60);
   $("dashboard-question-count").textContent = String(state.answeredCount);
+  $("preview-question-count").textContent = String(state.answeredCount);
   $("dashboard-question-label").textContent =
     state.answeredCount === 1 ? "question answered" : "questions answered";
   $("dashboard-homework-count").textContent = welcomeQuestionStatus(state.answeredCount);
@@ -350,7 +351,7 @@ function renderMemberPage() {
   });
   document.querySelectorAll(".classic-rail-nav a[href^='#']").forEach(link => {
     const target = memberSectionFromHash(link.hash);
-    const active = target === page || (target === "profile" && page === "preview");
+    const active = target === page;
     if (active) link.setAttribute("aria-current", "page");
     else link.removeAttribute("aria-current");
   });
@@ -709,6 +710,13 @@ function renderProfilePreview() {
   if (Number.isInteger(draft.age) && draft.age >= 18 && draft.age <= 120) introBits.push(String(draft.age));
   if (draft.cityRegion) introBits.push(draft.cityRegion);
   $("preview-one-line").textContent = introBits.join(" · ") || "Add your age or general area.";
+
+  // A real profile preference preview, from the current member's form only.
+  // textContent avoids interpreting names or user-entered prose as HTML.
+  const wants = [draft.interestedIn && "Interested in " + draft.interestedIn,
+    draft.relationshipGoal && "Open to " + draft.relationshipGoal].filter(Boolean);
+  $("preview-looking-for").textContent = wants.join(". ") ||
+    "Choose your interests and what you're open to in profile basics.";
 
   const tags = $("preview-tags");
   tags.replaceChildren();
