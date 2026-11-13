@@ -264,7 +264,7 @@ const profileTextFields = [
   ["gender", "gender", 60],
   ["pronouns", "pronouns", 40],
   ["orientation", "orientation", 60],
-  ["interestedIn", "interested_in", 30],
+  ["interestedIn", "interested_in", 120],
   ["relationshipGoal", "relationship_goal", 100],
   ["work", "work", 160],
   ["education", "education", 120],
