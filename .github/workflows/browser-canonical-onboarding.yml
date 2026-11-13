@@ -7,6 +7,9 @@ on:
       - 'member-app/**'
       - '.github/workflows/browser-canonical-onboarding.yml'
   workflow_dispatch:
+concurrency:
+  group: ogc-canonical-onboarding-browser-staging
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:
