@@ -1,6 +1,7 @@
 import { createAuthClient } from "@neon/auth";
 import { nextCompatibilityQuestion } from "./question-flow.js";
 import { displayQuestionProgress, acceptedAnswerSuggestion } from "./question-presentation.js";
+import { memberHomeState } from "./home-dashboard.js";
 import { createLocalityPicker } from "./locality-picker.js";
 import { createPhotoUI } from "./photo-uploads.js";
 import { createProfilePhotoGallery } from "./profile-photo-gallery.js";
@@ -245,33 +246,45 @@ function clearMemberView() {
 }
 
 function renderHomework() {
-  const profileSaved = Boolean(cachedProfile?.updatedAt);
-  const answered = Math.min(savedAnswers.size, 10);
-  const questionsStarted = answered >= 10;
-  const hasPhotos = savedPhotoCount > 0;
-  const completed = Number(profileSaved) + Number(hasPhotos) + Number(questionsStarted);
-  $("homework-progress-count").textContent = completed + " of 3";
-  $("homework-photos-state").textContent = hasPhotos
-    ? "✓ " + savedPhotoCount + " of 5 photos"
+  const state = memberHomeState({
+    profileSaved: Boolean(cachedProfile?.updatedAt),
+    photoCount: savedPhotoCount,
+    answeredCount: savedAnswers.size,
+  });
+  $("homework-progress-count").textContent = state.completed + " of " + state.available;
+  $("homework-photos-state").textContent = state.hasPhoto
+    ? "✓ " + state.photoCount + " of 5 photos"
     : "0 of 5 photos";
-  $("homework-photos").classList.toggle("is-complete",hasPhotos);
-  $("homework-profile-state").textContent = profileSaved ? "✓ Saved" : "Start here";
-  $("homework-profile").classList.toggle("is-complete", profileSaved);
-  $("homework-questions-state").textContent = questionsStarted
-    ? "✓ Getting to know you" : savedAnswers.size + " answered";
-  $("homework-questions").classList.toggle("is-complete", questionsStarted);
-  $("homework-next").textContent = !profileSaved
+  $("homework-photos").classList.toggle("is-complete",state.hasPhoto);
+  $("homework-profile-state").textContent = state.hasProfile ? "✓ Saved" : "Start here";
+  $("homework-profile").classList.toggle("is-complete",state.hasProfile);
+  $("homework-questions-state").textContent = state.hasAnswers
+    ? "✓ Getting to know you" : state.answeredCount + " answered";
+  $("homework-questions").classList.toggle("is-complete",state.hasAnswers);
+  $("homework-next").textContent = !state.hasProfile
     ? "Start with your written profile. The pictures can come later."
-    : !hasPhotos
+    : !state.hasPhoto
       ? "Your profile is saved. Next, add a photo that looks like you."
-      : !questionsStarted
+      : !state.hasAnswers
         ? "Pictures: check. Now get started on your match questions."
         : "Nice work. You can always return to your profile and keep answering questions.";
+  $("dashboard-member-name").textContent =
+    String(cachedProfile?.displayName || currentUser?.name || "friend").slice(0, 60);
+  $("dashboard-question-count").textContent = String(state.answeredCount);
+  $("dashboard-question-label").textContent =
+    state.answeredCount === 1 ? "question answered" : "questions answered";
+  $("dashboard-homework-count").textContent =
+    state.completed + " of " + state.available + " starting steps";
+  const onHome = Boolean(currentUser && $("member-columns").dataset.memberPage === "home");
+  show("member-home-dashboard", onHome && state.showRegularHome);
+  show("homework-dashboard", onHome && !state.showRegularHome);
+  show("member-persona-panel", onHome && !state.showRegularHome);
 }
 
 function renderMemberPage() {
   if (!currentUser) {
     show("homework-dashboard", false);
+    show("member-home-dashboard", false);
     show("member-view", false);
     show("profile-panel", true);
     show("photo-panel", false);
@@ -283,21 +296,21 @@ function renderMemberPage() {
   const hash = window.location.hash;
   const page = hash === "#profile-title" || hash === "#preview-title"
     ? "profile" : hash === "#photos-title"
-      ? "photos" : hash === "#question-title" ? "questions" : "home";
+      ? "photos" : hash === "#question-title" ? "questions"
+        : hash === "#settings-title" ? "settings" : "home";
   const home = page === "home";
-  show("homework-dashboard", home);
-  show("member-view", home);
+  show("member-view", page === "settings");
   show("profile-panel", page === "profile");
   show("profile-preview-panel", page === "profile");
   show("photo-panel", page === "photos");
   show("questions-panel", page === "questions");
-  show("member-persona-panel", home);
   $("member-columns").dataset.memberPage = page;
   document.querySelectorAll(".classic-member-tabs a[href^='#']").forEach(link => {
     if ((link.hash === "#member-title" && home) ||
         (link.hash === "#profile-title" && page === "profile") ||
         (link.hash === "#photos-title" && page === "photos") ||
-        (link.hash === "#question-title" && page === "questions")) {
+        (link.hash === "#question-title" && page === "questions") ||
+        (link.hash === "#settings-title" && page === "settings")) {
       link.setAttribute("aria-current", "page");
     } else {
       link.removeAttribute("aria-current");
