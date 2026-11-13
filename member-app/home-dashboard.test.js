@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { memberHomeState } from "./home-dashboard.js";
+import { memberHomeState, starterProfileReady } from "./home-dashboard.js";
 
 test("new member sees homework instead of a pretend match dashboard",()=>{
  const state=memberHomeState();
@@ -26,4 +26,15 @@ test("member account state is clamped to safe real values",()=>{
  assert.equal(state.answeredCount,37);
  assert.equal(state.completed,3);
  assert.equal(memberHomeState({profileSaved:1,photoCount:-2,answeredCount:NaN}).completed,0);
+});
+
+test("starter basics require real persisted identity and intentions, not an empty saved row", () => {
+ const complete = { updatedAt:"2026-11-13T10:00:00Z", displayName:"Alex", age:29, gender:"woman", interestedIn:"Men", relationshipGoal:"Long-term dating" };
+ assert.equal(starterProfileReady(complete), true);
+ assert.equal(starterProfileReady({ ...complete, updatedAt:null }), false);
+ assert.equal(starterProfileReady({ ...complete, age:null }), false);
+ assert.equal(starterProfileReady({ ...complete, interestedIn:"" }), false);
+ assert.equal(starterProfileReady({ ...complete, relationshipGoal:"" }), false);
+ assert.equal(starterProfileReady({ ...complete, gender:"" }), false);
+ assert.equal(starterProfileReady({ ...complete, displayName:"  " }), false);
 });
