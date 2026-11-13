@@ -33,7 +33,7 @@ const allowedOrigins = new Set([
   "https://ogcupid.onrender.com",
 ]);
 // Local browser testing is allowed ONLY for the isolated development branch.
-if (process.env.NEON_BRANCH === "dev/private-member-accounts") {
+if (["dev/private-member-accounts","dev/canonical-onboarding-2026-11-13"].includes(process.env.NEON_BRANCH || "")) {
   allowedOrigins.add("http://localhost:5173");
 }
 
