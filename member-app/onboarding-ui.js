@@ -10,8 +10,8 @@ const choices = {
   ethnicity: ["Asian", "Black", "Hispanic / Latin", "Indigenous", "Middle Eastern", "Pacific Islander", "White", "Other"],
   bodyType: ["Thin", "Athletic", "Average", "Jacked", "Chubby", "Overweight"],
   diet: ["Vegan", "Vegetarian", "Carnivore", "Omnivore", "Takis", "Other"],
-  smoking: ["Never", "Sometimes", "Often", "Just weed"],
-  vaping: ["Never", "Sometimes", "Often", "Just weed"],
+  smoking: ["Never", "Sometimes", "Often"],
+  vaping: ["Never", "Sometimes", "Often"],
   drinking: ["Never", "Sometimes", "Often"],
   drugs: ["Never", "Sometimes", "Often"],
   religion: ["Agnosticism", "Atheism", "Buddhism", "Christianity", "Hinduism", "Islam", "Judaism", "Sikhism", "Other"],
@@ -299,7 +299,9 @@ export function createOnboardingUI({
       '<h2>My details</h2><p class="ogc-identity-line" id="ogc-identity-description"></p>' +
       '<p>My age: shown in profile headers only. Zodiac: <strong id="ogc-zodiac"></strong> (from your birthdate).</p>' +
       Object.entries(choices).map(([field,optionList])=>choiceRow(field,field === "relationshipType"?"Monogamy / polyamory":field[0].toUpperCase()+field.slice(1),optionList,saved[field],multi.has(field))).join("") +
-      '<label class="ogc-check-extra"><input type="checkbox" name="justWeed"> Just weed (independent of frequency)</label>' +
+      '<label class="ogc-check-extra"><input type="checkbox" name="smokingWeed"> Smokes: Just weed</label>' +
+      '<label class="ogc-check-extra"><input type="checkbox" name="vapingWeed"> Vapes: Just weed</label>' +
+      '<label class="ogc-check-extra"><input type="checkbox" name="justWeed"> Drugs: Just weed (independent of frequency)</label>' +
       '<label class="ogc-control">Height<select name="height" id="ogc-height"><option value="">Select height</option></select></label>' +
       '<label class="ogc-control">Job<input type="text" name="work" maxlength="160"></label>' +
       '<fieldset><legend>Languages</legend><div id="ogc-languages"></div><p id="ogc-polyglot" class="ogc-affirmation" hidden>Trēs linguae? O polyglotta!</p></fieldset>' +
@@ -314,6 +316,13 @@ export function createOnboardingUI({
       const option=new Option(label,label);byId("ogc-height").add(option);
     }
     f.elements.height.value=saved.height||"";
+    for (const field of ["smoking","vaping"]) {
+      if (String(saved[field]||"").startsWith("Just weed")) {
+        f.elements[field+"Weed"].checked=true;
+        const frequency=String(saved[field]).split(" · ")[1]||"";
+        f.querySelectorAll('input[name="'+field+'"]').forEach(el=>{el.checked=el.value===frequency;});
+      }
+    }
     if(String(saved.drugs||"").startsWith("Just weed")) {
       f.elements.justWeed.checked=true;
       const freq=String(saved.drugs).split(" · ")[1]||"";
@@ -361,6 +370,9 @@ export function createOnboardingUI({
           height:f.elements.height.value,work:f.elements.work.value.trim(),sign:zodiac(s.birth_date)};
         for(const name of Object.keys(choices))detail[name]=values(f,name).join(", ");
         if(f.elements.justWeed.checked)detail.drugs="Just weed"+(detail.drugs?" · "+detail.drugs:"");
+        for(const name of ["smoking","vaping"]) {
+          if(f.elements[name+"Weed"].checked)detail[name]="Just weed"+(detail[name]?" · "+detail[name]:"");
+        }
         const languagesSaved=[];
         for(let i=1;i<=3;i++){
           const lang=f.elements["languageName"+i].value,level=f.elements["languageLevel"+i].value;
