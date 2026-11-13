@@ -59,7 +59,7 @@ function choiceRow(name, title, options, saved, multiple = false) {
 }
 function selectField(name,label,options,saved) {
   return '<label class="ogc-control">' + label + '<select name="' + name + '"><option value="">Select</option>' +
-    options.map(option => '<option value="' + option.replace(/"/g,"&quot;") + '"' + (String(saved) === String(option) ? ' selected' : '') + '>' + option + '</option>').join("") +
+    options.map(option => '<option value="' + String(option).replace(/"/g,"&quot;") + '"' + (String(saved) === String(option) ? ' selected' : '') + '>' + option + '</option>').join("") +
     '</select></label>';
 }
 const languages = ["English","Spanish","French","German","Italian","Portuguese","Russian","Arabic","Hindi","Mandarin","Japanese","Korean","Pig Latin","Other"];
@@ -234,7 +234,7 @@ export function createOnboardingUI({
         const expected=cleanCitySearch(place["place name"]);
         const matching=shard.find(item=>item.c==="US" &&
           cleanCitySearch(item.n)===expected &&
-          String(item.a).toUpperCase()===String(place["state abbreviation"]).toUpperCase());
+          [place["state"],place["state abbreviation"]].some(v=>cleanCitySearch(item.a)===cleanCitySearch(v)));
         if(!matching) throw Error("Couldn't match that ZIP to a town in our city list. Try another nearby ZIP.");
         zipPlace={id:matching.id,key};
         text(byId("ogc-city-message"),"✓ Ahh, "+matching.n+"!");
