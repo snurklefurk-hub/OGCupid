@@ -10,6 +10,7 @@
   <title>Your corner of the internet | OG Cupid</title>
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./classic.css">
+  <link rel="stylesheet" href="./member-shell.css">
   <script type="module" src="./main.js"></script>
 </head>
 <body>
@@ -30,10 +31,9 @@
         <a href="#member-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#8962;</span> My home</a>
         <a href="#welcome-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#10022;</span> Getting started</a>
         <a href="#settings-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#9881;</span> Account settings</a>
-        <a href="#profile-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#9825;</span> My profile</a>
+        <a href="#preview-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#9825;</span> My profile</a>
+        <a href="#profile-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#9998;</span> Edit profile</a>
         <a href="#photos-title" data-classic-auth hidden><span class="classic-rail-icon" aria-hidden="true">&#10064;</span> My photos</a>
-        <span class="classic-rail-pending"><span class="classic-rail-icon" aria-hidden="true">&#9734;</span> Matches <small>soon</small></span>
-        <span class="classic-rail-pending"><span class="classic-rail-icon" aria-hidden="true">&#9993;</span> Messages <small>soon</small></span>
         <a href="#question-title"><span class="classic-rail-icon" aria-hidden="true">&#9678;</span> Questions</a>
         <a href="/account/persona.html"><span class="classic-rail-icon" aria-hidden="true">&#10022;</span> Persona test</a>
         <a href="/ogtrends/"><span class="classic-rail-icon" aria-hidden="true">&#9998;</span> OgTrends</a>
@@ -86,12 +86,13 @@
             <div class="member-home-primary">
               <section class="member-home-section member-home-matches" aria-labelledby="dashboard-matches-title">
                 <div class="member-home-section-head">
-                  <h3 id="dashboard-matches-title">You might like...</h3>
-                  <span class="member-home-section-tag">MATCHES</span>
+                  <h3 id="dashboard-matches-title">Your profile</h3>
+                  <span class="member-home-section-tag">YOUR PAGE</span>
                 </div>
                 <div class="member-home-empty">
-                  <p>Good matches will show up here when member discovery and compatibility matching are ready.</p>
-                  <p>We'd rather introduce you to real people than make up a list.</p>
+                  <p>See your own writing and photos together, or add what makes you, you.</p>
+                  <p><a href="#preview-title">View your private profile preview</a> · <a href="#profile-title">Edit your profile</a></p>
+                  <p>Real member discovery will appear here once privacy controls and matching are ready.</p>
                 </div>
               </section>
               <section class="member-home-section" aria-labelledby="dashboard-community-title">
@@ -139,8 +140,8 @@
           <div class="welcome-center">
             <header class="welcome-center-intro">
               <p class="eyebrow">A GOOD PLACE TO START</p>
-              <h2 id="welcome-title">Welcome to OG Cupid</h2>
-              <p>Follow this quick guide to get the best out of the site. The interesting people are the whole point.</p>
+              <h2 id="welcome-title">Get your profile ready.</h2>
+              <p>Three quick milestones: save your basics, add a photo, answer ten match questions. That's enough to get started; the novels can wait.</p>
             </header>
             <p id="homework-next" class="welcome-current-step" aria-live="polite">First up: tell us the basics about yourself.</p>
             <ol class="welcome-steps">
@@ -150,7 +151,7 @@
                 </span>
                 <div class="welcome-step-content">
                   <h3><a href="#profile-title">Fill out your profile basics</a></h3>
-                  <p>The essentials first. Let people know who you are; the little details and essays can come later.</p>
+                  <p>Your name, age, identity, and what you're looking for. That's the starter profile; cities, essays, and details can wait.</p>
                   <span class="welcome-step-state" id="homework-profile-state">Start here</span>
                 </div>
               </li>
@@ -170,7 +171,7 @@
                 </span>
                 <div class="welcome-step-content">
                   <h3>Take the Dating Persona Quiz and answer match questions</h3>
-                  <p>Find out your dating persona, then tell us what matters to you. There aren't any visible question sets—just questions.</p>
+                  <p>Answer ten compatibility questions to finish the starter set. The Dating Persona Quiz is a fun optional detour, not a roadblock.</p>
                   <div class="welcome-step-links">
                     <a href="/account/persona.html">Dating Persona Quiz</a>
                     <a href="#question-title">Match questions</a>
@@ -328,6 +329,7 @@
                 <p class="eyebrow">YOUR PROFILE</p>
                 <h2 id="profile-title">Let's start with the basics.</h2>
               </div>
+              <a class="og-profile-edit-preview-link" href="#preview-title">View my profile</a>
             </div>
             <div id="profile-locked">
               <p>A real profile, not a swipe card. Sign in to start making yours.</p>
@@ -478,8 +480,12 @@
         </div>
         <section class="paper profile-preview-panel" id="profile-preview-panel" hidden aria-labelledby="preview-title">
           <div class="profile-preview-heading">
-            <div><p class="eyebrow">YOUR PROFILE / PRIVATE PREVIEW</p><h2 id="preview-title">THE CLASSIC PROFILE, REBORN.</h2></div>
-            <p>Exactly your words and your photos. Pictures are intended for signed-in members; wider profile discovery remains under development.</p>
+            <div>
+              <p class="eyebrow">YOUR PROFILE · PRIVATE PREVIEW</p>
+              <h2 id="preview-title">My profile</h2>
+              <p class="og-preview-heading-note">This is what your profile looks like. Save edits to keep them; member discovery isn't public yet.</p>
+            </div>
+            <a class="og-preview-edit-button" href="#profile-title">Edit my profile</a>
           </div>
           <article class="og-profile-preview" aria-label="How your profile will look to members">
             <header class="og-preview-hero">
@@ -496,6 +502,12 @@
                 <div id="preview-tags" class="og-preview-tags"></div>
               </div>
             </header>
+            <nav class="og-preview-tabs" aria-label="Your profile sections">
+              <a href="#preview-title" aria-current="page">About</a>
+              <a href="#photos-title">Photos</a>
+              <a href="#question-title">Questions</a>
+              <a href="#profile-title">Edit profile</a>
+            </nav>
             <div class="og-preview-layout">
               <div class="og-preview-essays">
                 <section class="og-preview-essay" id="preview-about-section"><h4>My self-summary</h4><p id="preview-about"></p></section>
@@ -507,14 +519,19 @@
                 <section class="og-preview-essay" id="preview-message-me-if-section" hidden><h4>You should message me if…</h4><p id="preview-message-me-if"></p></section>
               </div>
               <aside class="og-preview-aside">
+                <section class="og-preview-sidebox" aria-labelledby="preview-looking-for-title">
+                  <h4 id="preview-looking-for-title">I'm looking for</h4>
+                  <p id="preview-looking-for">Choose what you're looking for in profile basics.</p>
+                </section>
                 <section class="og-preview-sidebox">
                   <h4>My details</h4>
                   <dl id="preview-details"></dl>
                 </section>
                 <section class="og-preview-sidebox">
-                  <h4>Tests &amp; personality</h4>
-                  <p>Compatibility questions and Dating Persona results will appear here when linked to member profiles.</p>
-                  <a href="/account/persona.html">Take the Dating Persona Test ↗</a>
+                  <h4>Questions &amp; personality</h4>
+                  <p><strong id="preview-question-count">0</strong> match questions answered so far.</p>
+                  <a href="#question-title">Answer more questions</a>
+                  <a href="/account/persona.html">Take the Dating Persona Test</a>
                 </section>
               </aside>
             </div>
@@ -567,28 +584,43 @@
           </dialog>
         </section>
         <section class="paper question-panel" id="questions-panel" aria-labelledby="question-title">
-          <p class="eyebrow">04 / THE GOOD QUESTIONS</p>
-          <h2 id="question-title">A LITTLE MORE THAN SMALL TALK.</h2>
-          <p class="classic-questions-intro">Answer what matters to you. Tell us what you'd be happy to hear from someone else. The good matches start with the good questions.</p>
+          <header class="og-question-page-header">
+            <div>
+              <p class="eyebrow">YOUR ACCOUNT / COMPATIBILITY</p>
+              <h2 id="question-title">Match questions</h2>
+              <p class="classic-questions-intro">Answer once, keep going, and change your mind whenever you like.</p>
+            </div>
+            <a class="og-question-profile-link" href="#preview-title">My profile</a>
+          </header>
           <p id="question-locked">Sign in to answer match questions. Your answers are saved to your account.</p>
           <div id="question-view" hidden>
-            <div class="classic-question-status">
-              <p id="question-progress" class="question-progress" aria-live="polite"></p>
-            </div>
-            <div class="classic-question-review">
-              <label for="answered-review">Want to change an old answer?</label>
-              <select id="answered-review"><option value="">Keep answering new questions</option></select>
+            <div class="og-question-toolbar">
+              <div class="classic-question-status">
+                <p id="question-progress" class="question-progress" aria-live="polite"></p>
+                <span id="question-mode" class="og-question-mode">New question</span>
+              </div>
+              <div class="classic-question-review">
+                <label for="answered-review">Review a saved answer</label>
+                <select id="answered-review"><option value="">Keep answering new questions</option></select>
+              </div>
             </div>
             <form id="question-form" class="classic-question-form" novalidate>
               <div class="classic-question-card">
-                <p class="classic-question-step">01 <span>YOUR ANSWER</span></p>
-                <fieldset id="question-choices" class="classic-question-options">
-                  <legend id="question-prompt"></legend>
-                </fieldset>
-                <fieldset id="acceptable-choices" class="classic-question-options classic-acceptable-options">
-                  <legend>02 <span>ANSWERS I'LL ACCEPT</span></legend>
-                  <p id="acceptable-hint" class="classic-question-helper">Choose any answers you'd be happy to get from someone you're matched with.</p>
-                </fieldset>
+                <h3 id="question-headline" class="og-question-headline">Your next question</h3>
+                <div class="og-question-answer-grid">
+                  <section class="og-question-answer-column" aria-label="Your answer">
+                    <p class="classic-question-step">01 <span>YOUR ANSWER</span></p>
+                    <fieldset id="question-choices" class="classic-question-options">
+                      <legend id="question-prompt" class="og-screen-reader-prompt"></legend>
+                    </fieldset>
+                  </section>
+                  <section class="og-question-answer-column" aria-label="Answers you will accept">
+                    <fieldset id="acceptable-choices" class="classic-question-options classic-acceptable-options">
+                      <legend>02 <span>ANSWERS I'LL ACCEPT</span></legend>
+                      <p id="acceptable-hint" class="classic-question-helper">Check any answers you'd accept from a match.</p>
+                    </fieldset>
+                  </section>
+                </div>
                 <fieldset class="classic-question-importance">
                   <legend>03 <span>HOW IMPORTANT IS THIS TO ME?</span></legend>
                   <div class="classic-question-rating-options">
@@ -607,7 +639,7 @@
                 <p id="question-answer-error" class="classic-question-error" role="alert" hidden></p>
               </div>
               <div class="classic-question-actions">
-                <button class="button primary" type="submit">Save answer &amp; next question &rarr;</button>
+                <button class="button primary" id="question-save-button" type="submit">Save answer &amp; next question &rarr;</button>
                 <button id="question-skip" class="quiet-button" type="button" hidden>Skip this question</button>
               </div>
             </form>

@@ -31,3 +31,21 @@ test("profile page hides ordinary dashboard hero and 11-tile navigation while ed
   assert.match(js,/dataset\.profileStep/);
   assert.match(js,/event\.submitter/);
 });
+
+test("signed-in profile navigation and preview use actual member views",()=>{
+  const html=readFileSync(new URL("./index.html",import.meta.url),"utf8");
+  const js=readFileSync(new URL("./main.js",import.meta.url),"utf8");
+  const css=readFileSync(new URL("./member-shell.css",import.meta.url),"utf8");
+  const nav=html.slice(html.indexOf('class="classic-rail-nav"'),html.indexOf('</nav>',html.indexOf('class="classic-rail-nav"')));
+  assert.match(nav,/href="#preview-title"[^>]*data-classic-auth[^>]*>[^<]*<span[^>]*>[^<]*<\/span> My profile/);
+  assert.match(nav,/href="#profile-title"[^>]*data-classic-auth[^>]*>[^<]*<span[^>]*>[^<]*<\/span> Edit profile/);
+  const preview=html.slice(html.indexOf('id="profile-preview-panel"'),html.indexOf('<dialog id="profile-photo-viewer"'));
+  assert.match(preview,/aria-label="Your profile sections"/);
+  for(const href of ['#preview-title','#photos-title','#question-title','#profile-title']) assert.ok(preview.includes('href="'+href+'"'),href);
+  assert.match(preview,/id="preview-looking-for"/);
+  assert.match(preview,/id="preview-question-count"/);
+  assert.match(js,/\$\("preview-looking-for"\)\.textContent\s*=/);
+  assert.match(js,/\$\("preview-question-count"\)\.textContent\s*=/);
+  assert.match(css,/body\.is-authenticated #profile-preview-panel/);
+  assert.doesNotMatch(preview,/93% Match|90% Friend|Online now/);
+});

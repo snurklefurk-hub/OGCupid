@@ -1,7 +1,7 @@
 import { createAuthClient } from "@neon/auth";
 import { nextCompatibilityQuestion } from "./question-flow.js";
 import { displayQuestionProgress, acceptedAnswerSuggestion } from "./question-presentation.js";
-import { memberHomeState } from "./home-dashboard.js";
+import { memberHomeState, starterProfileReady } from "./home-dashboard.js";
 import { SIGNUP_WELCOME_HASH, memberSectionFromHash, welcomeQuestionStatus } from "./welcome-flow.js";
 import { PROFILE_EDITOR_STEPS, profileStepFromHash, profileDestination } from "./profile-editor-flow.js";
 import { createLocalityPicker } from "./locality-picker.js";
@@ -76,6 +76,7 @@ function message(text, type = "info") {
   const node = $("notice");
   node.className = "notice" + (type === "ok" ? " ok" : type === "error" ? " error" : "");
   node.textContent = text;
+  node.hidden = !text;
 }
 
 function show(id, visible) {
@@ -247,7 +248,7 @@ function clearMemberView() {
 
 function renderHomework() {
   const state = memberHomeState({
-    profileSaved: Boolean(cachedProfile?.updatedAt),
+    profileSaved: starterProfileReady(cachedProfile),
     photoCount: savedPhotoCount,
     answeredCount: savedAnswers.size,
   });
@@ -255,22 +256,28 @@ function renderHomework() {
     ? "✓ " + state.photoCount + (state.photoCount === 1 ? " photo added" : " photos added")
     : "No photos yet";
   $("homework-photos").classList.toggle("is-complete",state.hasPhoto);
-  $("homework-profile-state").textContent = state.hasProfile ? "✓ Profile saved" : "Start here";
+  $("homework-profile-state").textContent = state.hasProfile
+    ? "✓ Starter basics saved" : cachedProfile?.updatedAt
+      ? "Add your age, identity, and intentions" : "Start with your basics";
   $("homework-profile").classList.toggle("is-complete",state.hasProfile);
-  $("homework-questions-state").textContent = welcomeQuestionStatus(state.answeredCount);
-  // Do not mark the combined quiz + questions step complete: persona-quiz
-  // completion has no authenticated persistence yet.
-  $("homework-questions").classList.remove("is-complete");
+  $("homework-questions-state").textContent = state.hasAnswers
+    ? "✓ " + welcomeQuestionStatus(state.answeredCount)
+    : Math.min(10, state.answeredCount) + " of 10 match questions answered";
+  // Ten saved compatibility answers are the measurable milestone.
+  // The separate Dating Persona Quiz remains an optional, ungated activity.
+  $("homework-questions").classList.toggle("is-complete", state.hasAnswers);
+  const answersLeft = Math.max(0, 10 - state.answeredCount);
   $("homework-next").textContent = !state.hasProfile
-    ? "First up: fill out your profile basics."
+    ? "First: save your name, age, identity, and what you're looking for."
     : !state.hasPhoto
-      ? "Profile saved. Next, add a photo."
-      : state.answeredCount === 0
-        ? "Looking good. Try the Dating Persona Quiz and answer some match questions."
-        : "Keep answering questions, explore the site, and have fun.";
+      ? "Basics saved. Add one photo so people can put a face to your name."
+      : !state.hasAnswers
+        ? "Almost there: answer " + answersLeft + " more match question" + (answersLeft === 1 ? "" : "s") + "."
+        : "You're in. Your starter profile is ready; the essays and extras can come later.";
   $("dashboard-member-name").textContent =
     String(cachedProfile?.displayName || currentUser?.name || "friend").slice(0, 60);
   $("dashboard-question-count").textContent = String(state.answeredCount);
+  $("preview-question-count").textContent = String(state.answeredCount);
   $("dashboard-question-label").textContent =
     state.answeredCount === 1 ? "question answered" : "questions answered";
   $("dashboard-homework-count").textContent = welcomeQuestionStatus(state.answeredCount);
@@ -342,11 +349,18 @@ function renderMemberPage() {
       link.removeAttribute("aria-current");
     }
   });
+  document.querySelectorAll(".classic-rail-nav a[href^='#']").forEach(link => {
+    const target = memberSectionFromHash(link.hash);
+    const active = target === page;
+    if (active) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  });
   renderHomework();
 }
 
 function renderAuthenticated(member) {
   const authenticated = !!member;
+  document.body.classList.toggle("is-authenticated", authenticated);
   show("guest-view", !authenticated);
   show("member-view", authenticated);
   show("profile-locked", !authenticated);
@@ -543,6 +557,13 @@ function renderQuestion() {
   show("question-answer-error", false);
   const progress = displayQuestionProgress(count);
   $("question-progress").textContent = progress.label;
+  // The question presentation is driven by the real pending/saved record;
+  // these labels are UI-only and never alter the question-serving algorithm.
+  $("question-view").dataset.mode = editingQuestionId ? "review" : "new";
+  $("question-mode").textContent = editingQuestionId ? "Editing a saved answer" : "New question";
+  $("question-save-button").textContent = editingQuestionId
+    ? "Update saved answer" : "Save answer & next question →";
+  $("question-headline").textContent = currentQuestion?.prompt || "";
   if (!currentQuestion) return;
   $("question-prompt").textContent = currentQuestion.prompt;
   const own = $("question-choices");
@@ -696,6 +717,13 @@ function renderProfilePreview() {
   if (Number.isInteger(draft.age) && draft.age >= 18 && draft.age <= 120) introBits.push(String(draft.age));
   if (draft.cityRegion) introBits.push(draft.cityRegion);
   $("preview-one-line").textContent = introBits.join(" · ") || "Add your age or general area.";
+
+  // A real profile preference preview, from the current member's form only.
+  // textContent avoids interpreting names or user-entered prose as HTML.
+  const wants = [draft.interestedIn && "Interested in " + draft.interestedIn,
+    draft.relationshipGoal && "Open to " + draft.relationshipGoal].filter(Boolean);
+  $("preview-looking-for").textContent = wants.join(". ") ||
+    "Choose your interests and what you're open to in profile basics.";
 
   const tags = $("preview-tags");
   tags.replaceChildren();
@@ -1133,7 +1161,7 @@ function wireForms() {
       if (!editingQuestionId) clearPendingQuestion();
       editingQuestionId = null;
       renderQuestion();
-      $("question-prompt").scrollIntoView({ block: "start", behavior: "auto" });
+      $("question-headline").scrollIntoView({ block: "start", behavior: "auto" });
       message("Answer saved to your account.", "ok");
     });
   });
@@ -1178,9 +1206,15 @@ async function start() {
   });
   try {
     const member = await refreshMember({ loadProfile: true });
-    message(member
-      ? "Signed in. Your private member profile is ready."
-      : (registrationOpenInUi ? "Sign in or create your OG Cupid account." : "Sign in to your OG Cupid account."), "ok");
+    if (member) {
+      // The signed-in member is already inside the product. Don't greet them
+      // with a permanent full-width success banner on every page load.
+      if (!$("notice").classList.contains("error")) message("");
+    } else {
+      message(registrationOpenInUi
+        ? "Sign in or create your OG Cupid account."
+        : "Sign in to your OG Cupid account.", "ok");
+    }
   } catch {
     message("Couldn't check your session. Try signing in again.", "error");
   }
