@@ -236,6 +236,57 @@ function clearMemberView() {
   $("member-email").textContent = "";
 }
 
+function renderHomework() {
+  const profileSaved = Boolean(cachedProfile?.updatedAt);
+  const answered = Math.min(savedAnswers.size, 10);
+  const questionsStarted = answered >= 10;
+  const completed = Number(profileSaved) + Number(questionsStarted);
+  $("homework-progress-count").textContent = completed + " of 2";
+  $("homework-profile-state").textContent = profileSaved ? "✓ Saved" : "Start here";
+  $("homework-profile").classList.toggle("is-complete", profileSaved);
+  $("homework-questions-state").textContent = questionsStarted
+    ? "✓ First 10 answered" : answered + " of 10 answered";
+  $("homework-questions").classList.toggle("is-complete", questionsStarted);
+  $("homework-next").textContent = !profileSaved
+    ? "Start with your written profile. The pictures can come later."
+    : !questionsStarted
+      ? "Your profile is saved. Photos are next on our build list; meanwhile, get started on your match questions."
+      : "Nice work. You've done everything available right now. We'll add photos and member discovery as they're ready.";
+}
+
+function renderMemberPage() {
+  if (!currentUser) {
+    show("homework-dashboard", false);
+    show("member-view", false);
+    show("profile-panel", true);
+    show("questions-panel", true);
+    show("profile-preview-panel", false);
+    show("member-persona-panel", false);
+    return;
+  }
+  const hash = window.location.hash;
+  const page = hash === "#profile-title" || hash === "#preview-title"
+    ? "profile" : hash === "#question-title" ? "questions" : "home";
+  const home = page === "home";
+  show("homework-dashboard", home);
+  show("member-view", home);
+  show("profile-panel", page === "profile");
+  show("profile-preview-panel", page === "profile");
+  show("questions-panel", page === "questions");
+  show("member-persona-panel", home);
+  $("member-columns").dataset.memberPage = page;
+  document.querySelectorAll(".classic-member-tabs a[href^='#']").forEach(link => {
+    if ((link.hash === "#member-title" && home) ||
+        (link.hash === "#profile-title" && page === "profile") ||
+        (link.hash === "#question-title" && page === "questions")) {
+      link.setAttribute("aria-current", "page");
+    } else {
+      link.removeAttribute("aria-current");
+    }
+  });
+  renderHomework();
+}
+
 function renderAuthenticated(member) {
   const authenticated = !!member;
   show("guest-view", !authenticated);
@@ -259,7 +310,10 @@ function renderAuthenticated(member) {
   $("classic-member-greeting").textContent = authenticated
     ? "Hi, " + String(member.name || "member").slice(0, 60)
     : "Welcome to OG Cupid";
-  if (!member) return;
+  if (!member) {
+    renderMemberPage();
+    return;
+  }
   $("classic-rail-member-name").textContent = member.name || "OG Cupid member";
   $("member-welcome").textContent = member.name || "OG Cupid member";
   $("member-email").textContent = member.email || "";
@@ -267,6 +321,7 @@ function renderAuthenticated(member) {
     $("profile-name").value =
       typeof member.name === "string" ? member.name.trim().slice(0, 60) : "";
   }
+  renderMemberPage();
 }
 
 async function refreshMember(options = {}) {
@@ -366,6 +421,7 @@ async function loadAnswers() {
   savedAnswers = new Map((result.answers || []).map(answer => [answer.questionId, answer]));
   skippedQuestions.clear();
   renderQuestion();
+  renderHomework();
 }
 
 function renderQuestion() {
@@ -539,6 +595,7 @@ function renderProfilePreview() {
 function showStoredProfile(profile) {
   const form = $("profile-form");
   cachedProfile = profile;
+  renderHomework();
   const fallback = typeof currentUser?.name === "string"
     ? currentUser.name.trim().slice(0, 60) : "";
   form.elements.displayName.value = profile?.displayName ?? fallback;
@@ -877,6 +934,7 @@ function wireForms() {
       };
       await requestPrivate("/answers", "PUT", answer);
       savedAnswers.set(question.id, answer);
+      renderHomework();
       if (!editingQuestionId) clearPendingQuestion();
       editingQuestionId = null;
       renderQuestion();
@@ -898,6 +956,10 @@ async function start() {
   show("app-view", true);
   chooseAuthTab("signin");
   wireForms();
+  window.addEventListener("hashchange", () => {
+    renderMemberPage();
+    if (currentUser) window.scrollTo({ top: 0, behavior: "instant" });
+  });
   try {
     const member = await refreshMember({ loadProfile: true });
     message(member
