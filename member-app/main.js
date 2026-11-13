@@ -794,7 +794,7 @@ function showStoredProfile(profile) {
   homeCityPicker?.restore(profile?.localityId, profile?.localityKey, profile?.cityRegion || "");
   form.elements.searchRadiusMiles.value = profile?.searchRadiusMiles == null ? "" : String(profile.searchRadiusMiles);
   form.querySelectorAll('input[name="gender"]').forEach(input => {
-    input.checked = input.value === String(profile?.gender ?? "").toLowerCase();
+    input.checked = input.value.toLowerCase() === String(profile?.gender ?? "").toLowerCase();
   });
   form.querySelectorAll('input[name="openTo"]').forEach(input => {
     input.checked = String(profile?.relationshipGoal ?? "").split(", ").includes(input.value);
