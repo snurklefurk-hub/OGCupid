@@ -2,6 +2,7 @@ import { createAuthClient } from "@neon/auth";
 import { nextCompatibilityQuestion } from "./question-flow.js";
 import { createLocalityPicker } from "./locality-picker.js";
 import { createPhotoUI } from "./photo-uploads.js";
+import { createProfilePhotoGallery } from "./profile-photo-gallery.js";
 import "../public/questions/question-bank.js";
 import "./styles.css";
 
@@ -33,6 +34,7 @@ let cachedProfile = null;
 let homeCityPicker = null;
 let searchCityPicker = null;
 let photoUI = null;
+let profileGallery = null;
 let savedPhotoCount = 0;
 const questions = window.OGCQuestionBank.questions.map(question => ({
   ...question, tier: question.tier,
@@ -239,21 +241,6 @@ function clearMemberView() {
   $("member-email").textContent = "";
   photoUI?.reset();
   savedPhotoCount = 0;
-}
-
-function updatePrimaryPhotoPreview() {
-  const avatar = $("preview-avatar");
-  if(!avatar) return;
-  avatar.replaceChildren();
-  const imageUrl = photoUI?.primaryUrl;
-  if(imageUrl) {
-    const image=document.createElement("img");
-    image.src=imageUrl;
-    image.alt="";
-    avatar.appendChild(image);
-  } else {
-    avatar.textContent="♥";
-  }
 }
 
 function renderHomework() {
@@ -1020,13 +1007,23 @@ async function start() {
   }
   show("app-view", true);
   chooseAuthTab("signin");
+  profileGallery = createProfilePhotoGallery({
+    primaryButton: $("preview-primary-photo"),
+    thumbnailStrip: $("preview-photo-thumbnails"),
+    dialog: $("profile-photo-viewer"),
+    image: $("profile-photo-viewer-image"),
+    counter: $("profile-photo-viewer-count"),
+    previousButton: $("profile-photo-viewer-prev"),
+    nextButton: $("profile-photo-viewer-next"),
+    closeButton: $("profile-photo-viewer-close"),
+  });
   photoUI = createPhotoUI({
     requestJson: (method,path,body) => requestPrivate(path,method,body),
     requestImage: requestProfileImage,
     uploadJpeg: uploadProfileJpeg,
-    onPhotosChanged: count => {
+    onPhotosChanged: (count, photos) => {
       savedPhotoCount = count;
-      updatePrimaryPhotoPreview();
+      profileGallery?.setPhotos(photos);
       renderHomework();
     },
   });
