@@ -1,0 +1,31 @@
+name: Verify signup welcome checklist
+on:
+  push:
+    branches: [feature/signup-welcome-checklist]
+  pull_request:
+    branches: [main]
+    paths:
+      - 'member-app/**'
+      - '.github/workflows/verify-signup-welcome.yml'
+permissions:
+  contents: read
+jobs:
+  welcome-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: member-app/package-lock.json
+      - name: Install member dependencies
+        run: npm ci --prefix member-app
+      - name: Test signup welcome, question sequencing, photos, and home flow
+        run: npm test --prefix member-app
+      - name: Build production member bundle (with dummy service URLs)
+        run: npm run build --prefix member-app
+        env:
+          VITE_OGC_AUTH_URL: https://example.invalid/neondb/auth
+          VITE_OGC_MEMBER_API_URL: https://example.invalid/profile
+          VITE_OGC_REGISTRATION_ENABLED: 'false'
