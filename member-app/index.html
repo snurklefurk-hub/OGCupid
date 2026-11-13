@@ -584,28 +584,43 @@
           </dialog>
         </section>
         <section class="paper question-panel" id="questions-panel" aria-labelledby="question-title">
-          <p class="eyebrow">04 / THE GOOD QUESTIONS</p>
-          <h2 id="question-title">A LITTLE MORE THAN SMALL TALK.</h2>
-          <p class="classic-questions-intro">Answer what matters to you. Tell us what you'd be happy to hear from someone else. The good matches start with the good questions.</p>
+          <header class="og-question-page-header">
+            <div>
+              <p class="eyebrow">YOUR ACCOUNT / COMPATIBILITY</p>
+              <h2 id="question-title">Match questions</h2>
+              <p class="classic-questions-intro">Answer once, keep going, and change your mind whenever you like.</p>
+            </div>
+            <a class="og-question-profile-link" href="#preview-title">My profile</a>
+          </header>
           <p id="question-locked">Sign in to answer match questions. Your answers are saved to your account.</p>
           <div id="question-view" hidden>
-            <div class="classic-question-status">
-              <p id="question-progress" class="question-progress" aria-live="polite"></p>
-            </div>
-            <div class="classic-question-review">
-              <label for="answered-review">Want to change an old answer?</label>
-              <select id="answered-review"><option value="">Keep answering new questions</option></select>
+            <div class="og-question-toolbar">
+              <div class="classic-question-status">
+                <p id="question-progress" class="question-progress" aria-live="polite"></p>
+                <span id="question-mode" class="og-question-mode">New question</span>
+              </div>
+              <div class="classic-question-review">
+                <label for="answered-review">Review a saved answer</label>
+                <select id="answered-review"><option value="">Keep answering new questions</option></select>
+              </div>
             </div>
             <form id="question-form" class="classic-question-form" novalidate>
               <div class="classic-question-card">
-                <p class="classic-question-step">01 <span>YOUR ANSWER</span></p>
-                <fieldset id="question-choices" class="classic-question-options">
-                  <legend id="question-prompt"></legend>
-                </fieldset>
-                <fieldset id="acceptable-choices" class="classic-question-options classic-acceptable-options">
-                  <legend>02 <span>ANSWERS I'LL ACCEPT</span></legend>
-                  <p id="acceptable-hint" class="classic-question-helper">Choose any answers you'd be happy to get from someone you're matched with.</p>
-                </fieldset>
+                <h3 id="question-headline" class="og-question-headline">Your next question</h3>
+                <div class="og-question-answer-grid">
+                  <section class="og-question-answer-column" aria-label="Your answer">
+                    <p class="classic-question-step">01 <span>YOUR ANSWER</span></p>
+                    <fieldset id="question-choices" class="classic-question-options">
+                      <legend id="question-prompt" class="og-screen-reader-prompt"></legend>
+                    </fieldset>
+                  </section>
+                  <section class="og-question-answer-column" aria-label="Answers you will accept">
+                    <fieldset id="acceptable-choices" class="classic-question-options classic-acceptable-options">
+                      <legend>02 <span>ANSWERS I'LL ACCEPT</span></legend>
+                      <p id="acceptable-hint" class="classic-question-helper">Check any answers you'd accept from a match.</p>
+                    </fieldset>
+                  </section>
+                </div>
                 <fieldset class="classic-question-importance">
                   <legend>03 <span>HOW IMPORTANT IS THIS TO ME?</span></legend>
                   <div class="classic-question-rating-options">
@@ -624,7 +639,7 @@
                 <p id="question-answer-error" class="classic-question-error" role="alert" hidden></p>
               </div>
               <div class="classic-question-actions">
-                <button class="button primary" type="submit">Save answer &amp; next question &rarr;</button>
+                <button class="button primary" id="question-save-button" type="submit">Save answer &amp; next question &rarr;</button>
                 <button id="question-skip" class="quiet-button" type="button" hidden>Skip this question</button>
               </div>
             </form>
