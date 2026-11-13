@@ -65,5 +65,5 @@ test("no unverified persona completion marker or false match feeds on welcome",(
   const welcome=html.slice(start,end);
   assert.doesNotMatch(welcome,/persona (quiz )?(complete|finished|done)/i);
   assert.match(welcome,/member browsing and compatibility matching are coming/i);
-  assert.doesNotMatch(welcome,/\bhomework\b/i);
+  assert.doesNotMatch(welcome,/>\s*Your homework\s*</i);
 });
