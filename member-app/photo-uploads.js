@@ -141,6 +141,9 @@ export function createPhotoUI({ requestJson, requestImage, uploadJpeg, onPhotosC
     try {
       await cropper.open(file);
       ratio.value="square";
+      // The first uploaded picture is the primary square crop. Additional
+      // gallery pictures can be portrait or landscape.
+      ratio.disabled = photos.length === 0;
       zoom.value="1";
       cropDialog.showModal();
       setStatus("");
