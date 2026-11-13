@@ -1,5 +1,6 @@
 import { createAuthClient } from "@neon/auth";
 import { nextCompatibilityQuestion } from "./question-flow.js";
+import { displayQuestionProgress, acceptedAnswerSuggestion } from "./question-presentation.js";
 import { createLocalityPicker } from "./locality-picker.js";
 import { createPhotoUI } from "./photo-uploads.js";
 import { createProfilePhotoGallery } from "./profile-photo-gallery.js";
@@ -497,31 +498,38 @@ function renderQuestion() {
     writePendingQuestion(currentQuestion.id, focusTier);
   }
   show("question-form", !!currentQuestion);
-  show("question-complete", !currentQuestion && savedAnswers.size >= questions.length);
   const count = savedAnswers.size;
-  $("question-progress").textContent = currentQuestion
-    ? `${count} / ${questions.length} answered | ${editingQuestionId ? "Reviewing saved answer" : focusTier.replace("next", "Next ").replace("first", "First ")}`
-    : `${count} / ${questions.length} answered`;
-  if (!currentQuestion) {
-    if (count < questions.length) $("question-progress").textContent += " | Come back to skipped questions after refreshing.";
-    return;
-  }
+  show("question-complete", !currentQuestion && count >= questions.length);
+  show("question-pause", !currentQuestion && count < questions.length);
+  show("question-answer-error", false);
+  const progress = displayQuestionProgress(count, questions.length, focusTier, Boolean(editingQuestionId));
+  $("question-progress").textContent = progress.label;
+  $("question-progress-bar").value = progress.answered;
+  $("question-progress-bar").max = progress.total;
+  $("question-tier-label").textContent = progress.tier;
+  if (!currentQuestion) return;
   $("question-prompt").textContent = currentQuestion.prompt;
   const own = $("question-choices");
   const acceptable = $("acceptable-choices");
   own.replaceChildren($("question-prompt"));
-  acceptable.replaceChildren(acceptable.querySelector("legend"));
+  acceptable.replaceChildren(acceptable.querySelector("legend"), $("acceptable-hint"));
   currentQuestion.options.forEach((label, index) => {
     const id = currentQuestion.optionIds[index];
     const ownLabel = document.createElement("label");
+    ownLabel.className = "classic-question-choice";
     const radio = document.createElement("input");
     radio.type = "radio"; radio.name = "answer"; radio.value = id; radio.required = true;
-    ownLabel.append(radio, document.createTextNode(label));
+    const ownText = document.createElement("span");
+    ownText.textContent = label;
+    ownLabel.append(radio, ownText);
     own.append(ownLabel);
     const partnerLabel = document.createElement("label");
+    partnerLabel.className = "classic-question-choice";
     const check = document.createElement("input");
     check.type = "checkbox"; check.name = "acceptable"; check.value = id;
-    partnerLabel.append(check, document.createTextNode(label));
+    const partnerText = document.createElement("span");
+    partnerText.textContent = label;
+    partnerLabel.append(check, partnerText);
     acceptable.append(partnerLabel);
   });
   show("question-skip", !editingQuestionId && focusTier !== "first10");
@@ -532,7 +540,10 @@ function renderQuestion() {
       input.checked = previous.acceptableOptions.includes(input.value);
     });
   }
-  $("question-importance").value = String(previous?.importance ?? 1);
+  const importance = String(previous?.importance ?? 1);
+  document.querySelectorAll('input[name="importance"]').forEach(input => {
+    input.checked = input.value === importance;
+  });
   $("question-note").value = previous?.note ?? "";
   $("question-private").checked = previous?.isPrivate ?? false;
 }
@@ -963,6 +974,22 @@ function wireForms() {
     editingQuestionId = event.currentTarget.value || null;
     renderQuestion();
   });
+  $("question-choices").addEventListener("change", event => {
+    const input = event.target;
+    if (!input?.matches?.('input[name="answer"]')) return;
+    const acceptable = $("acceptable-choices");
+    const accepted = [...acceptable.querySelectorAll('input[name="acceptable"]:checked')].map(option => option.value);
+    const suggested = acceptedAnswerSuggestion(input.value, accepted);
+    if (suggested) {
+      const sameAnswer = [...acceptable.querySelectorAll('input[name="acceptable"]')]
+        .find(option => option.value === suggested);
+      if (sameAnswer) sameAnswer.checked = true;
+    }
+    show("question-answer-error", false);
+  });
+  $("acceptable-choices").addEventListener("change", () => {
+    show("question-answer-error", false);
+  });
   $("question-form").addEventListener("submit", (event) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -972,15 +999,18 @@ function wireForms() {
     if (!own) return;
     const accepted = [...form.querySelectorAll('input[name="acceptable"]:checked')].map(input => input.value);
     if (!accepted.length) {
-      message("Select at least one answer you would accept from someone else.", "error");
+      $("question-answer-error").textContent = "Choose at least one answer you'd accept from a match.";
+      show("question-answer-error", true);
+      $("acceptable-choices").scrollIntoView({ block: "center", behavior: "auto" });
       return;
     }
+    show("question-answer-error", false);
     operation(form.querySelector('button[type="submit"]'), "Saving your answer", async () => {
       const answer = {
         questionId: question.id,
         optionId: own.value,
         acceptableOptions: accepted,
-        importance: Number($("question-importance").value),
+        importance: Number(form.querySelector('input[name="importance"]:checked')?.value ?? 1),
         isPrivate: $("question-private").checked,
         note: $("question-note").value.trim(),
       };
@@ -990,7 +1020,8 @@ function wireForms() {
       if (!editingQuestionId) clearPendingQuestion();
       editingQuestionId = null;
       renderQuestion();
-      message("Answer saved privately to your account.", "ok");
+      $("question-prompt").scrollIntoView({ block: "start", behavior: "auto" });
+      message("Answer saved to your account.", "ok");
     });
   });
 }
