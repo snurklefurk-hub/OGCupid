@@ -8,9 +8,9 @@
   <meta name="referrer" content="no-referrer">
   <meta name="description" content="OG Cupid member accounts and profiles. Bringing back people, not swipes.">
   <title>Your corner of the internet | OG Cupid</title>
-  <script type="module" crossorigin src="./assets/index-BToR-GUY.js"></script>
+  <script type="module" crossorigin src="./assets/index-DnP9Ntf6.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/neon-auth-BIaN13e0.js">
-  <link rel="stylesheet" crossorigin href="./assets/index-DrXaCBk_.css">
+  <link rel="stylesheet" crossorigin href="./assets/index-CW08pI51.css">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -523,23 +523,15 @@
           <dialog id="photo-crop-dialog" class="photo-crop-dialog" aria-labelledby="photo-crop-title">
             <div class="photo-crop-heading">
               <h3 id="photo-crop-title">Crop your photo</h3>
-              <button type="button" id="photo-crop-close" class="quiet-button" aria-label="Close cropper">Close</button>
             </div>
-            <p>Drag the picture to reposition it, or use the zoom slider.</p>
-            <div class="photo-crop-preview"><canvas id="photo-crop-canvas" width="600" height="600" aria-label="Photo cropping preview; drag to reposition"></canvas></div>
-            <div class="photo-crop-settings">
-              <label for="photo-crop-ratio">Crop shape</label>
-              <select id="photo-crop-ratio">
-                <option value="square">Square (1:1)</option>
-                <option value="portrait">Portrait (4:5)</option>
-                <option value="landscape">Landscape (3:2)</option>
-              </select>
-              <label for="photo-crop-zoom">Zoom</label>
-              <input id="photo-crop-zoom" type="range" min="1" max="3" step=".05" value="1">
-            </div>
+            <p id="photo-crop-help">Drag the edges to crop, or drag inside to move. Only thumbnails are square.</p>
+            <div class="photo-crop-preview"><canvas id="photo-crop-canvas" width="600" height="500" tabindex="0" aria-label="Freeform photo crop" aria-describedby="photo-crop-help photo-crop-keyboard"></canvas></div>
+            <span id="photo-crop-keyboard" class="sr-only">Use arrow keys to move the crop. Hold Shift and use arrow keys to resize it.</span>
+            <p id="photo-crop-error" class="photo-error" role="alert"></p>
             <div class="photo-crop-actions">
+              <button id="photo-crop-reset" type="button" class="quiet-button">Reset crop</button>
               <button id="photo-crop-cancel" type="button" class="button">Cancel</button>
-              <button id="photo-crop-save" type="button" class="button primary">Crop &amp; upload</button>
+              <button id="photo-crop-save" type="button" class="button primary">Upload photo</button>
             </div>
           </dialog>
         </section>
