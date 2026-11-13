@@ -258,7 +258,7 @@ function renderHomework() {
   $("homework-profile-state").textContent = profileSaved ? "✓ Saved" : "Start here";
   $("homework-profile").classList.toggle("is-complete", profileSaved);
   $("homework-questions-state").textContent = questionsStarted
-    ? "✓ First 10 answered" : answered + " of 10 answered";
+    ? "✓ Getting to know you" : savedAnswers.size + " answered";
   $("homework-questions").classList.toggle("is-complete", questionsStarted);
   $("homework-next").textContent = !profileSaved
     ? "Start with your written profile. The pictures can come later."
@@ -502,11 +502,8 @@ function renderQuestion() {
   show("question-complete", !currentQuestion && count >= questions.length);
   show("question-pause", !currentQuestion && count < questions.length);
   show("question-answer-error", false);
-  const progress = displayQuestionProgress(count, questions.length, focusTier, Boolean(editingQuestionId));
+  const progress = displayQuestionProgress(count);
   $("question-progress").textContent = progress.label;
-  $("question-progress-bar").value = progress.answered;
-  $("question-progress-bar").max = progress.total;
-  $("question-tier-label").textContent = progress.tier;
   if (!currentQuestion) return;
   $("question-prompt").textContent = currentQuestion.prompt;
   const own = $("question-choices");
