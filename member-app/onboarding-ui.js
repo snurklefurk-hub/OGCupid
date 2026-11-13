@@ -87,6 +87,10 @@ export function createOnboardingUI({
       '<img src="/brand/og-cupid-arrow.svg" alt="OG Cupid" width="235" height="57">' +
       '<p>WELCOME TO OG CUPID</p></header><main class="ogc-onboard-content">' + markup +
       '<p id="ogc-onboard-error" class="ogc-error" role="alert" aria-live="polite"></p></main>' +
+      '<dialog id="ogc-locked-dialog" class="ogc-locked-dialog" aria-labelledby="ogc-locked-title">' +
+      '<h2 id="ogc-locked-title">Getting ahead of yourself, huh?</h2>' +
+      '<p>One thing at a time. The next step will light up when you’re ready.</p>' +
+      '<form method="dialog"><button type="submit" class="ogc-next">Alright, alright!</button></form></dialog>' +
       '<footer class="ogc-onboard-footer"><button type="button" id="ogc-sign-out">Sign out</button>' +
       '<button type="button" id="ogc-delete">Delete account</button>' +
       '<a href="/contact/">Contact</a><a href="/terms/">Legal / Terms &amp; Conditions</a>' +
@@ -267,14 +271,14 @@ export function createOnboardingUI({
     shell('<h1>Welcome to OG Cupid!</h1><p>Just a few things before you head inside.</p>' +
       '<div class="ogc-quadrants">' + titles.map((title,i)=>
         '<button type="button" class="ogc-quadrant ' + (unlocked[i]?"":"is-locked ") + (done[i]?"is-done":"") +
-        '" id="ogc-tile-'+i+'" aria-disabled="' + String(!unlocked[i]) +
+        '" id="ogc-tile-'+i+'" data-locked="' + String(!unlocked[i]) +
         '"><span class="ogc-tile-icon" aria-hidden="true">' + ["✎","▣","♡","➜"][i] + '</span><strong>' + title +
         (done[i]?' <span aria-label="Complete">✓</span>':'') + '</strong><small>' + descriptions[i] + '</small></button>').join("") + '</div>' +
       (status.quiz ? '<div class="ogc-explore-footer"><p>Go write a 10 page profile, answer more questions, make your own, meet your future ex, have her write you a reference to your other future ex. Oh, and read the blog. But most importantly, have fun!</p>' +
       (!status.verified ? '<p><strong>Now would be a good time to verify your email. Your profile isn’t public until then.</strong></p>' : '<p class="ogc-verified">✓ Email verified.</p>') + '</div>' : ''));
     titles.forEach((_,i)=>byId("ogc-tile-"+i).addEventListener("click",async()=>{
       if(busy) return;
-      if(!unlocked[i]) { text(byId("ogc-onboard-error"),"Getting ahead of yourself, huh?"); return; }
+      if(!unlocked[i]) { byId("ogc-locked-dialog").showModal(); return; }
       if(i===0) go(status.state?.details_complete && !status.profile?"summary":"details");
       if(i===1) openEmbedded("photos");
       if(i===2) go("quiz-choice");
