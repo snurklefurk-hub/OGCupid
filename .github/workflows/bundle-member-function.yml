@@ -24,6 +24,8 @@ jobs:
         run: |
           npm ci
           npm install --no-save esbuild@0.25.12
+      - name: Check profile query and controlled field regressions
+        run: node --test api/profile-query.test.js api/profile-choices.test.js api/job-moderation.test.js member-app/profile-form.test.js
       - name: Bundle private member API without environment files
         run: |
           npx esbuild api/member-profile.ts --bundle --platform=node --target=node24 --format=esm --banner:js="import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);" --outfile="$RUNNER_TEMP/index.mjs"
