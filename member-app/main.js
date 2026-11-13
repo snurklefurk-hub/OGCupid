@@ -34,7 +34,6 @@ let currentUser = null;
 let sessionUserId = null;
 let cachedProfile = null;
 let homeCityPicker = null;
-let searchCityPicker = null;
 let photoUI = null;
 let profileGallery = null;
 let savedPhotoCount = 0;
@@ -226,7 +225,6 @@ function chooseAuthTab(name) {
 function clearMemberView() {
   cachedProfile = null;
   homeCityPicker?.clear();
-  searchCityPicker?.clear();
   savedAnswers = new Map();
   currentQuestion = null;
   skippedQuestions = new Set();
@@ -560,9 +558,56 @@ function renderQuestion() {
 
 // OG Cupid's classic long-form profile is entirely owner-editable. The
 // preview uses textContent and DOM nodes, never member-submitted HTML.
-const longProfileFields = Object.freeze(["cityRegion","lookingFor","work","education","height","kids","pets","smoking","drinking","diet","languages","lifeDirection","goodAt","favorites","sixThings","fridayNight","messageMeIf"]);
+const longProfileFields = Object.freeze(["cityRegion","work","education","height","kids","pets","smoking","drinking","diet","ethnicity","bodyType","vaping","drugs","religion","sign","income","status","relationshipType","lifeDirection","goodAt","favorites","sixThings","fridayNight","messageMeIf"]);
 const previewEssays = Object.freeze([["aboutMe","about","about-section"],["lifeDirection","life-direction","life-direction-section"],["goodAt","good-at","good-at-section"],["favorites","favorites","favorites-section"],["sixThings","six-things","six-things-section"],["fridayNight","friday-night","friday-night-section"],["messageMeIf","message-me-if","message-me-if-section"]]);
-const previewDetails = Object.freeze([["Work","work"],["Education","education"],["Height","height"],["Kids","kids"],["Pets","pets"],["Smokes","smoking"],["Drinks","drinking"],["Diet","diet"],["Speaks","languages"]]);
+const previewDetails = Object.freeze([["Orientation","orientation"],["Ethnicity","ethnicity"],["Height","height"],["Body Type","bodyType"],["Diet","diet"],["Smokes","smoking"],["Vapes","vaping"],["Drinks","drinking"],["Drugs","drugs"],["Religion","religion"],["Sign","sign"],["Education","education"],["Job","work"],["Income","income"],["Status","status"],["Type","relationshipType"],["Offspring","kids"],["Pets","pets"],["Speaks","languages"]]);
+
+const selectedValues = element => element ? [...element.selectedOptions].map(option => option.value).join(", ") : "";
+const qualified = (value, checked, suffix = "Strictly") => value ? (checked ? `${suffix} ${value}` : value) : "";
+const readLanguages = form => [1, 2, 3].flatMap(index => {
+  const name = form.elements[`languageName${index}`].value;
+  const level = form.elements[`languageLevel${index}`].value;
+  return name && level ? [`${name} (${level})`] : [];
+}).join(", ");
+
+function restoreLanguages(form, value) {
+  for (const index of [1, 2, 3]) {
+    form.elements[`languageName${index}`].value = "";
+    form.elements[`languageLevel${index}`].value = "";
+  }
+  String(value ?? "").split(", ").slice(0, 3).forEach((entry, offset) => {
+    const match = /^(.*) \((Fluently|Okay|Poorly)\)$/.exec(entry);
+    if (!match) return;
+    const index = offset + 1;
+    if ([...form.elements[`languageName${index}`].options].some(option => option.value === match[1])) {
+      form.elements[`languageName${index}`].value = match[1];
+      form.elements[`languageLevel${index}`].value = match[2];
+    }
+  });
+}
+
+function restoreQualifiedChoice(form, field, checkbox, value, prefix) {
+  const text = String(value ?? "");
+  const isQualified = text.startsWith(prefix);
+  form.elements[field].value = isQualified ? text.slice(prefix.length) : text;
+  form.elements[checkbox].checked = isQualified;
+}
+
+function restorePairedChoice(form, field, qualifier, value) {
+  const [choice, ...rest] = String(value ?? "").split(", ");
+  form.elements[field].value = choice || "";
+  form.elements[qualifier].value = rest.join(", ");
+}
+
+function updateOffspringOptions() {
+  const form = $("profile-form");
+  const more = form.elements.kids.value === "Has kids" ? " more" : "";
+  const select = form.elements.wantsKids;
+  const previous = select.selectedIndex;
+  select.replaceChildren(new Option("Wants kids?", ""),
+    ...[`Wants${more} kids`, `Doesn't want${more} kids`, `Might want${more} kids`].map(text => new Option(text, text)));
+  select.selectedIndex = Math.max(0, previous);
+}
 
 function readProfileDraft(form = $("profile-form")) {
   const ageValue = form.elements.age.value.trim();
@@ -570,19 +615,29 @@ function readProfileDraft(form = $("profile-form")) {
     displayName: form.elements.displayName.value.trim(),
     aboutMe: form.elements.aboutMe.value.trim(),
     age: ageValue ? Number(ageValue) : null,
-    adultConfirmed: form.elements.adultConfirmed.checked,
     locality: homeCityPicker?.current() ?? null,
-    searchOrigin: searchCityPicker?.current() ?? null,
+    // Search starts from the broad location already chosen in Basics. There
+    // is intentionally no separate place picker or GeoNames terminology.
+    searchOrigin: homeCityPicker?.current() ?? null,
     searchRadiusMiles: form.elements.searchRadiusMiles.value === "" ? null : Number(form.elements.searchRadiusMiles.value),
     gender: form.querySelector('input[name="gender"]:checked')?.value ?? "",
     // Existing private text columns are sufficient for the classic fixed choices.
     // Store stable comma-separated option values; no new schema or public access.
-    orientation: [...form.querySelectorAll('input[name="interestedIn"]:checked')]
-      .map(input => input.value).join(","),
-    relationshipGoal: [...form.querySelectorAll('input[name="openTo"]:checked')]
-      .map(input => input.value).join(","),
+    orientation: form.elements.orientation.value,
+    interestedIn: [...form.querySelectorAll('input[name="interestedIn"]:checked')].map(input => input.value).join(", "),
+    relationshipGoal: [...form.querySelectorAll('input[name="openTo"]:checked')].map(input => input.value).join(", "),
+    pronouns: cachedProfile?.pronouns ?? "",
   };
   for (const field of longProfileFields) draft[field] = form.elements[field].value.trim();
+  draft.ethnicity = selectedValues(form.elements.ethnicity);
+  draft.pets = selectedValues(form.elements.pets);
+  draft.diet = qualified(draft.diet, form.elements.dietStrict.checked);
+  draft.education = qualified(draft.education, form.elements.educationWorkingOn.checked, "Working on");
+  draft.relationshipType = qualified(draft.relationshipType, form.elements.relationshipStrict.checked);
+  draft.religion = [draft.religion, form.elements.religionImportance.value].filter(Boolean).join(", ");
+  draft.sign = [draft.sign, form.elements.signImportance.value].filter(Boolean).join(", ");
+  draft.kids = [draft.kids, form.elements.wantsKids.value].filter(Boolean).join(", ");
+  draft.languages = readLanguages(form);
   return draft;
 }
 
@@ -596,11 +651,11 @@ function updateClassicRailProgress() {
   const completed = [
     exists("displayName"), exists("aboutMe"), exists("age"), exists("cityRegion"),
     exists("gender"), data.getAll("interestedIn").length > 0,
-    data.getAll("openTo").length > 0, exists("lookingFor"), essay,
+    data.getAll("openTo").length > 0, essay,
   ].filter(Boolean).length;
-  const percentage = Math.round(completed / 9 * 100);
+  const percentage = Math.round(completed / 8 * 100);
   $("classic-rail-progress-fill").style.width = percentage + "%";
-  $("classic-rail-progress-label").textContent = completed + " of 9 starting details";
+  $("classic-rail-progress-label").textContent = completed + " of 8 starting details";
 }
 
 function renderProfilePreview() {
@@ -623,19 +678,8 @@ function renderProfilePreview() {
     tags.appendChild(tag);
   }
 
-  const looking = $("preview-looking-for");
-  looking.textContent = draft.lookingFor || "The kind of connection you're hoping to find.";
-
   const details = $("preview-details");
   details.replaceChildren();
-  if (draft.orientation) {
-    const term = document.createElement("dt");
-    const description = document.createElement("dd");
-    term.textContent = "Interested in";
-    description.textContent = draft.orientation.split(",").map(value =>
-      value === "men" ? "Men" : "Women").join(", ");
-    details.append(term, description);
-  }
   for (const [label, field] of previewDetails) {
     if (!draft[field]) continue;
     const term = document.createElement("dt");
@@ -672,24 +716,39 @@ function showStoredProfile(profile) {
   const fallback = typeof currentUser?.name === "string"
     ? currentUser.name.trim().slice(0, 60) : "";
   form.elements.displayName.value = profile?.displayName ?? fallback;
+  const setValue = (name, value) => { if (form.elements[name]) form.elements[name].value = value ?? ""; };
   form.elements.aboutMe.value = profile?.aboutMe ?? "";
   form.elements.age.value = profile?.age == null ? "" : String(profile.age);
   for (const field of longProfileFields) form.elements[field].value = profile?.[field] ?? "";
+  restoreLanguages(form, profile?.languages);
+  restoreQualifiedChoice(form, "diet", "dietStrict", profile?.diet, "Strictly ");
+  restoreQualifiedChoice(form, "education", "educationWorkingOn", profile?.education, "Working on ");
+  restoreQualifiedChoice(form, "relationshipType", "relationshipStrict", profile?.relationshipType, "Strictly ");
+  restorePairedChoice(form, "religion", "religionImportance", profile?.religion);
+  restorePairedChoice(form, "sign", "signImportance", profile?.sign);
+  restorePairedChoice(form, "kids", "wantsKids", profile?.kids);
+  updateOffspringOptions();
+  form.elements.wantsKids.value = String(profile?.kids ?? "").split(", ")[1] || "";
   homeCityPicker?.restore(profile?.localityId, profile?.localityKey, profile?.cityRegion || "");
-  searchCityPicker?.restore(profile?.searchOriginId, profile?.searchOriginKey, profile?.searchOriginLabel || "");
   form.elements.searchRadiusMiles.value = profile?.searchRadiusMiles == null ? "" : String(profile.searchRadiusMiles);
   form.querySelectorAll('input[name="gender"]').forEach(input => {
     input.checked = input.value === String(profile?.gender ?? "").toLowerCase();
   });
-  const interests = new Set(String(profile?.orientation ?? "").split(",").map(value => value.trim()));
-  form.querySelectorAll('input[name="interestedIn"]').forEach(input => {
-    input.checked = interests.has(input.value);
-  });
-  const openTo = new Set(String(profile?.relationshipGoal ?? "").split(",").map(value => value.trim()));
   form.querySelectorAll('input[name="openTo"]').forEach(input => {
-    input.checked = openTo.has(input.value);
+    input.checked = String(profile?.relationshipGoal ?? "").split(", ").includes(input.value);
   });
-  form.elements.adultConfirmed.checked = Boolean(profile);
+  form.querySelectorAll('input[name="interestedIn"]').forEach(input => {
+    input.checked = String(profile?.interestedIn ?? "").split(", ").includes(input.value);
+  });
+  setValue("orientation", profile?.orientation);
+  setValue("ethnicity", "");
+  for (const value of String(profile?.ethnicity ?? "").split(", ")) {
+    const option = [...form.elements.ethnicity.options].find(item => item.value === value); if (option) option.selected = true;
+  }
+  setValue("bodyType", profile?.bodyType);
+  setValue("vaping", profile?.vaping); setValue("drugs", profile?.drugs);
+  setValue("income", profile?.income); setValue("status", profile?.status);
+  for (const value of String(profile?.pets ?? "").split(", ")) { const option = [...form.elements.pets.options].find(item => item.value === value); if (option) option.selected = true; }
   renderProfilePreview();
   const savedInfo = $("saved-info");
   if (profile) {
@@ -712,8 +771,16 @@ async function loadProfile({ silent = false } = {}) {
 }
 
 function wireForms() {
+  $("profile-kids").addEventListener("change", updateOffspringOptions);
+  updateOffspringOptions();
+  const age = $("profile-age");
+  for (let value = 18; value <= 120; value += 1) age.add(new Option(String(value), String(value)));
+  const height = $("profile-height");
+  for (let inches = 48; inches <= 84; inches += 1) {
+    const feet = Math.floor(inches / 12), remaining = inches % 12, cm = Math.round(inches * 2.54);
+    height.add(new Option(`${feet}' ${remaining}\" (${cm} cm)`, `${feet}' ${remaining}\" (${cm} cm)`));
+  }
   homeCityPicker = createLocalityPicker($("profile-city-region"), $("profile-city-options"), $("profile-city-hint"), renderProfilePreview);
-  searchCityPicker = createLocalityPicker($("search-origin"), $("search-origin-options"), $("search-origin-hint"), renderProfilePreview);
   bindEmailOptionOverrides($("signup-form"));
   bindEmailOptionOverrides($("email-settings-form"));
   populateEmailOptions($("signup-form"), necessaryEmailOnly);
@@ -956,7 +1023,6 @@ function wireForms() {
     if (!form.reportValidity()) return;
     operation(form.querySelector('button[type="submit"]'), "Saving your profile", async () => {
       const draft = readProfileDraft(form);
-      if (!draft.adultConfirmed) throw new Error("You must confirm that you are at least 18.");
       // Old free-text places are kept unchanged until the owner selects a
       // canonical town. Newly entered places must come from the lookup.
       if (draft.cityRegion && !draft.locality &&

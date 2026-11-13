@@ -5,6 +5,8 @@ import { Pool, type PoolClient } from "pg";
 import { attachDatabasePool } from "@neon/functions";
 import { isPhotoPath, photoMethodAllowed, handlePhotoRequest } from "./member-photos.js";
 import { removePhoto } from "./photo-storage.js";
+import { isKrustyKrabCookJob } from "./job-moderation.js";
+import { validProfileChoice } from "./profile-choices.js";
 
 const required = ["DATABASE_URL", "NEON_AUTH_JWKS_URL", "NEON_AUTH_BASE_URL"] as const;
 for (const name of required) {
@@ -191,6 +193,7 @@ type MemberProfile = {
   gender: string;
   pronouns: string;
   orientation: string;
+  interestedIn: string;
   relationshipGoal: string;
   lookingFor: string;
   work: string;
@@ -208,6 +211,8 @@ type MemberProfile = {
   sixThings: string;
   fridayNight: string;
   messageMeIf: string;
+  ethnicity: string; bodyType: string; vaping: string; drugs: string;
+  religion: string; sign: string; income: string; status: string; relationshipType: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -222,6 +227,7 @@ function present(row: Record<string, unknown>): MemberProfile {
     gender: String(row.gender ?? ""),
     pronouns: String(row.pronouns ?? ""),
     orientation: String(row.orientation ?? ""),
+    interestedIn: String(row.interested_in ?? ""),
     relationshipGoal: String(row.relationship_goal ?? ""),
     lookingFor: String(row.looking_for ?? ""),
     work: String(row.work ?? ""),
@@ -239,6 +245,11 @@ function present(row: Record<string, unknown>): MemberProfile {
     sixThings: String(row.six_things ?? ""),
     fridayNight: String(row.friday_night ?? ""),
     messageMeIf: String(row.message_me_if ?? ""),
+    ethnicity: String(row.ethnicity ?? ""), bodyType: String(row.body_type ?? ""),
+    vaping: String(row.vaping ?? ""), drugs: String(row.drugs ?? ""),
+    religion: String(row.religion ?? ""), sign: String(row.sign ?? ""),
+    income: String(row.income ?? ""), status: String(row.status ?? ""),
+    relationshipType: String(row.relationship_type ?? ""),
     createdAt: new Date(String(row.created_at)).toISOString(),
     updatedAt: new Date(String(row.updated_at)).toISOString(),
   };
@@ -252,8 +263,8 @@ const profileTextFields = [
   ["gender", "gender", 60],
   ["pronouns", "pronouns", 40],
   ["orientation", "orientation", 60],
+  ["interestedIn", "interested_in", 30],
   ["relationshipGoal", "relationship_goal", 100],
-  ["lookingFor", "looking_for", 500],
   ["work", "work", 160],
   ["education", "education", 120],
   ["height", "height", 50],
@@ -263,6 +274,15 @@ const profileTextFields = [
   ["drinking", "drinking", 60],
   ["diet", "diet", 100],
   ["languages", "languages", 160],
+  ["ethnicity", "ethnicity", 200],
+  ["bodyType", "body_type", 30],
+  ["vaping", "vaping", 30],
+  ["drugs", "drugs", 30],
+  ["religion", "religion", 160],
+  ["sign", "sign", 100],
+  ["income", "income", 30],
+  ["status", "status", 30],
+  ["relationshipType", "relationship_type", 50],
   ["lifeDirection", "life_direction", 2000],
   ["goodAt", "good_at", 1500],
   ["favorites", "favorites", 2000],
@@ -595,7 +615,7 @@ export default {
       if (request.method === "GET") {
         const result = await withMember(userId, async client => {
           const profile = await client.query(
-            `SELECT user_id, display_name, about_me, age, city_region, gender, pronouns, orientation, relationship_goal, looking_for, work, education, height, kids, pets, smoking, drinking, diet, languages, life_direction, good_at, favorites, six_things, friday_night, message_me_if, created_at, updated_at FROM app_private.member_profiles WHERE user_id = $1::uuid`,
+            `SELECT user_id, display_name, about_me, age, city_region, gender, pronouns, orientation, interested_in, relationship_goal, work, education, height, kids, pets, smoking, drinking, diet, languages, ethnicity, body_type, vaping, drugs, religion, sign, income, status, relationship_type, life_direction, good_at, favorites, six_things, friday_night, message_me_if, created_at, updated_at FROM app_private.member_profiles WHERE user_id = $1::uuid`,
             [userId],
           );
           const geo = await client.query(
@@ -635,10 +655,9 @@ export default {
         return json(request, { error: "Invalid profile" }, 400);
       }
       const fields = body as Record<string, unknown>;
-      const displayName = typeof fields.displayName === "string" ? fields.displayName.trim() : "";
       const aboutMe = typeof fields.aboutMe === "string" ? fields.aboutMe.trim() : "";
-      if (displayName.length < 2 || displayName.length > 60 || aboutMe.length > 5000 || fields.adultConfirmed !== true) {
-        return json(request, { error: "Enter a 2–60 character name, a bio no longer than 5000 characters, and confirm you are at least 18" }, 400);
+      if (aboutMe.length > 5000) {
+        return json(request, { error: "Enter a bio no longer than 5000 characters" }, 400);
       }
       const rawAge = fields.age;
       const age = rawAge == null || rawAge === "" ? null : rawAge;
@@ -680,23 +699,54 @@ export default {
         }
         extraValues.push(value.trim());
       }
+      if (isKrustyKrabCookJob(fields.work)) {
+        // Safe hold: this endpoint has no production deletion authority. Do
+        // not turn a text typo into an irreversible account deletion or scan
+        // existing members. A separately reviewed moderation workflow must
+        // perform any future ban/blacklist action with audit logging.
+        return json(request, { error: "That job entry is banned for being cringe." }, 403);
+      }
       // SQL identifiers are always sourced from the constant profileTextFields
       // above. Only values are supplied by the member, via parameters.
       const columns = profileTextFields.map(([, column]) => column);
-      const fieldUpdates = columns.map(column => `${column} = EXCLUDED.${column}`);
+      // An older cached client omits new fields. Preserve those columns;
+      // an explicitly supplied empty string still clears a field.
+      const fieldUpdates = profileTextFields
+        .filter(([key]) => Object.prototype.hasOwnProperty.call(fields, key))
+        .map(([, column]) => `${column} = EXCLUDED.${column}`);
       const paramList = columns.map((_, index) => `${index + 5}`);
       const allReturned = ["user_id", "display_name", "about_me", "age", ...columns, "created_at", "updated_at"];
       const sql = `INSERT INTO app_private.member_profiles
            (user_id, display_name, about_me, adult_attested_at, age, ${columns.join(", ")})
          VALUES ($1::uuid, $2, $3, now(), $4, ${paramList.join(", ")})
          ON CONFLICT (user_id) DO UPDATE SET
-           display_name = EXCLUDED.display_name,
+           -- Display name is account identity; profile setup cannot rename it.
            about_me = EXCLUDED.about_me,
            age = EXCLUDED.age,
-           ${fieldUpdates.join(", ")},
+           ${fieldUpdates.length ? fieldUpdates.join(", ") + "," : ""}
            updated_at = now()
          RETURNING ${allReturned.join(", ")}`;
       const result = await withMember(userId, async client => {
+        // The account service, not this browser payload, owns display name.
+        // This prevents a profile PUT (including a hand-crafted one) from
+        // setting or changing another account attribute.  Existing profile
+        // names are retained; a first profile reads the verified Auth name
+        // through the narrowly scoped SECURITY DEFINER helper in migration 014.
+        const existing = await client.query(
+          `SELECT display_name, ${columns.join(", ")} FROM app_private.member_profiles WHERE user_id = $1::uuid`,
+          [userId],
+        );
+        for (const [index, [key, column]] of profileTextFields.entries()) {
+          if (!validProfileChoice(key, extraValues[index], existing.rows[0]?.[column])) {
+            throw new Error("Invalid controlled profile choice");
+          }
+        }
+        const displayName = existing.rows[0]?.display_name == null
+          ? String((await client.query("SELECT app_private.current_member_display_name() AS display_name")).rows[0]?.display_name ?? "").trim()
+          : String(existing.rows[0].display_name).trim();
+        if (displayName.length < 2 || displayName.length > 60) {
+          throw new Error("Account display name is unavailable");
+        }
         const saved = await client.query(sql, [userId, displayName, aboutMe, age, ...extraValues]);
         if (geoSupplied) {
           await client.query(
@@ -733,6 +783,9 @@ export default {
         founderStatus: result.founderStatus,
       } });
     } catch (error) {
+      if (error instanceof Error && error.message === "Invalid controlled profile choice") {
+        return json(request, { error: "Choose a valid profile option" }, 400);
+      }
       // Do not echo SQL errors, tokens, or personally identifiable information.
       console.error("Private profile request failed", error instanceof Error ? error.name : "unknown");
       return json(request, { error: "Service unavailable" }, 503);

@@ -3,7 +3,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'api/member-profile.ts'
+      - 'api/**'
       - '.github/workflows/bundle-member-function.yml'
   workflow_dispatch:
 permissions:
