@@ -41,9 +41,31 @@ async function cleanup(){
     await page.locator('#ogc-delete-form input[name="password"]').fill(password);
     await page.locator('#ogc-delete-form input[name="confirmation"]').fill("DELETE");
     await page.locator("#ogc-delete-form button[type=submit]").click();
-    await page.locator("#signup-form").waitFor({state:"hidden",timeout:10000}).catch(()=>{});
-    deleted=await page.locator("#ogc-onboarding").isHidden();
-  }catch {console.log("CLEANUP WARNING: browser account may need removal in isolated Neon staging");}
+    await page.locator("#ogc-onboarding").waitFor({state:"hidden",timeout:10000});
+    deleted=true;
+    console.log("CLEANUP PASS: synthetic browser account deleted using the UI");
+  }catch {
+    // If the browser flow itself has a bug, use the same authenticated API
+    // rather than leaving test registrations in the staging auth database.
+    try{
+      const tokenResponse=await context.request.get(stageAuth+"/token",{
+        headers:{Origin:baseURL},timeout:12000
+      });
+      const payload=await tokenResponse.json().catch(()=>({}));
+      const jwt=payload.token||payload.data?.token;
+      if(!tokenResponse.ok || typeof jwt!=="string" || jwt.split(".").length!==3)
+        throw Error("No staging token available for cleanup");
+      const response=await context.request.post(stageApi+"/account/delete",{
+        headers:{"Origin":baseURL,"Authorization":"Bearer "+jwt},
+        data:{email,password,confirm:"DELETE"},timeout:12000
+      });
+      const outcome=await response.json().catch(()=>({}));
+      if(!response.ok || outcome.deleted!==true)
+        throw Error("Deletion API did not confirm cleanup");
+      deleted=true;
+      console.log("CLEANUP PASS: synthetic browser account deleted through staging API");
+    }catch {console.log("CLEANUP WARNING: synthetic browser account remains in isolated Neon branch");}
+  }
 }
 
 try {
@@ -86,18 +108,18 @@ try {
   await visible("#ogc-details");
   assert.match(await value("#ogc-identity-description"),/Bi Man/);
   assert.match(await value("#ogc-zodiac"),/Capricorn/);
-  await page.locator('input[name="interestedIn"][value="Woman"]').check();
-  await page.locator('input[name="openTo"][value="long-term dating"]').check();
-  await page.locator('input[name="diet"][value="Other"]').check();
-  await page.locator('input[name="drugs"][value="Sometimes"]').check();
-  await page.locator('input[name="justWeed"]').check();
-  await page.locator('select[name="languageName1"]').selectOption("English");
-  await page.locator('select[name="languageLevel1"]').selectOption("Fluently");
-  await page.locator('select[name="languageName2"]').selectOption("French");
-  await page.locator('select[name="languageLevel2"]').selectOption("Okay");
-  await page.locator('select[name="languageName3"]').selectOption("Spanish");
+  await page.locator('#ogc-details input[name="interestedIn"][value="Woman"]').check();
+  await page.locator('#ogc-details input[name="openTo"][value="long-term dating"]').check();
+  await page.locator('#ogc-details input[name="diet"][value="Other"]').check();
+  await page.locator('#ogc-details input[name="drugs"][value="Sometimes"]').check();
+  await page.locator('#ogc-details input[name="justWeed"]').check();
+  await page.locator('#ogc-details select[name="languageName1"]').selectOption("English");
+  await page.locator('#ogc-details select[name="languageLevel1"]').selectOption("Fluently");
+  await page.locator('#ogc-details select[name="languageName2"]').selectOption("French");
+  await page.locator('#ogc-details select[name="languageLevel2"]').selectOption("Okay");
+  await page.locator('#ogc-details select[name="languageName3"]').selectOption("Spanish");
   await visible("#ogc-polyglot");
-  await page.locator('select[name="languageLevel3"]').selectOption("Poorly");
+  await page.locator('#ogc-details select[name="languageLevel3"]').selectOption("Poorly");
   await screenshot("04-profile-checkboxes");
   await page.locator('#ogc-details button[type=submit]').click();
   await visible("#ogc-summary");
