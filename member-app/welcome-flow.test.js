@@ -67,3 +67,43 @@ test("no unverified persona completion marker or false match feeds on welcome",(
   assert.match(welcome,/member browsing and compatibility matching are coming/i);
   assert.doesNotMatch(welcome,/>\s*Your homework\s*</i);
 });
+
+test("welcome is a dedicated centered canvas with navigation and supporting info at the edges", () => {
+  const html = readFileSync(new URL("./index.html", import.meta.url), "utf8");
+  const css = readFileSync(new URL("./classic.css", import.meta.url), "utf8");
+  const js = readFileSync(new URL("./main.js", import.meta.url), "utf8");
+  const welcomeStart = html.indexOf('id="homework-dashboard"');
+  const centerEnd = html.indexOf('id="member-columns"', welcomeStart);
+  const sideStart = html.indexOf('id="welcome-side-panel"');
+  const footerStart = html.indexOf('class="member-legal-footer"');
+  assert.ok(welcomeStart >= 0 && centerEnd > welcomeStart);
+  assert.ok(sideStart > centerEnd && footerStart > sideStart,
+    "supporting progress sidebar lives outside the main welcome canvas");
+  const center = html.slice(welcomeStart, centerEnd);
+  assert.match(center, /class="welcome-page-tabs"/);
+  assert.match(center, /class="welcome-center"/);
+  assert.equal((center.match(/class="welcome-step" id="homework-/g)||[]).length, 4);
+  assert.match(center, /class="welcome-step-icon welcome-step-icon-profile"/);
+  assert.match(center, /class="welcome-step-icon welcome-step-icon-photos"/);
+  assert.match(center, /class="welcome-step-icon welcome-step-icon-questions"/);
+  assert.match(center, /class="welcome-step-icon welcome-step-icon-explore"/);
+  assert.match(css, /\.is-welcome-flow \.shell\s*\{[^}]*grid-template-columns:/);
+  assert.match(css, /\.is-welcome-flow #member-columns\s*\{display:none!important\}/);
+  assert.match(css, /@media\(max-width:760px\)/);
+  assert.match(js, /document\.body\.classList\.toggle\("is-welcome-flow", onWelcome\)/);
+  assert.match(js, /document\.body\.classList\.remove\("is-welcome-flow"\)/);
+});
+
+test("welcome side labels reflect existing state rather than invented member activity", () => {
+  const js = readFileSync(new URL("./main.js", import.meta.url), "utf8");
+  const html = readFileSync(new URL("./index.html", import.meta.url), "utf8");
+  for(const id of [
+    "welcome-side-profile-status",
+    "welcome-side-photos-status",
+    "welcome-side-questions-status",
+  ]) {
+    assert.match(html, new RegExp('id="' + id + '"'));
+    assert.ok(js.includes('$("' + id + '").textContent'), id + " is driven by saved account data");
+  }
+  assert.doesNotMatch(html.slice(html.indexOf('id="welcome-side-panel"'),html.indexOf('class="member-legal-footer"')),/match percentage|new messages waiting|visitors today/i);
+});

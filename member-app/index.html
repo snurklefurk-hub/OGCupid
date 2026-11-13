@@ -132,63 +132,70 @@
           </div>
         </section>
         <section class="paper homework-dashboard welcome-checklist" id="homework-dashboard" hidden aria-labelledby="welcome-title">
-          <div class="homework-header welcome-header">
-            <div>
-              <p class="eyebrow">HEY, YOU MADE IT. WELCOME TO OG CUPID.</p>
-              <h2 id="welcome-title">Your corner of the internet starts here.</h2>
-              <p>We missed dating sites that actually wanted you to get to know someone. Here are a few good places to start.</p>
-            </div>
-            <div class="welcome-illustration" aria-hidden="true"><span>&#9829;</span></div>
+          <nav class="welcome-page-tabs" aria-label="Welcome page navigation">
+            <span class="welcome-page-tab-active" aria-current="page">Welcome!</span>
+            <a href="#member-title">My home</a>
+          </nav>
+          <div class="welcome-center">
+            <header class="welcome-center-intro">
+              <p class="eyebrow">A GOOD PLACE TO START</p>
+              <h2 id="welcome-title">Welcome to OG Cupid</h2>
+              <p>Follow this quick guide to get the best out of the site. The interesting people are the whole point.</p>
+            </header>
+            <p id="homework-next" class="welcome-current-step" aria-live="polite">First up: tell us the basics about yourself.</p>
+            <ol class="welcome-steps">
+              <li class="welcome-step" id="homework-profile">
+                <span class="welcome-step-icon welcome-step-icon-profile" aria-hidden="true">
+                  <svg viewBox="0 0 64 64" focusable="false"><circle cx="31" cy="18" r="13"/><path d="M10 56c0-15 9-23 21-23s21 8 21 23z"/></svg>
+                </span>
+                <div class="welcome-step-content">
+                  <h3><a href="#profile-title">Fill out your profile basics</a></h3>
+                  <p>The essentials first. Let people know who you are; the little details and essays can come later.</p>
+                  <span class="welcome-step-state" id="homework-profile-state">Start here</span>
+                </div>
+              </li>
+              <li class="welcome-step" id="homework-photos">
+                <span class="welcome-step-icon welcome-step-icon-photos" aria-hidden="true">
+                  <svg viewBox="0 0 64 64" focusable="false"><path d="M10 20h10l5-7h15l5 7h9a5 5 0 0 1 5 5v26a5 5 0 0 1-5 5H10a5 5 0 0 1-5-5V25a5 5 0 0 1 5-5z"/><circle cx="32" cy="37" r="12" fill="#fff"/><circle cx="32" cy="37" r="7"/></svg>
+                </span>
+                <div class="welcome-step-content">
+                  <h3><a href="#photos-title">Add photos</a></h3>
+                  <p>Give people a face to put with your words. Upload up to five pictures and choose your favorite.</p>
+                  <span class="welcome-step-state" id="homework-photos-state">No photos yet</span>
+                </div>
+              </li>
+              <li class="welcome-step" id="homework-questions">
+                <span class="welcome-step-icon welcome-step-icon-questions" aria-hidden="true">
+                  <svg viewBox="0 0 64 64" focusable="false"><rect x="9" y="7" width="46" height="50" rx="4"/><path d="M20 21h4m9 0h13M20 32h4m9 0h13M20 43h4m9 0h13" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>
+                </span>
+                <div class="welcome-step-content">
+                  <h3>Take the Dating Persona Quiz and answer match questions</h3>
+                  <p>Find out your dating persona, then tell us what matters to you. There aren't any visible question sets—just questions.</p>
+                  <div class="welcome-step-links">
+                    <a href="/account/persona.html">Dating Persona Quiz</a>
+                    <a href="#question-title">Match questions</a>
+                  </div>
+                  <span class="welcome-step-state" id="homework-questions-state">0 match questions answered</span>
+                </div>
+              </li>
+              <li class="welcome-step" id="homework-meet">
+                <span class="welcome-step-icon welcome-step-icon-explore" aria-hidden="true">
+                  <svg viewBox="0 0 64 64" focusable="false"><path d="m32 4 8.9 18.6 20.4 2.8-14.8 14.3 3.6 20.3L32 50.3 13.9 60l3.6-20.3L2.7 25.4l20.4-2.8z"/></svg>
+                </span>
+                <div class="welcome-step-content">
+                  <h3><a href="#member-title">Explore, match, and have fun</a></h3>
+                  <p>Look around and make yourself at home. Member browsing and compatibility matching are coming later. For now, look around and make yourself at home.</p>
+                  <div class="welcome-step-links">
+                    <a href="#member-title">Explore OG Cupid</a>
+                    <a href="/ogtrends/">Read OgTrends</a>
+                  </div>
+                </div>
+              </li>
+            </ol>
+            <p class="welcome-fine-print">No rush, no swiping, no pressure. Your profile is yours, and you can come back to <a href="#welcome-title">Getting started</a> anytime.</p>
           </div>
-          <p id="homework-next" class="homework-next">First up: tell us the basics about yourself.</p>
-          <ol class="homework-list welcome-list">
-            <li class="homework-item" id="homework-profile">
-              <span class="homework-number" aria-hidden="true">01</span>
-              <div class="homework-copy">
-                <h3>Fill out your profile basics</h3>
-                <p>Give people the essentials. The details and essays are there whenever you feel like writing more.</p>
-              </div>
-              <span class="homework-state" id="homework-profile-state">Start here</span>
-              <a class="button" href="#profile-title">Set up my profile &rarr;</a>
-            </li>
-            <li class="homework-item" id="homework-photos">
-              <span class="homework-number" aria-hidden="true">02</span>
-              <div class="homework-copy">
-                <h3>Add photos</h3>
-                <p>Put a face to your words. You can add up to five pictures and choose your main photo.</p>
-              </div>
-              <span class="homework-state" id="homework-photos-state">No photos yet</span>
-              <a class="button" href="#photos-title">Add my photos &rarr;</a>
-            </li>
-            <li class="homework-item welcome-two-actions" id="homework-questions">
-              <span class="homework-number" aria-hidden="true">03</span>
-              <div class="homework-copy">
-                <h3>Take the Dating Persona Quiz and answer match questions</h3>
-                <p>Discover your persona, then tell us what matters to you. Match questions come from one big, varied pool—answer as many as you like.</p>
-                <p class="welcome-quiz-note">The quiz and match questions are separate activities; both are worth trying.</p>
-              </div>
-              <span class="homework-state" id="homework-questions-state">0 match questions answered</span>
-              <div class="welcome-actions">
-                <a class="button" href="/account/persona.html">Take the Dating Persona Quiz &rarr;</a>
-                <a class="button" href="#question-title">Answer match questions &rarr;</a>
-              </div>
-            </li>
-            <li class="homework-item welcome-two-actions" id="homework-meet">
-              <span class="homework-number" aria-hidden="true">04</span>
-              <div class="homework-copy">
-                <h3>Explore, match, and have fun</h3>
-                <p>Make yourself at home and explore what's already here. Member browsing and compatibility matching are coming as those features launch.</p>
-              </div>
-              <span class="homework-state">Explore now</span>
-              <div class="welcome-actions">
-                <a class="button" href="#member-title">Explore my home &rarr;</a>
-                <a class="welcome-quiet-link" href="/ogtrends/">Read OgTrends</a>
-              </div>
-            </li>
-          </ol>
-          <p class="homework-footer">There's no test to pass before you can look around. Come back to <a href="#welcome-title">Getting started</a> any time.</p>
         </section>
-                <div class="columns" id="member-columns">
+        <div class="columns" id="member-columns">
           <section class="paper" id="guest-view" aria-labelledby="account-title">
             <p class="eyebrow">01 / ACCOUNT</p>
             <div class="panel-head">
@@ -615,6 +622,26 @@
       </div>
       <div class="bottom-mark" aria-hidden="true">COME FOR THE QUIZZES. STAY FOR THE PEOPLE.</div>
     </main>
+    <aside class="welcome-side-panel" id="welcome-side-panel" hidden aria-label="Your starting progress">
+      <div class="welcome-side-member">
+        <span class="welcome-side-avatar" aria-hidden="true">
+          <svg viewBox="0 0 72 72" focusable="false"><circle cx="36" cy="24" r="16"/><path d="M6 72c0-21 12-32 30-32s30 11 30 32z"/></svg>
+        </span>
+        <strong>Make yourself at home.</strong>
+        <a href="#profile-title">Complete your profile</a>
+        <a class="welcome-side-photo-button" href="#photos-title">Upload a photo</a>
+      </div>
+      <div class="welcome-side-card">
+        <h2>YOUR PROGRESS</h2>
+        <p><strong id="welcome-side-profile-status">Profile basics not saved</strong></p>
+        <p id="welcome-side-photos-status">No photos yet</p>
+        <p id="welcome-side-questions-status">0 match questions answered</p>
+      </div>
+      <div class="welcome-side-message">
+        <strong>Real people. Real conversations.</strong>
+        <p>Answer the questions that matter to you. Take your time with the rest.</p>
+      </div>
+    </aside>
     <footer class="member-legal-footer" aria-label="Legal and support"><span>OG Cupid · Independent project; not affiliated with OkCupid or Match Group.</span><nav aria-label="Contact and legal pages"><a href="/contact/">Contact</a><a href="/privacy/">Privacy Policy</a><a href="/terms/">Terms &amp; Conditions</a></nav></footer>
   </div>
 </body>

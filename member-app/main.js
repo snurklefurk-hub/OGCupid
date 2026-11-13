@@ -276,6 +276,16 @@ function renderHomework() {
   const page = $("member-columns").dataset.memberPage;
   const onHome = Boolean(currentUser && page === "home");
   const onWelcome = Boolean(currentUser && (page === "welcome" || (onHome && !state.showRegularHome)));
+  // The semi-walled onboarding layout is scoped to this view only. Other
+  // member views keep their normal navigation, account settings and layout.
+  document.body.classList.toggle("is-welcome-flow", onWelcome);
+  $("welcome-side-profile-status").textContent =
+    state.hasProfile ? "Profile basics saved" : "Profile basics not saved yet";
+  $("welcome-side-photos-status").textContent = state.hasPhoto
+    ? state.photoCount + (state.photoCount === 1 ? " photo added" : " photos added")
+    : "No photos yet";
+  $("welcome-side-questions-status").textContent = welcomeQuestionStatus(state.answeredCount);
+  show("welcome-side-panel", onWelcome);
   show("member-home-dashboard", onHome && state.showRegularHome);
   show("homework-dashboard", onWelcome);
   // The quiz is already a visible action in welcome step three.
@@ -284,6 +294,8 @@ function renderHomework() {
 
 function renderMemberPage() {
   if (!currentUser) {
+    document.body.classList.remove("is-welcome-flow");
+    show("welcome-side-panel", false);
     show("homework-dashboard", false);
     show("member-home-dashboard", false);
     show("member-view", false);

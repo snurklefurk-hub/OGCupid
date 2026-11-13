@@ -588,3 +588,257 @@ form input:focus,form textarea:focus,.profile-field select:focus-visible{outline
  .welcome-illustration{display:none}
  .welcome-header h2{font-size:27px}
 }
+
+
+/* Focused post-signup welcome: screenshot-based classic three-column composition.
+   Keep account settings, long profile forms and ordinary dashboard out of the
+   central welcome canvas. The rails stay secondary to the four large steps. */
+body.is-welcome-flow{background:#285997}
+.is-welcome-flow .shell{
+  max-width:1320px;margin:0 auto 20px;
+  grid-template-columns:clamp(150px,14.1vw,184px) minmax(0,1fr) clamp(157px,14vw,185px);
+  align-items:stretch;box-shadow:0 6px 20px #0b315a52
+}
+.is-welcome-flow .topline{
+  grid-row:1;grid-column:1/-1;
+  min-height:25px;padding:5px 12px;
+  background:#265897;border-bottom:1px solid #1e477d;
+  color:#bad5f4;font-size:9px
+}
+.is-welcome-flow .masthead{
+  grid-row:2;grid-column:1;
+  background:linear-gradient(165deg,#193a79,#17346d 75%);
+  min-height:100%;gap:0
+}
+.is-welcome-flow .masthead .brand-original{
+  min-height:71px;padding:12px 9px;background:transparent;
+  border-bottom:1px solid #396295
+}
+.is-welcome-flow .masthead .brand-original img{
+  width:146px;mix-blend-mode:normal;filter:brightness(0) invert(1)
+}
+.is-welcome-flow .masthead .classic-rail-member,
+.is-welcome-flow .masthead .classic-rail-guest,
+.is-welcome-flow .masthead .classic-rail-section,
+.is-welcome-flow .masthead .classic-rail-note,
+.is-welcome-flow .masthead nav .classic-rail-pending{display:none!important}
+.is-welcome-flow .masthead nav.classic-rail-nav{border-top:0;margin-top:2px}
+.is-welcome-flow .masthead nav.classic-rail-nav a{
+  min-height:36px;padding:9px 11px;
+  color:#c4d9f1;border-bottom:1px solid #294c87;
+  font-size:11px;line-height:1.3
+}
+.is-welcome-flow .masthead nav.classic-rail-nav a[href="#welcome-title"]{
+  color:#fff;background:#315a9b;border-left:3px solid #ee8bb6;padding-left:8px
+}
+.is-welcome-flow .masthead .classic-rail-icon{width:17px;font-size:15px}
+.is-welcome-flow .masthead nav.classic-rail-nav a[href="#settings-title"]{opacity:.75}
+.is-welcome-flow main{
+  grid-row:2;grid-column:2;
+  min-height:calc(100vh - 84px);
+  background:#fdfdfe;border-left:1px solid #d9e3ef;border-right:1px solid #d9e3ef
+}
+.is-welcome-flow main>.classic-member-topbar,
+.is-welcome-flow main>.classic-member-announcement,
+.is-welcome-flow main>.intro,
+.is-welcome-flow main>.notice:not(.error),
+.is-welcome-flow main>.bottom-mark,
+.is-welcome-flow #member-columns{display:none!important}
+.is-welcome-flow main>.notice.error{
+  margin:8px 22px 0;padding:8px 11px;font-size:11px
+}
+.is-welcome-flow .welcome-checklist{
+  display:block;margin:0;padding:0;
+  background:#fdfdfe;border:0;box-shadow:none;min-height:calc(100vh - 84px)
+}
+.is-welcome-flow .welcome-page-tabs{
+  display:flex;gap:0;min-height:46px;align-items:stretch;
+  padding:0 16px;border-bottom:1px solid #e3e6ed;
+  background:linear-gradient(#fff,#f1f1f3);font:11px Arial,Helvetica,sans-serif
+}
+.is-welcome-flow .welcome-page-tab-active{
+  display:flex;align-items:center;
+  padding:0 17px;margin-top:7px;
+  background:#fff;border:1px solid #e1e5ec;border-bottom:1px solid #fff;
+  color:#d54b82;font-weight:700
+}
+.is-welcome-flow .welcome-page-tabs a{
+  display:flex;align-items:center;padding:8px 15px;margin-top:7px;
+  border:1px solid transparent;color:#7e899a;text-decoration:none
+}
+.is-welcome-flow .welcome-page-tabs a:hover{color:#326497;background:#fff}
+.is-welcome-flow .welcome-center{
+  max-width:700px;margin:0 auto;padding:58px 52px 78px
+}
+.is-welcome-flow .welcome-center-intro{text-align:center;margin:0 0 16px}
+.is-welcome-flow .welcome-center-intro .eyebrow{
+  font:700 9px Arial,Helvetica,sans-serif;letter-spacing:.13em;
+  color:#afbdcb;margin:0 0 10px
+}
+.is-welcome-flow .welcome-center-intro h2{
+  font:italic normal 34px/1.22 Georgia,'Times New Roman',serif;
+  color:#2d65ab;margin:0 0 10px;letter-spacing:-.7px
+}
+.is-welcome-flow .welcome-center-intro>p:not(.eyebrow){
+  font:12px/1.65 Arial,Helvetica,sans-serif;color:#6c7890;
+  max-width:465px;margin:0 auto
+}
+.is-welcome-flow .welcome-current-step{
+  padding:0;margin:0 0 12px;
+  text-align:center;font:11px/1.5 Arial,Helvetica,sans-serif;color:#c76b96
+}
+.is-welcome-flow .welcome-steps{
+  margin:0;padding:0;list-style:none
+}
+.is-welcome-flow .welcome-step{
+  display:grid;grid-template-columns:74px minmax(0,1fr);
+  align-items:center;gap:25px;
+  padding:22px 6px;border-bottom:1px solid #eef0f5
+}
+.is-welcome-flow .welcome-step:last-child{border-bottom:0}
+.is-welcome-flow .welcome-step-icon{
+  width:66px;height:66px;display:grid;place-items:center;
+  border:0;background:none;align-self:center
+}
+.is-welcome-flow .welcome-step-icon svg{
+  width:59px;height:59px;display:block;fill:currentColor
+}
+.is-welcome-flow .welcome-step-icon-profile{color:#bc80de}
+.is-welcome-flow .welcome-step-icon-photos{color:#a8d95b}
+.is-welcome-flow .welcome-step-icon-questions{color:#f28e8e}
+.is-welcome-flow .welcome-step-icon-explore{color:#ffc34e}
+.is-welcome-flow .welcome-step-content{min-width:0}
+.is-welcome-flow .welcome-step-content h3{
+  margin:0 0 5px;color:#3765a6;
+  font:normal 18px/1.3 Arial,Helvetica,sans-serif;letter-spacing:0
+}
+.is-welcome-flow .welcome-step-content h3 a{
+  color:inherit;text-decoration:none
+}
+.is-welcome-flow .welcome-step-content h3 a:hover{
+  text-decoration:underline;text-underline-offset:2px
+}
+.is-welcome-flow .welcome-step-content>p{
+  margin:0;max-width:470px;color:#8590a0;
+  font:11px/1.6 Arial,Helvetica,sans-serif
+}
+.is-welcome-flow .welcome-step-state{
+  display:block;margin-top:7px;color:#7c9db2;
+  font:10px/1.4 Arial,Helvetica,sans-serif
+}
+.is-welcome-flow .welcome-step.is-complete .welcome-step-state{color:#508867}
+.is-welcome-flow .welcome-step-links{
+  display:flex;flex-wrap:wrap;gap:5px 15px;margin-top:7px
+}
+.is-welcome-flow .welcome-step-links a{
+  color:#336aa6;font:11px/1.5 Arial,Helvetica,sans-serif;
+  text-decoration:underline;text-underline-offset:2px
+}
+.is-welcome-flow .welcome-fine-print{
+  margin:23px 0 0;text-align:center;
+  color:#a0aab5;font:10px/1.65 Arial,Helvetica,sans-serif
+}
+.is-welcome-flow .welcome-fine-print a{color:#557fa9}
+.is-welcome-flow .welcome-side-panel{
+  grid-row:2;grid-column:3;
+  display:flex;flex-direction:column;gap:13px;
+  padding:14px 11px 20px;
+  background:#2a5495;color:#dce8f9;min-width:0
+}
+.is-welcome-flow .welcome-side-member{
+  display:flex;flex-direction:column;align-items:center;gap:9px;
+  text-align:center;padding:12px 7px 16px;
+  border-bottom:1px solid #183b76;background:#23477f;
+  font:11px/1.4 Arial,Helvetica,sans-serif
+}
+.is-welcome-flow .welcome-side-avatar{
+  display:grid;place-items:center;width:61px;height:61px;
+  border-radius:50%;background:#71a1ef;color:#28569c
+}
+.is-welcome-flow .welcome-side-avatar svg{width:48px;height:48px;fill:currentColor}
+.is-welcome-flow .welcome-side-member>strong{color:#fff;font-size:11px}
+.is-welcome-flow .welcome-side-member>a:not(.welcome-side-photo-button){
+  color:#cae0ff;font-size:10px;text-decoration:underline
+}
+.is-welcome-flow .welcome-side-photo-button{
+  display:block;width:100%;margin-top:7px;padding:10px 6px;
+  background:#173c78;border:1px solid #3d68a4;color:#dceaff;
+  text-decoration:none;font:700 10px Arial,Helvetica,sans-serif
+}
+.is-welcome-flow .welcome-side-photo-button:hover{background:#315e9b}
+.is-welcome-flow .welcome-side-card{
+  padding:12px 9px;background:#fff;border:3px solid #193f7c;
+  box-shadow:0 2px 0 #173466;color:#244a85
+}
+.is-welcome-flow .welcome-side-card h2{
+  margin:0 0 10px;color:#335fa7;font:italic bold 14px Georgia,serif;
+  text-align:center;border-bottom:1px solid #e4e8f0;padding-bottom:8px
+}
+.is-welcome-flow .welcome-side-card p{
+  margin:0;padding:8px 0;border-bottom:1px solid #edf0f5;
+  color:#4d6896;font:11px/1.5 Arial,Helvetica,sans-serif;
+  overflow-wrap:anywhere
+}
+.is-welcome-flow .welcome-side-card p:last-child{border-bottom:0}
+.is-welcome-flow .welcome-side-card strong{font-weight:700;color:#24588a}
+.is-welcome-flow .welcome-side-message{
+  margin-top:5px;padding:13px 10px;background:#193c76;
+  color:#d2e4f9;border-top:2px solid #5b86c3
+}
+.is-welcome-flow .welcome-side-message strong{
+  display:block;color:#fff;font:italic 16px/1.4 Georgia,serif
+}
+.is-welcome-flow .welcome-side-message p{
+  margin:8px 0 0;color:#bfd4ed;font:10px/1.6 Arial,Helvetica,sans-serif
+}
+.is-welcome-flow .member-legal-footer{
+  grid-row:3;grid-column:1/-1;
+  padding:12px 19px;background:#224b87;color:#c7d9ee;
+  border-top:1px solid #17386c
+}
+.is-welcome-flow .member-legal-footer a{color:#d7e7fa}
+@media(max-width:960px){
+ .is-welcome-flow .shell{grid-template-columns:144px minmax(0,1fr) 146px}
+ .is-welcome-flow .welcome-center{padding:43px 26px 60px}
+ .is-welcome-flow .welcome-step{gap:16px}
+ .is-welcome-flow .welcome-step-content h3{font-size:16px}
+}
+@media(max-width:760px){
+ .is-welcome-flow .shell{display:block;margin:0;max-width:none}
+ .is-welcome-flow .topline{font-size:9px}
+ .is-welcome-flow .masthead{min-height:0;padding:0}
+ .is-welcome-flow .masthead .brand-original{
+  justify-content:center;min-height:54px;padding:8px 12px
+ }
+ .is-welcome-flow .masthead .brand-original img{width:139px}
+ .is-welcome-flow .masthead nav.classic-rail-nav{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  margin:0;border-top:1px solid #31598d
+ }
+ .is-welcome-flow .masthead nav.classic-rail-nav a{
+  justify-content:center;min-height:39px;
+  padding:7px 6px;text-align:center;font-size:10px;
+  border-right:1px solid #21477f
+ }
+ .is-welcome-flow .masthead nav.classic-rail-nav a[href="#settings-title"],
+ .is-welcome-flow .masthead nav.classic-rail-nav a[href="/"],
+ .is-welcome-flow .masthead nav.classic-rail-nav a[href="/ogtrends/"]{display:none}
+ .is-welcome-flow .masthead .classic-rail-icon{display:none}
+ .is-welcome-flow main{min-height:calc(100vh - 215px);border:0}
+ .is-welcome-flow .welcome-checklist{min-height:calc(100vh - 215px)}
+ .is-welcome-flow .welcome-side-panel{display:none!important}
+ .is-welcome-flow .welcome-center{padding:35px 24px 50px}
+ .is-welcome-flow .welcome-center-intro h2{font-size:30px}
+ .is-welcome-flow .welcome-step{grid-template-columns:65px minmax(0,1fr);gap:14px;padding:19px 3px}
+ .is-welcome-flow .welcome-step-icon{width:61px;height:61px}
+ .is-welcome-flow .welcome-step-icon svg{width:53px;height:53px}
+ .is-welcome-flow .member-legal-footer{padding:13px}
+}
+@media(max-width:420px){
+ .is-welcome-flow .welcome-center{padding:31px 17px 45px}
+ .is-welcome-flow .welcome-center-intro h2{font-size:27px}
+ .is-welcome-flow .welcome-step{grid-template-columns:49px minmax(0,1fr);gap:12px;padding:17px 0}
+ .is-welcome-flow .welcome-step-icon{width:48px;height:48px}
+ .is-welcome-flow .welcome-step-icon svg{width:44px;height:44px}
+ .is-welcome-flow .welcome-step-content h3{font-size:15px}
+}
