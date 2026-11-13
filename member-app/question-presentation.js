@@ -1,23 +1,10 @@
-// Presentation-only helpers for the classic match-question screen.
-// The tier serving algorithm and persisted answer values live elsewhere.
-export const QUESTION_TIER_NAMES = Object.freeze({
-  first10: "FIRST 10",
-  next50: "NEXT 50",
-  next100: "NEXT 100",
-  next250: "NEXT 250",
-  other: "MORE QUESTIONS",
-});
-
-export function displayQuestionProgress(answeredCount, questionCount, focusTier, editing = false) {
-  const total = Number.isSafeInteger(questionCount) && questionCount > 0 ? questionCount : 1;
-  const answered = Number.isSafeInteger(answeredCount)
-    ? Math.max(0, Math.min(answeredCount, total))
-    : 0;
+// Member-facing question progress. Editorial tiers remain private serving
+// logic in question-flow.js and are intentionally absent from the UI.
+export function displayQuestionProgress(answeredCount) {
+  const answered = Number.isSafeInteger(answeredCount) ? Math.max(0, answeredCount) : 0;
   return {
     answered,
-    total,
-    label: answered + " of " + total + " questions answered",
-    tier: editing ? "REVIEWING AN ANSWER" : QUESTION_TIER_NAMES[focusTier] || "MORE QUESTIONS",
+    label: answered === 1 ? "1 question answered" : answered + " questions answered",
   };
 }
 
