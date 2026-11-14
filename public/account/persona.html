@@ -15,7 +15,7 @@
 
   <style>.member-quiz-header{background:#fffdf7;border:2px solid #24203e;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:15px;width:min(100% - 18px,1100px);margin:12px auto 0;padding:13px 22px;display:flex;box-shadow:4px 4px #24203e}.member-quiz-header img{width:200px;max-width:100%;height:auto;display:block}.member-quiz-header a:last-child{color:#24203e;text-transform:uppercase;font:900 13px/1.2 Trebuchet MS,sans-serif;text-decoration:none}.member-quiz-header a:last-child:hover{text-decoration:underline}@media (width<=760px){.member-quiz-header{width:calc(100% - 18px);margin-top:9px;padding:13px 15px;box-shadow:3px 3px #24203e}.member-quiz-header img{width:175px}}</style>
   <link rel="stylesheet" href="/brand/classic.css?v=4">
-  <script type="module" crossorigin src="./assets/persona-Ce7fCd5W.js"></script>
+  <script type="module" crossorigin src="./assets/persona-BoD2B6-a.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/neon-auth-BIaN13e0.js">
 </head>
 <body>
@@ -1558,7 +1558,14 @@
     e.preventDefault();
     if(!readyPage()){$("persona-warning").textContent="Choose an answer for each question on this page to continue.";return;}
     if(page<PAGE_COUNT-1){page++;renderPage();$("quiz").scrollIntoView({behavior:"smooth"});return;}
-    const scored=scoreTest();code=scored.code;scores=scored.sum;renderResult();$("quiz").scrollIntoView({behavior:"smooth"});
+    if(answers.some(function(answer,i){return !Number.isInteger(answer)||!questions[i].options[answer];})){
+      $("persona-warning").textContent="Complete every question before revealing your persona.";return;
+    }
+    const scored=scoreTest();code=scored.code;scores=scored.sum;renderResult();
+    window.dispatchEvent(new CustomEvent("ogc:persona-finished",{
+      detail:{answers:answers.slice(),code:code}
+    }));
+    $("quiz").scrollIntoView({behavior:"smooth"});
   });
   $("persona-switch").addEventListener("click",function(){style=style==="m"?"f":"m";renderResult();});
 
