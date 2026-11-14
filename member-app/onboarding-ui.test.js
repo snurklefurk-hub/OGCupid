@@ -72,7 +72,7 @@ test("onboarding failure is fail-closed and offers retry rather than exposing no
   assert.match(ui, /function renderUnavailable\(\)/);
   assert.match(ui, /Nothing has been lost/);
   assert.match(ui, /retrySession\(\)/);
-  assert.match(ui, /stage === "unavailable"/);
+  assert.match(ui, /stage\s*===\s*"unavailable"/);
   assert.match(app, /retrySession:\(\)=>refreshMember\(\{loadProfile:true\}\)/);
   assert.match(ui, /root\.hidden=false/);
 });
