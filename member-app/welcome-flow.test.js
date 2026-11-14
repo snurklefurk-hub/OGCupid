@@ -58,8 +58,15 @@ test("signup immediately authenticates into onboarding, with email verification 
   assert.match(signup, /window\.location\.hash\s*!==\s*SIGNUP_WELCOME_HASH/);
   assert.match(signup, /refreshMember\(\{ loadProfile: true \}\)/);
   assert.match(signup, /callbackURL:\s*location\.origin\s*\+\s*"\/account\/"\s*\+\s*SIGNUP_WELCOME_HASH/);
-  assert.match(verification, /send-verify-code/);
+  assert.match(verification, /sendVerificationEmail\(/);
+  assert.doesNotMatch(verification, /send-verify-code|emailOtp\.verifyEmail/);
   assert.match(js, /sendVerificationEmail\(/);
+  const verifyHtml = readFileSync(new URL("./index.html", import.meta.url), "utf8");
+  const verificationMarkup = verifyHtml.slice(verifyHtml.indexOf('id="verify-form"'), verifyHtml.indexOf('id="reset-request-form"'));
+  assert.match(verificationMarkup, /id="send-verify-link"[^>]*type="submit"/);
+  assert.doesNotMatch(verificationMarkup, /send-verify-code|name="otp"/);
+  assert.match(js, /emailOtp\.resetPassword/); // Password recovery remains separate.
+
   assert.doesNotMatch(verification, /emailOtp\.verifyEmail/);
   assert.doesNotMatch(signup + verification, /window\.location\.hash\s*=\s*["']#settings-title/);
 });
