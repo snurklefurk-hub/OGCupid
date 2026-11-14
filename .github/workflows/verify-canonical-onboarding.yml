@@ -13,7 +13,9 @@ on:
     paths:
       - 'api/**'
       - 'db/migrations/015_canonical_onboarding.sql'
+      - 'member-app/**'
       - '.github/workflows/verify-canonical-onboarding.yml'
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
