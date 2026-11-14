@@ -6,15 +6,17 @@ on:
       - 'api/**'
       - 'db/migrations/015_canonical_onboarding.sql'
       - 'db/migrations/016_persona_v2_40_answers.sql'
+      - 'db/migrations/017_site_feedback.sql'
       - 'member-app/onboarding-ui.js'
       - 'member-app/persona-onboarding.js'
       - '.github/workflows/verify-canonical-onboarding.yml'
   push:
-    branches: [feature/canonical-onboarding, fix/persona-v2-onboarding]
+    branches: [feature/canonical-onboarding, fix/persona-v2-onboarding, feature/feedback-box]
     paths:
       - 'api/**'
       - 'db/migrations/015_canonical_onboarding.sql'
       - 'db/migrations/016_persona_v2_40_answers.sql'
+      - 'db/migrations/017_site_feedback.sql'
       - 'member-app/**'
       - '.github/workflows/verify-canonical-onboarding.yml'
   workflow_dispatch:
@@ -33,7 +35,7 @@ jobs:
       - name: Install locked dependencies
         run: npm ci
       - name: Run backend validation tests
-        run: node --test api/onboarding.test.js api/profile-choices.test.js api/profile-query.test.js api/job-moderation.test.js
+        run: node --test api/onboarding.test.js api/profile-choices.test.js api/profile-query.test.js api/job-moderation.test.js api/member-feedback.test.js
       - name: Parse server TypeScript with bundler
         run: |
           npm install --no-save esbuild@0.25.12
