@@ -36,6 +36,8 @@ jobs:
         run: npm ci
       - name: Run backend validation tests
         run: node --test api/onboarding.test.js api/profile-choices.test.js api/profile-query.test.js api/job-moderation.test.js api/member-feedback.test.js
+      - name: Check shared feedback widget JavaScript syntax
+        run: node --check public/feedback-widget.js
       - name: Parse server TypeScript with bundler
         run: |
           npm install --no-save esbuild@0.25.12
