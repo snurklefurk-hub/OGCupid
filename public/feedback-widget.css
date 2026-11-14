@@ -1,0 +1,24 @@
+/* OG Cupid beta feedback: intentionally simple, classic site chrome. */
+.ogc-feedback-widget{position:fixed;z-index:2147482000;bottom:max(12px,env(safe-area-inset-bottom));right:12px;width:min(350px,calc(100vw - 24px));font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#182d4a;text-align:left}
+.ogc-feedback-toggle{display:block;margin-left:auto;min-height:42px;padding:8px 16px;border:2px solid #214c8c;border-radius:4px;background:#e9f1ff;color:#133665;font:700 13px Arial,Helvetica,sans-serif;letter-spacing:.035em;cursor:pointer;box-shadow:3px 3px 0 #183b73}
+.ogc-feedback-toggle:hover,.ogc-feedback-toggle:focus-visible{background:#d7e7ff;outline:2px solid #f99cc9;outline-offset:2px}
+.ogc-feedback-panel{box-sizing:border-box;max-height:min(520px,calc(100dvh - 80px));overflow-y:auto;padding:13px 15px;border:2px solid #214c8c;border-radius:4px;background:#fffdf8;box-shadow:4px 4px 0 #193c70}
+.ogc-feedback-panel[hidden]{display:none!important}
+.ogc-feedback-heading{display:flex;align-items:start;justify-content:space-between;gap:8px;padding-bottom:8px;border-bottom:2px solid #d9e4f8}
+.ogc-feedback-heading strong{font-size:15px;line-height:1.3;color:#10376d}
+.ogc-feedback-close{padding:0 4px;border:0;background:transparent;font-size:25px;line-height:21px;color:#23446d;cursor:pointer}
+.ogc-feedback-panel p{margin:9px 0;color:#314762;font-size:13px;line-height:1.45}
+.ogc-feedback-panel form{display:flex;flex-direction:column;gap:8px}
+.ogc-feedback-panel label{font-weight:700;font-size:11px;letter-spacing:.04em}
+.ogc-feedback-panel textarea{box-sizing:border-box;width:100%;min-height:95px;resize:vertical;border:1px solid #6a89af;border-radius:2px;padding:9px;background:#fff;color:#122d4c;font:14px/1.4 Arial,Helvetica,sans-serif}
+.ogc-feedback-panel textarea:focus-visible{outline:2px solid #275aaf;outline-offset:1px}
+.ogc-feedback-actions{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.ogc-feedback-actions span{font-size:11px;color:#5a6981}
+.ogc-feedback-send{padding:8px 12px;border:1px solid #163d76;border-radius:3px;background:#27599d;color:white;font:700 13px Arial,Helvetica,sans-serif;cursor:pointer}
+.ogc-feedback-send:hover{background:#194478}
+.ogc-feedback-send:disabled{opacity:.65;cursor:wait}
+.ogc-feedback-status{min-height:1.3em;margin:0!important;font-weight:700}
+.ogc-feedback-signin{color:#174e96;text-decoration:underline;font-weight:700;font-size:13px}
+.ogc-feedback-signin[hidden]{display:none!important}
+.ogc-feedback-panel .ogc-feedback-privacy{margin:9px 0 0;padding-top:8px;border-top:1px dotted #bac7d8;color:#617086;font-size:11px}
+@media (max-width:480px){.ogc-feedback-widget{right:8px;bottom:max(8px,env(safe-area-inset-bottom));width:min(350px,calc(100vw - 16px))}.ogc-feedback-toggle{font-size:12px;padding:8px 12px}}
