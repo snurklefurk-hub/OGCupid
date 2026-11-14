@@ -27,6 +27,22 @@ async function tokenForSession() {
   return token;
 }
 
+// Same private feedback drawer works on the separate signed-in quiz page.
+window.ogcSubmitFeedback = async (payload) => {
+  if(!auth || !apiBaseUrl) throw Error("Sign in to send feedback.");
+  const token = await tokenForSession();
+  const endpoint = new URL(apiBaseUrl);
+  endpoint.pathname = "/feedback";
+  const response = await fetch(endpoint.toString(),{
+    method:"POST",credentials:"omit",cache:"no-store",
+    headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
+    body:JSON.stringify(payload)
+  });
+  const body = await response.json().catch(()=>({}));
+  if(!response.ok) throw Error(body.error || "Couldn't save feedback.");
+  return body;
+};
+
 async function savePersona(result) {
   if(saving || !auth || !apiBaseUrl) return;
   if(!result || !Array.isArray(result.answers) || result.answers.length!==40 ||
