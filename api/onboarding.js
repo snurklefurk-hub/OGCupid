@@ -1,3 +1,5 @@
+import { scorePersonaV2 } from "./persona-v2-scoring.js";
+
 // All calls arrive after JWT verification and use the transaction-scoped member ID.
 const genders = new Set(['Man','Woman','Transman','Transwoman','Something else']);
 const orientations = new Set(['Gay','Straight','Bi','Something else']);
@@ -16,6 +18,9 @@ export function adultBirthDate(value, today = new Date()) {
   return date >= oldest && date <= youngest;
 }
 export function scorePersona(answers) {
+  // Current V2: 40 answer indices with per-question weights and three neutral interludes.
+  // Preserve legacy 28-answer scoring for any historical saved result.
+  if (Array.isArray(answers) && answers.length === 40) return scorePersonaV2(answers);
   if (!Array.isArray(answers) || answers.length !== 28 ||
       !answers.every(n => [-2,-1,1,2].includes(n))) return null;
   const polarity = [
@@ -113,7 +118,9 @@ export async function handleOnboarding(request,userId,withMember,json,verifiedPl
       });
     } else if (body.step==='persona') {
       const code=scorePersona(body.answers);
-      if (!code) throw Error('Finish all 28 Persona questions');
+      if (!code) throw Error('Finish every Persona question with a valid answer');
+      if (body.code !== undefined && body.code !== code)
+        throw Error('Persona result did not match the submitted answers');
       await withMember(userId,async client=>{
         const progress=await client.query(`SELECT o.primary_self_photo_id FROM app_private.member_onboarding o
           JOIN app_private.member_photos p ON p.id=o.primary_self_photo_id AND p.is_primary

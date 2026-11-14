@@ -8,7 +8,7 @@ const apiBaseUrl = local
   ? (import.meta.env.VITE_OGC_MEMBER_API_URL || "https://br-empty-lab-bbjb0q1u-members.compute.c-15.us-east-1.aws.neon.tech/profile")
   : (import.meta.env.VITE_OGC_MEMBER_API_URL || "");
 const auth = authBaseUrl && apiBaseUrl ? createAuthClient(authBaseUrl) : null;
-let lastAnswers = null, saving = false;
+let lastResult = null, saving = false;
 
 async function tokenForSession() {
   const {data,error} = await auth.getSession();
@@ -27,9 +27,10 @@ async function tokenForSession() {
   return token;
 }
 
-async function savePersona(answers) {
+async function savePersona(result) {
   if(saving || !auth || !apiBaseUrl) return;
-  if(!Array.isArray(answers)||answers.length!==28) return;
+  if(!result || !Array.isArray(result.answers) || result.answers.length!==40 ||
+    !result.answers.every(Number.isInteger) || !/^[DR][GB][LS][DM]$/.test(result.code)) return;
   saving=true;
   let notice=document.getElementById("ogc-persona-save-status");
   if(!notice){
@@ -44,11 +45,12 @@ async function savePersona(answers) {
     const res=await fetch(url.toString(),{
       method:"PUT",credentials:"omit",cache:"no-store",
       headers:{"Authorization":"Bearer "+jwt,"Content-Type":"application/json"},
-      body:JSON.stringify({step:"persona",answers})
+      body:JSON.stringify({step:"persona",answers:result.answers,code:result.code})
     });
     const body=await res.json().catch(()=>({}));
     if(!res.ok||!body.saved)throw Error(body.error||"Could not save your Persona result.");
     notice.textContent="✓ Saved to your OG Cupid profile.";
+    document.getElementById("ogc-persona-save-retry")?.remove();
     if(new URLSearchParams(location.search).get("onboarding")==="1") {
       location.replace("/account/#welcome-title");
     }
@@ -58,15 +60,16 @@ async function savePersona(answers) {
     if(!retry){
       retry=document.createElement("button");retry.id="ogc-persona-save-retry";retry.type="button";
       retry.textContent="Try saving again";
-      retry.addEventListener("click",()=>{if(lastAnswers)savePersona(lastAnswers);});
+      retry.addEventListener("click",()=>{if(lastResult)void savePersona(lastResult);});
       notice.after(retry);
     }
   } finally { saving=false; }
 }
 
 window.addEventListener("ogc:persona-finished",event=>{
-  const answers=event.detail?.answers;
-  if(!Array.isArray(answers)||answers.length!==28)return;
-  lastAnswers=answers.slice();
-  void savePersona(lastAnswers);
+  const answers=event.detail?.answers, code=event.detail?.code;
+  if(!Array.isArray(answers)||answers.length!==40||!answers.every(Number.isInteger)||
+    typeof code!=="string"||!/^[DR][GB][LS][DM]$/.test(code))return;
+  lastResult={answers:answers.slice(),code};
+  void savePersona(lastResult);
 });

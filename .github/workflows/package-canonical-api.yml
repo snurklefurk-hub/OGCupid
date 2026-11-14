@@ -1,7 +1,7 @@
-name: Package canonical onboarding function for isolated Neon branch
+name: Package Persona V2 API for isolated review before Neon production rollout
 on:
   push:
-    branches: [feature/canonical-onboarding]
+    branches: [fix/persona-v2-onboarding]
     paths:
       - 'api/**'
       - '.github/workflows/package-canonical-api.yml'
@@ -29,13 +29,13 @@ jobs:
           node --check "$RUNNER_TEMP/index.mjs"
           (cd "$RUNNER_TEMP" && zip -9 -q canonical-members.zip index.mjs)
           base64 -w0 "$RUNNER_TEMP/canonical-members.zip" > dev/canonical-members-function-bundle.b64
-      - name: Save only the nonsecret compiled bundle to this feature branch
+      - name: Save nonsecret compiled bundle to this hotfix branch
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add dev/canonical-members-function-bundle.b64
           if ! git diff --cached --quiet; then
             git commit -m "build: package canonical onboarding API for Neon dev"
-            git pull --rebase origin feature/canonical-onboarding
-            git push origin HEAD:feature/canonical-onboarding
+            git pull --rebase origin fix/persona-v2-onboarding
+            git push origin HEAD:fix/persona-v2-onboarding
           fi

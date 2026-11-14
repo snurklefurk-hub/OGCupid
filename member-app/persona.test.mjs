@@ -25,11 +25,15 @@ function harness(search=''){
  createElement:t=>new Element(t),createElementNS:(_,t)=>new Element(t),createTextNode:t=>{const n=new Element('#text');n.textContent=t;return n;},
  querySelector:()=>({value:'m'})
  };
- const context={document,Image:Element,window:{location:{search,href:'https://ogcupid.onrender.com/account/persona.html'+search}},URL,URLSearchParams,navigator:{clipboard:{writeText:async()=>{}}}};
+ const events=[];
+ const context={document,Image:Element,
+  window:{location:{search,href:'https://ogcupid.onrender.com/account/persona.html'+search},dispatchEvent(event){events.push(event);}},
+  CustomEvent:class {constructor(type,init){this.type=type;this.detail=init.detail;}},
+  URL,URLSearchParams,navigator:{clipboard:{writeText:async()=>{}}}};
  vm.createContext(context);
  const exportCode='globalThis.api={questions,scoreAnswers,answers,renderPage,readyPage,openCatalog,archetypes,originalWriteups,partialHistoricWriteups,revivalSummaries,resultUrl,setPage:n=>page=n,getPage:()=>page,render:(c,g)=>{code=c;style=g;renderResult();}};';
  vm.runInContext(script.replace(/\}\)\(\);\s*$/,exportCode+'})();'),context);
- return {...context.api,ids};
+ return {...context.api,ids,events};
 }
 test('40 mixed questions have valid independent answer scores and provenance',()=>{
  const h=harness();assert.equal(h.questions.length,40);
@@ -103,6 +107,11 @@ test('four pages render variable answer counts, restore answers, and require com
  h.ids.get('persona-form').events.submit({preventDefault(){}});
  assert.equal(h.ids.get('persona-result').hidden,false);
  assert.equal(h.ids.get('persona-progress-label').textContent,'40 of 40 answered');
+ assert.equal(h.events.length,1);
+ assert.equal(h.events[0].type,'ogc:persona-finished');
+ assert.equal(h.events[0].detail.answers.length,40);
+ assert.deepEqual([...h.events[0].detail.answers],[...h.answers]);
+ assert.equal(h.events[0].detail.code,h.scoreAnswers(h.answers).code);
  h.ids.get('persona-retake').events.click();assert.ok(h.answers.every(a=>a===null));
 });
 test('share links and historical aliases render without archive embeds',()=>{
@@ -110,4 +119,20 @@ test('share links and historical aliases render without archive embeds',()=>{
  assert.match(h.resultUrl(),/persona=RGLMf/);
  const alias=harness('?persona=DGLD&style=B');assert.equal(alias.ids.get('persona-name').textContent,'The Sonnet');
  assert.doesNotMatch(html,/<iframe|id="persona-show-source"|id="persona-source-viewer"|id="persona-archive-link"/);
+});
+
+test('shared/catalog results never mark onboarding complete without a fully answered quiz',()=>{
+ const shared=harness('?persona=RGLMf');
+ assert.equal(shared.events.length,0);
+ const h=harness();
+ h.answers.fill(0);
+ h.answers[19]=null;
+ h.setPage(3);h.renderPage();
+ h.ids.get('persona-form').events.submit({preventDefault(){}});
+ assert.equal(h.events.length,0);
+ h.answers[19]=0;
+ h.ids.get('persona-form').events.submit({preventDefault(){}});
+ assert.equal(h.events.length,1);
+ assert.equal(h.events[0].detail.answers.length,40);
+ assert.ok(html.includes('src="./persona-onboarding.js"'),"Persistence module must load on the actual quiz page");
 });
