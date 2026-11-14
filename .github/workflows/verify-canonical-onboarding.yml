@@ -5,14 +5,16 @@ on:
     paths:
       - 'api/**'
       - 'db/migrations/015_canonical_onboarding.sql'
+      - 'db/migrations/016_persona_v2_40_answers.sql'
       - 'member-app/onboarding-ui.js'
       - 'member-app/persona-onboarding.js'
       - '.github/workflows/verify-canonical-onboarding.yml'
   push:
-    branches: [feature/canonical-onboarding]
+    branches: [feature/canonical-onboarding, fix/persona-v2-onboarding]
     paths:
       - 'api/**'
       - 'db/migrations/015_canonical_onboarding.sql'
+      - 'db/migrations/016_persona_v2_40_answers.sql'
       - 'member-app/**'
       - '.github/workflows/verify-canonical-onboarding.yml'
   workflow_dispatch:
