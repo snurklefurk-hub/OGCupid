@@ -8,7 +8,7 @@
   <meta name="referrer" content="no-referrer">
   <meta name="description" content="OG Cupid member accounts and profiles. Bringing back people, not swipes.">
   <title>Your corner of the internet | OG Cupid</title>
-  <script type="module" crossorigin src="./assets/index-D4Q0vyEQ.js"></script>
+  <script type="module" crossorigin src="./assets/index-BfNBL3Fv.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/neon-auth-BIaN13e0.js">
   <link rel="stylesheet" crossorigin href="./assets/index-CQ0J-D0F.css">
 </head>
@@ -245,12 +245,13 @@
 
             <form id="verify-form" hidden novalidate>
               <h3>Verify your email</h3>
-              <p>Check your inbox for a one-time code from OG Cupid. Never share it with anyone.</p>
+              <p>Check your inbox. If you receive a one-click verification link, click it. If you receive a code, enter it below. Never share either with anyone.</p>
               <label for="verify-email">Email</label>
               <input id="verify-email" name="email" type="email" required autocomplete="email">
               <label for="verify-code">Verification code</label>
               <input id="verify-code" name="otp" type="text" required autocomplete="one-time-code" inputmode="numeric">
               <button id="send-verify-code" class="quiet-button" type="button">Send verification code</button>
+              <button id="send-verify-link" class="quiet-button" type="button">Send verification link</button>
               <button class="button primary" type="submit">Verify email</button>
               <button class="quiet-button" id="back-to-signin" type="button">Back to sign in</button>
             </form>
