@@ -468,6 +468,7 @@ body { min-width:320px; }
 </style>
   <style>html.member-gated{visibility:hidden}body{overflow-x:clip}</style>
   <script type="module" src="./persona-gate.js"></script>
+  <script type="module" src="./persona-onboarding.js"></script>
 
   <style>
     .member-quiz-header{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;
@@ -2023,7 +2024,14 @@ body { min-width:320px; }
     e.preventDefault();
     if(!readyPage()){$("persona-warning").textContent="Choose an answer for each question on this page to continue.";return;}
     if(page<PAGE_COUNT-1){page++;renderPage();$("quiz").scrollIntoView({behavior:"smooth"});return;}
-    const scored=scoreTest();code=scored.code;scores=scored.sum;renderResult();$("quiz").scrollIntoView({behavior:"smooth"});
+    if(answers.some(function(answer,i){return !Number.isInteger(answer)||!questions[i].options[answer];})){
+      $("persona-warning").textContent="Complete every question before revealing your persona.";return;
+    }
+    const scored=scoreTest();code=scored.code;scores=scored.sum;renderResult();
+    window.dispatchEvent(new CustomEvent("ogc:persona-finished",{
+      detail:{answers:answers.slice(),code:code}
+    }));
+    $("quiz").scrollIntoView({behavior:"smooth"});
   });
   $("persona-switch").addEventListener("click",function(){style=style==="m"?"f":"m";renderResult();});
 
