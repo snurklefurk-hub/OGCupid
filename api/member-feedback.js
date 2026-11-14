@@ -14,7 +14,7 @@ export async function handleFeedback(request, memberId, withMember, respond) {
     Object.keys(body).sort().join(",") !== "message,pagePath" ||
     typeof body.message !== "string" || typeof body.pagePath !== "string" ||
     !body.message.trim() || body.message.length > 1200 ||
-    body.pagePath.length > 240 || !/^\/[A-Za-z0-9_./~-]*$/.test(body.pagePath))
+    body.pagePath.length > 240 || (!/^\/[A-Za-z0-9_./~-]*$/.test(body.pagePath) || body.pagePath.startsWith("//")))
     return respond(request,{error:"Please enter feedback (up to 1200 characters)"},400);
   try {
     const result=await withMember(memberId,client=>client.query(
