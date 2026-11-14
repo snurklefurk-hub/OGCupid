@@ -422,22 +422,32 @@ async function refreshMember(options = {}) {
   const member = data?.user || null;
   const newId = member?.id || null;
 
-  if (newId !== sessionUserId) {
+  const accountChanged = newId !== sessionUserId;
+  if (accountChanged) {
     clearMemberView(); // Never display A's profile when account B signs in.
     sessionUserId = newId;
   }
   currentUser = member;
+  // Fail closed: regular member pages may not appear until the server confirms
+  // this user's onboarding status. The loading screen also guards account switches.
+  if (!member) onboarding?.hide();
+  else if (accountChanged || options.loadProfile) onboarding?.showLoading();
   renderAuthenticated(member);
 
   if (member && options.loadProfile) {
-    await loadProfile({ silent: true });
-    await loadAnswers();
-    try { await photoUI?.load(member.id); }
-    catch { message("Photo album temporarily unavailable.", "error"); }
-    try { await loadEmailOptions(); }
-    catch { $("email-preferences-status").textContent = "Could not load email preferences. Try saving them again."; }
-    try { await onboarding?.load(); }
-    catch { message("Onboarding is temporarily unavailable; your account is safe.", "error"); }
+    try {
+      await loadProfile({ silent: true });
+      await loadAnswers();
+      try { await photoUI?.load(member.id); }
+      catch { message("Photo album temporarily unavailable.", "error"); }
+      try { await loadEmailOptions(); }
+      catch { $("email-preferences-status").textContent = "Could not load email preferences. Try saving them again."; }
+      await onboarding?.load();
+    } catch (error) {
+      // A network/API problem must never unlock the full member shell.
+      onboarding?.showUnavailable();
+      throw error;
+    }
   }
   return member;
 }
@@ -1214,6 +1224,7 @@ async function start() {
   });
   onboarding = createOnboardingUI({
     getUser:()=>currentUser,
+    retrySession:()=>refreshMember({loadProfile:true}),
     getProfile:()=>cachedProfile,
     saveProfile:async data=>{
       const result=await requestProfile("PUT",data);
