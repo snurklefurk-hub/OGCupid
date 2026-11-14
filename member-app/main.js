@@ -1003,6 +1003,7 @@ function wireForms() {
         name: String(input.name).trim(),
         email,
         password: String(input.password),
+        callbackURL: location.origin + "/account/" + SIGNUP_WELCOME_HASH,
       });
       form.elements.password.value = "";
       if (error) throw new Error(asError(error, "Account creation failed"));
