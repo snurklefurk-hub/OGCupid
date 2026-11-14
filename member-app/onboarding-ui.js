@@ -156,6 +156,28 @@ export function createOnboardingUI({
     if (previous === "delete") stage = "delete";
     render();
   }
+  function renderLoading() {
+    shell('<h1>Loading your saved progress…</h1>' +
+      '<p>Your account is signed in. We’re checking where you left off.</p>');
+  }
+  function renderUnavailable() {
+    shell('<h1>Couldn’t load your progress.</h1>' +
+      '<p>Nothing has been lost. We won’t open regular member features until your onboarding status is available.</p>' +
+      '<button id="ogc-retry-progress" class="ogc-next" type="button">Try again</button>');
+    byId("ogc-retry-progress").addEventListener("click", event =>
+      submit(event.currentTarget, () => load()));
+  }
+  function showLoading() {
+    status = null;
+    stage = "loading";
+    render();
+  }
+  function showUnavailable() {
+    status = null;
+    stage = "unavailable";
+    render();
+  }
+
   function renderIdentity() {
     shell('<h1>First, the basics.</h1><p>Just two things, and you’re on your way.</p>' +
       '<form id="ogc-identity" class="ogc-shortform"><label>Gender<select required name="gender"><option value="">Select your gender</option>' +
@@ -453,7 +475,9 @@ export function createOnboardingUI({
     document.body.classList.add("ogc-onboarding-active");
     document.body.classList.remove("ogc-onboarding-native");
     native=null;
-    if(stage==="identity")renderIdentity();
+    if(stage==="loading")renderLoading();
+    else if(stage==="unavailable")renderUnavailable();
+    else if(stage==="identity")renderIdentity();
     else if(stage==="location")renderLocation();
     else if(stage==="details")renderDetails();
     else if(stage==="summary")renderSummary();
@@ -522,7 +546,7 @@ export function createOnboardingUI({
     }
   }
   function showHub(){if(status){stage="hub";render();}}
-  return {load, refresh, hide, showHub, photoChanged, answeredQuestion,
+  return {load, refresh, hide, showHub, showLoading, showUnavailable, photoChanged, answeredQuestion,
     get active(){return !root.hidden || native!==null;},
     get nativeSection(){return native;},
     get complete(){return Boolean(status?.explored);},
