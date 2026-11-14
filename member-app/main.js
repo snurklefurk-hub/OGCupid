@@ -898,18 +898,6 @@ function wireForms() {
     chooseAuthTab("verify");
     message("Request a one-click verification link; no codes to type.");
   });
-  $("send-verify-code").addEventListener("click", (event) => {
-    const form = $("verify-form");
-    if (!form.elements.email.reportValidity()) return;
-    operation(event.currentTarget, "Sending verification link", async () => {
-      const email = form.elements.email.value.trim();
-      const { error } = await auth.sendVerificationEmail({
-        email, callbackURL: location.origin + "/account/#welcome-title",
-      });
-      if (error) throw new Error(asError(error, "Could not send verification link"));
-      message("Check your inbox for a one-click verification link.", "ok");
-    });
-  });
   $("send-another-code").addEventListener("click", () => {
     $("reset-request-form").elements.email.value = $("reset-confirm-form").elements.email.value;
     chooseAuthTab("reset-request");
@@ -1018,8 +1006,17 @@ function wireForms() {
 
   $("verify-form").addEventListener("submit", (event) => {
     event.preventDefault();
-    if (!event.currentTarget.reportValidity()) return;
-    $("send-verify-code").click();
+    const form = event.currentTarget;
+    if (!form.reportValidity()) return;
+    operation(form.querySelector('button[type="submit"]'), "Sending verification link", async () => {
+      const email = form.elements.email.value.trim();
+      const { error } = await auth.sendVerificationEmail({
+        email,
+        callbackURL: location.origin + "/account/" + SIGNUP_WELCOME_HASH,
+      });
+      if (error) throw new Error(asError(error, "Could not send verification link"));
+      message("Verification link sent. Check your inbox, then click the link to finish.", "ok");
+    });
   });
 
   $("signout").addEventListener("click", (event) =>
