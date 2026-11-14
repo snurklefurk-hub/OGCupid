@@ -32,33 +32,7 @@ BEGIN
   END IF;
   IF p_message IS NULL OR char_length(trim(p_message)) < 1 OR
      char_length(p_message) > 1200 OR
-     p_page_path IS NULL OR (p_page_path !~ '^/[A-Za-z0-9_./~-]*
-     char_length(p_page_path) > 240 THEN
-    RAISE EXCEPTION 'Invalid feedback' USING ERRCODE = '22023';
-  END IF;
-
-  -- Serialize each member's submissions so parallel tabs can't beat limits.
-  PERFORM pg_advisory_xact_lock(60612, hashtext(member_id::text));
-  IF (SELECT count(*) FROM app_private.site_feedback
-      WHERE user_id = member_id AND submitted_at > now() - interval '1 minute') >= 2 OR
-     (SELECT count(*) FROM app_private.site_feedback
-      WHERE user_id = member_id AND submitted_at > now() - interval '1 day') >= 30 THEN
-    RAISE EXCEPTION 'Too many feedback submissions' USING ERRCODE = 'P0001';
-  END IF;
-
-  INSERT INTO app_private.site_feedback(user_id, page_path, message)
-    VALUES (member_id, p_page_path, trim(p_message))
-    RETURNING id INTO feedback_id;
-  RETURN feedback_id;
-END;
-$fn$;
-REVOKE ALL ON FUNCTION app_private.submit_site_feedback(text, text) FROM PUBLIC, ogcupid_delete_api;
-GRANT EXECUTE ON FUNCTION app_private.submit_site_feedback(text, text) TO ogcupid_member_api;
-
--- Owner-only review:
--- SELECT id, submitted_at, user_id, page_path, message
--- FROM app_private.site_feedback ORDER BY submitted_at DESC;
- OR p_page_path LIKE '//%') OR
+     p_page_path IS NULL OR (p_page_path !~ '^/[A-Za-z0-9_./~-]*$' OR p_page_path LIKE '//%') OR
      char_length(p_page_path) > 240 THEN
     RAISE EXCEPTION 'Invalid feedback' USING ERRCODE = '22023';
   END IF;
