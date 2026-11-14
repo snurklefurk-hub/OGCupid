@@ -23,9 +23,9 @@ test('Persona V2 server rubric exactly matches all 40 live quiz option orders an
   const html = readFileSync(new URL('../member-app/persona.html', import.meta.url), 'utf8');
   const key = '  const questions = ';
   const start = html.indexOf(key);
-  const end = html.indexOf('  ];', start);
+  const end = html.indexOf('\n];', start);
   assert.ok(start >= 0 && end > start, 'live V2 question data exists');
-  const quiz = JSON.parse(html.slice(start + key.length, end + 3).trim().replace(/;$/, ''));
+  const quiz = JSON.parse(html.slice(start + key.length, end + 2).trim());
   assert.equal(quiz.length, 40);
   assert.deepEqual(PERSONA_V2_RUBRIC, quiz.map(q => ({
     id:q.id, axis:q.axis, scores:q.options.map(o=>o.score)
