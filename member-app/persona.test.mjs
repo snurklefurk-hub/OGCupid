@@ -110,7 +110,7 @@ test('four pages render variable answer counts, restore answers, and require com
  assert.equal(h.events.length,1);
  assert.equal(h.events[0].type,'ogc:persona-finished');
  assert.equal(h.events[0].detail.answers.length,40);
- assert.deepEqual([...h.events[0].detail.answers],h.answers);
+ assert.deepEqual([...h.events[0].detail.answers],[...h.answers]);
  assert.equal(h.events[0].detail.code,h.scoreAnswers(h.answers).code);
  h.ids.get('persona-retake').events.click();assert.ok(h.answers.every(a=>a===null));
 });
