@@ -1,7 +1,10 @@
 name: Verify signup welcome checklist
 on:
   push:
-    branches: [feature/signup-welcome-checklist]
+    branches: [feature/signup-welcome-checklist, feature/canonical-onboarding]
+    paths:
+      - 'member-app/**'
+      - '.github/workflows/verify-signup-welcome.yml'
   pull_request:
     branches: [main]
     paths:
