@@ -29,7 +29,7 @@
     try { sessionStorage.removeItem(draftKey); } catch {}
   }
   function canonicalPath(value) {
-    if(typeof value !== "string" || !/^\/[A-Za-z0-9_./~-]*$/.test(value) || value.length > 240) return "/";
+    if(typeof value !== "string" || (!/^\/[A-Za-z0-9_./~-]*$/.test(value) || value.startsWith("//")) || value.length > 240) return "/";
     return value;
   }
   async function submitDirect(body) {
