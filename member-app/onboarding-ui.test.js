@@ -59,3 +59,20 @@ test("onboarding completion and protected identity are server-derived",()=>{
   assert.match(api,/current_member_email_verified/);
   assert.match(api,/Finish your onboarding steps first/);
 });
+
+test("onboarding failure is fail-closed and offers retry rather than exposing normal member screens", () => {
+  const app = readFileSync(new URL("./main.js", import.meta.url), "utf8");
+  const ui = readFileSync(new URL("./onboarding-ui.js", import.meta.url), "utf8");
+  const start = app.indexOf("async function refreshMember(");
+  const end = app.indexOf("function isJwt(", start);
+  const sessionLoad = app.slice(start, end);
+  assert.match(sessionLoad, /onboarding\?\.showLoading\(\)/);
+  assert.match(sessionLoad, /await onboarding\?\.load\(\)/);
+  assert.match(sessionLoad, /catch \(error\)\s*\{[\s\S]*onboarding\?\.showUnavailable\(\)/);
+  assert.match(ui, /function renderUnavailable\(\)/);
+  assert.match(ui, /Nothing has been lost/);
+  assert.match(ui, /retrySession\(\)/);
+  assert.match(ui, /stage === "unavailable"/);
+  assert.match(app, /retrySession:\(\)=>refreshMember\(\{loadProfile:true\}\)/);
+  assert.match(ui, /root\.hidden=false/);
+});
