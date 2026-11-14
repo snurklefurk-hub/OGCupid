@@ -1,10 +1,7 @@
+# Manual-only while staging sends real verification emails on sign-up.
+# Synthetic example.invalid addresses must not trigger outbound SMTP.
 name: Canonical onboarding isolated Neon end-to-end smoke
 on:
-  push:
-    branches: [feature/canonical-onboarding]
-    paths:
-      - 'scripts/smoke-canonical-onboarding.mjs'
-      - '.github/workflows/smoke-canonical-onboarding.yml'
   workflow_dispatch:
 permissions:
   contents: read
