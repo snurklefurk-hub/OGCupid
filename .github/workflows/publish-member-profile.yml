@@ -4,6 +4,10 @@ on:
     branches: [main]
     paths:
       - 'member-app/**'
+      - '.github/workflows/publish-member-profile.yml'
+concurrency:
+  group: publish-ogcupid-member-site
+  cancel-in-progress: true
 permissions:
   contents: write
 jobs:
@@ -37,5 +41,6 @@ jobs:
           git add -A -f public/account
           if ! git diff --cached --quiet; then
             git commit -m "build: publish classic profile choices"
+            git pull --rebase origin main
             git push origin HEAD:main
           fi
