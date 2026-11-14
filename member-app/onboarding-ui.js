@@ -73,7 +73,7 @@ function unpackLanguages(saved) {
 }
 export function createOnboardingUI({
   getUser, getProfile, saveProfile, request, signOut, deleteAccount,
-  getPhotoCount, openNative, leaveToHome, verifyEmail
+  getPhotoCount, openNative, leaveToHome, verifyEmail, retrySession
 }) {
   const root = document.createElement("section");
   root.id = "ogc-onboarding";
@@ -165,7 +165,7 @@ export function createOnboardingUI({
       '<p>Nothing has been lost. We won’t open regular member features until your onboarding status is available.</p>' +
       '<button id="ogc-retry-progress" class="ogc-next" type="button">Try again</button>');
     byId("ogc-retry-progress").addEventListener("click", event =>
-      submit(event.currentTarget, () => load()));
+      submit(event.currentTarget, () => retrySession()));
   }
   function showLoading() {
     status = null;
