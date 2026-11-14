@@ -855,31 +855,6 @@ function wireForms() {
     chooseAuthTab("verify");
     message("Enter your email and request a verification code.");
   });
-  $("send-verify-code").addEventListener("click", (event) => {
-    const form = $("verify-form");
-    if (!form.elements.email.reportValidity()) return;
-    operation(event.currentTarget, "Sending verification code", async () => {
-      const email = form.elements.email.value.trim();
-      const { error } = await auth.emailOtp.sendVerificationOtp({
-        email,
-        type: "email-verification",
-      });
-      if (error) throw new Error(asError(error, "Could not send verification code"));
-      message("Check your inbox for verification instructions.", "ok");
-    });
-  });
-  $("send-verify-link").addEventListener("click", event => {
-    const form = $("verify-form");
-    if (!form.elements.email.reportValidity()) return;
-    operation(event.currentTarget, "Sending verification link", async () => {
-      const { error } = await auth.sendVerificationEmail({
-        email: form.elements.email.value.trim(),
-        callbackURL: location.origin + "/account/" + SIGNUP_WELCOME_HASH,
-      });
-      if (error) throw new Error(asError(error, "Could not send verification link"));
-      message("Verification link sent. Check your inbox.", "ok");
-    });
-  });
   $("send-another-code").addEventListener("click", () => {
     $("reset-request-form").elements.email.value = $("reset-confirm-form").elements.email.value;
     chooseAuthTab("reset-request");
@@ -983,30 +958,22 @@ function wireForms() {
       // Remember the welcome destination through email verification, even
       // if the new account is not signed in until a separate login.
       if (window.location.hash !== SIGNUP_WELCOME_HASH) window.location.hash = SIGNUP_WELCOME_HASH;
-      message("Check your inbox: click the verification link if you received one, or enter the verification code below.", "ok");
+      message("Account created. Check your inbox and click the email verification link.", "ok");
     });
   });
 
+  // Email verification uses a one-click link. Recovery codes remain separate.
   $("verify-form").addEventListener("submit", (event) => {
     event.preventDefault();
     const form = event.currentTarget;
     if (!form.reportValidity()) return;
-    operation(form.querySelector('button[type="submit"]'), "Verifying your email", async () => {
-      const input = fields(form);
-      const { error } = await auth.emailOtp.verifyEmail({
-        email: String(input.email).trim(),
-        otp: String(input.otp).trim(),
+    operation(form.querySelector('button[type="submit"]'), "Sending verification link", async () => {
+      const { error } = await auth.sendVerificationEmail({
+        email: form.elements.email.value.trim(),
+        callbackURL: location.origin + "/account/" + SIGNUP_WELCOME_HASH,
       });
-      form.elements.otp.value = "";
-      if (error) throw new Error(asError(error, "Email verification failed"));
-      const member = await refreshMember({ loadProfile: true });
-      if (!member) chooseAuthTab("signin");
-      // A completed new signup must never land in Account Settings.
-      if (window.location.hash !== SIGNUP_WELCOME_HASH) window.location.hash = SIGNUP_WELCOME_HASH;
-      else if (member) renderMemberPage();
-      message(member
-        ? "Email verified! Start with your profile basics."
-        : "Email verified. Sign in to see your getting-started page.", "ok");
+      if (error) throw new Error(asError(error, "Could not send verification link"));
+      message("Verification link sent. Check your inbox, then click the link to finish.", "ok");
     });
   });
 
