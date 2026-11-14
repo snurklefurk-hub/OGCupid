@@ -1,7 +1,12 @@
 name: Build and publish OG Cupid member site
-# Canonical onboarding requires database migration, member API, and legacy-member handling.
-# Keep publishing manual until the coordinated production cutover is verified.
+# Canonical onboarding schema/API have been deployed and verified on production.
+# Build and publish the member UI on source changes; manual runs remain available.
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'member-app/**'
+      - '.github/workflows/publish-member-profile.yml'
   workflow_dispatch:
 concurrency:
   group: publish-ogcupid-member-site
