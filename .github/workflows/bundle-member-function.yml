@@ -1,7 +1,7 @@
 name: Bundle Neon member API (no credentials)
 on:
   push:
-    branches: [main]
+    branches: [main, feature/feedback-box]
     paths:
       - 'api/**'
       - '.github/workflows/bundle-member-function.yml'
@@ -25,7 +25,7 @@ jobs:
           npm ci
           npm install --no-save esbuild@0.25.12
       - name: Check profile query and controlled field regressions
-        run: node --test api/profile-query.test.js api/profile-choices.test.js api/job-moderation.test.js member-app/profile-form.test.js
+        run: node --test api/profile-query.test.js api/profile-choices.test.js api/job-moderation.test.js api/member-feedback.test.js member-app/profile-form.test.js
       - name: Bundle private member API without environment files
         run: |
           npx esbuild api/member-profile.ts --bundle --platform=node --target=node24 --format=esm --banner:js="import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);" --outfile="$RUNNER_TEMP/index.mjs"
@@ -40,6 +40,6 @@ jobs:
           git add -A dev/members-function-bundle.b64
           if ! git diff --cached --quiet; then
             git commit -m 'build: package private member API for Neon'
-            git pull --rebase origin main
-            git push origin HEAD:main
+            git pull --rebase origin "$GITHUB_REF_NAME"
+            git push origin "HEAD:$GITHUB_REF_NAME"
           fi
