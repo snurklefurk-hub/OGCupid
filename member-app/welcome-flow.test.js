@@ -57,6 +57,9 @@ test("signup and email verification deliberately route to welcome", () => {
   const verification = js.slice(js.indexOf('"verify-form").addEventListener'),js.indexOf('"signout").addEventListener'));
   assert.match(signup, /window\.location\.hash\s*!==\s*SIGNUP_WELCOME_HASH/);
   assert.match(verification, /window\.location\.hash\s*!==\s*SIGNUP_WELCOME_HASH/);
+  assert.match(signup, /callbackURL:\s*location\.origin\s*\+\s*"\/account\/"\s*\+\s*SIGNUP_WELCOME_HASH/);
+  assert.match(js, /sendVerificationEmail\(/);
+  assert.match(readFileSync(new URL("./index.html", import.meta.url), "utf8"), /id="send-verify-link"/);
   assert.doesNotMatch(signup + verification, /window\.location\.hash\s*=\s*["']#settings-title/);
 });
 
