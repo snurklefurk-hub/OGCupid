@@ -44,6 +44,15 @@ jobs:
           git add -A -f public/account
           if ! git diff --cached --quiet; then
             git commit -m "build: publish classic profile choices"
-            git pull --rebase origin main
-            git push origin HEAD:main
+            # API bundling can land on main between fetch and push.
+            # Retry with a fresh rebase instead of leaving built assets unpublished.
+            for attempt in 1 2 3 4 5; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then
+                exit 0
+              fi
+              sleep 2
+            done
+            echo "Unable to publish after five rebased attempts" >&2
+            exit 1
           fi
