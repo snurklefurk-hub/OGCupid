@@ -865,7 +865,19 @@ function wireForms() {
         type: "email-verification",
       });
       if (error) throw new Error(asError(error, "Could not send verification code"));
-      message("Check your inbox for an OG Cupid email verification code.", "ok");
+      message("Check your inbox for verification instructions.", "ok");
+    });
+  });
+  $("send-verify-link").addEventListener("click", event => {
+    const form = $("verify-form");
+    if (!form.elements.email.reportValidity()) return;
+    operation(event.currentTarget, "Sending verification link", async () => {
+      const { error } = await auth.sendVerificationEmail({
+        email: form.elements.email.value.trim(),
+        callbackURL: location.origin + "/account/" + SIGNUP_WELCOME_HASH,
+      });
+      if (error) throw new Error(asError(error, "Could not send verification link"));
+      message("Verification link sent. Check your inbox.", "ok");
     });
   });
   $("send-another-code").addEventListener("click", () => {
@@ -961,6 +973,7 @@ function wireForms() {
         name: String(input.name).trim(),
         email,
         password: String(input.password),
+        callbackURL: location.origin + "/account/" + SIGNUP_WELCOME_HASH,
       });
       form.elements.password.value = "";
       if (error) throw new Error(asError(error, "Account creation failed"));
@@ -970,7 +983,7 @@ function wireForms() {
       // Remember the welcome destination through email verification, even
       // if the new account is not signed in until a separate login.
       if (window.location.hash !== SIGNUP_WELCOME_HASH) window.location.hash = SIGNUP_WELCOME_HASH;
-      message("Check your inbox for a verification code from OG Cupid.", "ok");
+      message("Check your inbox: click the verification link if you received one, or enter the verification code below.", "ok");
     });
   });
 
