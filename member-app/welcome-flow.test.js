@@ -57,6 +57,7 @@ test("signup immediately authenticates into onboarding, with email verification 
   const verification = js.slice(js.indexOf('"verify-form").addEventListener'),js.indexOf('"signout").addEventListener'));
   assert.match(signup, /window\.location\.hash\s*!==\s*SIGNUP_WELCOME_HASH/);
   assert.match(signup, /refreshMember\(\{ loadProfile: true \}\)/);
+  assert.match(signup, /callbackURL:\s*location\.origin\s*\+\s*"\/account\/"\s*\+\s*SIGNUP_WELCOME_HASH/);
   assert.match(verification, /send-verify-code/);
   assert.match(js, /sendVerificationEmail\(/);
   assert.doesNotMatch(verification, /emailOtp\.verifyEmail/);
