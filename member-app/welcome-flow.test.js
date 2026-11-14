@@ -56,10 +56,18 @@ test("signup and email verification deliberately route to welcome", () => {
   const signup = js.slice(js.indexOf('"signup-form").addEventListener'),js.indexOf('"verify-form").addEventListener'));
   const verification = js.slice(js.indexOf('"verify-form").addEventListener'),js.indexOf('"signout").addEventListener'));
   assert.match(signup, /window\.location\.hash\s*!==\s*SIGNUP_WELCOME_HASH/);
-  assert.match(verification, /window\.location\.hash\s*!==\s*SIGNUP_WELCOME_HASH/);
+  assert.match(verification, /callbackURL:\s*location\.origin\s*\+\s*"\/account\/"\s*\+\s*SIGNUP_WELCOME_HASH/);
   assert.match(signup, /callbackURL:\s*location\.origin\s*\+\s*"\/account\/"\s*\+\s*SIGNUP_WELCOME_HASH/);
   assert.match(js, /sendVerificationEmail\(/);
   assert.match(readFileSync(new URL("./index.html", import.meta.url), "utf8"), /id="send-verify-link"/);
+  const html = readFileSync(new URL("./index.html", import.meta.url), "utf8");
+  const verificationForm = html.slice(html.indexOf('id="verify-form"'), html.indexOf('id="reset-request-form"'));
+  assert.match(verificationForm, /No codes to type/);
+  assert.match(verificationForm, /id="send-verify-link"[^>]*type="submit"/);
+  assert.doesNotMatch(verificationForm, /name="otp"|id="send-verify-code"|Verification code/);
+  assert.doesNotMatch(js, /emailOtp\.verifyEmail|sendVerificationOtp/);
+  assert.match(js, /emailOtp\.resetPassword/); // Password recovery still uses its own OTP.
+
   assert.doesNotMatch(signup + verification, /window\.location\.hash\s*=\s*["']#settings-title/);
 });
 
