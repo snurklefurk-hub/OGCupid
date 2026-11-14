@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --host localhost --port 5173 --strictPort",
     "build": "vite build",
-    "test": "node --test question-flow.test.js locality-picker.test.js photo-cropper.test.js profile-photo-gallery.test.js question-presentation.test.js home-dashboard.test.js welcome-flow.test.js profile-editor-flow.test.js"
+    "test": "node --test question-flow.test.js locality-picker.test.js photo-cropper.test.js profile-photo-gallery.test.js question-presentation.test.js home-dashboard.test.js welcome-flow.test.js onboarding-ui.test.js profile-editor-flow.test.js"
   },
   "dependencies": {
     "@neon/auth": "latest"

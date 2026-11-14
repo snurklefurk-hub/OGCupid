@@ -1,0 +1,45 @@
+# Manual-only while staging sends real verification emails on sign-up.
+# Synthetic example.invalid addresses must not trigger outbound SMTP.
+name: Browser-verify canonical onboarding on isolated Neon
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  chromium-staging-onboarding:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      VITE_OGC_AUTH_URL: https://ep-wild-term-bbvgmd5y.neonauth.c-15.us-east-1.aws.neon.tech/neondb/auth
+      VITE_OGC_MEMBER_API_URL: https://br-tiny-wave-bbnpjp0m-members.compute.c-15.us-east-1.aws.neon.tech/profile
+      VITE_OGC_REGISTRATION_ENABLED: "true"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: member-app/package-lock.json
+      - name: Install frontend and test browser
+        run: |
+          npm ci --prefix member-app
+          npm install --no-save playwright@1.57.0
+          npx playwright install --with-deps chromium
+      - name: Start isolated local Vite frontend
+        run: |
+          (npm run dev --prefix member-app > "$RUNNER_TEMP/ogc-local-vite.log" 2>&1 &)
+          for attempt in $(seq 1 40); do
+            if curl -fsS http://localhost:5173/ > /dev/null; then exit 0; fi
+            sleep 2
+          done
+          cat "$RUNNER_TEMP/ogc-local-vite.log"
+          exit 1
+      - name: Exercise actual Chromium signup and onboarding
+        run: node scripts/browser-canonical-onboarding.mjs
+      - name: Preserve staging screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: canonical-onboarding-browser-screenshots
+          path: test-results/
+          if-no-files-found: ignore

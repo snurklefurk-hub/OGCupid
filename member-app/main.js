@@ -6,6 +6,8 @@ import { SIGNUP_WELCOME_HASH, memberSectionFromHash, welcomeQuestionStatus } fro
 import { PROFILE_EDITOR_STEPS, profileStepFromHash, profileDestination } from "./profile-editor-flow.js";
 import { createLocalityPicker } from "./locality-picker.js";
 import { createPhotoUI } from "./photo-uploads.js";
+import { createOnboardingUI } from "./onboarding-ui.js";
+import "./onboarding.css";
 import { createProfilePhotoGallery } from "./profile-photo-gallery.js";
 import "../public/questions/question-bank.js";
 import "./styles.css";
@@ -15,10 +17,10 @@ import "./styles.css";
 // endpoints and a separate registration enable flag at build time.
 const local = ["localhost", "127.0.0.1"].includes(location.hostname);
 const authBaseUrl = local
-  ? "https://ep-blue-credit-bbfdwceu.neonauth.c-15.us-east-1.aws.neon.tech/neondb/auth"
+  ? (import.meta.env.VITE_OGC_AUTH_URL || "https://ep-blue-credit-bbfdwceu.neonauth.c-15.us-east-1.aws.neon.tech/neondb/auth")
   : (import.meta.env.VITE_OGC_AUTH_URL || "");
 const memberApiUrl = local
-  ? "https://br-empty-lab-bbjb0q1u-members.compute.c-15.us-east-1.aws.neon.tech/profile"
+  ? (import.meta.env.VITE_OGC_MEMBER_API_URL || "https://br-empty-lab-bbjb0q1u-members.compute.c-15.us-east-1.aws.neon.tech/profile")
   : (import.meta.env.VITE_OGC_MEMBER_API_URL || "");
 // Member creation and self-service deletion are enabled on localhost
 // for iterative development. Public deployment still requires separately
@@ -38,6 +40,7 @@ let cachedProfile = null;
 let homeCityPicker = null;
 let photoUI = null;
 let profileGallery = null;
+let onboarding = null;
 let savedPhotoCount = 0;
 const questions = window.OGCQuestionBank.questions.map(question => ({
   ...question, tier: question.tier,
@@ -283,7 +286,8 @@ function renderHomework() {
   $("dashboard-homework-count").textContent = welcomeQuestionStatus(state.answeredCount);
   const page = $("member-columns").dataset.memberPage;
   const onHome = Boolean(currentUser && page === "home");
-  const onWelcome = Boolean(currentUser && (page === "welcome" || (onHome && !state.showRegularHome)));
+  const showRegularHome = state.showRegularHome || Boolean(onboarding?.complete);
+  const onWelcome = Boolean(currentUser && (page === "welcome" || (onHome && !showRegularHome)));
   // The semi-walled onboarding layout is scoped to this view only. Other
   // member views keep their normal navigation, account settings and layout.
   document.body.classList.toggle("is-welcome-flow", onWelcome);
@@ -294,7 +298,7 @@ function renderHomework() {
     : "No photos yet";
   $("welcome-side-questions-status").textContent = welcomeQuestionStatus(state.answeredCount);
   show("welcome-side-panel", onWelcome);
-  show("member-home-dashboard", onHome && state.showRegularHome);
+  show("member-home-dashboard", onHome && showRegularHome);
   show("homework-dashboard", onWelcome);
   // The quiz is already a visible action in welcome step three.
   show("member-persona-panel", false);
@@ -313,6 +317,21 @@ function renderProfileEditorStep() {
 }
 
 function renderMemberPage() {
+  if(currentUser && onboarding?.complete && !onboarding.active && window.location.hash===SIGNUP_WELCOME_HASH) {
+    onboarding.showHub();
+    return;
+  }
+  // Hide unfinished member features even when somebody types a deep link.
+  // The server separately checks all private mutations and progress unlocks.
+  if (currentUser && onboarding?.active && !onboarding.complete) {
+    const target=memberSectionFromHash(window.location.hash);
+    const permitted=onboarding.nativeSection==="photos" ? "photos" :
+      onboarding.nativeSection==="questions" ? "questions" : "welcome";
+    if (target!==permitted && !(target==="home" && permitted==="welcome")) {
+      if(window.location.hash!==SIGNUP_WELCOME_HASH)window.location.hash=SIGNUP_WELCOME_HASH;
+      return;
+    }
+  }
   if (!currentUser) {
     document.body.classList.remove("is-profile-setup");
     document.body.classList.remove("is-welcome-flow");
@@ -403,20 +422,32 @@ async function refreshMember(options = {}) {
   const member = data?.user || null;
   const newId = member?.id || null;
 
-  if (newId !== sessionUserId) {
+  const accountChanged = newId !== sessionUserId;
+  if (accountChanged) {
     clearMemberView(); // Never display A's profile when account B signs in.
     sessionUserId = newId;
   }
   currentUser = member;
+  // Fail closed: regular member pages may not appear until the server confirms
+  // this user's onboarding status. The loading screen also guards account switches.
+  if (!member) onboarding?.hide();
+  else if (accountChanged || options.loadProfile) onboarding?.showLoading();
   renderAuthenticated(member);
 
   if (member && options.loadProfile) {
-    await loadProfile({ silent: true });
-    await loadAnswers();
-    try { await photoUI?.load(member.id); }
-    catch { message("Photo album temporarily unavailable.", "error"); }
-    try { await loadEmailOptions(); }
-    catch { $("email-preferences-status").textContent = "Could not load email preferences. Try saving them again."; }
+    try {
+      await loadProfile({ silent: true });
+      await loadAnswers();
+      try { await photoUI?.load(member.id); }
+      catch { message("Photo album temporarily unavailable.", "error"); }
+      try { await loadEmailOptions(); }
+      catch { $("email-preferences-status").textContent = "Could not load email preferences. Try saving them again."; }
+      await onboarding?.load();
+    } catch (error) {
+      // A network/API problem must never unlock the full member shell.
+      onboarding?.showUnavailable();
+      throw error;
+    }
   }
   return member;
 }
@@ -682,7 +713,7 @@ function readProfileDraft(form = $("profile-form")) {
   draft.pets = selectedValues(form.elements.pets);
   draft.diet = qualified(draft.diet, form.elements.dietStrict.checked);
   draft.education = qualified(draft.education, form.elements.educationWorkingOn.checked, "Working on");
-  draft.relationshipType = qualified(draft.relationshipType, form.elements.relationshipStrict.checked);
+  // Monogamy/polyamory no longer includes a strictly modifier.
   draft.religion = [draft.religion, form.elements.religionImportance.value].filter(Boolean).join(", ");
   draft.sign = [draft.sign, form.elements.signImportance.value].filter(Boolean).join(", ");
   draft.kids = [draft.kids, form.elements.wantsKids.value].filter(Boolean).join(", ");
@@ -779,7 +810,7 @@ function showStoredProfile(profile) {
   restoreLanguages(form, profile?.languages);
   restoreQualifiedChoice(form, "diet", "dietStrict", profile?.diet, "Strictly ");
   restoreQualifiedChoice(form, "education", "educationWorkingOn", profile?.education, "Working on ");
-  restoreQualifiedChoice(form, "relationshipType", "relationshipStrict", profile?.relationshipType, "Strictly ");
+  form.elements.relationshipType.value = String(profile?.relationshipType ?? "").replace(/^Strictly /, "");
   restorePairedChoice(form, "religion", "religionImportance", profile?.religion);
   restorePairedChoice(form, "sign", "signImportance", profile?.sign);
   restorePairedChoice(form, "kids", "wantsKids", profile?.kids);
@@ -788,7 +819,7 @@ function showStoredProfile(profile) {
   homeCityPicker?.restore(profile?.localityId, profile?.localityKey, profile?.cityRegion || "");
   form.elements.searchRadiusMiles.value = profile?.searchRadiusMiles == null ? "" : String(profile.searchRadiusMiles);
   form.querySelectorAll('input[name="gender"]').forEach(input => {
-    input.checked = input.value === String(profile?.gender ?? "").toLowerCase();
+    input.checked = input.value.toLowerCase() === String(profile?.gender ?? "").toLowerCase();
   });
   form.querySelectorAll('input[name="openTo"]').forEach(input => {
     input.checked = String(profile?.relationshipGoal ?? "").split(", ").includes(input.value);
@@ -826,6 +857,28 @@ async function loadProfile({ silent = false } = {}) {
   return data.profile || null;
 }
 
+
+async function deleteAccountFromOnboarding(password) {
+  if (!accountDeletionInUi || !currentUser) throw new Error("Account deletion unavailable.");
+  const jwt = await getAccessToken();
+  const url = new URL(memberApiUrl);
+  url.pathname = "/account/delete"; url.search = "";
+  const response = await fetch(url.toString(), {
+    method:"POST",cache:"no-store",credentials:"omit",
+    headers:{"Authorization":"Bearer "+jwt,"Content-Type":"application/json"},
+    body:JSON.stringify({email:currentUser.email,password,confirm:"DELETE"})
+  });
+  const result = await response.json().catch(()=>({}));
+  if (!response.ok || result.deleted !== true) {
+    throw new Error(result.error || "Deletion was not completed.");
+  }
+  try { await auth.signOut(); } catch { /* Its session was deleted. */ }
+  sessionUserId=null;currentUser=null;
+  clearMemberView();renderAuthenticated(null);
+  chooseAuthTab("signin");
+  message("Your account was deleted. Only the minimal historical email marker remains in the application.", "ok");
+}
+
 function wireForms() {
   $("profile-kids").addEventListener("change", updateOffspringOptions);
   updateOffspringOptions();
@@ -853,7 +906,7 @@ function wireForms() {
   $("open-verify").addEventListener("click", () => {
     $("verify-form").elements.email.value = $("signin-form").elements.email.value;
     chooseAuthTab("verify");
-    message("Enter your email and request a verification code.");
+    message("Request a one-click verification link; no codes to type.");
   });
   $("send-another-code").addEventListener("click", () => {
     $("reset-request-form").elements.email.value = $("reset-confirm-form").elements.email.value;
@@ -942,7 +995,7 @@ function wireForms() {
     if (!form.reportValidity()) return;
     operation(form.querySelector('button[type="submit"]'), "Creating your account", async () => {
       const input = fields(form);
-      if (input.adult !== "on") throw new Error("You must confirm that you are at least 18.");
+      // Date of birth and adult eligibility are validated at the next step.
       const email = String(input.email).trim();
       const { error } = await auth.signUp.email({
         name: String(input.name).trim(),
@@ -953,23 +1006,22 @@ function wireForms() {
       form.elements.password.value = "";
       if (error) throw new Error(asError(error, "Account creation failed"));
       stageSignupEmailOptions(email, readEmailOptions(form));
-      $("verify-form").elements.email.value = email;
-      chooseAuthTab("verify");
-      // Remember the welcome destination through email verification, even
-      // if the new account is not signed in until a separate login.
+      // Account comes first. Verification is nonblocking and can happen later.
       if (window.location.hash !== SIGNUP_WELCOME_HASH) window.location.hash = SIGNUP_WELCOME_HASH;
-      message("Account created. Check your inbox and click the email verification link.", "ok");
+      const member = await refreshMember({ loadProfile: true });
+      if (!member) throw new Error("Account saved, but the session is unavailable. Sign in to resume.");
+      message("");
     });
   });
 
-  // Email verification uses a one-click link. Recovery codes remain separate.
   $("verify-form").addEventListener("submit", (event) => {
     event.preventDefault();
     const form = event.currentTarget;
     if (!form.reportValidity()) return;
     operation(form.querySelector('button[type="submit"]'), "Sending verification link", async () => {
+      const email = form.elements.email.value.trim();
       const { error } = await auth.sendVerificationEmail({
-        email: form.elements.email.value.trim(),
+        email,
         callbackURL: location.origin + "/account/" + SIGNUP_WELCOME_HASH,
       });
       if (error) throw new Error(asError(error, "Could not send verification link"));
@@ -1143,6 +1195,7 @@ function wireForms() {
       renderQuestion();
       $("question-headline").scrollIntoView({ block: "start", behavior: "auto" });
       message("Answer saved to your account.", "ok");
+      await onboarding?.answeredQuestion();
     });
   });
 }
@@ -1158,7 +1211,7 @@ async function start() {
     return;
   }
   show("app-view", true);
-  chooseAuthTab("signin");
+  chooseAuthTab(new URLSearchParams(location.search).get("join")==="1" ? "signup" : "signin");
   profileGallery = createProfilePhotoGallery({
     primaryButton: $("preview-primary-photo"),
     thumbnailStrip: $("preview-photo-thumbnails"),
@@ -1169,6 +1222,38 @@ async function start() {
     nextButton: $("profile-photo-viewer-next"),
     closeButton: $("profile-photo-viewer-close"),
   });
+  onboarding = createOnboardingUI({
+    getUser:()=>currentUser,
+    retrySession:()=>refreshMember({loadProfile:true}),
+    getProfile:()=>cachedProfile,
+    saveProfile:async data=>{
+      const result=await requestProfile("PUT",data);
+      showStoredProfile(result.profile);
+      return result.profile;
+    },
+    request:(method,path,body)=>requestPrivate(path,method,body),
+    signOut:async()=>{
+      const {error}=await auth.signOut();
+      if(error)throw new Error(asError(error,"Could not sign out"));
+      await refreshMember();
+      chooseAuthTab("signin");
+      message("Signed out. Your progress is saved.", "ok");
+    },
+    deleteAccount:deleteAccountFromOnboarding,
+    verifyEmail:async (email,callbackURL)=>{
+      const {error}=await auth.sendVerificationEmail({email,callbackURL});
+      if(error)throw new Error(asError(error,"Could not send verification link"));
+    },
+    openNative:section=>{
+      window.location.hash=section==="photos"?"#photos-title":"#question-title";
+      renderMemberPage();
+    },
+    leaveToHome:()=>{
+      if(window.location.hash!=="#member-title")window.location.hash="#member-title";
+      renderMemberPage();
+    },
+    getPhotoCount:()=>savedPhotoCount
+  });
   photoUI = createPhotoUI({
     requestJson: (method,path,body) => requestPrivate(path,method,body),
     requestImage: requestProfileImage,
@@ -1177,6 +1262,7 @@ async function start() {
       savedPhotoCount = count;
       profileGallery?.setPhotos(photos);
       renderHomework();
+      onboarding?.photoChanged();
     },
   });
   wireForms();

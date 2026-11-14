@@ -7,6 +7,7 @@ import { isPhotoPath, photoMethodAllowed, handlePhotoRequest } from "./member-ph
 import { removePhoto } from "./photo-storage.js";
 import { isKrustyKrabCookJob } from "./job-moderation.js";
 import { validProfileChoice } from "./profile-choices.js";
+import { handleOnboarding } from "./onboarding.js";
 
 const required = ["DATABASE_URL", "NEON_AUTH_JWKS_URL", "NEON_AUTH_BASE_URL"] as const;
 for (const name of required) {
@@ -32,7 +33,7 @@ const allowedOrigins = new Set([
   "https://ogcupid.onrender.com",
 ]);
 // Local browser testing is allowed ONLY for the isolated development branch.
-if (process.env.NEON_BRANCH === "dev/private-member-accounts") {
+if (["dev/private-member-accounts","dev/canonical-onboarding-2026-11-13"].includes(process.env.NEON_BRANCH || "")) {
   allowedOrigins.add("http://localhost:5173");
 }
 
@@ -263,7 +264,7 @@ const profileTextFields = [
   ["gender", "gender", 60],
   ["pronouns", "pronouns", 40],
   ["orientation", "orientation", 60],
-  ["interestedIn", "interested_in", 30],
+  ["interestedIn", "interested_in", 120],
   ["relationshipGoal", "relationship_goal", 100],
   ["work", "work", 160],
   ["education", "education", 120],
@@ -306,19 +307,21 @@ export default {
     const profilePath = url.pathname === "/profile" || url.pathname === "/profile/";
     const answersPath = url.pathname === "/answers" || url.pathname === "/answers/";
     const photoPath = isPhotoPath(url.pathname);
+    const onboardingPath = url.pathname === "/onboarding" || url.pathname === "/onboarding/";
     const emailPreferencesPath = url.pathname === "/email-preferences" || url.pathname === "/email-preferences/";
     const deletePath = url.pathname === "/account/delete" || url.pathname === "/account/delete/";
     // A credential check that can NEVER call the privileged eraser.
     // Only enabled for the one disposable development account.
     const verifyPath = url.pathname === "/account/reauth-check" || url.pathname === "/account/reauth-check/";
-    if (!profilePath && !answersPath && !emailPreferencesPath && !deletePath && !verifyPath && !photoPath) {
+    if (!profilePath && !answersPath && !emailPreferencesPath && !deletePath && !verifyPath && !photoPath && !onboardingPath) {
       return json(request, { error: "Not found" }, 404);
     }
     // Self-service deletion is allowed only on the explicitly configured
     // development or production branch, and only with its dedicated
     // server-side deletion credential and deliberate feature flag.
     const productionBranch = process.env.NEON_BRANCH === "production";
-    const developmentBranch = process.env.NEON_BRANCH === "dev/private-member-accounts";
+    const developmentBranch = process.env.NEON_BRANCH === "dev/private-member-accounts" ||
+      process.env.NEON_BRANCH === "dev/canonical-onboarding-2026-11-13";
     if (deletePath &&
         (!(productionBranch || developmentBranch) ||
          process.env.OGC_ACCOUNT_DELETION_ENABLED !== "true" ||
@@ -345,7 +348,7 @@ export default {
     if (!userId) return json(request, { error: "Unauthorized" }, 401);
 
     try {
-      if (profilePath || answersPath || emailPreferencesPath || photoPath) {
+      if (profilePath || answersPath || emailPreferencesPath || photoPath || onboardingPath) {
         // A signed JWT can outlive the account/session that issued it.
         // Do not allow a deleted identity to read an empty profile as if it
         // were still a member, or attempt to recreate a profile via PUT.
@@ -361,6 +364,9 @@ export default {
 
       if (photoPath) {
         return await handlePhotoRequest(request,userId,url,withMember,json);
+      }
+      if (onboardingPath) {
+        return await handleOnboarding(request,userId,withMember,json,verifiedPlace);
       }
 
       if (deletePath || verifyPath) {

@@ -68,7 +68,7 @@ export async function handlePhotoRequest(request,userId,url,withMember,jsonRespo
       });
       const origin=request.headers.get("origin");
       const allowed=new Set(["https://ogcupid.com","https://www.ogcupid.com","https://ogcupid.onrender.com"]);
-      if(process.env.NEON_BRANCH==="dev/private-member-accounts")allowed.add("http://localhost:5173");
+      if(["dev/private-member-accounts","dev/canonical-onboarding-2026-11-13"].includes(process.env.NEON_BRANCH || ""))allowed.add("http://localhost:5173");
       if(origin&&allowed.has(origin)){
         headers.set("Access-Control-Allow-Origin",origin);
         headers.set("Vary","Origin");
