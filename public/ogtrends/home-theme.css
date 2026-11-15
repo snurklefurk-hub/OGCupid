@@ -59,3 +59,12 @@ a{color:#2f72ae;text-underline-offset:2px}a:hover{color:#245984}
 @media(max-width:800px){.ogtrends-page{padding:12px 12px 40px;grid-template-columns:1fr}.ogtrends-page .main-column{padding-top:12px}.ogtrends-page .cards{grid-template-columns:1fr}}
 @media(max-width:480px){.ogtrends-page .mast{padding:22px 16px 16px}.ogtrends-page .mast h1{font-size:26px}.ogtrends-page main.main{padding:18px 16px 30px}.ogtrends-page .prose p{font-size:14px}.ogtrends-page .figure,.ogtrends-page .research-figure,.ogtrends-page .figure.reply-table{padding:14px}.ogtrends-page .research-figure .chart-row{grid-template-columns:90px minmax(0,1fr) 45px;gap:6px}.ogtrends-page .research-figure .chart-label{font-size:10px}.ogtrends-page .research-figure .chart-value{font-size:16px}}
 @media(prefers-reduced-motion:reduce){.ogtrends-page .card{transition:none}}
+
+/* Preserve the homepage's mixed-case rail labels against legacy article nav rules. */
+.ogtrends-page .rail-nav{gap:0;letter-spacing:normal;text-transform:none;font-weight:normal}
+.ogtrends-page .rail-nav a{border-bottom:0;text-transform:none}
+.ogtrends-page .rail-nav a:hover{color:#fff;text-decoration:underline}
+.ogtrends-page .rail-nav a[aria-current="page"]{color:#fff}
+.ogtrends-page .footer nav{letter-spacing:normal;text-transform:none}
+.ogtrends-page .footer nav a{border-bottom:0}
+.zero .ogtrends-page .opening{font-size:19px;line-height:1.6}
