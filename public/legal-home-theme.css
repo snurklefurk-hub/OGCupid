@@ -1,0 +1,37 @@
+/* Public legal/contact pages: OG Cupid homepage shell, without changing policy text. */
+:root{--ink:#244f80;--blue:#2f72ae;--rose:#de4780;--yellow:#fce9f1;--mint:#e6eef7;--paper:#f7f7f7;--white:#fff}
+body{min-width:320px;background:radial-gradient(ellipse 620px 260px at 50% 0,#6fa0d3,transparent 75%),linear-gradient(#2e619c 60%,#285b94);color:#59636f;font:12px/1.5 Verdana,"Lucida Grande",Geneva,sans-serif}
+a{color:#2f72ae}a:hover{color:#245984}:focus-visible{outline:3px solid #ffce5d;outline-offset:2px}
+.skip{top:-100px;background:#fff;color:#244f80}.skip:focus{top:8px}
+.legal-page{max-width:960px;margin:0 auto;padding:16px 0 48px;grid-template-columns:180px minmax(0,1fr)}
+.legal-page .main-column{min-width:0;padding-top:48px}
+.legal-page .panel{background:#f7f7f7;box-shadow:0 1px 6px #173c6580}
+.legal-page .hero{max-width:none;min-height:0;margin:0;padding:28px 25px 19px;background:linear-gradient(#fff,#ededed);border-bottom:1px solid #ddd}
+.legal-page .hero .stamp{display:inline-block;padding:5px 9px;background:#e6eef7;border:1px solid #cadbe8;color:#245984;font:700 10px/1.4 Verdana,Arial,sans-serif;letter-spacing:.3px;text-transform:uppercase}
+.legal-page .hero h1{font:normal clamp(27px,3.2vw,36px)/1.2 "Helvetica Neue",Arial,sans-serif;color:#de4780;letter-spacing:0;text-transform:none;margin:13px 0 10px;max-width:100%;overflow-wrap:break-word}
+.legal-page .hero .lead{font:normal 15px/1.65 Verdana,Arial,sans-serif;color:#245984;max-width:100%}
+.legal-page .hero .updated{font:normal 11px/1.5 Verdana,Arial,sans-serif;color:#76818d;letter-spacing:0;margin:12px 0 0}
+.legal-page main.main{max-width:none;min-width:0;border:0;background:#f7f7f7;padding:24px 25px 36px;color:#59636f;font:normal 13px/1.8 Verdana,Arial,sans-serif}
+.legal-page .main h2{font:normal 24px/1.3 "Helvetica Neue",Arial,sans-serif;color:#2f72ae;border-top:1px solid #d6e0e9;padding-top:20px;margin:30px 0 12px}
+.legal-page .main h3{font:700 16px/1.3 "Helvetica Neue",Arial,sans-serif;color:#245984}
+.legal-page .main p,.legal-page .main li{font-size:13px;line-height:1.8}
+.legal-page .main .toc{gap:7px 13px;padding:13px 16px;margin-bottom:15px;background:#e6eef7;border:1px solid #cadbe8}
+.legal-page .main .toc a{font:700 11px/1.6 Verdana,Arial,sans-serif}
+.legal-page .main .notice{padding:16px 20px;background:#e6eef7;border:0;border-left:4px solid #de4780;color:#245984;font-size:13px;font-weight:normal}
+.legal-page .main .card,.legal-page .main .card.alt{background:#fff;border:1px solid #cbdce9;box-shadow:0 1px 5px #173c6518;padding:18px 20px}
+.legal-page .main .card.alt{background:#edf4fb}
+.legal-page .main .card h2{border:0;padding:0;margin:0 0 9px;color:#2f72ae}
+.legal-page .main .mail{font-size:clamp(16px,2.5vw,20px);font-weight:700;overflow-wrap:anywhere}
+.legal-page .footer{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 18px;margin:16px 0 0;padding:0;background:transparent;border:0;color:#d1e0f0;font:normal 10px/1.6 Verdana,Arial,sans-serif}
+.legal-page .footer-links{gap:8px 13px;letter-spacing:normal;text-transform:none}
+.legal-page .footer-links a{color:#fff;font:700 10px/1.5 Verdana,Arial,sans-serif}
+@media(max-width:800px){
+ .legal-page{padding:12px 12px 40px;grid-template-columns:1fr}
+ .legal-page .main-column{padding-top:12px}
+}
+@media(max-width:480px){
+ .legal-page .hero{padding:22px 16px 17px}
+ .legal-page .hero h1{font-size:26px}
+ .legal-page main.main{padding:18px 16px 30px}
+ .legal-page .main .card,.legal-page .main .card.alt{padding:15px}
+}
