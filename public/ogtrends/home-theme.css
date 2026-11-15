@@ -7,7 +7,7 @@ a{color:#2f72ae;text-underline-offset:2px}a:hover{color:#245984}
 :focus-visible{outline:3px solid #ffce5d;outline-offset:2px}
 .skip{background:#fff;color:#244f80}.skip:focus{top:8px}
 .ogtrends-page{max-width:960px;margin:0 auto;padding:16px 0 48px;grid-template-columns:180px minmax(0,1fr)}
-.ogtrends-page .main-column{padding-top:58px}
+.ogtrends-page .main-column{padding-top:48px}
 .ogtrends-page .panel{background:#f7f7f7;box-shadow:0 1px 6px #173c6580}
 .ogtrends-page .mast{padding:28px 25px 18px;background:linear-gradient(#fff,#ededed);border:0;border-bottom:1px solid #ddd}
 .ogtrends-page .mast .stamp{padding:5px 9px;background:#e6eef7;border:1px solid #cbdce9;box-shadow:none;color:#245984;letter-spacing:.3px;font:700 10px/1.4 Verdana,Arial,sans-serif;text-transform:uppercase;transform:none}
