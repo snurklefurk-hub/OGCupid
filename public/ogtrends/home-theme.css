@@ -1,0 +1,61 @@
+
+/* OgTrends skin: same shell and palette as OG Cupid homepage.
+   Loaded after /lovable-home.css and existing article CSS. */
+:root{--ink:#244f80;--blue:#2f72ae;--rose:#de4780;--yellow:#fce9f1;--mint:#e6eef7;--paper:#f7f7f7;--white:#fff;--muted:#666}
+body{min-width:320px;margin:0;color:#666;background:radial-gradient(ellipse 620px 260px at 50% 0,#6fa0d3,transparent 75%),linear-gradient(#2e619c 60%,#285b94);font:12px/1.5 Verdana,"Lucida Grande",Geneva,sans-serif}
+a{color:#2f72ae;text-underline-offset:2px}a:hover{color:#245984}
+:focus-visible{outline:3px solid #ffce5d;outline-offset:2px}
+.skip{background:#fff;color:#244f80}.skip:focus{top:8px}
+.ogtrends-page{max-width:960px;margin:0 auto;padding:16px 0 48px;grid-template-columns:180px minmax(0,1fr)}
+.ogtrends-page .main-column{padding-top:58px}
+.ogtrends-page .panel{background:#f7f7f7;box-shadow:0 1px 6px #173c6580}
+.ogtrends-page .mast{padding:28px 25px 18px;background:linear-gradient(#fff,#ededed);border:0;border-bottom:1px solid #ddd}
+.ogtrends-page .mast .stamp{padding:5px 9px;background:#e6eef7;border:1px solid #cbdce9;box-shadow:none;color:#245984;letter-spacing:.3px;font:700 10px/1.4 Verdana,Arial,sans-serif;text-transform:uppercase;transform:none}
+.ogtrends-page .mast .eyebrow{font:700 11px/1.4 Verdana,Arial,sans-serif;letter-spacing:.2px;color:#245984;text-transform:none;margin:14px 0 4px}
+.ogtrends-page .mast h1{font:normal clamp(27px,3.2vw,36px)/1.2 "Helvetica Neue",Arial,sans-serif;color:#de4780;letter-spacing:0;text-transform:none;margin:14px 0 10px;max-width:100%;overflow-wrap:break-word}
+.ogtrends-page .mast h1 em{font:inherit;font-weight:700;color:inherit}
+.ogtrends-page .mast .subtitle{font:normal 15px/1.6 Verdana,Arial,sans-serif;color:#245984;max-width:100%}
+.ogtrends-page .mast .byline{margin-top:16px;padding-top:12px;border-color:#ddd;color:#697583;font-size:11px}
+.ogtrends-page .mast .byline strong{color:#245984}
+.ogtrends-page main.main{padding:24px 25px 36px;border-top:0;background:#f7f7f7;max-width:100%;min-width:0}
+.ogtrends-page main.main .prose{max-width:760px;margin:0 auto}
+.ogtrends-references main.main .prose{max-width:none}
+.ogtrends-page .prose{color:#525c68}
+.ogtrends-page .prose p{font-size:14px;line-height:1.8}
+.ogtrends-page .prose strong{color:#245984}
+.ogtrends-page .prose h2{font:normal 25px/1.3 "Helvetica Neue",Arial,sans-serif;color:#2f72ae;letter-spacing:0;text-transform:none;margin-top:32px}
+.ogtrends-page .prose h3{font:700 18px/1.3 "Helvetica Neue",Arial,sans-serif;color:#245984}
+.ogtrends-page .index-intro p{font:normal 14px/1.8 Verdana,Arial,sans-serif;color:#525c68}
+.ogtrends-page .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin:24px 0}
+.ogtrends-page .card,.ogtrends-page .card:nth-child(2){min-width:0;padding:20px;background:#fff;border:1px solid #d4dfe9;box-shadow:0 2px 4px #173c6515;border-radius:2px}
+.ogtrends-page .card:hover{transform:translateY(-2px);box-shadow:0 4px 9px #173c6524}
+.ogtrends-page .card-num{font:normal 38px/1 "Helvetica Neue",Arial,sans-serif;color:#de4780}
+.ogtrends-page .card h2{font:normal 22px/1.25 "Helvetica Neue",Arial,sans-serif;color:#2f72ae;text-transform:none;margin:10px 0}
+.ogtrends-page .card p{font:normal 12px/1.65 Verdana,Arial,sans-serif;color:#5d6670}
+.ogtrends-page .card .tag{font:700 10px/1.5 Verdana,Arial,sans-serif;color:#697583;letter-spacing:0}
+.ogtrends-page .card .read{font:700 12px/1.3 Verdana,Arial,sans-serif;color:#2f72ae;text-transform:none}
+.ogtrends-page .rule,.ogtrends-page .prose .rule{padding:16px 20px;margin:24px 0;background:#e6eef7;border:1px solid #cbdce9;box-shadow:none;color:#245984;font:700 13px/1.6 Verdana,Arial,sans-serif}
+.ogtrends-page .edition{color:#666;font:11px/1.6 Verdana,Arial,sans-serif}
+.ogtrends-page .deck-note{background:#e6eef7;border-left:4px solid #de4780;color:#245984}
+.ogtrends-page .figure,.ogtrends-page .research-figure,.ogtrends-page .figure.reply-table{max-width:100%;min-width:0;padding:20px;background:#fff;border:1px solid #cbdce9;box-shadow:0 2px 7px #173c651c}
+.ogtrends-page .figure h2,.ogtrends-page .research-figure h2{font:700 21px/1.3 "Helvetica Neue",Arial,sans-serif!important;color:#2f72ae;text-transform:none;letter-spacing:0}
+.ogtrends-page .research-figure .chart-bar{background:linear-gradient(90deg,#2e619c,#73a2d3)}
+.ogtrends-page .research-figure .chart-bar.coral{background:linear-gradient(90deg,#de4780,#f1a6c3)}
+.ogtrends-page .stat{border:1px solid #cbdce9;background:#fff}.ogtrends-page .stat:nth-child(2){background:#e6eef7}.ogtrends-page .stat:nth-child(3){background:#fce9f1}
+.ogtrends-page .table-wrap,.ogtrends-page .pricing-scroll{border-color:#cbdce9;box-shadow:none}
+.ogtrends-page .data-table caption{background:#e6eef7;color:#245984}
+.ogtrends-page .data-table th{background:#e6eef7}
+.ogtrends-page .example{border:1px solid #cbdce9;box-shadow:0 1px 4px #173c651b;background:#fff}
+.ogtrends-page .example.good{background:#edf7f0}.ogtrends-page .example.caution{background:#fff2f6}
+.ogtrends-page details{border-color:#cbdce9}.ogtrends-page summary{background:#e6eef7;color:#245984}
+.ogtrends-page .sources{border-top:1px solid #cbdce9}
+.ogtrends-page .sources h2{font:700 22px/1.3 "Helvetica Neue",Arial,sans-serif!important}
+.ogtrends-page .article-nav{border-top:1px solid #cbdce9}
+.ogtrends-page .profile-showcase{max-width:100%;overflow-x:auto;border:1px solid #cbdce9}
+.ogtrends-page .footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 16px;margin:16px 0 0;padding:0;background:transparent;border:0;box-shadow:none;color:#d1e0f0;font:normal 10px/1.6 Verdana,Arial,sans-serif}
+.ogtrends-page .footer a{color:#fff}
+.ogtrends-page .footer .legal-footer-links{flex-basis:100%;border-color:#7ca0c3;margin-top:3px;padding-top:10px}
+.ogtrends-page .footer .legal-footer-links a{font:700 10px/1.5 Verdana,Arial,sans-serif;color:#fff}
+@media(max-width:800px){.ogtrends-page{padding:12px 12px 40px;grid-template-columns:1fr}.ogtrends-page .main-column{padding-top:12px}.ogtrends-page .cards{grid-template-columns:1fr}}
+@media(max-width:480px){.ogtrends-page .mast{padding:22px 16px 16px}.ogtrends-page .mast h1{font-size:26px}.ogtrends-page main.main{padding:18px 16px 30px}.ogtrends-page .prose p{font-size:14px}.ogtrends-page .figure,.ogtrends-page .research-figure,.ogtrends-page .figure.reply-table{padding:14px}.ogtrends-page .research-figure .chart-row{grid-template-columns:90px minmax(0,1fr) 45px;gap:6px}.ogtrends-page .research-figure .chart-label{font-size:10px}.ogtrends-page .research-figure .chart-value{font-size:16px}}
+@media(prefers-reduced-motion:reduce){.ogtrends-page .card{transition:none}}
