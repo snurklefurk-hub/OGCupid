@@ -545,7 +545,7 @@ export function createOnboardingUI({
       if(next.quiz) await refresh();
     }
   }
-  function showHub(){if(status){stage="hub";render();}}
+  function showHub(){if(status && !status.explored){stage="hub";render();}}
   return {load, refresh, hide, showHub, showLoading, showUnavailable, photoChanged, answeredQuestion,
     get active(){return !root.hidden || native!==null;},
     get nativeSection(){return native;},
