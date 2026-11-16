@@ -66,13 +66,35 @@ test("onboarding failure is fail-closed and offers retry rather than exposing no
   const start = app.indexOf("async function refreshMember(");
   const end = app.indexOf("function isJwt(", start);
   const sessionLoad = app.slice(start, end);
-  assert.match(sessionLoad, /onboarding\?\.showLoading\(\)/);
+  assert.match(sessionLoad, /onboarding\?\.showPending\(\)/);
   assert.match(sessionLoad, /await onboarding\?\.load\(\)/);
-  assert.match(sessionLoad, /catch \(error\)\s*\{[\s\S]*onboarding\?\.showUnavailable\(\)/);
+  assert.match(sessionLoad, /if \(currentUser\) onboarding\?\.showUnavailable\(\)/);
+  // A completed member's onboarding status is checked BEFORE fetching
+  // optional profile/answers/photos/email. No old splash can appear.
+  assert.ok(sessionLoad.indexOf("await onboarding?.load()") < sessionLoad.indexOf("await loadProfile("));
+  assert.doesNotMatch(sessionLoad, /showLoading/);
+  assert.doesNotMatch(ui, /Loading your saved progress|checking where you left off|renderLoading|showLoading/);
+  assert.match(ui, /function showPending\(\)/);
+  assert.match(ui, /root\.hidden = true/);
+  assert.match(ui, /classList\.add\("ogc-member-pending"\)/);
+  assert.match(ui, /classList\.remove\("ogc-member-pending"\)/);
   assert.match(ui, /function renderUnavailable\(\)/);
   assert.match(ui, /Nothing has been lost/);
   assert.match(ui, /retrySession\(\)/);
   assert.match(ui, /stage\s*===\s*"unavailable"/);
   assert.match(app, /retrySession:\(\)=>refreshMember\(\{loadProfile:true\}\)/);
   assert.match(ui, /root\.hidden=false/);
+});
+
+test("completed accounts never show an interim onboarding progress page", () => {
+  const html = readFileSync(new URL("./index.html", import.meta.url), "utf8");
+  const css = readFileSync(new URL("./onboarding.css", import.meta.url), "utf8");
+  const js = readFileSync(new URL("./main.js", import.meta.url), "utf8");
+  const onboarding = readFileSync(new URL("./onboarding-ui.js", import.meta.url), "utf8");
+  assert.match(html, /<body class="ogc-member-theme ogc-member-pending">/);
+  assert.match(css, /body\.ogc-member-pending > \.shell\s*\{[^}]*visibility:hidden/);
+  assert.match(onboarding, /if \(status\.explored\) \{ hide\(\); leaveToHome\(\); return; \}/);
+  assert.doesNotMatch(onboarding, /Loading your saved progress/);
+  assert.match(js, /const hydrate = accountChanged \|\| options\.loadProfile \|\| !onboarding\?\.state/);
+  assert.match(js, /renderAuthenticated\(member\)/);
 });

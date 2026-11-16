@@ -464,26 +464,49 @@ async function refreshMember(options = {}) {
     sessionUserId = newId;
   }
   currentUser = member;
-  // Fail closed: regular member pages may not appear until the server confirms
-  // this user's onboarding status. The loading screen also guards account switches.
-  if (!member) onboarding?.hide();
-  else if (accountChanged || options.loadProfile) onboarding?.showLoading();
-  renderAuthenticated(member);
+  // Do not display a full-page loading/welcome splash when a member returns.
+  // Keep the member shell visually hidden until the *server* has confirmed
+  // their onboarding state; never show old account content during a switch.
+  if (!member) {
+    onboarding?.hide();
+    renderAuthenticated(null);
+    return null;
+  }
 
-  if (member && options.loadProfile) {
+  const hydrate = accountChanged || options.loadProfile || !onboarding?.state;
+  if (hydrate) {
+    onboarding?.showPending();
     try {
-      await loadProfile({ silent: true });
-      await loadAnswers();
-      try { await photoUI?.load(member.id); }
-      catch { message("Photo album temporarily unavailable.", "error"); }
-      try { await loadEmailOptions(); }
-      catch { $("email-preferences-status").textContent = "Could not load email preferences. Try saving them again."; }
+      // This check is intentionally FIRST. Optional photos, answers and
+      // notification requests must not delay a completed member's dashboard.
       await onboarding?.load();
     } catch (error) {
-      // A network/API problem must never unlock the full member shell.
-      onboarding?.showUnavailable();
+      // If Neon invalidated the account, show sign-in rather than onboarding.
+      if (currentUser) onboarding?.showUnavailable();
+      else onboarding?.hide();
       throw error;
     }
+  }
+  renderAuthenticated(member);
+
+  if (options.loadProfile || accountChanged) {
+    // Once onboarding is checked, supporting data can arrive independently.
+    // A secondary request failure must not resurrect the onboarding screen.
+    try { await loadProfile({ silent: true }); }
+    catch (error) {
+      if (!currentUser) throw error;
+      message("Your profile couldn't load. Refresh to try again.", "error");
+    }
+    try { await loadAnswers(); }
+    catch (error) {
+      if (!currentUser) throw error;
+      message("Your saved questions couldn't load. Refresh to try again.", "error");
+    }
+    try { await photoUI?.load(member.id); }
+    catch { message("Photo album temporarily unavailable.", "error"); }
+    try { await loadEmailOptions(); }
+    catch { $("email-preferences-status").textContent = "Could not load email preferences. Try saving them again."; }
+    renderMemberPage();
   }
   return member;
 }
@@ -1244,6 +1267,7 @@ async function start() {
     document.title = "DEV | OG Cupid Member Accounts";
   }
   if (!auth) {
+    document.body.classList.remove("ogc-member-pending");
     show("unavailable-view", true);
     message("Member registration isn't public yet. We're working on secure profiles and safety controls.");
     return;
@@ -1320,6 +1344,8 @@ async function start() {
         : "Sign in to your OG Cupid account.", "ok");
     }
   } catch {
+    // A failed auth check must not leave an invisible, non-interactive page.
+    document.body.classList.remove("ogc-member-pending");
     message("Couldn't check your session. Try signing in again.", "error");
   }
 }

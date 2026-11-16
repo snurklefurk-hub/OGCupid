@@ -117,3 +117,11 @@ body.ogc-onboarding-native #member-columns[data-member-page=questions] > .photo-
 }
 .ogc-native-controls button:nth-child(3) { color:#a52b3f; }
 .ogc-native-notice { width:100%;text-align:center;color:#187b54;font-size:.85rem; }
+
+/* Silent session preflight: no full-page “Loading your saved progress”
+ * onboarding splash. This prevents account data flashes while a fresh
+ * server-side completion check runs, without displaying a fake wizard. */
+body.ogc-member-pending > .shell {
+  visibility:hidden;
+  pointer-events:none;
+}

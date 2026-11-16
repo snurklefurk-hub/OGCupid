@@ -124,7 +124,7 @@ export function createOnboardingUI({
   function go(to) { stage = to; render(); window.scrollTo(0,0); }
   function hide() {
     root.hidden = true; native = null;
-    document.body.classList.remove("ogc-onboarding-active","ogc-onboarding-native");
+    document.body.classList.remove("ogc-onboarding-active","ogc-onboarding-native","ogc-member-pending");
   }
   async function requestVerification() {
     // This method is injected by the authenticated member shell: never store
@@ -156,10 +156,6 @@ export function createOnboardingUI({
     if (previous === "delete") stage = "delete";
     render();
   }
-  function renderLoading() {
-    shell('<h1>Loading your saved progress…</h1>' +
-      '<p>Your account is signed in. We’re checking where you left off.</p>');
-  }
   function renderUnavailable() {
     shell('<h1>Couldn’t load your progress.</h1>' +
       '<p>Nothing has been lost. We won’t open regular member features until your onboarding status is available.</p>' +
@@ -167,10 +163,15 @@ export function createOnboardingUI({
     byId("ogc-retry-progress").addEventListener("click", event =>
       submit(event.currentTarget, () => retrySession()));
   }
-  function showLoading() {
+  function showPending() {
+    // No onboarding/logo splash or old member content while the server
+    // decides whether this account still has onboarding work to do.
     status = null;
-    stage = "loading";
-    render();
+    stage = "hub";
+    native = null;
+    root.hidden = true;
+    document.body.classList.remove("ogc-onboarding-active","ogc-onboarding-native");
+    document.body.classList.add("ogc-member-pending");
   }
   function showUnavailable() {
     status = null;
@@ -471,12 +472,12 @@ export function createOnboardingUI({
     });
   }
   function render() {
+    document.body.classList.remove("ogc-member-pending");
     root.hidden=false;
     document.body.classList.add("ogc-onboarding-active");
     document.body.classList.remove("ogc-onboarding-native");
     native=null;
-    if(stage==="loading")renderLoading();
-    else if(stage==="unavailable")renderUnavailable();
+    if(stage==="unavailable")renderUnavailable();
     else if(stage==="identity")renderIdentity();
     else if(stage==="location")renderLocation();
     else if(stage==="details")renderDetails();
@@ -546,7 +547,7 @@ export function createOnboardingUI({
     }
   }
   function showHub(){if(status && !status.explored){stage="hub";render();}}
-  return {load, refresh, hide, showHub, showLoading, showUnavailable, photoChanged, answeredQuestion,
+  return {load, refresh, hide, showHub, showPending, showUnavailable, photoChanged, answeredQuestion,
     get active(){return !root.hidden || native!==null;},
     get nativeSection(){return native;},
     get complete(){return Boolean(status?.explored);},
