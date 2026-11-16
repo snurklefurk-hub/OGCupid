@@ -1,0 +1,54 @@
+name: Package production member API for controlled Neon release
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'api/**'
+      - '.github/workflows/package-member-profile-api.yml'
+  workflow_dispatch:
+concurrency:
+  group: package-ogc-member-api
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install locked backend dependencies
+        run: |
+          npm ci
+          npm install --no-save esbuild@0.25.12
+      - name: Validate source, profile privacy and backend behavior
+        run: |
+          node --check public/profiles/view.js
+          node --check public/home-auth-redirect.js
+          node --test api/job-moderation.test.js api/profile-choices.test.js api/profile-query.test.js api/profile-route.test.js
+      - name: Compile deployable Neon Function
+        run: |
+          npx esbuild api/member-profile.ts --bundle --platform=node --target=node24 --format=esm --banner:js="import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);" --outfile="$RUNNER_TEMP/index.mjs"
+          node --check "$RUNNER_TEMP/index.mjs"
+          (cd "$RUNNER_TEMP" && zip -9 -q profile-members.zip index.mjs)
+          base64 -w0 "$RUNNER_TEMP/profile-members.zip" > dev/prod-profile-members-bundle.b64
+      - name: Publish code-only binary bundle for controlled Neon deployment
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f dev/prod-profile-members-bundle.b64
+          if ! git diff --cached --quiet; then
+            git commit -m "build: package member profile API for Neon"
+            for attempt in 1 2 3 4 5; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+              sleep 2
+            done
+            echo "Could not publish function bundle" >&2
+            exit 1
+          fi
