@@ -594,7 +594,11 @@ async function uploadProfileJpeg(blob) {
 }
 
 async function requestPrivate(path, method, body, options = {}) {
-  const token = await getAccessToken();
+  // The onboarding preflight has an abortable HTTP request, and must not
+  // wait indefinitely for a separate JWT exchange before that request starts.
+  const token = options.signal
+    ? await withSessionDeadline(getAccessToken())
+    : await getAccessToken();
   const endpoint = new URL(memberApiUrl);
   endpoint.pathname = path;
   const result = await fetch(endpoint.toString(), {

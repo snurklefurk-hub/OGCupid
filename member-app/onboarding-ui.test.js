@@ -105,6 +105,7 @@ test("silent account verification has a deadline and cannot expose an unverified
   assert.match(main, /withSessionDeadline\(auth\.getSession\(\)\)/);
   assert.match(main, /withSessionDeadline\(promise, ms = 12000\)/);
   assert.match(main, /options\.signal \? \{ signal: options\.signal \}/);
+  assert.match(main, /options\.signal\s*\? await withSessionDeadline\(getAccessToken\(\)\)/);
   assert.match(main, /request:\(method,path,body,options\)=>requestPrivate\(path,method,body,options\)/);
   assert.match(ui, /new AbortController\(\)/);
   assert.match(ui, /setTimeout\(\(\) => controller\.abort\(\), 12000\)/);
