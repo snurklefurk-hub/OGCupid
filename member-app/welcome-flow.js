@@ -1,14 +1,15 @@
 /**
  * Signed-in account section navigation. The welcome checklist is intentionally
- * independent of Account Settings and can always be revisited by members.
+ * independent of Account Settings. Only members who have not finished
+ * server-backed onboarding can see the welcome destination.
  *
  * Signup uses a dedicated destination rather than reusing whichever section
  * happens to be open during verification.
  */
 export const SIGNUP_WELCOME_HASH = "#welcome-title";
 
-export function memberSectionFromHash(hash) {
-  if (hash === SIGNUP_WELCOME_HASH) return "welcome";
+export function memberSectionFromHash(hash, onboardingComplete = false) {
+  if (hash === SIGNUP_WELCOME_HASH) return onboardingComplete ? "home" : "welcome";
   if (hash === "#profile-title" || hash === "#profile-details-title" || hash === "#profile-essays-title") return "profile";
   if (hash === "#preview-title") return "preview";
   if (hash === "#photos-title") return "photos";
