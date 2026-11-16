@@ -306,6 +306,8 @@ export default {
 
     const url = new URL(request.url);
     const profilePath = url.pathname === "/profile" || url.pathname === "/profile/";
+    const profileSlugMatch = url.pathname.match(/^\/profiles\/([a-z0-9][a-z0-9-]{0,62})\/?$/);
+    const currentProfileUrlPath = url.pathname === "/profiles/me" || url.pathname === "/profiles/me/";
     const answersPath = url.pathname === "/answers" || url.pathname === "/answers/";
     const photoPath = isPhotoPath(url.pathname);
     const onboardingPath = url.pathname === "/onboarding" || url.pathname === "/onboarding/";
@@ -315,7 +317,7 @@ export default {
     // A credential check that can NEVER call the privileged eraser.
     // Only enabled for the one disposable development account.
     const verifyPath = url.pathname === "/account/reauth-check" || url.pathname === "/account/reauth-check/";
-    if (!profilePath && !answersPath && !emailPreferencesPath && !deletePath && !verifyPath && !photoPath && !onboardingPath && !feedbackPath) {
+    if (!profilePath && !profileSlugMatch && !currentProfileUrlPath && !answersPath && !emailPreferencesPath && !deletePath && !verifyPath && !photoPath && !onboardingPath && !feedbackPath) {
       return json(request, { error: "Not found" }, 404);
     }
     // Self-service deletion is allowed only on the explicitly configured
@@ -337,7 +339,8 @@ export default {
            "5b03f41b-29b7-4a7a-9c72-71744dd8b2f2")) {
       return json(request, { error: "Not found" }, 404);
     }
-    const methodAllowed = feedbackPath ? request.method === "POST" : photoPath
+    const methodAllowed = (profileSlugMatch || currentProfileUrlPath)
+      ? request.method === "GET" : feedbackPath ? request.method === "POST" : photoPath
       ? photoMethodAllowed(url.pathname, request.method)
       : deletePath || verifyPath
         ? request.method === "POST"
@@ -350,7 +353,7 @@ export default {
     if (!userId) return json(request, { error: "Unauthorized" }, 401);
 
     try {
-      if (profilePath || answersPath || emailPreferencesPath || photoPath || onboardingPath || feedbackPath) {
+      if (profilePath || profileSlugMatch || currentProfileUrlPath || answersPath || emailPreferencesPath || photoPath || onboardingPath || feedbackPath) {
         // A signed JWT can outlive the account/session that issued it.
         // Do not allow a deleted identity to read an empty profile as if it
         // were still a member, or attempt to recreate a profile via PUT.
@@ -364,6 +367,19 @@ export default {
         }
       }
 
+      if (currentProfileUrlPath) {
+        const record = await withMember(userId,client =>
+          client.query("SELECT app_private.current_member_profile_slug() AS slug"));
+        const slug = record.rows[0]?.slug ?? null;
+        return json(request,slug ? {slug, url:"/profiles/"+slug} : {slug:null}, slug ? 200 : 404);
+      }
+      if (profileSlugMatch) {
+        const record = await withMember(userId,client =>
+          client.query("SELECT app_private.member_profile_for_slug($1::text) AS profile",
+            [profileSlugMatch[1]]));
+        const profile = record.rows[0]?.profile ?? null;
+        return json(request, profile ? {profile} : {error:"Profile not found"}, profile ? 200 : 404);
+      }
       if (feedbackPath) {
         return await handleFeedback(request,userId,withMember,json);
       }
