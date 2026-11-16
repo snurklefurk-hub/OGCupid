@@ -53,12 +53,17 @@ export async function handlePhotoRequest(request,userId,url,withMember,jsonRespo
     }
     const img=path.match(/^\/photos\/([0-9a-f-]{36})\/bytes\/?$/i);
     if(img){
-      const row=await withMember(userId,async client=>{
-        const found=await client.query(SELECT+" WHERE id=$1::uuid",[img[1]]);
-        return found.rows[0] ?? null;
+      // JWT authentication and member liveness have already been checked by
+      // the router. The SECURITY DEFINER getter exposes only a storage key
+      // inside this server process, never to the browser or a guest.
+      const objectKey=await withMember(userId,async client=>{
+        const found=await client.query(
+          "SELECT app_private.member_viewable_photo_key($1::uuid) AS object_key",
+          [img[1]]);
+        return found.rows[0]?.object_key ?? null;
       });
-      if(!row)return jsonResponse(request,{error:"Photo not found"},404);
-      const jpeg=await fetchPhoto(row.object_key);
+      if(!objectKey)return jsonResponse(request,{error:"Photo not found"},404);
+      const jpeg=await fetchPhoto(objectKey);
       const headers=new Headers({
         "Content-Type":"image/jpeg",
         "Cache-Control":"private, no-store",
