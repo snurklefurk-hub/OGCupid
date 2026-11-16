@@ -325,7 +325,7 @@ function syncMemberProfileLinks(completedOnboarding) {
   const profileUrl = completedOnboarding && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug || "")
     ? "/profiles/" + encodeURIComponent(slug) : null;
   for (const link of document.querySelectorAll(
-    'a[href="#profile-title"],a[href="#preview-title"],a[href="#photos-title"],a[data-own-profile-link]'
+    'a[href="#profile-title"],a[href="#preview-title"],a[href="#photos-title"],a[data-pre-profile-href]'
   )) {
     if (!link.dataset.preProfileHref) {
       link.dataset.preProfileHref = link.getAttribute("href");
