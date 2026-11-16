@@ -286,8 +286,10 @@ function renderHomework() {
   $("dashboard-homework-count").textContent = welcomeQuestionStatus(state.answeredCount);
   const page = $("member-columns").dataset.memberPage;
   const onHome = Boolean(currentUser && page === "home");
-  const showRegularHome = state.showRegularHome || Boolean(onboarding?.complete);
-  const onWelcome = Boolean(currentUser && (page === "welcome" || (onHome && !showRegularHome)));
+  const finishedOnboarding = Boolean(onboarding?.complete);
+  const showRegularHome = state.showRegularHome || finishedOnboarding;
+  const onWelcome = Boolean(currentUser && !finishedOnboarding &&
+    (page === "welcome" || (onHome && !showRegularHome)));
   // The semi-walled onboarding layout is scoped to this view only. Other
   // member views keep their normal navigation, account settings and layout.
   document.body.classList.toggle("is-welcome-flow", onWelcome);
@@ -317,10 +319,19 @@ function renderProfileEditorStep() {
 }
 
 function renderMemberPage() {
-  if(currentUser && onboarding?.complete && !onboarding.active && window.location.hash===SIGNUP_WELCOME_HASH) {
-    onboarding.showHub();
-    return;
+  const completedOnboarding = Boolean(currentUser && onboarding?.complete);
+  // Canonical onboarding completion is server-backed. A stale deep link must
+  // never reopen the four-step screen or the legacy welcome checklist.
+  if (completedOnboarding && window.location.hash === SIGNUP_WELCOME_HASH) {
+    window.history.replaceState(null, "", window.location.pathname +
+      window.location.search + "#member-title");
   }
+  // Hide links to onboarding for finished members, including the dashboard's
+  // old "view getting-started steps" shortcut. Keep links for unfinished users.
+  document.querySelectorAll('a[href="#welcome-title"]').forEach(link => {
+    link.hidden = completedOnboarding ||
+      (!currentUser && link.hasAttribute("data-classic-auth"));
+  });
   // Hide unfinished member features even when somebody types a deep link.
   // The server separately checks all private mutations and progress unlocks.
   if (currentUser && onboarding?.active && !onboarding.complete) {
@@ -346,7 +357,7 @@ function renderMemberPage() {
     show("member-persona-panel", false);
     return;
   }
-  const page = memberSectionFromHash(window.location.hash);
+  const page = memberSectionFromHash(window.location.hash, completedOnboarding);
   const home = page === "home";
   document.body.classList.toggle("is-profile-setup",page === "profile");
   if (page === "profile") renderProfileEditorStep();
