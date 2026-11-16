@@ -2,14 +2,14 @@
 .ogc-feedback-widget{
  position:fixed;z-index:2147482000;bottom:max(12px,env(safe-area-inset-bottom));
  right:12px;width:min(350px,calc(100vw - 24px));text-align:left;
- font:normal 12px/19px Verdana,Arial,sans-serif;color:#555555;
+ font:normal 12px/19px Verdana,"Bitstream Vera Sans","DejaVu Sans",Geneva,sans-serif;color:#555555;
 }
-.ogc-feedback-widget *{box-sizing:border-box;font-family:Verdana,Arial,sans-serif}
+.ogc-feedback-widget *{box-sizing:border-box;font-family:Verdana,"Bitstream Vera Sans","DejaVu Sans",Geneva,sans-serif}
 .ogc-feedback-toggle{
  display:block;margin-left:auto;min-height:30px;padding:5px 13px;
  border:1px solid #244a73;border-radius:3px;cursor:pointer;
  background:linear-gradient(#3d85ce,#2963a4);color:#fff;
- font:bold 12px/19px Verdana,Arial,sans-serif;
+ font:bold 12px/19px Verdana,"Bitstream Vera Sans","DejaVu Sans",Geneva,sans-serif;
  box-shadow:inset 0 1px #ffffff7d,0 1px 2px #00000016;
  text-shadow:0 1px #183b62;
 }
@@ -24,22 +24,22 @@
 }
 .ogc-feedback-panel[hidden]{display:none!important}
 .ogc-feedback-heading{display:flex;align-items:start;justify-content:space-between;gap:8px;padding-bottom:8px;border-bottom:1px solid #dddddd}
-.ogc-feedback-heading strong{font:bold 14px/21px Verdana,Arial,sans-serif;color:#264e79}
-.ogc-feedback-close{padding:0 4px;border:0;background:none;color:#555555;font:normal 22px/21px Verdana,Arial,sans-serif;cursor:pointer}
-.ogc-feedback-panel p{margin:9px 0;color:#555555;font:normal 12px/19px Verdana,Arial,sans-serif}
+.ogc-feedback-heading strong{font:bold 14px/21px Verdana,"Bitstream Vera Sans","DejaVu Sans",Geneva,sans-serif;color:#264e79}
+.ogc-feedback-close{padding:0 4px;border:0;background:none;color:#555555;font:normal 22px/21px Verdana,"Bitstream Vera Sans","DejaVu Sans",Geneva,sans-serif;cursor:pointer}
+.ogc-feedback-panel p{margin:9px 0;color:#555555;font:normal 12px/19px Verdana,"Bitstream Vera Sans","DejaVu Sans",Geneva,sans-serif}
 .ogc-feedback-panel form{display:flex;flex-direction:column;gap:8px}
-.ogc-feedback-panel label{font:bold 11px/16px Verdana,Arial,sans-serif;color:#264e79}
+.ogc-feedback-panel label{font:bold 11px/16px Verdana,"Bitstream Vera Sans","DejaVu Sans",Geneva,sans-serif;color:#264e79}
 .ogc-feedback-panel textarea{
  width:100%;min-height:95px;resize:vertical;border:1px solid #c2d4e6;
  border-radius:3px;padding:9px;background:#fff;color:#303030;
- font:normal 13px/21px Verdana,Arial,sans-serif;
+ font:normal 13px/21px Verdana,"Bitstream Vera Sans","DejaVu Sans",Geneva,sans-serif;
 }
 .ogc-feedback-actions{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.ogc-feedback-actions span{font:normal 11px/16px Verdana,Arial,sans-serif;color:#999999}
+.ogc-feedback-actions span{font:normal 11px/16px Verdana,"Bitstream Vera Sans","DejaVu Sans",Geneva,sans-serif;color:#999999}
 .ogc-feedback-send{
  min-height:30px;padding:5px 13px;border:1px solid #244a73;border-radius:3px;
  background:linear-gradient(#3d85ce,#2963a4);color:white;
- font:bold 12px/19px Verdana,Arial,sans-serif;
+ font:bold 12px/19px Verdana,"Bitstream Vera Sans","DejaVu Sans",Geneva,sans-serif;
  box-shadow:inset 0 1px #ffffff7d;cursor:pointer;
 }
 .ogc-feedback-send:hover{background:linear-gradient(#3a77b8,#264e79)}
@@ -49,7 +49,7 @@
 .ogc-feedback-signin[hidden]{display:none!important}
 .ogc-feedback-panel .ogc-feedback-privacy{
  margin:9px 0 0;padding-top:8px;border-top:1px solid #dddddd;
- color:#999999;font:normal 11px/16px Verdana,Arial,sans-serif
+ color:#999999;font:normal 11px/16px Verdana,"Bitstream Vera Sans","DejaVu Sans",Geneva,sans-serif
 }
 @media(max-width:480px){
  .ogc-feedback-widget{right:8px;bottom:max(8px,env(safe-area-inset-bottom));width:min(350px,calc(100vw - 16px))}

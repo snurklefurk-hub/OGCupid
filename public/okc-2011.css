@@ -49,12 +49,12 @@ body,body.ogc-member-theme,body.ogc-persona-theme {
   margin:0;min-width:320px;
   background:linear-gradient(to bottom,var(--okc-blue-top) 0,var(--okc-blue) 60px,var(--okc-paper) 60px,var(--okc-paper) 100%);
   color:var(--okc-ink);
-  font-family:Verdana,Arial,sans-serif;
+  font-family:Verdana,"Bitstream Vera Sans","DejaVu Sans",Geneva,sans-serif;
   font-size:13px;
   line-height:21px;
 }
 body :where(h1,h2,h3,h4,h5,h6,p,a,button,textarea,input,select,th,td,label,legend,small,summary,nav,li,dt,dd) {
-  font-family:Verdana,Arial,sans-serif;
+  font-family:Verdana,"Bitstream Vera Sans","DejaVu Sans",Geneva,sans-serif;
 }
 body :where(h1,h2,h3,h4,h5,h6) { letter-spacing:normal; text-transform:none; }
 body :where(h1) { font-size:26px;line-height:28px;font-weight:400;color:var(--okc-ink-strong); }
@@ -63,7 +63,7 @@ body :where(h3) { font-size:14px;line-height:21px;font-weight:700;color:var(--ok
 body :where(p,li,dd,dt,summary) { line-height:21px; }
 body :where(a){color:var(--okc-blue);}
 body :where(a:hover){color:var(--okc-qblue);}
-body :where(button,input,select,textarea){font-family:Verdana,Arial,sans-serif;}
+body :where(button,input,select,textarea){font-family:Verdana,"Bitstream Vera Sans","DejaVu Sans",Geneva,sans-serif;}
 body :where(input:not([type=checkbox]):not([type=radio]),select,textarea) {
  border:1px solid #b6c6d5;border-radius:3px;background:var(--okc-white);
  color:var(--okc-ink-strong);box-shadow:inset 0 1px 1px #0000000b;
@@ -121,7 +121,7 @@ body.ogc-persona-theme .persona-page .rail-member-link {
 body.ogc-member-theme .masthead nav.classic-rail-nav a,
 body.ogc-member-theme.is-authenticated .masthead nav.classic-rail-nav a,
 body.ogc-persona-theme .persona-page .rail-nav a{
- font:normal 12px/19px Verdana,Arial,sans-serif;
+ font:normal 12px/19px Verdana,"Bitstream Vera Sans","DejaVu Sans",Geneva,sans-serif;
  padding:9px 15px;color:var(--okc-white);
  border-bottom:1px solid #244a73;background:transparent;
  text-transform:none;box-shadow:none;border-radius:0;
@@ -147,7 +147,7 @@ body.ogc-persona-theme .persona-page .rail-member-link strong {
 body.ogc-persona-theme .persona-page .rail-member-link a{
  border:1px solid #10263e;border-radius:3px;background:linear-gradient(#38414a,#111111);
  box-shadow:inset 0 1px #ffffff30,0 1px 2px #00000020;
- color:var(--okc-white);font:bold 12px/19px Verdana,Arial,sans-serif;
+ color:var(--okc-white);font:bold 12px/19px Verdana,"Bitstream Vera Sans","DejaVu Sans",Geneva,sans-serif;
  text-shadow:0 1px #000;min-height:30px;
 }
 .rail-signin .rail-signin-button:hover,.rail-signin .rail-signup-button:hover {
@@ -177,7 +177,7 @@ body.ogc-member-theme main>.intro h1,
 body.ogc-persona-theme .persona-page .persona-heading h2,
 .profile-identity h1 {
  color:var(--okc-ink-strong);
- font:normal 26px/28px Verdana,Arial,sans-serif;
+ font:normal 26px/28px Verdana,"Bitstream Vera Sans","DejaVu Sans",Geneva,sans-serif;
  letter-spacing:normal;text-transform:none;
 }
 .panel-header h1 .headline-emphasis,
@@ -193,10 +193,10 @@ body.ogc-persona-theme .persona-page .persona-explain,
 }
 .hero-callout h2,.idea h2,.endcap h2,
 .ogtrends-page .mast .subtitle,.legal-page .hero .lead {
- color:var(--okc-heading);font:normal 22px/26px Verdana,Arial,sans-serif;
+ color:var(--okc-heading);font:normal 22px/26px Verdana,"Bitstream Vera Sans","DejaVu Sans",Geneva,sans-serif;
 }
 .hero-callout p,.ogtrends-page .prose p,.legal-page .main p,
-.profile-essay p {color:var(--okc-ink);font:normal 13px/21px Verdana,Arial,sans-serif;}
+.profile-essay p {color:var(--okc-ink);font:normal 13px/21px Verdana,"Bitstream Vera Sans","DejaVu Sans",Geneva,sans-serif;}
 /* Button recipe: 30px, 3px radius, vertical blue gloss and soft edge. */
 .page .button,.ogtrends-page .button,.legal-page .button,
 body.ogc-member-theme .button,
@@ -209,7 +209,7 @@ body.ogc-persona-theme .persona-page .persona-btn,
  background:linear-gradient(to bottom,var(--okc-blue-light),var(--okc-blue));
  box-shadow:inset 0 1px 0 #ffffff7d,0 1px 2px #00000016;
  text-shadow:0 1px #1e4b7a;
- color:var(--okc-white);font:bold 12px/19px Verdana,Arial,sans-serif;
+ color:var(--okc-white);font:bold 12px/19px Verdana,"Bitstream Vera Sans","DejaVu Sans",Geneva,sans-serif;
  text-decoration:none;text-transform:none;letter-spacing:normal;transform:none;
 }
 .page .button:hover,.ogtrends-page .button:hover,.legal-page .button:hover,
@@ -241,16 +241,16 @@ body.ogc-persona-theme .persona-page .persona-app {
 .legal-page .main h2,body.ogc-member-theme .paper h2,
 body.ogc-member-theme .member-home-dashboard h2,
 .profile-site .section-header h2 {
- color:var(--okc-ink);font:normal 22px/26px Verdana,Arial,sans-serif;
+ color:var(--okc-ink);font:normal 22px/26px Verdana,"Bitstream Vera Sans","DejaVu Sans",Geneva,sans-serif;
  letter-spacing:normal;text-transform:none;
 }
 .ogtrends-page .prose h3,.legal-page .main h3,
 body.ogc-member-theme .paper h3,.profile-essay h2,.profile-details h2,
 .profile-site .question-list strong {
- color:var(--okc-heading);font:bold 14px/21px Verdana,Arial,sans-serif;
+ color:var(--okc-heading);font:bold 14px/21px Verdana,"Bitstream Vera Sans","DejaVu Sans",Geneva,sans-serif;
 }
 .ogtrends-page .card .tag,.ogtrends-page .card .read {
- color:var(--okc-blue);font:normal 12px/19px Verdana,Arial,sans-serif;
+ color:var(--okc-blue);font:normal 12px/19px Verdana,"Bitstream Vera Sans","DejaVu Sans",Geneva,sans-serif;
  text-transform:none;
 }
 .ogtrends-page .research-figure .chart-bar,
@@ -265,7 +265,7 @@ body.ogc-member-theme .eyebrow {color:var(--okc-ink-soft);}
 body.ogc-member-theme .switcher button,
 .profile-site .tab-bar button,
 body.ogc-persona-theme .persona-page .persona-ribbon {
- font:normal 12px/19px Verdana,Arial,sans-serif;
+ font:normal 12px/19px Verdana,"Bitstream Vera Sans","DejaVu Sans",Geneva,sans-serif;
  background:var(--okc-paper-dim);color:var(--okc-ink);
  border:0;border-bottom:1px solid var(--okc-line);
  box-shadow:none;transform:none;border-radius:0;text-transform:none;
@@ -301,7 +301,7 @@ body.ogc-member-theme .welcome-current-step {
 .profile-site .edit-pencil:hover {color:var(--okc-green-dark);}
 .profile-site .question-list strong{color:var(--okc-qblue);font-size:15px;}
 .profile-site .persona-code {color:var(--okc-blue);}
-.profile-site .dialog h2{color:var(--okc-ink);font:normal 22px/26px Verdana,Arial,sans-serif;}
+.profile-site .dialog h2{color:var(--okc-ink);font:normal 22px/26px Verdana,"Bitstream Vera Sans","DejaVu Sans",Geneva,sans-serif;}
 .profile-site .dialog label{color:var(--okc-heading);}
 .profile-site .dialog::backdrop{background:#0a284788;}
 body.ogc-persona-theme .persona-page .persona-titlebar {background:var(--okc-navy);color:var(--okc-white);}
