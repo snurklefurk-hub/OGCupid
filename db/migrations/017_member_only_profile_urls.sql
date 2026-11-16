@@ -12,7 +12,6 @@ GRANT SELECT ON app_private.member_profile_routes TO ogcupid_member_api;
 ALTER TABLE app_private.member_profile_routes ENABLE ROW LEVEL SECURITY;
 -- Deliberately not FORCE: the locked, SECURITY DEFINER slug assigner needs to
 -- create rows. The member API cannot INSERT/UPDATE/DELETE this table.
-DROP POLICY IF EXISTS profile_routes_member_read ON app_private.member_profile_routes;
 CREATE POLICY profile_routes_member_read ON app_private.member_profile_routes
   FOR SELECT TO ogcupid_member_api
   USING (app_private.current_member_is_active());
@@ -67,7 +66,6 @@ BEGIN
 END;
 $$;
 REVOKE ALL ON FUNCTION app_private.profile_route_on_insert() FROM PUBLIC, ogcupid_member_api, ogcupid_delete_api;
-DROP TRIGGER IF EXISTS assign_member_profile_route ON app_private.member_profiles;
 CREATE TRIGGER assign_member_profile_route
 AFTER INSERT ON app_private.member_profiles
 FOR EACH ROW EXECUTE FUNCTION app_private.profile_route_on_insert();
@@ -85,14 +83,12 @@ END $backfill$;
 
 -- Member-authenticated reads; the server still whitelists fields before JSON
 -- serialization. Existing owner-only ALL/UPDATE policies remain unchanged.
-DROP POLICY IF EXISTS member_profiles_authenticated_read ON app_private.member_profiles;
 CREATE POLICY member_profiles_authenticated_read ON app_private.member_profiles
 FOR SELECT TO ogcupid_member_api
 USING (app_private.current_member_is_active());
 
 -- Public-facing answered questions exclude is_private=true and NEVER return
 -- answer notes, acceptable partner choices or importance weights.
-DROP POLICY IF EXISTS member_answers_authenticated_public_read ON app_private.member_match_answers;
 CREATE POLICY member_answers_authenticated_public_read ON app_private.member_match_answers
 FOR SELECT TO ogcupid_member_api
 USING (is_private = false AND app_private.current_member_is_active());
