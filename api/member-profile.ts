@@ -306,6 +306,7 @@ export default {
 
     const url = new URL(request.url);
     const profilePath = url.pathname === "/profile" || url.pathname === "/profile/";
+    const memberProfileMatch = url.pathname.match(/^\/profiles\/([a-z0-9]+(?:-[a-z0-9]+)*)\/?$/);
     const answersPath = url.pathname === "/answers" || url.pathname === "/answers/";
     const photoPath = isPhotoPath(url.pathname);
     const onboardingPath = url.pathname === "/onboarding" || url.pathname === "/onboarding/";
@@ -315,7 +316,7 @@ export default {
     // A credential check that can NEVER call the privileged eraser.
     // Only enabled for the one disposable development account.
     const verifyPath = url.pathname === "/account/reauth-check" || url.pathname === "/account/reauth-check/";
-    if (!profilePath && !answersPath && !emailPreferencesPath && !deletePath && !verifyPath && !photoPath && !onboardingPath && !feedbackPath) {
+    if (!profilePath && !memberProfileMatch && !answersPath && !emailPreferencesPath && !deletePath && !verifyPath && !photoPath && !onboardingPath && !feedbackPath) {
       return json(request, { error: "Not found" }, 404);
     }
     // Self-service deletion is allowed only on the explicitly configured
@@ -337,7 +338,7 @@ export default {
            "5b03f41b-29b7-4a7a-9c72-71744dd8b2f2")) {
       return json(request, { error: "Not found" }, 404);
     }
-    const methodAllowed = feedbackPath ? request.method === "POST" : photoPath
+    const methodAllowed = memberProfileMatch ? request.method === "GET" : feedbackPath ? request.method === "POST" : photoPath
       ? photoMethodAllowed(url.pathname, request.method)
       : deletePath || verifyPath
         ? request.method === "POST"
@@ -350,7 +351,7 @@ export default {
     if (!userId) return json(request, { error: "Unauthorized" }, 401);
 
     try {
-      if (profilePath || answersPath || emailPreferencesPath || photoPath || onboardingPath || feedbackPath) {
+      if (profilePath || memberProfileMatch || answersPath || emailPreferencesPath || photoPath || onboardingPath || feedbackPath) {
         // A signed JWT can outlive the account/session that issued it.
         // Do not allow a deleted identity to read an empty profile as if it
         // were still a member, or attempt to recreate a profile via PUT.
@@ -372,6 +373,48 @@ export default {
       }
       if (onboardingPath) {
         return await handleOnboarding(request,userId,withMember,json,verifiedPlace);
+      }
+
+      // Member-only profile read; a profile slug NEVER establishes edit
+      // ownership. JWT identity and active-member status were verified above.
+      // The query chooses public profile fields explicitly: no email, private
+      // match notes, acceptable partner choices, birth dates or storage keys.
+      if (memberProfileMatch) {
+        const slug = memberProfileMatch[1];
+        const found = await withMember(userId, async client => {
+          const result = await client.query(
+            `SELECT p.user_id, p.display_name, p.about_me, p.age,
+               p.city_region, p.gender, p.pronouns, p.orientation,
+               p.interested_in, p.relationship_goal, p.looking_for,
+               p.work, p.education, p.height, p.kids, p.pets, p.smoking,
+               p.drinking, p.diet, p.languages, p.ethnicity, p.body_type,
+               p.vaping, p.drugs, p.religion, p.sign, p.income, p.status,
+               p.relationship_type, p.life_direction, p.good_at, p.favorites,
+               p.six_things, p.friday_night, p.message_me_if,
+               p.created_at, p.updated_at
+             FROM app_private.member_profile_routes route
+             JOIN app_private.member_profiles p ON p.user_id = route.user_id
+             WHERE route.slug = $1`, [slug]);
+          const row = result.rows[0];
+          if (!row) return null;
+          const answers = await client.query(
+            `SELECT question_id, option_id FROM app_private.member_match_answers
+             WHERE user_id=$1::uuid AND is_private=false
+             ORDER BY question_id LIMIT 410`, [row.user_id]);
+          const persona = await client.query(
+            "SELECT app_private.visible_member_persona($1::uuid) AS code",
+            [row.user_id]);
+          return {
+            profile: { ...present(row), slug },
+            isOwner: String(row.user_id).toLowerCase() === userId,
+            publicAnswers: answers.rows.map(answer => ({
+              questionId: String(answer.question_id),
+              optionId: String(answer.option_id)
+            })),
+            personaCode: persona.rows[0]?.code ?? null
+          };
+        });
+        return found ? json(request, found) : json(request, {error:"Profile not found"},404);
       }
 
       if (deletePath || verifyPath) {
@@ -638,10 +681,14 @@ export default {
           const founder = await client.query(
             "SELECT app_private.current_member_founder_status() AS status",
           );
+          const route = await client.query(
+            "SELECT slug FROM app_private.member_profile_routes WHERE user_id=$1::uuid",
+            [userId]);
           return {
             profile: profile.rows[0] ?? null,
             geo: geo.rows[0] ?? null,
             founderStatus: founder.rows[0]?.status ?? null,
+            slug: route.rows[0]?.slug ?? null
           };
         });
         if (!result.profile) return json(request, { profile: null });
@@ -649,6 +696,7 @@ export default {
           ...present(result.profile),
           ...geoDetails(result.geo),
           founderStatus: result.founderStatus,
+          slug: result.slug,
         } });
       }
 
@@ -782,16 +830,21 @@ export default {
         const founder = await client.query(
           "SELECT app_private.current_member_founder_status() AS status",
         );
+        const route = await client.query(
+          "SELECT slug FROM app_private.member_profile_routes WHERE user_id=$1::uuid",
+          [userId]);
         return {
           profile: saved.rows[0],
           geo: geo.rows[0] ?? null,
           founderStatus: founder.rows[0]?.status ?? null,
+          slug: route.rows[0]?.slug ?? null
         };
       });
       return json(request, { profile: {
         ...present(result.profile),
         ...geoDetails(result.geo),
         founderStatus: result.founderStatus,
+        slug: result.slug,
       } });
     } catch (error) {
       if (error instanceof Error && error.message === "Invalid controlled profile choice") {
