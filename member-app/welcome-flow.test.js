@@ -20,6 +20,27 @@ test("existing signed-in destinations remain accessible", () => {
   assert.equal(memberSectionFromHash("#settings-title"), "settings");
 });
 
+test("finished members always route past legacy welcome deep links", () => {
+  assert.equal(memberSectionFromHash(SIGNUP_WELCOME_HASH, true), "home");
+  assert.equal(memberSectionFromHash(SIGNUP_WELCOME_HASH, false), "welcome");
+  assert.equal(memberSectionFromHash("#member-title", true), "home");
+  assert.equal(memberSectionFromHash("#question-title", true), "questions");
+  assert.equal(memberSectionFromHash("#profile-title", true), "profile");
+});
+
+test("completed accounts cannot reopen the onboarding screen through links or hash changes", () => {
+  const main = readFileSync(new URL("./main.js", import.meta.url), "utf8");
+  const ui = readFileSync(new URL("./onboarding-ui.js", import.meta.url), "utf8");
+  assert.match(main, /completedOnboarding\s*&&\s*window\.location\.hash\s*===\s*SIGNUP_WELCOME_HASH/);
+  assert.match(main, /history\.replaceState\(null,\s*"",\s*window\.location\.pathname/);
+  assert.match(main, /memberSectionFromHash\(window\.location\.hash,\s*completedOnboarding\)/);
+  assert.match(main, /link\.hidden\s*=\s*completedOnboarding/);
+  assert.match(main, /currentUser\s*&&\s*!finishedOnboarding/);
+  assert.doesNotMatch(main, /onboarding\.showHub\(\)/);
+  assert.match(ui, /showHub\(\)\s*\{\s*if\s*\(status\s*&&\s*!status\.explored\)/);
+  assert.match(ui, /if\s*\(status\.explored\)\s*\{\s*hide\(\);\s*leaveToHome\(\);\s*return;/);
+});
+
 test("match-question count is one cloud, not disclosed editorial question tiers", () => {
   assert.equal(welcomeQuestionStatus(0), "0 match questions answered");
   assert.equal(welcomeQuestionStatus(1), "1 match question answered");
