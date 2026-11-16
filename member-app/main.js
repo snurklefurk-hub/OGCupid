@@ -318,8 +318,33 @@ function renderProfileEditorStep() {
   }
 }
 
+// Completed members manage their profile in the same live, member-visible
+// /profiles/{slug} page. Onboarding-only editors remain for unfinished accounts.
+function syncMemberProfileLinks(completedOnboarding) {
+  const slug = cachedProfile?.slug;
+  const profileUrl = completedOnboarding && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug || "")
+    ? "/profiles/" + encodeURIComponent(slug) : null;
+  for (const link of document.querySelectorAll(
+    'a[href="#profile-title"],a[href="#preview-title"],a[href="#photos-title"],a[data-own-profile-link]'
+  )) {
+    if (!link.dataset.preProfileHref) {
+      link.dataset.preProfileHref = link.getAttribute("href");
+    }
+    const original = link.dataset.preProfileHref;
+    link.setAttribute("href", profileUrl
+      ? profileUrl + (original === "#photos-title" ? "#photos" : "")
+      : original);
+  }
+  return profileUrl;
+}
+
 function renderMemberPage() {
   const completedOnboarding = Boolean(currentUser && onboarding?.complete);
+  const profileUrl = syncMemberProfileLinks(completedOnboarding);
+  if (profileUrl && ["#profile-title","#preview-title","#photos-title"].includes(window.location.hash)) {
+    window.location.replace(profileUrl + (window.location.hash === "#photos-title" ? "#photos" : ""));
+    return;
+  }
   // Canonical onboarding completion is server-backed. A stale deep link must
   // never reopen the four-step screen or the legacy welcome checklist.
   if (completedOnboarding && window.location.hash === SIGNUP_WELCOME_HASH) {
