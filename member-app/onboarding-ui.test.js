@@ -98,3 +98,17 @@ test("completed accounts never show an interim onboarding progress page", () => 
   assert.match(js, /const hydrate = accountChanged \|\| options\.loadProfile \|\| !onboarding\?\.state/);
   assert.match(js, /renderAuthenticated\(member\)/);
 });
+
+test("silent account verification has a deadline and cannot expose an unverified dashboard", () => {
+  const main = readFileSync(new URL("./main.js", import.meta.url), "utf8");
+  const ui = readFileSync(new URL("./onboarding-ui.js", import.meta.url), "utf8");
+  assert.match(main, /withSessionDeadline\(auth\.getSession\(\)\)/);
+  assert.match(main, /withSessionDeadline\(promise, ms = 12000\)/);
+  assert.match(main, /options\.signal \? \{ signal: options\.signal \}/);
+  assert.match(main, /request:\(method,path,body,options\)=>requestPrivate\(path,method,body,options\)/);
+  assert.match(ui, /new AbortController\(\)/);
+  assert.match(ui, /setTimeout\(\(\) => controller\.abort\(\), 12000\)/);
+  assert.match(ui, /if \(controller\.signal\.aborted\) throw new Error\("Account verification timed out\."\)/);
+  assert.match(ui, /clearTimeout\(timer\)/);
+  assert.match(ui, /if \(status\.explored\) \{ hide\(\); leaveToHome\(\); return; \}/);
+});

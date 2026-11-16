@@ -90,6 +90,22 @@ function asError(error, fallback) {
   return error?.message || fallback;
 }
 
+// Authentication reads must not leave a silent, blocked member page forever.
+// This limits UI waiting time; it never assumes onboarding has completed.
+async function withSessionDeadline(promise, ms = 12000) {
+  let timer;
+  try {
+    return await Promise.race([
+      promise,
+      new Promise((_, reject) => {
+        timer = setTimeout(() => reject(new Error("Account verification timed out. Please retry.")), ms);
+      }),
+    ]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 function fields(form) {
   return Object.fromEntries(new FormData(form).entries());
 }
@@ -453,7 +469,7 @@ function renderAuthenticated(member) {
 
 async function refreshMember(options = {}) {
   if (!auth) return null;
-  const { data, error } = await auth.getSession();
+  const { data, error } = await withSessionDeadline(auth.getSession());
   if (error) throw new Error(asError(error, "Could not check your session."));
   const member = data?.user || null;
   const newId = member?.id || null;
@@ -577,7 +593,7 @@ async function uploadProfileJpeg(blob) {
   return data;
 }
 
-async function requestPrivate(path, method, body) {
+async function requestPrivate(path, method, body, options = {}) {
   const token = await getAccessToken();
   const endpoint = new URL(memberApiUrl);
   endpoint.pathname = path;
@@ -590,6 +606,7 @@ async function requestPrivate(path, method, body) {
     ...(body ? { body: JSON.stringify(body) } : {}),
     cache: "no-store",
     credentials: "omit",
+    ...(options.signal ? { signal: options.signal } : {}),
   });
   const response = await result.json().catch(() => ({}));
   if (!result.ok) {
@@ -1293,7 +1310,7 @@ async function start() {
       showStoredProfile(result.profile);
       return result.profile;
     },
-    request:(method,path,body)=>requestPrivate(path,method,body),
+    request:(method,path,body,options)=>requestPrivate(path,method,body,options),
     signOut:async()=>{
       const {error}=await auth.signOut();
       if(error)throw new Error(asError(error,"Could not sign out"));

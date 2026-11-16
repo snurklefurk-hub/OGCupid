@@ -137,12 +137,24 @@ export function createOnboardingUI({
   }
   async function load() {
     if (!getUser()) { hide(); return; }
-    const current = await request("GET", "/onboarding");
-    status = current;
-    if (status.explored) { hide(); leaveToHome(); return; }
-    stage = nextRequired(status);
-    if(stage==="hub" && status.state?.details_complete && !status.profile)stage="summary";
-    render();
+    // Only the server decides whether onboarding is complete. Abort slow
+    // verification instead of leaving the member on an invisible page.
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 12000);
+    try {
+      const current = await request("GET", "/onboarding", undefined, { signal: controller.signal });
+      if (controller.signal.aborted) throw new Error("Account verification timed out.");
+      status = current;
+      if (status.explored) { hide(); leaveToHome(); return; }
+      stage = nextRequired(status);
+      if(stage==="hub" && status.state?.details_complete && !status.profile)stage="summary";
+      render();
+    } catch (error) {
+      if (controller.signal.aborted) throw new Error("Account verification timed out. Please retry.");
+      throw error;
+    } finally {
+      clearTimeout(timer);
+    }
   }
   async function refresh() {
     const previous = stage;
