@@ -64,7 +64,7 @@
     if(!document.body) return;
     const css = document.createElement("link");
     css.rel = "stylesheet";
-    css.href = "/feedback-widget.css?v=1";
+    css.href = "/feedback-widget.css?v=2";
     document.head.appendChild(css);
 
     const widget = element("section","ogc-feedback-widget");

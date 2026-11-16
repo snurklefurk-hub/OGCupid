@@ -36,7 +36,7 @@
   --okc-white:#ffffff;
   --okc-footer:#222222;
   --sky:var(--okc-blue); --sky-glow:var(--okc-blue-top);
-  --navy:var(--okc-navy); --navy-dark:var(--okc-navy-deep);
+  --navy:var(--okc-navy); --navy-dark:var(--okc-navy-deep); --pink:var(--okc-pink);
   --link:var(--okc-blue); --link-dark:var(--okc-heading);
   --callout:var(--okc-pale-blue); --panel:var(--okc-white);
   --border:var(--okc-line); --text:var(--okc-ink);
