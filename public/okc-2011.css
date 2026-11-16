@@ -1,0 +1,361 @@
+/*
+ * OG Cupid: circa-2011 OkCupid-inspired sitewide presentation.
+ * Source: user-approved 2011 Design Token Card (2026-11-16).
+ * Presentation only; legacy DOM IDs, scripts, form behavior, security and
+ * responsive capabilities are intentionally preserved.
+ * Load this AFTER the preexisting page-specific sheets.
+ */
+:root {
+  --okc-blue:#2963a4;
+  --okc-blue-top:#3a77b8;
+  --okc-blue-light:#3d85ce;
+  --okc-navy:#183b62;
+  --okc-navy-deep:#0b2847;
+  --okc-navy-line:#244a73;
+  --okc-navy-shadow:#0a2847;
+  --okc-sky:#d5e1ed;
+  --okc-sky-mid:#8fb3d6;
+  --okc-pink:#f83265;
+  --okc-pink-dark:#d21d51;
+  --okc-green:#63a62f;
+  --okc-green-dark:#4c9020;
+  --okc-green-pale:#e8f2e0;
+  --okc-paper:#f6f6f6;
+  --okc-paper-dim:#e9e9e9;
+  --okc-ink:#555555;
+  --okc-ink-soft:#999999;
+  --okc-ink-strong:#303030;
+  --okc-heading:#264e79;
+  --okc-qblue:#2a5a94;
+  --okc-line:#dddddd;
+  --okc-rowline:#c2d4e6;
+  --okc-pale-blue:#e7eef5;
+  --okc-yellow:#f5e663;
+  --okc-gold:#f4b402;
+  --okc-black:#111111;
+  --okc-white:#ffffff;
+  --okc-footer:#222222;
+  --sky:var(--okc-blue); --sky-glow:var(--okc-blue-top);
+  --navy:var(--okc-navy); --navy-dark:var(--okc-navy-deep);
+  --link:var(--okc-blue); --link-dark:var(--okc-heading);
+  --callout:var(--okc-pale-blue); --panel:var(--okc-white);
+  --border:var(--okc-line); --text:var(--okc-ink);
+  --ink:var(--okc-ink); --rose:var(--okc-pink);
+  --mint:var(--okc-pale-blue); --paper:var(--okc-paper);
+  --white:var(--okc-white); --blue:var(--okc-blue);
+}
+html { color-scheme:light; background:var(--okc-paper); }
+body,body.ogc-member-theme,body.ogc-persona-theme {
+  margin:0;min-width:320px;
+  background:linear-gradient(to bottom,var(--okc-blue-top) 0,var(--okc-blue) 60px,var(--okc-paper) 60px,var(--okc-paper) 100%);
+  color:var(--okc-ink);
+  font-family:Verdana,Arial,sans-serif;
+  font-size:13px;
+  line-height:21px;
+}
+body :where(h1,h2,h3,h4,h5,h6,p,a,button,textarea,input,select,th,td,label,legend,small,summary,nav,li,dt,dd) {
+  font-family:Verdana,Arial,sans-serif;
+}
+body :where(h1,h2,h3,h4,h5,h6) { letter-spacing:normal; text-transform:none; }
+body :where(h1) { font-size:26px;line-height:28px;font-weight:400;color:var(--okc-ink-strong); }
+body :where(h2) { font-size:22px;line-height:26px;font-weight:400;color:var(--okc-ink); }
+body :where(h3) { font-size:14px;line-height:21px;font-weight:700;color:var(--okc-heading); }
+body :where(p,li,dd,dt,summary) { line-height:21px; }
+body :where(a){color:var(--okc-blue);}
+body :where(a:hover){color:var(--okc-qblue);}
+body :where(button,input,select,textarea){font-family:Verdana,Arial,sans-serif;}
+body :where(input:not([type=checkbox]):not([type=radio]),select,textarea) {
+ border:1px solid #b6c6d5;border-radius:3px;background:var(--okc-white);
+ color:var(--okc-ink-strong);box-shadow:inset 0 1px 1px #0000000b;
+}
+body :where(button,a,input,select,textarea):focus-visible {
+ outline:2px solid var(--okc-blue-light);outline-offset:2px;
+}
+body :where(hr) {border:0;border-top:1px solid var(--okc-line);}
+body :where([hidden]) {display:none!important;}
+/* The original desktop grid was 1150px with a 215px navigation rail;
+   retain a responsive stacking layout on smaller screens. */
+.page,.ogtrends-page,.legal-page,.profile-site,
+body.ogc-member-theme .shell,
+body.ogc-member-theme.is-authenticated .shell,
+body.ogc-member-theme.is-authenticated.is-welcome-flow .shell,
+body.ogc-member-theme.is-authenticated.is-profile-setup .shell,
+body.ogc-persona-theme .persona-page {
+ max-width:1150px;width:calc(100% - 24px);margin-left:auto;margin-right:auto;
+ grid-template-columns:215px minmax(0,1fr);
+}
+.page,.ogtrends-page,.legal-page,body.ogc-persona-theme .persona-page { padding-top:16px; }
+.profile-site {margin-top:16px;}
+body.ogc-member-theme .shell,
+body.ogc-member-theme.is-authenticated .shell,
+body.ogc-member-theme.is-authenticated.is-welcome-flow .shell,
+body.ogc-member-theme.is-authenticated.is-profile-setup .shell {margin-top:16px;}
+/* Nearly square, navy left rail. No oversized radii, blur or purple gradients. */
+.rail-signin,.rail-nav,.profile-rail,.profile-rail nav,
+body.ogc-member-theme .masthead,
+body.ogc-member-theme.is-authenticated .masthead,
+body.ogc-member-theme.is-authenticated.is-welcome-flow .masthead,
+body.ogc-member-theme.is-authenticated.is-profile-setup .masthead,
+body.ogc-member-theme .masthead nav.classic-rail-nav,
+body.ogc-persona-theme .persona-page .rail-nav,
+body.ogc-persona-theme .persona-page .rail-member-link{
+ background:linear-gradient(to bottom,var(--okc-navy),var(--okc-navy-deep));
+ color:var(--okc-white);border:0;border-radius:0;box-shadow:none;
+}
+.rail-logo,.profile-logo,body.ogc-persona-theme .persona-page .rail-logo,
+body.ogc-member-theme .masthead .brand-original {
+ background:var(--okc-blue);border:0;
+}
+.rail-logo img,.profile-logo img,
+body.ogc-persona-theme .persona-page .rail-logo img,
+body.ogc-member-theme .masthead .brand-original img,
+body.ogc-member-theme.is-authenticated .masthead .brand-original img {
+ filter:none;mix-blend-mode:normal;max-width:100%;
+}
+.rail-signin,.profile-rail .member-note,
+body.ogc-persona-theme .persona-page .rail-member-link {
+ border-top:1px solid var(--okc-navy-line);
+ border-bottom:1px solid var(--okc-navy-line);border-radius:0;
+}
+.rail-nav a,.profile-rail nav a,
+body.ogc-member-theme .masthead nav.classic-rail-nav a,
+body.ogc-member-theme.is-authenticated .masthead nav.classic-rail-nav a,
+body.ogc-persona-theme .persona-page .rail-nav a{
+ font:normal 12px/19px Verdana,Arial,sans-serif;
+ padding:9px 15px;color:var(--okc-white);
+ border-bottom:1px solid #244a73;background:transparent;
+ text-transform:none;box-shadow:none;border-radius:0;
+}
+.rail-nav a:hover,.profile-rail nav a:hover,
+body.ogc-member-theme .masthead nav.classic-rail-nav a:hover,
+body.ogc-persona-theme .persona-page .rail-nav a:hover {
+ background:var(--okc-navy-line);color:var(--okc-white);text-decoration:none;
+}
+.rail-nav a[aria-current],.profile-rail nav a[aria-current=page],
+body.ogc-member-theme .masthead nav.classic-rail-nav a[aria-current="page"],
+body.ogc-member-theme.is-authenticated .masthead nav.classic-rail-nav a[aria-current="page"],
+body.ogc-persona-theme .persona-page .rail-nav a[aria-current=page]{
+ color:var(--okc-green-dark);background:var(--okc-green-pale);
+ border-bottom:1px solid var(--okc-green);box-shadow:none;
+ font-weight:700;padding-left:15px;
+}
+.rail-signin strong,.profile-rail .member-note,
+body.ogc-persona-theme .persona-page .rail-member-link strong {
+ color:var(--okc-white);font-size:12px;
+}
+.rail-signin .rail-signin-button,.rail-signin .rail-signup-button,
+body.ogc-persona-theme .persona-page .rail-member-link a{
+ border:1px solid #10263e;border-radius:3px;background:linear-gradient(#38414a,#111111);
+ box-shadow:inset 0 1px #ffffff30,0 1px 2px #00000020;
+ color:var(--okc-white);font:bold 12px/19px Verdana,Arial,sans-serif;
+ text-shadow:0 1px #000;min-height:30px;
+}
+.rail-signin .rail-signin-button:hover,.rail-signin .rail-signup-button:hover {
+ color:var(--okc-white);background:linear-gradient(#444444,#222222);
+}
+.rail-signin .rail-signup-button,.rail-signin .rail-signup-button:hover{color:var(--okc-white);}
+.rail-logo img,.profile-logo img {width:170px;}
+/* White paper content with 1px borders, not giant shadows. */
+.panel,.legal-page .panel,.ogtrends-page .panel,
+.profile-main,
+body.ogc-member-theme main#main,
+body.ogc-member-theme.is-authenticated main#main,
+body.ogc-member-theme.is-authenticated.is-welcome-flow main#main,
+body.ogc-member-theme.is-authenticated.is-profile-setup main#main,
+body.ogc-persona-theme .persona-page .panel {
+ background:var(--okc-white);border:1px solid var(--okc-line);
+ box-shadow:none;border-radius:0;min-width:0;
+}
+.panel-header,.ogtrends-page .mast,.legal-page .hero,
+body.ogc-member-theme main>.intro,
+body.ogc-persona-theme .persona-page .member-quiz-header,
+.profile-head {
+ background:var(--okc-white);border-bottom:1px solid var(--okc-line);
+}
+.panel-header h1,.ogtrends-page .mast h1,.legal-page .hero h1,
+body.ogc-member-theme main>.intro h1,
+body.ogc-persona-theme .persona-page .persona-heading h2,
+.profile-identity h1 {
+ color:var(--okc-ink-strong);
+ font:normal 26px/28px Verdana,Arial,sans-serif;
+ letter-spacing:normal;text-transform:none;
+}
+.panel-header h1 .headline-emphasis,
+.panel-header h1 .headline-emphasis:visited {
+ color:var(--okc-blue);font-weight:700;text-decoration:underline;
+}
+.hero-callout,.ogtrends-page .rule,.legal-page .main .notice,
+body.ogc-member-theme .notice,
+body.ogc-persona-theme .persona-page .persona-explain,
+.legal-page .main .toc {
+ color:var(--okc-heading);background:var(--okc-pale-blue);
+ border:1px solid var(--okc-rowline);border-radius:0;box-shadow:none;
+}
+.hero-callout h2,.idea h2,.endcap h2,
+.ogtrends-page .mast .subtitle,.legal-page .hero .lead {
+ color:var(--okc-heading);font:normal 22px/26px Verdana,Arial,sans-serif;
+}
+.hero-callout p,.ogtrends-page .prose p,.legal-page .main p,
+.profile-essay p {color:var(--okc-ink);font:normal 13px/21px Verdana,Arial,sans-serif;}
+/* Button recipe: 30px, 3px radius, vertical blue gloss and soft edge. */
+.page .button,.ogtrends-page .button,.legal-page .button,
+body.ogc-member-theme .button,
+body.ogc-member-theme .button.primary,
+body.ogc-persona-theme .persona-page .persona-btn,
+.profile-site .cta,.profile-site .dialog .dialog-buttons button[type=submit],
+.profile-site #photo-save {
+ min-height:30px;display:inline-flex;align-items:center;justify-content:center;
+ padding:5px 13px;border:1px solid #1f588d;border-radius:3px;
+ background:linear-gradient(to bottom,var(--okc-blue-light),var(--okc-blue));
+ box-shadow:inset 0 1px 0 #ffffff7d,0 1px 2px #00000016;
+ text-shadow:0 1px #1e4b7a;
+ color:var(--okc-white);font:bold 12px/19px Verdana,Arial,sans-serif;
+ text-decoration:none;text-transform:none;letter-spacing:normal;transform:none;
+}
+.page .button:hover,.ogtrends-page .button:hover,.legal-page .button:hover,
+body.ogc-member-theme .button:hover:not(:disabled),.profile-site .cta:hover,
+body.ogc-persona-theme .persona-page .persona-btn:hover {
+ filter:brightness(1.07);box-shadow:inset 0 1px #ffffff80,0 1px 2px #00000020;
+ text-decoration:none;transform:none;
+}
+.page .button:not(.primary):not(.blue),body.ogc-member-theme .button:not(.primary),
+.profile-site .dialog button:not([type=submit]) {
+ color:var(--okc-ink-strong);text-shadow:none;
+ background:linear-gradient(#ffffff,#eeeeee);border-color:var(--okc-line);
+}
+body.ogc-member-theme .button.primary {color:var(--okc-white);}
+body.ogc-member-theme .button:disabled,
+.profile-site button:disabled {opacity:.55;cursor:not-allowed;filter:none;}
+/* Flat tabs with thin underlines; green signals answered/completed. */
+.ogtrends-page .card,.legal-page .main .card,.legal-page .main .card.alt,
+body.ogc-member-theme .paper,.profile-site .photo-card,
+.ogtrends-page .figure,.ogtrends-page .research-figure,
+.profile-site .dialog,.profile-site .persona-card,
+body.ogc-persona-theme .persona-page .persona-app {
+ background:var(--okc-white);border:1px solid var(--okc-line);
+ box-shadow:none;border-radius:0;transform:none;
+}
+.ogtrends-page .card:hover {transform:none;box-shadow:none;border-color:var(--okc-sky-mid);}
+.ogtrends-page .card-num {color:var(--okc-ink-soft);}
+.ogtrends-page .card h2,.ogtrends-page .prose h2,
+.legal-page .main h2,body.ogc-member-theme .paper h2,
+body.ogc-member-theme .member-home-dashboard h2,
+.profile-site .section-header h2 {
+ color:var(--okc-ink);font:normal 22px/26px Verdana,Arial,sans-serif;
+ letter-spacing:normal;text-transform:none;
+}
+.ogtrends-page .prose h3,.legal-page .main h3,
+body.ogc-member-theme .paper h3,.profile-essay h2,.profile-details h2,
+.profile-site .question-list strong {
+ color:var(--okc-heading);font:bold 14px/21px Verdana,Arial,sans-serif;
+}
+.ogtrends-page .card .tag,.ogtrends-page .card .read {
+ color:var(--okc-blue);font:normal 12px/19px Verdana,Arial,sans-serif;
+ text-transform:none;
+}
+.ogtrends-page .research-figure .chart-bar,
+.ogtrends-page .chart-bar {background:var(--okc-blue);}
+.ogtrends-page .research-figure .chart-bar.coral {background:var(--okc-green);}
+.ogtrends-page .data-table th,.ogtrends-page .data-table caption,
+.ogtrends-page .stat:nth-child(2){background:var(--okc-pale-blue);color:var(--okc-heading);}
+.ogtrends-page .stat:nth-child(3){background:var(--okc-green-pale);}
+.ogtrends-page .stat,.ogtrends-page .table-wrap,
+.ogtrends-page .research-figure,.ogtrends-page .figure {border-color:var(--okc-line);}
+body.ogc-member-theme .eyebrow {color:var(--okc-ink-soft);}
+body.ogc-member-theme .switcher button,
+.profile-site .tab-bar button,
+body.ogc-persona-theme .persona-page .persona-ribbon {
+ font:normal 12px/19px Verdana,Arial,sans-serif;
+ background:var(--okc-paper-dim);color:var(--okc-ink);
+ border:0;border-bottom:1px solid var(--okc-line);
+ box-shadow:none;transform:none;border-radius:0;text-transform:none;
+}
+body.ogc-member-theme .switcher button[aria-pressed=true],
+.profile-site .tab-bar button[aria-selected=true] {
+ background:var(--okc-white);color:var(--okc-green-dark);
+ border-bottom:2px solid var(--okc-green);font-weight:700;
+}
+body.ogc-member-theme .profile-edit-section .classic-choice:has(input:checked),
+body.ogc-member-theme .question-panel fieldset label:has(input:checked),
+body.ogc-member-theme .email-options .email-option:has(input:checked) {
+ background:var(--okc-green-pale);border-color:var(--okc-green);
+}
+body.ogc-member-theme .profile-progress,body.ogc-member-theme .question-progress,
+body.ogc-member-theme .welcome-current-step {
+ background:var(--okc-pale-blue);border:1px solid var(--okc-rowline);
+ box-shadow:none;border-radius:0;
+}
+/* The established profile layout remains 2-column and owner-editable. */
+.profile-site .profile-head {padding-top:24px;}
+.profile-site .profile-main {background:var(--okc-white);}
+.profile-site .profile-summary,.profile-site .fact-row dt {color:var(--okc-ink-soft);}
+.profile-site .profile-identity h1 {font-size:26px;line-height:28px;}
+.profile-site .tab-bar{border-color:var(--okc-line);}
+.profile-site .tab-bar button{padding:11px 4px;background:none;}
+.profile-site .profile-panel{background:var(--okc-white);}
+.profile-site .avatar-frame,.profile-site .photo-card img {
+ border:1px solid var(--okc-line);border-radius:0;background:var(--okc-sky);
+}
+.profile-site .fact-row {border-bottom:1px solid var(--okc-line);}
+.profile-site .edit-pencil {color:var(--okc-green);background:transparent;}
+.profile-site .edit-pencil:hover {color:var(--okc-green-dark);}
+.profile-site .question-list strong{color:var(--okc-qblue);font-size:15px;}
+.profile-site .persona-code {color:var(--okc-blue);}
+.profile-site .dialog h2{color:var(--okc-ink);font:normal 22px/26px Verdana,Arial,sans-serif;}
+.profile-site .dialog label{color:var(--okc-heading);}
+.profile-site .dialog::backdrop{background:#0a284788;}
+body.ogc-persona-theme .persona-page .persona-titlebar {background:var(--okc-navy);color:var(--okc-white);}
+body.ogc-persona-theme .persona-page .persona-ribbon {
+ background:var(--okc-pale-blue);border:1px solid var(--okc-rowline);color:var(--okc-heading);
+}
+body.ogc-persona-theme .persona-page .persona-heading h2 {font-size:26px;}
+body.ogc-persona-theme .persona-page .persona-btn-alt {
+ color:var(--okc-ink-strong);background:linear-gradient(#ffffff,#eeeeee);
+ border-color:var(--okc-line);text-shadow:none;
+}
+/* A recognizably 2011 magazine, with its existing copy/links unchanged. */
+.cover--classic{border:1px solid var(--okc-line);box-shadow:0 1px 4px #00000030;border-radius:0;}
+.cover--classic:hover{box-shadow:0 1px 4px #00000030;}
+.ogtrends-page .footer,.legal-page .footer,
+body.ogc-member-theme .member-legal-footer,
+body.ogc-persona-theme .persona-page footer {
+ color:var(--okc-ink-soft);background:transparent;border-color:var(--okc-line);
+}
+.ogtrends-page .footer a,.legal-page .footer a,
+body.ogc-member-theme .member-legal-footer a {color:var(--okc-blue);}
+.page footer,.page footer nav,.page footer p{color:var(--okc-ink-soft);}
+.page footer a {color:var(--okc-blue);}
+/* Existing mobile structure remains active; only reset widths and the rail. */
+@media(max-width:800px){
+ .page,.ogtrends-page,.legal-page,.profile-site,
+ body.ogc-member-theme .shell,
+ body.ogc-member-theme.is-authenticated .shell,
+ body.ogc-member-theme.is-authenticated.is-welcome-flow .shell,
+ body.ogc-member-theme.is-authenticated.is-profile-setup .shell,
+ body.ogc-persona-theme .persona-page {
+  max-width:none;width:calc(100% - 24px);grid-template-columns:1fr;
+ }
+ .rail-nav,.profile-rail nav,body.ogc-persona-theme .persona-page .rail-nav {
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  border:1px solid var(--okc-navy-line);gap:0;
+ }
+ .rail-nav a,.profile-rail nav a,body.ogc-persona-theme .persona-page .rail-nav a {
+  padding:8px 10px;min-width:0;white-space:normal;
+ }
+ .profile-site .profile-main {margin-top:12px;}
+}
+@media(max-width:480px){
+ .page,.ogtrends-page,.legal-page,.profile-site,
+ body.ogc-member-theme .shell,
+ body.ogc-member-theme.is-authenticated .shell,
+ body.ogc-member-theme.is-authenticated.is-welcome-flow .shell,
+ body.ogc-member-theme.is-authenticated.is-profile-setup .shell,
+ body.ogc-persona-theme .persona-page {width:calc(100% - 16px);}
+ .panel-header h1,.ogtrends-page .mast h1,.legal-page .hero h1,
+ body.ogc-member-theme main>.intro h1,.profile-site .profile-identity h1 {
+  font-size:24px;line-height:28px;
+ }
+ .profile-site .profile-columns{grid-template-columns:1fr;}
+ .profile-site .profile-panel{padding:18px 14px;}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto;transition:none!important;animation:none!important;}}
