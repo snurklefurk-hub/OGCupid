@@ -42,7 +42,7 @@
     ["quickmatch", "✦", "QUICKMATCH"]
   ];
   const state = {
-    member: null, onboarding: null, recommendations: [], token: null,
+    member: null, onboarding: null, recommendations: [], directory: [], token: null,
     imageUrls: [], refreshSeq: 0, refreshing: false, lastRefresh: 0
   };
   const element = (tag, cls, content) => {
@@ -63,14 +63,19 @@
   // >75% group is sampled randomly; the shortfall is filled from the
   // highest-scored remaining profiles. Scores must come from the member API.
   const selectProfiles = profiles => {
-    const scored = (Array.isArray(profiles) ? profiles : []).filter(item =>
+    const eligible = (Array.isArray(profiles) ? profiles : []).filter(item =>
       safeSlug(item.slug) && item.slug !== state.member?.slug &&
-      typeof item.matchPercent === "number" && Number.isFinite(item.matchPercent) &&
-      item.matchPercent >= 0 && item.matchPercent <= 100);
-    const high = randomize(scored.filter(item => item.matchPercent > 75)).slice(0, 3);
+      (item.matchPercent === null ||
+        (typeof item.matchPercent === "number" && Number.isFinite(item.matchPercent) &&
+         item.matchPercent >= 0 && item.matchPercent <= 100)));
+    const high = randomize(eligible.filter(item => item.matchPercent !== null && item.matchPercent > 75)).slice(0, 3);
     if (high.length === 3) return high;
-    const rest = scored.filter(item => !high.includes(item))
-      .sort((a, b) => b.matchPercent - a.matchPercent);
+    const rest = eligible.filter(item => !high.includes(item))
+      .sort((a, b) => {
+        if (a.matchPercent === null && b.matchPercent !== null) return 1;
+        if (b.matchPercent === null && a.matchPercent !== null) return -1;
+        return (b.matchPercent ?? 0) - (a.matchPercent ?? 0);
+      });
     return high.concat(rest.slice(0, 3 - high.length));
   };
 
@@ -147,7 +152,10 @@
     const thumb = element("span", "ogc-card-thumb ogc-card-avatar", "♥");
     const body = element("span", "ogc-card-body");
     body.append(element("span", "ogc-card-name", String(profile.displayName || "Member").slice(0, 80)));
-    body.append(element("span", "ogc-card-percent", Math.round(profile.matchPercent) + "% match"));
+    const scoreText = typeof profile.matchPercent === "number"
+      ? Math.round(profile.matchPercent) + "% question match · " + profile.commonQuestions + " shared"
+      : "Not enough shared answers";
+    body.append(element("span", "ogc-card-percent", scoreText));
     card.append(thumb, body);
     if (compact) card.classList.add("ogc-compact-card");
     if (profile.thumbUrl) {
@@ -169,10 +177,10 @@
     }
     recommendationsBox.hidden = false;
     if (!state.recommendations.length) {
-      recNote.textContent = "No scored matches are available yet.";
+      recNote.textContent = "No discoverable member profiles are available yet.";
       return;
     }
-    recNote.textContent = "A few members worth getting to know.";
+    recNote.textContent = "Provisional question-only compatibility; limited overlap lowers confidence.";
     state.recommendations.forEach(item => recItems.append(profileRow(item, true)));
   }
 
@@ -207,10 +215,10 @@
       return;
     }
     const profiles = view === "quickmatch"
-      ? randomize(state.recommendations).slice(0, 1)
-      : state.recommendations;
+      ? randomize(state.directory).slice(0, 1)
+      : state.directory;
     if (!profiles.length) {
-      screen.append(element("p", "ogc-view-empty", "There are no scored profiles to show you yet. Match percentages will appear only when the compatibility service provides them."));
+      screen.append(element("p", "ogc-view-empty", "No discoverable members are available yet. More matches will appear as members finish onboarding."));
       const links = element("p", "ogc-view-actions");
       const q = element("a", "", "Answer more match questions");
       q.href = "/account/#question-title";
@@ -220,7 +228,7 @@
     }
     const caption = view === "quickmatch"
       ? "Here's one of your available matches. Refresh Quickmatch for another."
-      : "Members with more than 75% match are randomized first; remaining slots use the highest available scores.";
+      : "Browse completed member profiles. Question-only scores are provisional and depend on shared answers.";
     screen.append(element("p", "", caption));
     const cards = element("div", "ogc-view-card");
     profiles.forEach(profile => cards.append(profileRow(profile, false)));
@@ -325,6 +333,7 @@
         state.member = null;
         state.onboarding = null;
         state.recommendations = [];
+        state.directory = [];
         clearUrls();
         renderRightCard();
         renderRecommendations();
@@ -357,12 +366,14 @@
         }
       }
       state.recommendations = [];
+      state.directory = [];
       if (state.onboarding.explored) {
         try {
           const result = await request("/discovery");
           if (seq !== state.refreshSeq) return;
-          state.recommendations = selectProfiles(result.profiles);
-          await Promise.all(state.recommendations.map(async p => {
+          state.directory = Array.isArray(result.profiles) ? result.profiles : [];
+          state.recommendations = selectProfiles(state.directory);
+          await Promise.all(state.directory.map(async p => {
             p.thumbUrl = await thumbnailFor(p.userId);
           }));
         } catch {
@@ -376,6 +387,7 @@
       state.member = null;
       state.onboarding = null;
       state.recommendations = [];
+      state.directory = [];
       clearUrls();
       renderRightCard();
       renderRecommendations();
