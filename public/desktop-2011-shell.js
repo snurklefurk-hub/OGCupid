@@ -279,8 +279,8 @@
       const image = element("img", "ogc-right-avatar");
       image.src = state.member.thumbUrl;
       image.alt = "";
-      avatar.replaceWith(image);
-      state.member.avatarNode = image;
+      const visibleAvatar = profileCard.querySelector(".ogc-right-avatar");
+      if (visibleAvatar) visibleAvatar.replaceWith(image);
     }
   }
 
