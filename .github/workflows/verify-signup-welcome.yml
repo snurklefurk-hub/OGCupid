@@ -26,6 +26,11 @@ jobs:
         run: npm ci --prefix member-app
       - name: Test signup welcome, question sequencing, photos, and home flow
         run: npm test --prefix member-app
+      - name: Validate classic desktop scripts
+        run: |
+          node --check public/desktop-2011-shell.js
+          node --check public/profiles/question-editor.js
+          node --check public/profiles/view.js
       - name: Build production member bundle (with dummy service URLs)
         run: npm run build --prefix member-app
         env:
