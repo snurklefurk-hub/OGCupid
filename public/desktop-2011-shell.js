@@ -6,14 +6,32 @@
   if (window.matchMedia("(max-width:1023px)").matches) return;
 
   const account = document.body.classList.contains("ogc-member-theme");
-  const root = account ? document.querySelector(".shell") : document.querySelector(".profile-site");
+  const editorial = document.body.classList.contains("okc");
+  const root = account ? document.querySelector(".shell") : editorial
+    ? document.querySelector(".page") : document.querySelector(".profile-site");
   if (!root) return;
 
-  const left = root.querySelector(account ? ".masthead" : ".profile-rail");
+  const left = root.querySelector(account ? ".masthead" : editorial ? ".rail" : ".profile-rail");
   const nav = left?.querySelector("nav");
-  const right = root.querySelector(".period-promo-rail");
-  const main = root.querySelector(account ? "main#main" : ".profile-main");
+  let right = root.querySelector(editorial ? ".okc-rrail" : ".period-promo-rail");
+  if (editorial && !right) {
+    right = elementForMissingRail();
+    root.append(right);
+  }
+  const main = root.querySelector(account ? "main#main" : editorial ? ".main-column" : ".profile-main");
   if (!left || !nav || !right || !main) return;
+
+  function elementForMissingRail() {
+    const rail=document.createElement("aside");
+    rail.className="okc-rrail";rail.setAttribute("aria-label","Explore OG Cupid");
+    for (const [title,href] of [["Match questions","/account/#question-title"],["Dating Persona Test","/account/persona.html"],["OgTrends","/ogtrends/"]]) {
+      const card=document.createElement("div");card.className="okc-rbox";
+      const heading=document.createElement("h4");heading.textContent=title;
+      const link=document.createElement("a");link.href=href;link.textContent="Explore";
+      card.append(heading,link);rail.append(card);
+    }
+    return rail;
+  }
 
   const AUTH = "https://ep-hidden-breeze-bbdn5nsb.neonauth.c-15.us-east-1.aws.neon.tech/neondb/auth";
   const API = "https://br-plain-unit-bbcbxpqq-members.compute.c-15.us-east-1.aws.neon.tech";
@@ -67,6 +85,11 @@
     nav.append(link);
   }
 
+  if (editorial) {
+    const logo=left.querySelector(".rail-logo");
+    if (logo) logo.after(nav);
+  }
+
   const recommendationsBox = element("section", "ogc-desktop-discovery");
   const recHeading = element("h2", "", "You might like");
   const recNote = element("p", "ogc-discovery-note", "Compatible members will appear here.");
@@ -102,7 +125,7 @@
   const legal = element("a", "", "Privacy & terms");
   legal.href = "/privacy/";
   extra.append(settings, document.createTextNode(" · "), legal);
-  right.append(extra);
+  if (!editorial) right.append(extra);
 
   let activeView = null;
   let screen = null;
