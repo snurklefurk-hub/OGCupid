@@ -13,7 +13,7 @@ const keep2011ThemeLast = {
   apply: "build",
   closeBundle() {
     const theme = '<link rel="stylesheet" href="/okc-2011.css?v=1">';
-    const period = '<link rel="stylesheet" href="/okc-period-site.css?v=1">';
+    const period = '<link rel="stylesheet" href="/okc-period-site.css?v=2">';
     for (const name of ["index.html", "persona.html"]) {
       const filename = fileURLToPath(new URL("../public/account/" + name, import.meta.url));
       const html = readFileSync(filename, "utf8");
