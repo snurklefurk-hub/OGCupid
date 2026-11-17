@@ -58,5 +58,5 @@ test("migration is write-only, preserves feedback and limits submissions",()=>{
   assert.match(sql,/2 OR[\s\S]*interval '1 day'\) >= 30/);
   assert.match(server,/if \(feedbackPath\) \{\s*return await handleFeedback/);
   assert.match(server,/photoPath \|\| onboardingPath \|\| feedbackPath/);
-  assert.match(server,/const methodAllowed = feedbackPath \? request\.method === "POST"/);
+  assert.match(server,/const methodAllowed = (?:memberProfileMatch \? request\.method === "GET" : )?feedbackPath \? request\.method === "POST"/);
 });

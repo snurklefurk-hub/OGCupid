@@ -79,7 +79,7 @@ export function createOnboardingUI({
   root.id = "ogc-onboarding";
   root.hidden = true;
   root.setAttribute("aria-label","Getting started with OG Cupid");
-  document.body.appendChild(root);
+  // Desktop keeps the classic left and right rails visible while the center\n  // presents the same server-backed onboarding flow. Mobile is unchanged.\n  const desktopCenter = window.matchMedia("(min-width:1024px)").matches\n    ? document.querySelector(".shell main#main") : null;\n  (desktopCenter || document.body).appendChild(root);
   let status = null, stage = "hub", cityPicker = null, error = "", busy = false;
   let native = null, zipPlace = null, promptedPolyglot = false;
   function shell(markup) {
