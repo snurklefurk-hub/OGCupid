@@ -1,0 +1,130 @@
+/*
+ * OG Cupid period layout, opt-in via <body class="okc">.
+ * Spec: research/design/okc-period-style-addendum.md (overrides the Lovable card).
+ * Load AFTER okc-2011.css.
+ */
+body.okc{
+  --p-page:#2552a5;--p-rail:#12296d;--p-rail-line:#1c3680;--p-rail-deep:#0a1d5a;--p-rail-hover:#1a3580;
+  --p-rail-sub:#9fb8f0;--p-rail-text:#c4d2f5;
+  --p-head-top:#f0f0f0;--p-head-bot:#d9d7da;--p-content:#f7f7f9;--p-card:#fff;--p-callout:#eaf1f9;
+  --p-pink:#f10f5b;--p-heading:#2a3f8f;--p-link:#2a4fae;--p-ink:#444;--p-soft:#999;--p-gold:#ffb32c;
+  background:var(--p-page);color:var(--p-ink);
+  font:11px/1.55 Verdana,"Bitstream Vera Sans","DejaVu Sans",Geneva,sans-serif;
+  -webkit-font-smoothing:auto;
+}
+
+/* Skeleton: left rail | content | right rail. Fluid between ~820px and 1280px. */
+body.okc .page{
+  display:grid;
+  grid-template-columns:clamp(150px,15vw,210px) minmax(0,1fr) clamp(140px,14vw,200px);
+  grid-template-areas:"rail main rrail";
+  max-width:1280px;width:calc(100% - 20px);margin:0 auto;padding:10px 0 32px;gap:0;align-items:start;
+}
+body.okc .rail{grid-area:rail;padding:0;min-width:0}
+body.okc .main-column{grid-area:main;min-width:0;padding:0;container-type:inline-size}
+body.okc .okc-rrail{grid-area:rrail;min-width:0;padding-top:22px}
+
+body.okc .rail-logo{display:block;background:none;border:0;padding:2px 8px 10px}
+body.okc .rail-logo img{display:block;width:100%;max-width:150px;height:auto;margin:0 auto;filter:none}
+
+/* Left rail */
+body.okc .okc-railnav{display:block;background:var(--p-rail);padding:0;border:0;border-radius:0}
+body.okc .okc-railnav a{
+  display:flex;align-items:center;gap:8px;min-height:31px;padding:0 10px;
+  color:#fff;font:11px/1.3 Verdana,sans-serif;text-decoration:none;
+  border-bottom:1px solid var(--p-rail-line);background:none;
+}
+body.okc .okc-railnav a:hover{background:var(--p-rail-hover);text-decoration:none}
+body.okc .okc-railnav a[aria-current]{background:var(--p-rail-deep);font-weight:bold}
+body.okc .okc-ico{flex:none;width:16px;text-align:center;color:#a8bcff;font-size:13px}
+body.okc .okc-badge{margin-left:auto;min-width:15px;padding:0 3px;background:#3b55a3;color:#fff;font-size:9px;line-height:15px;text-align:center}
+body.okc .okc-badge.pink{background:var(--p-pink)}
+body.okc .okc-railbox{background:var(--p-rail);padding:12px 10px;border-top:1px solid var(--p-rail-line)}
+body.okc .okc-railbox h4{margin:0 0 6px;color:#fff;font:11px/1.4 Verdana,sans-serif}
+body.okc .okc-railbox h4 ~ h4{margin-top:12px}
+body.okc .okc-railbtn{display:block;padding:5px 0;text-align:center;background:var(--p-rail-deep);border:1px solid #2a4590;color:#fff;font-weight:bold;text-decoration:none}
+body.okc .okc-railbtn:hover{background:var(--p-rail-hover);color:#fff;text-decoration:none}
+body.okc .okc-railbtn-pink{color:#ff8fb4}
+
+/* Top text links */
+body.okc .okc-toplinks{display:flex;justify-content:flex-end;align-items:center;gap:14px;height:22px;padding:0 8px}
+body.okc .okc-toplinks a{color:#d5e1ff;font-size:10px;text-decoration:none}
+body.okc .okc-toplinks a:hover{color:#fff;text-decoration:underline}
+
+/* Content column */
+body.okc .panel{background:var(--p-content);border:0;border-radius:0;box-shadow:none;min-height:640px}
+body.okc .panel-header{background:linear-gradient(var(--p-head-top),var(--p-head-bot));border:0;border-bottom:1px solid #cfcdd0;padding:16px 16px 12px}
+body.okc .panel-header h1{margin:0;color:var(--p-pink);font:18px/1.3 Verdana,sans-serif;letter-spacing:-.3px;text-shadow:0 1px #fff}
+body.okc .panel-header h1 .headline-emphasis,
+body.okc .panel-header h1 .headline-emphasis:visited{color:var(--p-pink);font-weight:bold}
+body.okc main{padding:14px 16px}
+
+body.okc :where(h2:not(.cover *),h3:not(.cover *)),
+body.okc .idea h2,body.okc .endcap h2,body.okc .hero-callout h2,body.okc .principles h3{
+  color:var(--p-heading);font:bold 12px/1.4 Verdana,sans-serif;letter-spacing:0;margin:0 0 4px;
+}
+body.okc :where(p:not(.cover *)),body.okc .idea p,body.okc .principles p,body.okc .hero-callout p{
+  color:var(--p-ink);font:11px/1.6 Verdana,sans-serif;margin:0 0 8px;
+}
+body.okc :where(a:not(.cover)){color:var(--p-link)}
+
+/* Staff-Robot style callout with speech tail */
+body.okc .hero-callout{position:relative;background:var(--p-callout);border:0;border-radius:0;box-shadow:none;padding:12px 14px;margin:0 0 18px}
+body.okc .hero-callout::after{content:"";position:absolute;left:60px;bottom:-10px;border:10px solid transparent;border-bottom:0;border-top-color:var(--p-callout)}
+body.okc .hero-callout p{color:var(--p-link);margin:0}
+body.okc .hero-actions{display:flex;gap:8px;margin:0;padding:0}
+
+/* Cards on the content gray */
+body.okc .content-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:12px;margin-top:14px;padding:0;border:0}
+body.okc .idea,body.okc .endcap{background:var(--p-card);padding:14px;border:0;border-radius:0}
+body.okc .principles{display:grid;gap:12px;margin-top:12px}
+body.okc .principles small{color:var(--p-soft);font:11px Verdana,sans-serif}
+body.okc .endcap{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:12px}
+body.okc .endcap p{max-width:none;margin:0}
+body.okc .endcap h2 span{color:var(--p-pink)}
+body.okc .cover--classic{min-height:0;transform:none;border:1px solid #ddd;box-shadow:none}
+body.okc .cover--classic:hover{transform:none;box-shadow:none}
+
+@container (max-width:640px){body.okc .content-grid{grid-template-columns:1fr}body.okc .magazine{max-width:300px}}
+
+/* Buttons: light gradient, 1px border, small bold label */
+body.okc .button{
+  display:inline-flex;align-items:center;justify-content:center;min-height:0;height:26px;padding:0 14px;
+  border-radius:2px;font:bold 11px/24px Verdana,sans-serif;text-decoration:none;
+  text-shadow:none;box-shadow:none;transform:none;letter-spacing:0;text-transform:none;filter:none;
+}
+body.okc .button.primary{color:#fff;background:linear-gradient(#4a77d4,#2a55b4);border:1px solid #234a9e}
+body.okc .button:not(.primary){color:#333;background:linear-gradient(#fff,#ececec);border:1px solid #c9c9c9}
+body.okc .button.gray{color:#fff;background:#8a888b;border-color:#7a787b}
+body.okc .button:hover{filter:brightness(1.05);text-decoration:none}
+
+/* Right rail: promo boxes now, ad slots later (same footprint) */
+body.okc .okc-rbox{background:var(--p-rail);margin:0 0 10px;padding:12px 10px;color:var(--p-rail-text)}
+body.okc .okc-rbox h4{margin:0 0 4px;color:#fff;font:bold 11px/1.4 Verdana,sans-serif}
+body.okc .okc-rbox p{color:var(--p-rail-text);font-size:10px;line-height:1.5;margin:0 0 6px}
+body.okc .okc-rbox a{color:var(--p-rail-sub);font-size:10px;text-decoration:none}
+body.okc .okc-rbox a:hover{color:#fff;text-decoration:underline}
+body.okc .okc-slot{min-height:160px}
+body.okc .okc-slot-label{display:block;margin-bottom:6px;color:#7f97d6;font-size:9px}
+body.okc .okc-slot strong{display:block;color:#fff;font-size:12px;margin-bottom:4px}
+
+/* Footer under the content column */
+body.okc footer{margin:10px 0 0;padding:0;color:var(--p-rail-sub);font-size:10px;line-height:1.5}
+body.okc footer nav{display:flex;flex-wrap:wrap;gap:10px}
+body.okc footer nav strong{color:var(--p-rail-text);font-weight:normal;margin:0}
+body.okc footer nav a{color:var(--p-rail-text);border:0;padding:0;text-decoration:none}
+body.okc footer nav a:hover{color:#fff;text-decoration:underline}
+body.okc footer p{color:#7f97d6;font-size:10px;margin:6px 0 0}
+
+/* Below ~820px the right rail tucks under the left rail; phones stack. */
+@media(max-width:820px){
+  body.okc .page{grid-template-columns:160px minmax(0,1fr);grid-template-areas:"rail main" "rrail main"}
+  body.okc .okc-rrail{padding-top:10px}
+  body.okc .content-grid{grid-template-columns:1fr}
+  body.okc .magazine{max-width:300px}
+}
+@media(max-width:560px){
+  body.okc .page{grid-template-columns:1fr;grid-template-areas:"rail" "main" "rrail"}
+  body.okc .okc-railnav{display:grid;grid-template-columns:1fr 1fr}
+  body.okc .endcap{display:block}
+}

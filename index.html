@@ -13,19 +13,21 @@
   <style>html.ogc-session-pending body{visibility:hidden}</style>
   <script src="/home-auth-redirect.js?v=1"></script>
   <link rel="stylesheet" href="/okc-2011.css?v=1">
+  <link rel="stylesheet" href="/okc-period.css?v=3">
 </head>
-<body>
+<body class="okc">
   <a class="skip" href="#main">Skip to content</a>
   <div class="page">
     <aside class="rail" aria-label="OG Cupid navigation">
       <a class="rail-logo" href="/" aria-label="OG Cupid home"><img src="/brand/ogcupid-logo-white.png" alt="OG Cupid" width="720" height="174"></a>
-      <div class="rail-signin"><strong>Already a member?</strong><a class="rail-signin-button" href="/account/">Sign in</a><a class="rail-signin-button rail-signup-button" href="/account/?join=1">Sign Up</a></div>
-      <nav class="rail-nav" aria-label="Primary navigation">
-        <a href="/" aria-current="page">Home</a><a href="/account/">Members</a><a href="/questions/">Match questions</a><a href="/quiz/">Dating persona</a><a href="/ogtrends/">OgTrends</a><a href="/contact/">Contact</a>
+      <nav class="okc-railnav" aria-label="Primary navigation">
+        <a href="/" aria-current="page"><span class="okc-ico" aria-hidden="true">&#9829;</span>Home</a><a href="/account/"><span class="okc-ico" aria-hidden="true">&#9787;</span>Members</a><a href="/questions/"><span class="okc-ico" aria-hidden="true">?</span>Match questions</a><a href="/quiz/"><span class="okc-ico" aria-hidden="true">&#9733;</span>Dating persona</a><a href="/ogtrends/"><span class="okc-ico" aria-hidden="true">&#9998;</span>OgTrends</a><a href="/contact/"><span class="okc-ico" aria-hidden="true">&#9993;</span>Contact</a>
       </nav>
+      <div class="okc-railbox"><h4>Already a member?</h4><a class="okc-railbtn" href="/account/">Sign in</a><h4>New here?</h4><a class="okc-railbtn okc-railbtn-pink" href="/account/?join=1">Sign up for free</a></div>
     </aside>
     <div class="main-column">
-      <div class="panel">
+      <div class="okc-toplinks"><a href="/account/">Sign in</a><a href="/account/?join=1">Join</a><a href="/ogtrends/">OgTrends</a></div>
+<div class="panel">
         <header class="panel-header">
           <h1>Online dating is dead because <a class="headline-emphasis" href="https://tinder.com/" target="_blank" rel="noopener noreferrer" aria-label="it sucks — opens Tinder in a new tab">it sucks</a>.</h1>
         </header>
@@ -61,10 +63,20 @@
           </div>
           <section class="endcap" aria-labelledby="endcap-title"><div><h2 id="endcap-title">Enough scrolling. <span>Come be interesting.</span></h2><p>We don't need another dating app that treats people like inventory. We need a place worth showing up for.</p></div><a class="button primary" href="/account/?join=1">Get started on OG Cupid</a></section>
         </main>
-        <div class="wave" aria-hidden="true"></div>
+        
       </div>
       <footer><nav aria-label="Footer"><strong>OG Cupid</strong><a href="/ogtrends/">OgTrends</a><a href="/account/">Sign in</a><a href="/account/">Create an account</a><a href="/contact/">Contact</a><a href="/privacy/">Privacy Policy</a><a href="/terms/">Terms &amp; Conditions</a></nav><p>Made for people, not engagement metrics. Independent project; not affiliated with OkCupid or Match Group.<br>AI was used to assist with composition, research, editing, and data gathering.</p></footer>
     </div>
+    <aside class="okc-rrail" aria-label="Promotions">
+      <div class="okc-rbox"><h4>Answer match questions</h4><p>The more you answer, the better your matches get.</p><a href="/questions/">Start answering &raquo;</a></div>
+      <div class="okc-rbox"><h4>Find your dating persona</h4><p>A two-minute quiz with suspiciously accurate results.</p><a href="/quiz/">Take the quiz &raquo;</a></div>
+      <div class="okc-rbox okc-slot" data-slot="promo-1"><span class="okc-slot-label">From OgTrends</span><a href="/ogtrends/"><strong>OG Cupid is live!</strong> Read the launch issue &raquo;</a></div>
+    </aside>
+    <aside class="okc-rrail" aria-label="Promotions">
+      <div class="okc-rbox"><h4>Answer match questions</h4><p>The more you answer, the better your matches get.</p><a href="/questions/">Start answering &raquo;</a></div>
+      <div class="okc-rbox"><h4>Find your dating persona</h4><p>A two-minute quiz with suspiciously accurate results.</p><a href="/quiz/">Take the quiz &raquo;</a></div>
+      <div class="okc-rbox okc-slot" data-slot="promo-1"><span class="okc-slot-label">From OgTrends</span><a href="/ogtrends/"><strong>OG Cupid is live!</strong> Read the launch issue &raquo;</a></div>
+    </aside>
   </div>
   <script defer src="/visit-counter.js"></script>
   <script defer src="/feedback-widget.js"></script>
