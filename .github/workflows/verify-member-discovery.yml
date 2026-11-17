@@ -1,0 +1,34 @@
+name: Verify member discovery and scoring
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'api/**'
+      - 'db/migrations/020_member_discovery_eligibility.sql'
+      - 'public/desktop-2011-shell.js'
+      - '.github/workflows/verify-member-discovery.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'api/**'
+      - 'db/migrations/020_member_discovery_eligibility.sql'
+      - 'public/desktop-2011-shell.js'
+      - '.github/workflows/verify-member-discovery.yml'
+permissions:
+  contents: read
+jobs:
+  discovery-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate source syntax
+        run: |
+          node --check api/discovery-score.js
+          node --check api/member-discovery.js
+          node --check public/desktop-2011-shell.js
+      - name: Verify question scoring and member-only discovery privacy
+        run: |
+          node --test api/discovery-score.test.js api/discovery-route.test.js api/profile-route.test.js api/member-feedback.test.js
