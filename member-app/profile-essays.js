@@ -100,9 +100,7 @@ export function formatEssayParagraphs(text) {
     return '<p class="empty-essay-note"><em>(Not answered yet)</em></p>';
   }
   return text
-    .split(/
-{2,}|
-/)
+    .split('\n')
     .map(chunk => chunk.trim())
     .filter(Boolean)
     .map(para => `<p>${escapeHtml(para)}</p>`)
