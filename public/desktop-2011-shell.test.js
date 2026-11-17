@@ -60,11 +60,11 @@ test("both pages use the same left/nav, center-scroll, and right rail grid posit
 
 test("CSS is last in both published pages, and Vite rebuild preserves that order", () => {
   for (const html of [account,profile]) {
-    assert.match(html, /desktop-2011-shell\.css\?v=1/);
+    assert.match(html, /desktop-2011-shell\.css\?v=2/);
     const desktop = html.indexOf("/desktop-2011-shell.css");
     assert.ok(desktop > html.indexOf("/okc-2011.css"));
     assert.ok(desktop > html.indexOf("/okc-period-site.css"));
   }
   assert.match(memberJs, /document\.body\.classList\.toggle\("is-authenticated", authenticated\)/);
-  assert.match(viteConfig, /const desktop = '<link rel="stylesheet" href="\/desktop-2011-shell\.css\?v=1">';/);
+  assert.match(viteConfig, /const desktop = '<link rel="stylesheet" href="\/desktop-2011-shell\.css\?v=2">';/);
 });
