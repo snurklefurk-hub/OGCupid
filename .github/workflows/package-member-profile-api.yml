@@ -30,7 +30,7 @@ jobs:
         run: |
           node --check public/profiles/view.js
           node --check public/home-auth-redirect.js
-          node --test api/job-moderation.test.js api/profile-choices.test.js api/profile-query.test.js api/profile-route.test.js
+          node --test api/job-moderation.test.js api/profile-choices.test.js api/profile-query.test.js api/profile-route.test.js api/discovery-score.test.js api/discovery-route.test.js
       - name: Compile deployable Neon Function
         run: |
           npx esbuild api/member-profile.ts --bundle --platform=node --target=node24 --format=esm --banner:js="import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);" --outfile="$RUNNER_TEMP/index.mjs"
