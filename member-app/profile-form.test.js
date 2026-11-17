@@ -2,18 +2,18 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
+import { CLASSIC_ESSAYS } from './profile-essays.js';
 
 const html = readFileSync(new URL('./index.html', import.meta.url), 'utf8');
 const source = readFileSync(new URL('./main.js', import.meta.url), 'utf8');
 
 test('profile draft and preview have their required form controls', () => {
-  for (const name of ['aboutMe', 'age', 'displayName', 'diet', 'education', 'relationshipType']) {
+  for (const name of ['age', 'displayName', 'diet', 'education', 'relationshipType']) {
     assert.ok(html.includes(`name="${name}"`), `missing ${name}`);
   }
-  assert.ok(html.includes('id="bio-count"'));
-  assert.equal((html.match(/name="aboutMe"/g) || []).length, 1);
+  assert.ok(html.includes('id="profile-essays-editor"'));
+  assert.ok(CLASSIC_ESSAYS.some(e => e.key === 'aboutMe'));
 });
-
 test('qualified choices and paired choices restore their editable components', () => {
   const functions = source.slice(source.indexOf('function restoreQualifiedChoice'), source.indexOf('function readProfileDraft'));
   const context = vm.createContext({});
