@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="/okc-2011.css?v=1">
   <link rel="icon" type="image/png" href="/favicon.png?v=3">
   <link rel="stylesheet" href="/okc-period-site.css?v=2">
+  <link rel="stylesheet" href="./questions-period.css">
 </head>
 <body class="ogc-member-theme ogc-member-pending">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -593,9 +594,8 @@
         <section class="paper question-panel" id="questions-panel" aria-labelledby="question-title">
           <header class="og-question-page-header">
             <div>
-              <p class="eyebrow">YOUR ACCOUNT / COMPATIBILITY</p>
-              <h2 id="question-title">Match questions</h2>
-              <p class="classic-questions-intro">Answer once, keep going, and change your mind whenever you like.</p>
+              <h2 id="question-title">Questions</h2>
+              <p class="classic-questions-intro">Get to know people beyond their photos.</p>
             </div>
             <a class="og-question-profile-link" href="#preview-title">My profile</a>
           </header>
@@ -616,20 +616,20 @@
                 <h3 id="question-headline" class="og-question-headline">Your next question</h3>
                 <div class="og-question-answer-grid">
                   <section class="og-question-answer-column" aria-label="Your answer">
-                    <p class="classic-question-step">01 <span>YOUR ANSWER</span></p>
+                    <p class="classic-question-step"><span>Your answer...</span></p>
                     <fieldset id="question-choices" class="classic-question-options">
                       <legend id="question-prompt" class="og-screen-reader-prompt"></legend>
                     </fieldset>
                   </section>
                   <section class="og-question-answer-column" aria-label="Answers you will accept">
                     <fieldset id="acceptable-choices" class="classic-question-options classic-acceptable-options">
-                      <legend>02 <span>ANSWERS I'LL ACCEPT</span></legend>
+                      <legend><span>Answer I’ll accept...</span></legend>
                       <p id="acceptable-hint" class="classic-question-helper">Check any answers you'd accept from a match.</p>
                     </fieldset>
                   </section>
                 </div>
                 <fieldset class="classic-question-importance">
-                  <legend>03 <span>HOW IMPORTANT IS THIS TO ME?</span></legend>
+                  <legend><span>This question is...</span></legend>
                   <div class="classic-question-rating-options">
                     <label><input type="radio" name="importance" value="0"><span>Irrelevant</span></label>
                     <label><input type="radio" name="importance" value="1" checked><span>A little important</span></label>
@@ -639,15 +639,15 @@
                   </div>
                 </fieldset>
                 <div class="classic-question-explain">
-                  <label for="question-note"><span class="classic-question-step">04 <span>EXPLAIN YOUR ANSWER</span></span><small>Optional private note, for your own reference</small></label>
+                  <label for="question-note"><span class="classic-question-step"><span>Explain your answer</span></span><small>Optional private note, for your own reference</small></label>
                   <textarea id="question-note" name="note" rows="3" maxlength="400" placeholder="Anything you'd like to remember about your answer?"></textarea>
                 </div>
                 <label class="checkrow classic-question-private" for="question-private"><input id="question-private" name="private" type="checkbox"><span>Keep this answer private</span></label>
                 <p id="question-answer-error" class="classic-question-error" role="alert" hidden></p>
               </div>
               <div class="classic-question-actions">
-                <button class="button primary" id="question-save-button" type="submit">Save answer &amp; next question &rarr;</button>
-                <button id="question-skip" class="quiet-button" type="button" hidden>Skip this question</button>
+                <button class="button primary" id="question-save-button" type="submit">Submit</button>
+                <button id="question-skip" class="quiet-button" type="button" hidden>Skip</button>
               </div>
             </form>
             <p id="question-complete" class="classic-question-complete" hidden>You've answered every question in the curated set. Come back as we build matching.</p>
