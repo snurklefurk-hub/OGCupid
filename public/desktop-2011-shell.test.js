@@ -9,14 +9,12 @@ const memberJs = readFileSync(new URL("../member-app/main.js", import.meta.url),
 const viteConfig = readFileSync(new URL("../member-app/vite.config.js", import.meta.url), "utf8");
 
 function sharedRule(memberSelector, profileSelector) {
-  // CSS rule body (not declaration order) must contain *both* selectors.
-  const block = css.split("{").find(segment => {
-    const suffix = segment.slice(segment.lastIndexOf("}") + 1);
-    return suffix.includes(memberSelector) && suffix.includes(profileSelector);
-  });
-  assert.ok(block, "Shared account/profile selector group missing: " + memberSelector);
-  const offset = css.indexOf(block);
-  return css.slice(offset, css.indexOf("}", offset));
+  // Keep both pages in the same CSS selector group, so their geometry
+  // cannot silently diverge while a later stylesheet overrides one page.
+  for (const rule of css.matchAll(/([^{}]+)\\{([^{}]+)\\}/g)) {
+    if (rule[1].includes(memberSelector) && rule[1].includes(profileSelector)) return rule[2];
+  }
+  assert.fail("Shared account/profile selector group missing: " + memberSelector);
 }
 
 test("CSS contains real line breaks, not literal backslash-n escapes in selector groups", () => {
