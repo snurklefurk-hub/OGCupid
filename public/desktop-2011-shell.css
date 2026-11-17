@@ -222,3 +222,32 @@
     margin:0!important;background:#2552a5!important;height:24px!important;
   }
 }
+
+
+/* Owner Questions tab: compact answer / reanswer form, using 2011 tokens. */
+.profile-site .ogc-owner-question-editor {margin-top:17px;}
+.profile-site .ogc-question-edit-card {
+  padding:17px 19px;background:#fff;border:1px solid #d7dfe8;color:#555;
+  box-shadow:none;border-radius:0;
+}
+.profile-site .ogc-question-edit-card > h2 {
+  margin:0 0 12px;color:#264e79;font:bold 14px/21px Verdana,Geneva,sans-serif;
+}
+.profile-site .ogc-answer-tools {display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px;margin-bottom:14px;padding:11px;background:#e7eef5;border:1px solid #c2d4e6;}
+.profile-site .ogc-answer-tools label {flex:1 1 200px;min-width:0;color:#264e79;font:bold 11px/16px Verdana,Geneva,sans-serif;}
+.profile-site .ogc-answer-tools select {display:block;width:100%;min-width:0;max-width:100%;height:30px;margin-top:5px;padding:4px;border:1px solid #bacad9;background:#fff;font:11px Verdana,Geneva,sans-serif;color:#444;}
+.profile-site .ogc-answer-tools button,.profile-site .ogc-answer-edit-link {
+  padding:5px 9px;border:1px solid #bbc9d6;background:linear-gradient(#fff,#e7edf3);
+  color:#2a5a94;border-radius:2px;font:bold 11px Verdana,Geneva,sans-serif;
+}
+.profile-site .ogc-answer-edit-link {margin:6px 0 2px;}
+.profile-site .ogc-inline-answer-form h3 {margin:0 0 12px;color:#2a5a94;font:bold 15px/21px Verdana,Geneva,sans-serif;}
+.profile-site .ogc-answer-group {border:0;border-top:1px solid #e2e2e2;margin:0 0 13px;padding:12px 0 0;}
+.profile-site .ogc-answer-group legend {padding:0 4px 0 0;color:#2a5a94;font:bold 12px/18px Verdana,Geneva,sans-serif;}
+.profile-site .ogc-answer-choice {display:flex;align-items:flex-start;gap:6px;padding:2px 0;font:12px/18px Verdana,Geneva,sans-serif;color:#444;cursor:pointer;}
+.profile-site .ogc-answer-choice input {flex:none;margin-top:3px;accent-color:#2963a4;}
+.profile-site .ogc-answer-note {display:block;margin:12px 0;color:#2a5a94;font:bold 11px Verdana,Geneva,sans-serif;}
+.profile-site .ogc-answer-note textarea {display:block;box-sizing:border-box;width:100%;min-height:66px;margin:6px 0;border:1px solid #b5c6d6;background:#fff;padding:8px;color:#444;font:12px/18px Verdana,Geneva,sans-serif;resize:vertical;}
+.profile-site .ogc-answer-error {color:#af2148;font-size:11px;}
+.profile-site .ogc-answer-success {padding:9px 12px;background:#e8f2e0;border:1px solid #b3d99d;color:#4c9020;font-weight:700;}
+.profile-site .ogc-inline-answer-form .cta {margin-top:8px;cursor:pointer;}
