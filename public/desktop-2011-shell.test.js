@@ -11,7 +11,7 @@ const viteConfig = readFileSync(new URL("../member-app/vite.config.js", import.m
 function sharedRule(memberSelector, profileSelector) {
   // Keep both pages in the same CSS selector group, so their geometry
   // cannot silently diverge while a later stylesheet overrides one page.
-  for (const rule of css.matchAll(/([^{}]+)\\{([^{}]+)\\}/g)) {
+  for (const rule of css.matchAll(/([^{}]+)\{([^{}]+)\}/g)) {
     if (rule[1].includes(memberSelector) && rule[1].includes(profileSelector)) return rule[2];
   }
   assert.fail("Shared account/profile selector group missing: " + memberSelector);
