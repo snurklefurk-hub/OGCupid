@@ -15,6 +15,10 @@ export function memberSectionFromHash(hash, onboardingComplete = false) {
   if (hash === "#photos-title") return "photos";
   if (hash === "#question-title") return "questions";
   if (hash === "#settings-title") return "settings";
+  if (hash === "#matches-title") return "matches";
+  if (hash === "#messages-title") return "messages";
+  if (hash === "#visitors-title") return "visitors";
+  if (hash === "#quickmatch-title") return "quickmatch";
   return "home";
 }
 
