@@ -10,6 +10,7 @@
   <link rel="icon" type="image/png" href="/favicon.png?v=3">
   <link rel="stylesheet" href="/profiles/view.css?v=1">
   <script src="/questions/question-bank.js"></script>
+  <script src="/questions/question-order.js"></script>
   <script type="module" src="/profiles/view.js?v=1"></script>
   <link rel="stylesheet" href="/okc-2011.css?v=1">
   <link rel="stylesheet" href="/okc-period-site.css?v=2">
@@ -77,8 +78,9 @@
             <h2>Questions answered</h2>
             <a class="cta" id="answer-more" href="/account/#question-title" hidden>Answer questions</a>
           </div>
-          <p class="muted">Only answers marked public are shown here.</p>
+          <p class="muted" id="question-privacy-note">Only answers marked public are shown here.</p>
           <ol class="question-list" id="question-list"></ol>
+          <div id="owner-question-editor" class="ogc-owner-question-editor" hidden></div>
         </section>
         <section class="profile-panel" id="panel-personality" role="tabpanel" aria-labelledby="tab-personality" hidden>
           <div class="section-header">
