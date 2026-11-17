@@ -412,6 +412,7 @@
       publicAnswers = data.publicAnswers || [];
       personaCode = data.personaCode;
       renderHeader();renderAbout();renderQuestions();renderPersona();
+      window.dispatchEvent(new CustomEvent("ogc:profile-ready", {detail:{isOwner}}));
       el("profile-app").hidden = false;
       el("loading").hidden = true;
       el("main").setAttribute("aria-busy","false");
