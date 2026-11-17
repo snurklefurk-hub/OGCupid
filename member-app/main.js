@@ -11,6 +11,12 @@ import "./onboarding.css";
 import { createProfilePhotoGallery } from "./profile-photo-gallery.js";
 import "../public/questions/question-bank.js";
 import "./styles.css";
+import {
+  CLASSIC_ESSAYS,
+  renderEssaysEditor,
+  renderEssaysPreview,
+  attachEssayCounters
+} from "./profile-essays.js";
 
 // Preview-only defaults. The production build does NOT connect to the
 // development database. A release requires explicitly configured production
@@ -720,7 +726,7 @@ function renderQuestion() {
 
 // OG Cupid's classic long-form profile is entirely owner-editable. The
 // preview uses textContent and DOM nodes, never member-submitted HTML.
-const longProfileFields = Object.freeze(["cityRegion","work","education","height","kids","pets","smoking","drinking","diet","ethnicity","bodyType","vaping","drugs","religion","sign","income","status","relationshipType","lifeDirection","goodAt","favorites","sixThings","fridayNight","messageMeIf"]);
+const longProfileFields = Object.freeze(["cityRegion","work","education","height","kids","pets","smoking","drinking","diet","ethnicity","bodyType","vaping","drugs","religion","sign","income","status","relationshipType","lifeDirection","goodAt","firstThings","favorites","sixThings","thinkingAbout","fridayNight","messageMeIf"]);
 const previewEssays = Object.freeze([["aboutMe","about","about-section"],["lifeDirection","life-direction","life-direction-section"],["goodAt","good-at","good-at-section"],["favorites","favorites","favorites-section"],["sixThings","six-things","six-things-section"],["fridayNight","friday-night","friday-night-section"],["messageMeIf","message-me-if","message-me-if-section"]]);
 const previewDetails = Object.freeze([["Orientation","orientation"],["Ethnicity","ethnicity"],["Height","height"],["Body Type","bodyType"],["Diet","diet"],["Smokes","smoking"],["Vapes","vaping"],["Drinks","drinking"],["Drugs","drugs"],["Religion","religion"],["Sign","sign"],["Education","education"],["Job","work"],["Income","income"],["Status","status"],["Type","relationshipType"],["Offspring","kids"],["Pets","pets"],["Speaks","languages"]]);
 
@@ -771,11 +777,18 @@ function updateOffspringOptions() {
   select.selectedIndex = Math.max(0, previous);
 }
 
+function mountEssaysEditor(profile = {}) {
+  const container = $("profile-essays-editor");
+  if (!container) return;
+  container.innerHTML = renderEssaysEditor(profile);
+  attachEssayCounters(container);
+}
+
 function readProfileDraft(form = $("profile-form")) {
   const ageValue = form.elements.age.value.trim();
   const draft = {
     displayName: form.elements.displayName.value.trim(),
-    aboutMe: form.elements.aboutMe.value.trim(),
+    aboutMe: form.elements.aboutMe ? form.elements.aboutMe.value.trim() : "",
     age: ageValue ? Number(ageValue) : null,
     locality: homeCityPicker?.current() ?? null,
     // Search starts from the broad location already chosen in Basics. There
@@ -808,8 +821,7 @@ function updateClassicRailProgress() {
   const form = $("profile-form");
   const data = new FormData(form);
   const exists = name => String(data.get(name) || "").trim().length > 0;
-  const essay = ["lifeDirection", "goodAt", "favorites", "sixThings", "fridayNight", "messageMeIf"]
-    .some(exists);
+  const essay = CLASSIC_ESSAYS.filter(e => e.key !== "aboutMe").map(e => e.key).some(exists);
   const completed = [
     exists("displayName"), exists("aboutMe"), exists("age"), exists("cityRegion"),
     exists("gender"), data.getAll("interestedIn").length > 0,
@@ -823,7 +835,10 @@ function updateClassicRailProgress() {
 function renderProfilePreview() {
   updateClassicRailProgress();
   const draft = readProfileDraft();
-  $("bio-count").textContent = String($("profile-form").elements.aboutMe.value.length);
+  const bioCount = $("aboutMe-count") || $("bio-count");
+  if (bioCount && $("profile-form")?.elements?.aboutMe) {
+    bioCount.textContent = String($("profile-form").elements.aboutMe.value.length);
+  }
   $("preview-display-name").textContent = draft.displayName || "Your name goes here";
 
   const introBits = [];
@@ -863,23 +878,20 @@ function renderProfilePreview() {
     details.appendChild(note);
   }
 
-  for (const [field, targetId, sectionId] of previewEssays) {
-    const value = draft[field];
-    const body = $("preview-" + targetId);
-    body.textContent = value || (field === "aboutMe"
-      ? "Your self-summary will appear here as you write."
-      : "");
-    if (field !== "aboutMe") show("preview-" + sectionId, Boolean(value));
+  const essaysContainer = document.querySelector(".og-preview-essays");
+  if (essaysContainer) {
+    essaysContainer.innerHTML = renderEssaysPreview(draft, { showEmpty: true, isOwner: true });
   }
 
-  const filled = previewEssays.filter(([field]) => draft[field].length >= 40).length;
-  $("profile-progress").textContent = `${filled} of 7 writing sections started (40+ characters). ` +
+  const filled = CLASSIC_ESSAYS.filter(e => (draft[e.key] || "").length >= 40).length;
+  $("profile-progress").textContent = `${filled} of 9 writing sections started (40+ characters). ` +
     (filled < 3 ? "A few real paragraphs go a long way." : "Nice. People have something to read.");
 }
 
 function showStoredProfile(profile) {
   const form = $("profile-form");
   cachedProfile = profile;
+  mountEssaysEditor(profile || {});
   photoUI?.setProfileReady(Boolean(profile));
   renderHomework();
   const fallback = typeof currentUser?.name === "string"
@@ -1190,6 +1202,7 @@ function wireForms() {
     });
   });
 
+  mountEssaysEditor(cachedProfile || {});
   $("profile-form").addEventListener("input", renderProfilePreview);
   $("profile-form").addEventListener("change", renderProfilePreview);
 
