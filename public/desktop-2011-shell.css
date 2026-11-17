@@ -4,11 +4,17 @@
    The central pane is the sole vertical page scroller. */
 :root { --ogc-desktop-left:16%; --ogc-desktop-right:16%; }
 @media (min-width:1024px) {
-  html:has(body.ogc-onboarding-active),\n  html:has(body.ogc-onboarding-native),\n  html:has(body.ogc-member-theme.is-authenticated),
+  html:has(body.ogc-onboarding-active),
+  html:has(body.ogc-onboarding-native),
+  html:has(body.ogc-member-theme.is-authenticated),
   html:has(.profile-site) {height:100%;overflow:hidden;background:#2552a5;}
   body.ogc-member-theme.is-authenticated,
+  body.ogc-onboarding-active,
+  body.ogc-onboarding-native,
   body:has(.profile-site) {height:100vh;overflow:hidden;margin:0;background:#2552a5;}
-  body.ogc-onboarding-active > .shell,\n  body.ogc-onboarding-native > .shell,\n  body.ogc-member-theme.is-authenticated .shell,
+  body.ogc-onboarding-active > .shell,
+  body.ogc-onboarding-native > .shell,
+  body.ogc-member-theme.is-authenticated .shell,
   body.ogc-member-theme.is-authenticated.is-welcome-flow .shell,
   body.ogc-member-theme.is-authenticated.is-profile-setup .shell,
   body:has(.profile-site) .profile-site {
@@ -20,7 +26,9 @@
   }
   body.ogc-member-theme.is-authenticated .topline,
   body.ogc-member-theme.is-authenticated .member-legal-footer {display:none!important;}
-  body.ogc-onboarding-active .masthead,\n  body.ogc-onboarding-native .masthead,\n  body.ogc-member-theme.is-authenticated .masthead,
+  body.ogc-onboarding-active .masthead,
+  body.ogc-onboarding-native .masthead,
+  body.ogc-member-theme.is-authenticated .masthead,
   body.ogc-member-theme.is-authenticated.is-welcome-flow .masthead,
   body.ogc-member-theme.is-authenticated.is-profile-setup .masthead,
   .profile-site .profile-rail {
@@ -67,7 +75,9 @@
     background:#1d4075!important;color:#fff!important;border-left:3px solid #63a62f!important;padding-left:14px!important;
   }
   .ogc-desktop-nav-icon {display:inline-block;width:19px;margin-right:9px;color:#a9c7ea;font-size:12px;}
-  body.ogc-onboarding-active main#main,\n  body.ogc-onboarding-native main#main,\n  body.ogc-member-theme.is-authenticated main#main,
+  body.ogc-onboarding-active main#main,
+  body.ogc-onboarding-native main#main,
+  body.ogc-member-theme.is-authenticated main#main,
   body.ogc-member-theme.is-authenticated.is-welcome-flow main#main,
   body.ogc-member-theme.is-authenticated.is-profile-setup main#main,
   .profile-site .profile-main {
@@ -77,7 +87,9 @@
     overflow-y:auto!important;overscroll-behavior-y:contain;scrollbar-width:thin;
     background:#f6f6f6!important;border:0!important;border-radius:0!important;box-shadow:none!important;
   }
-  body.ogc-onboarding-active .period-promo-rail,\n  body.ogc-onboarding-native .period-promo-rail,\n  body.ogc-member-theme.is-authenticated .period-promo-rail,
+  body.ogc-onboarding-active .period-promo-rail,
+  body.ogc-onboarding-native .period-promo-rail,
+  body.ogc-member-theme.is-authenticated .period-promo-rail,
   .profile-site .period-promo-rail {
     grid-column:3!important;grid-row:1!important;position:relative!important;
     align-self:stretch!important;height:100vh!important;min-height:0!important;

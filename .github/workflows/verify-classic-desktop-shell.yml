@@ -1,0 +1,30 @@
+name: Verify classic desktop shell layout
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'public/desktop-2011-shell.css'
+      - 'public/desktop-2011-shell.test.js'
+      - 'public/account/index.html'
+      - 'public/profiles/index.html'
+      - '.github/workflows/verify-classic-desktop-shell.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/desktop-2011-shell.css'
+      - 'public/desktop-2011-shell.test.js'
+      - 'public/account/index.html'
+      - 'public/profiles/index.html'
+      - '.github/workflows/verify-classic-desktop-shell.yml'
+permissions:
+  contents: read
+jobs:
+  desktop-layout-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify shared viewport shell and CSS loading order
+        run: node --test public/desktop-2011-shell.test.js
