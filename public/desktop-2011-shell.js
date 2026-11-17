@@ -95,7 +95,7 @@
   const recNote = element("p", "ogc-discovery-note", "Compatible members will appear here.");
   const recItems = element("div", "ogc-discovery-items");
   recommendationsBox.append(recHeading, recNote, recItems);
-  left.append(recommendationsBox);
+  nav.after(recommendationsBox);
 
   const profileCard = element("section", "ogc-right-profile");
   profileCard.hidden = true;
@@ -297,6 +297,12 @@
       fill.style.width = percentage + "%";
       fill.setAttribute("aria-valuenow", String(percentage));
       progressCopy.textContent = percentage + "% complete";
+    }
+    const displayedAvatar = profileCard.querySelector(".ogc-right-avatar");
+    if (!state.member.thumbUrl && displayedAvatar?.tagName === "IMG") {
+      const fallback = element("span", "ogc-right-avatar", "♥");
+      fallback.setAttribute("aria-hidden", "true");
+      displayedAvatar.replaceWith(fallback);
     }
     if (state.member.thumbUrl) {
       const image = element("img", "ogc-right-avatar");
