@@ -1,0 +1,141 @@
+/* OG Cupid desktop member shell — Nov 17, 2026.
+   Old OkCupid screenshot is the primary visual reference; 2011 tokens are
+   inherited from /okc-2011.css. Only desktop member routes use the fixed rails.
+   The central pane is the sole vertical page scroller. */
+:root { --ogc-desktop-left:16%; --ogc-desktop-right:16%; }
+@media (min-width:1024px) {
+  html:has(body.ogc-member-theme.is-authenticated),
+  html:has(.profile-site) {height:100%;overflow:hidden;background:#2552a5;}
+  body.ogc-member-theme.is-authenticated,
+  body:has(.profile-site) {height:100vh;overflow:hidden;margin:0;background:#2552a5;}
+  body.ogc-member-theme.is-authenticated .shell,
+  body.ogc-member-theme.is-authenticated.is-welcome-flow .shell,
+  body.ogc-member-theme.is-authenticated.is-profile-setup .shell,
+  body:has(.profile-site) .profile-site {
+    display:grid!important;position:relative;width:100%!important;
+    max-width:none!important;height:100vh!important;min-height:0!important;
+    margin:0!important;padding:0!important;gap:0!important;
+    grid-template-columns:var(--ogc-desktop-left) minmax(0,1fr) var(--ogc-desktop-right)!important;
+    grid-template-rows:minmax(0,1fr)!important;align-items:stretch!important;
+  }
+  body.ogc-member-theme.is-authenticated .topline,
+  body.ogc-member-theme.is-authenticated .member-legal-footer {display:none!important;}
+  body.ogc-member-theme.is-authenticated .masthead,
+  body.ogc-member-theme.is-authenticated.is-welcome-flow .masthead,
+  body.ogc-member-theme.is-authenticated.is-profile-setup .masthead,
+  .profile-site .profile-rail {
+    grid-column:1!important;grid-row:1!important;
+    display:flex!important;flex-direction:column!important;
+    position:relative!important;height:100vh!important;min-height:0!important;
+    margin:0!important;padding:0!important;overflow-x:hidden;overflow-y:auto;
+    background:#122d65!important;border:0!important;border-radius:0!important;
+    scrollbar-width:thin;scrollbar-color:#244a73 #122d65;
+  }
+  body.ogc-member-theme.is-authenticated .masthead .brand-original,
+  .profile-site .profile-logo {
+    height:80px!important;min-height:80px!important;padding:13px 18px!important;
+    display:flex!important;align-items:center;justify-content:center;
+    background:#2552a5!important;border:0!important;border-bottom:1px solid #3f69a2!important;
+  }
+  body.ogc-member-theme.is-authenticated .masthead .brand-original img,
+  .profile-site .profile-logo img {width:min(200px,85%)!important;max-height:57px;object-fit:contain;}
+  body.ogc-member-theme.is-authenticated .masthead .classic-rail-member,
+  body.ogc-member-theme.is-authenticated .masthead .classic-rail-guest,
+  body.ogc-member-theme.is-authenticated .masthead .classic-rail-section,
+  body.ogc-member-theme.is-authenticated .masthead .classic-rail-note,
+  .profile-site .profile-rail .member-note {display:none!important;}
+  body.ogc-member-theme.is-authenticated .masthead nav.classic-rail-nav,
+  .profile-site .profile-rail nav {
+    display:flex!important;flex-direction:column!important;flex:none!important;
+    width:100%!important;gap:0!important;margin:0!important;padding:10px 0 0!important;
+    background:#122d65!important;border:0!important;
+  }
+  body.ogc-member-theme.is-authenticated .masthead nav.classic-rail-nav a,
+  .profile-site .profile-rail nav a {
+    display:flex!important;align-items:center!important;justify-content:flex-start!important;
+    flex:0 0 auto!important;width:100%!important;min-height:38px!important;
+    padding:10px 17px!important;margin:0!important;
+    font:700 12px/17px Verdana,Geneva,sans-serif!important;
+    text-transform:uppercase!important;white-space:normal!important;letter-spacing:0!important;
+    color:#e7eefb!important;text-decoration:none!important;
+    border:0!important;border-bottom:1px solid #0b2453!important;border-radius:0!important;
+    box-shadow:inset 0 1px #284b7c!important;background:#122d65!important;
+  }
+  body.ogc-member-theme.is-authenticated .masthead nav.classic-rail-nav a:hover,
+  body.ogc-member-theme.is-authenticated .masthead nav.classic-rail-nav a[aria-current],
+  .profile-site .profile-rail nav a:hover,.profile-site .profile-rail nav a[aria-current] {
+    background:#1d4075!important;color:#fff!important;border-left:3px solid #63a62f!important;padding-left:14px!important;
+  }
+  .ogc-desktop-nav-icon {display:inline-block;width:19px;margin-right:9px;color:#a9c7ea;font-size:12px;}
+  body.ogc-member-theme.is-authenticated main#main,
+  body.ogc-member-theme.is-authenticated.is-welcome-flow main#main,
+  body.ogc-member-theme.is-authenticated.is-profile-setup main#main,
+  .profile-site .profile-main {
+    grid-column:2!important;grid-row:1!important;height:100vh!important;
+    max-height:100vh!important;min-height:0!important;min-width:0!important;
+    margin:0!important;padding:0 0 28px!important;overflow-x:hidden!important;
+    overflow-y:auto!important;overscroll-behavior-y:contain;scrollbar-width:thin;
+    background:#f6f6f6!important;border:0!important;border-radius:0!important;box-shadow:none!important;
+  }
+  body.ogc-member-theme.is-authenticated .period-promo-rail,
+  .profile-site .period-promo-rail {
+    grid-column:3!important;grid-row:1!important;position:relative!important;
+    align-self:stretch!important;height:100vh!important;min-height:0!important;
+    margin:0!important;padding:8px 10px!important;overflow-x:hidden;overflow-y:auto;
+    background:#2552a5!important;scrollbar-width:thin;scrollbar-color:#41639d #2552a5;
+  }
+  .period-promo-rail .period-promo {
+    margin:0 0 8px!important;padding:12px!important;
+    background:#112c62!important;color:#c4d4ed!important;
+    border:1px solid #244a80!important;border-radius:0!important;
+    box-shadow:none!important;
+  }
+  .period-promo-rail .period-promo strong {color:#fff;}
+  .period-promo-rail .period-promo a {color:#bdd8ff;}
+  .profile-site .profile-head {padding:19px 23px!important;gap:20px!important;}
+  .profile-site .avatar-frame {flex-basis:126px!important;width:126px!important;height:126px!important;}
+  .profile-site .profile-panel {padding:20px 22px!important;}
+  .profile-site .tab-bar {padding:0 19px!important;gap:3px!important;background:#e9e9e9!important;border-bottom:1px solid #d1d1d1!important;}
+  .profile-site .tab-bar button {margin:0!important;padding:9px 13px!important;font-size:12px!important;border:1px solid transparent!important;border-bottom:0!important;color:#555!important;}
+  .profile-site .tab-bar button[aria-selected=true] {background:#fff!important;border-color:#d1d1d1!important;color:#2a5a94!important;}
+  .ogc-desktop-discovery {padding:16px 12px 18px;color:#d7e4fa;font:11px/1.55 Verdana,Geneva,sans-serif;}
+  .ogc-desktop-discovery h2 {font:bold 12px/1.4 Verdana,Geneva,sans-serif;color:#fff!important;margin:0 0 5px;padding:0 3px;}
+  .ogc-desktop-discovery .ogc-discovery-note {font-size:10px;line-height:1.5;margin:0 3px 11px;color:#bfd3ed;}
+  .ogc-desktop-discovery .ogc-member-card {display:flex;gap:9px;padding:9px 3px;border-top:1px solid #31517e;color:#e8f1ff;text-decoration:none;min-height:68px;}
+  .ogc-desktop-discovery .ogc-member-card:hover {background:#23477b;text-decoration:none;}
+  .ogc-member-card .ogc-card-thumb {height:51px;width:51px;flex:none;object-fit:cover;background:#365585;border:1px solid #6384b1;}
+  .ogc-member-card .ogc-card-avatar {display:grid;place-items:center;font-size:22px;color:#e8efff;}
+  .ogc-member-card .ogc-card-body {min-width:0;display:block;}
+  .ogc-member-card .ogc-card-name {display:block;overflow-wrap:anywhere;color:#fff;font:bold 11px/1.3 Verdana,Geneva,sans-serif;}
+  .ogc-member-card .ogc-card-percent {font-size:10px;color:#aed58e;}
+  .ogc-right-profile {
+    display:block;margin:0 0 8px;padding:10px 9px 11px;
+    background:#112c62;border:1px solid #244a80;color:#dbe9fd;
+    font:11px/1.4 Verdana,Geneva,sans-serif;
+  }
+  .ogc-right-profile[hidden],.ogc-desktop-discovery[hidden] {display:none!important;}
+  .ogc-right-link {display:flex;align-items:center;gap:9px;text-decoration:none;color:#fff!important;}
+  .ogc-right-link:hover {text-decoration:underline;}
+  .ogc-right-avatar {display:grid;place-items:center;flex:0 0 50px;width:50px;height:50px;object-fit:cover;border:1px solid #7392bd;background:#284775;color:#d7e8fe;font-size:21px;}
+  .ogc-right-title {font-weight:700;font-size:11px;color:#fff;}
+  .ogc-right-subtitle {display:block;font-size:10px;color:#bed1ec;margin-top:3px;overflow-wrap:anywhere;}
+  .ogc-progress-track {margin-top:11px;height:7px;background:#071b43;border:1px solid #466593;overflow:hidden;}
+  .ogc-progress-fill {display:block;height:100%;width:0;background:#63a62f;transition:width .15s linear;}
+  .ogc-progress-copy {display:block;margin-top:5px;color:#dbe9fd;font-size:10px;}
+  .ogc-desktop-view {padding:20px 25px 32px;min-height:80vh;background:#f6f6f6;color:#555;}
+  .ogc-desktop-view h1 {margin:0 0 9px;font:normal 26px/29px Verdana,Geneva,sans-serif;color:#2a5a94;}
+  .ogc-desktop-view h2 {font:bold 14px/20px Verdana,Geneva,sans-serif;color:#264e79;}
+  .ogc-desktop-view p {font:13px/21px Verdana,Geneva,sans-serif;}
+  .ogc-desktop-view .ogc-view-card {background:#fff;border:1px solid #ddd;padding:16px;margin:12px 0;}
+  .ogc-desktop-view .ogc-view-empty {color:#777;}
+  .ogc-desktop-view .ogc-view-actions a {color:#2963a4;}
+  body.ogc-member-theme.is-authenticated.ogc-desktop-screen main#main > :not(#ogc-desktop-view) {display:none!important;}
+  body.ogc-member-theme.is-authenticated main#main #ogc-desktop-view[hidden] {display:none!important;}
+  .ogc-desktop-view .ogc-member-card {display:flex;gap:12px;padding:10px;border-bottom:1px solid #ddd;text-decoration:none;}
+  .ogc-desktop-view .ogc-card-thumb {width:68px;height:68px;object-fit:cover;background:#dce7f3;}
+  .ogc-desktop-view .ogc-card-name {color:#2a5a94;font-weight:700;}
+  .ogc-desktop-view .ogc-card-percent {color:#4c9020;display:block;}
+}
+@media(max-width:1023px) {
+  .ogc-desktop-discovery,.ogc-right-profile,.ogc-desktop-view {display:none!important;}
+}
