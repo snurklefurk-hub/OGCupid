@@ -13,12 +13,14 @@ const keep2011ThemeLast = {
   apply: "build",
   closeBundle() {
     const theme = '<link rel="stylesheet" href="/okc-2011.css?v=1">';
+    const period = '<link rel="stylesheet" href="/okc-period-site.css?v=1">';
     for (const name of ["index.html", "persona.html"]) {
       const filename = fileURLToPath(new URL("../public/account/" + name, import.meta.url));
       const html = readFileSync(filename, "utf8");
       const count = html.split(theme).length - 1;
       if (count !== 1) throw new Error("Theme reference missing or duplicated in " + name);
-      const updated = html.replace(theme, "").replace("</head>", "  " + theme + "\n</head>");
+      if (html.split(period).length !== 2) throw new Error("Period theme reference missing or duplicated in " + name);
+      const updated = html.replace(theme, "").replace(period, "").replace("</head>", "  " + theme + "\n  " + period + "\n</head>");
       if (updated === html) continue;
       writeFileSync(filename, updated, "utf8");
     }

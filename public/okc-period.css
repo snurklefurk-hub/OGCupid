@@ -128,3 +128,15 @@ body.okc footer p{color:#7f97d6;font-size:10px;margin:6px 0 0}
   body.okc .okc-railnav{display:grid;grid-template-columns:1fr 1fr}
   body.okc .endcap{display:block}
 }
+/* Legal and editorial pages share the homepage shell. */
+body.okc .rail-signin{background:#12296d;color:#fff;padding:10px;border-radius:0}
+body.okc .rail-signin a{display:block;background:#0a1d5a;color:#fff;border:1px solid #2a4590;box-shadow:none;border-radius:0}
+body.okc .hero,body.okc .mast{background:linear-gradient(#f0f0f0,#d9d7da);border:0;border-bottom:1px solid #cfcdd0;border-radius:0;box-shadow:none;padding:16px}
+body.okc .hero h1,body.okc .mast h1{color:#f10f5b;font:18px/1.3 Verdana,sans-serif;letter-spacing:0;text-transform:none;text-shadow:0 1px #fff}
+body.okc .hero h1 em,body.okc .mast h1 em{color:#f10f5b}
+body.okc .hero p,body.okc .mast p{color:#444;font:11px/1.6 Verdana,sans-serif}
+body.okc .card,body.okc .article,body.okc .notice,body.okc .index-intro{background:#fff;border:1px solid #e6e6e6;border-radius:0;box-shadow:none}
+body.okc .stamp,body.okc .tag{color:#2a4fae;letter-spacing:0}
+body.okc .main-column .main{background:#f7f7f9}
+body.okc .okc-railnav a{color:#fff}
+body.okc .okc-rrail a{color:#9fb8f0}

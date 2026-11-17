@@ -1,0 +1,32 @@
+/* Period styling for the member application and profiles. */
+html{background:#2552a5}
+body.ogc-member-theme,body.ogc-persona-theme,body:has(.profile-site){background:#2552a5;color:#444;font-family:Verdana,sans-serif}
+body.ogc-member-theme .shell,body.is-authenticated .shell,body.is-authenticated.is-welcome-flow .shell,body.is-authenticated.is-profile-setup .shell{max-width:1280px;grid-template-columns:clamp(150px,15vw,210px) minmax(0,1fr) clamp(140px,14vw,200px);margin:10px auto 32px;gap:0}
+body.ogc-member-theme .masthead,body.is-authenticated .masthead{background:#12296d;border-radius:0;box-shadow:none}
+body.ogc-member-theme .masthead .brand-original,body.is-authenticated .masthead .brand-original{background:#2552a5;border:0;min-height:64px}
+body.ogc-member-theme .classic-rail-nav,body.is-authenticated .masthead nav.classic-rail-nav{background:#12296d}
+body.ogc-member-theme .classic-rail-nav a,body.is-authenticated .masthead nav.classic-rail-nav a{color:#fff;border-bottom:1px solid #1c3680;font:11px/1.4 Verdana,sans-serif}
+body.ogc-member-theme main#main{background:#f7f7f9;color:#444;box-shadow:none;border:0;border-radius:0}
+body.ogc-member-theme .paper,body.ogc-member-theme .question-card,body.ogc-member-theme .profile-card{background:#fff;border:1px solid #e6e6e6;border-radius:0;box-shadow:none}
+body.ogc-member-theme h1,body.ogc-member-theme .member-home-header h1{color:#f10f5b;font-family:Verdana,sans-serif}
+body.ogc-member-theme h2,body.ogc-member-theme h3{color:#2a3f8f;font-family:Verdana,sans-serif}
+body.ogc-member-theme .classic-member-topbar,body.ogc-member-theme .member-home-header,body.ogc-member-theme .og-preview-hero,body.ogc-member-theme .og-question-page-header{background:linear-gradient(#f0f0f0,#d9d7da);border-color:#cfcdd0;border-radius:0;box-shadow:none}
+body.ogc-member-theme .classic-member-tabs,body.ogc-member-theme .og-preview-tabs{background:#e5e4e6;border-radius:0}
+body.ogc-member-theme button,body.ogc-member-theme .button{border-radius:2px;box-shadow:none}
+body.ogc-member-theme .member-legal-footer{grid-column:2;color:#c4d2f5}
+body.ogc-persona-theme .page{max-width:1280px;grid-template-columns:clamp(150px,15vw,210px) minmax(0,1fr);gap:0}
+body.ogc-persona-theme .rail,body.ogc-persona-theme .rail-nav{background:#12296d;border-radius:0}
+body.ogc-persona-theme .rail-nav a{color:#fff;border-bottom:1px solid #1c3680}
+body.ogc-persona-theme .panel,body.ogc-persona-theme .standalone-quiz{background:#f7f7f9;border-radius:0;box-shadow:none}
+body.ogc-persona-theme .member-quiz-header{background:linear-gradient(#f0f0f0,#d9d7da);border:0}
+body.ogc-persona-theme .persona-titlebar{background:#12296d;color:#fff}
+body:has(.profile-site) .profile-site{max-width:1280px;grid-template-columns:clamp(150px,15vw,210px) minmax(0,1fr);margin:10px auto 32px}
+.profile-site .profile-rail,.profile-site .profile-rail nav{background:#12296d;border-radius:0}
+.profile-site .profile-logo{background:#2552a5}
+.profile-site .profile-rail nav a{border-bottom:1px solid #1c3680;color:#fff}
+.profile-site .profile-main,.profile-site .profile-panel{background:#f7f7f9;border:0;border-radius:0;box-shadow:none}
+.profile-site .profile-head{background:linear-gradient(#f0f0f0,#d9d7da);border:0;border-bottom:1px solid #cfcdd0}
+.profile-site .profile-head h1{color:#f10f5b}
+.profile-site .profile-tabs{background:#e5e4e6}
+@media(max-width:820px){body.ogc-member-theme .shell,body.is-authenticated .shell,body.is-authenticated.is-welcome-flow .shell,body.is-authenticated.is-profile-setup .shell,body.ogc-persona-theme .page{grid-template-columns:160px minmax(0,1fr)}}
+@media(max-width:560px){body.ogc-member-theme .shell,body.is-authenticated .shell,body.is-authenticated.is-welcome-flow .shell,body.is-authenticated.is-profile-setup .shell,body.ogc-persona-theme .page,body:has(.profile-site) .profile-site{display:block;width:100%;margin:0}}
