@@ -1,7 +1,8 @@
 // Member-to-member profile reads from the authenticated Neon Function.
 // Only an explicit display whitelist enters React state. Raw email, DOB,
 // preferences, private match answers and object storage keys never enter it.
-import {UUID,SLUG} from "./member-gateway.mjs";
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 export const PUBLIC_ESSAYS = Object.freeze([
   Object.freeze({key:"aboutMe",title:"My self-summary"}),
