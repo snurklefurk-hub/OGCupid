@@ -24,7 +24,7 @@ jobs:
       - name: Validate backend Quickmatch syntax and RLS/authorization tests
         run: |
           node --check api/member-quickmatch.js
-          node --test api/member-quickmatch.test.js api/discovery-route.test.js api/discovery-score.test.js
+          node --test api/member-quickmatch.test.js api/quickmatch-score-adjustment.test.js api/discovery-route.test.js api/discovery-score.test.js
       - name: Compile the actual Neon member Function including Quickmatch
         run: |
           npm ci
