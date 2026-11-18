@@ -1,0 +1,46 @@
+name: Package OGC-L pair-state member Function
+on:
+  push:
+    branches: [feature/ogcl-quickmatch-pair-state-20261118]
+    paths:
+      - 'api/member-quickmatch.js'
+      - 'api/member-discovery.js'
+      - 'api/member-profile.ts'
+      - '.github/workflows/package-ogcl-quickmatch-pair.yml'
+permissions:
+  contents: write
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - name: Install existing backend dependencies and pinned bundler
+        run: |
+          npm ci
+          npm install --no-save esbuild@0.25.12
+      - name: Verify pair-state and old member authorization regressions
+        run: |
+          node --test api/member-quickmatch.test.js api/discovery-route.test.js api/discovery-score.test.js api/staging-cors-contract.test.js api/profile-route.test.js
+      - name: Build credential-free deployable Node.js 24 Neon Function
+        run: |
+          npx esbuild api/member-profile.ts --bundle --platform=node --target=node24 --format=esm --banner:js="import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);" --outfile="$RUNNER_TEMP/index.mjs"
+          node --check "$RUNNER_TEMP/index.mjs"
+          (cd "$RUNNER_TEMP" && zip -9 -q members.zip index.mjs)
+          base64 -w0 "$RUNNER_TEMP/members.zip" > dev/ogcl-quickmatch-pair-members-function.b64
+      - name: Commit bundle on the isolated feature branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f dev/ogcl-quickmatch-pair-members-function.b64
+          if ! git diff --cached --quiet; then
+            git commit -m "build: package member Function with Quickmatch pair rules"
+            git pull --rebase origin feature/ogcl-quickmatch-pair-state-20261118
+            git push origin HEAD:feature/ogcl-quickmatch-pair-state-20261118
+          fi
