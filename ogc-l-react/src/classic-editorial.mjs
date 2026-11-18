@@ -1,7 +1,7 @@
 // Editorial text approved in the OG Cupid project wiki, November 18, 2026.
 // Exactly six different cards per full refresh, never fabricated sponsors.
 export const SITE_PROMOTIONS=Object.freeze([
-  {title:"You're More Than a Selfie",body:"Nine profile essays. Plenty of room to explain why you're worth getting to know.",destination:"profile"},
+  {title:"You're More Than a Selfie",body:"Ten profile essays. Plenty of room to explain why you're worth getting to know.",destination:"profile"},
   {title:"Answer Some Questions",body:"The more you put in, the more you get out.",destination:"questions"},
   {title:"Dealbreakers Welcome",body:"Some things matter more than others.",destination:"questions"},
   {title:"Explain Yourself",body:"Your answer is interesting. Your reasoning might be even more interesting. Add an explanation to any match question.",destination:"questions"},

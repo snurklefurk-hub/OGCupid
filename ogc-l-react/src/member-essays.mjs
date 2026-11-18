@@ -4,9 +4,12 @@ export const LIVE_ESSAYS = Object.freeze([
   Object.freeze({key:"aboutMe",label:"My self-summary",max:5000}),
   Object.freeze({key:"lifeDirection",label:"What I'm doing with my life",max:2000}),
   Object.freeze({key:"goodAt",label:"I'm really good at",max:1500}),
+  Object.freeze({key:"firstThings",label:"The first things people usually notice about me",max:1500}),
   Object.freeze({key:"favorites",label:"Favorite books, movies, shows, music, food",max:2000}),
   Object.freeze({key:"sixThings",label:"The six things I could never do without",max:1500}),
+  Object.freeze({key:"thinkingAbout",label:"I spend a lot of time thinking about",max:1500}),
   Object.freeze({key:"fridayNight",label:"On a typical Friday night I am",max:1500}),
+  Object.freeze({key:"privateThing",label:"The most private thing I’m willing to admit",max:1500}),
   Object.freeze({key:"messageMeIf",label:"You should message me if",max:1500})
 ]);
 export function essayDefinition(key) {return LIVE_ESSAYS.find(e=>e.key===key)||null;}

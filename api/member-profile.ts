@@ -214,9 +214,12 @@ type MemberProfile = {
   languages: string;
   lifeDirection: string;
   goodAt: string;
+  firstThings: string;
   favorites: string;
   sixThings: string;
+  thinkingAbout: string;
   fridayNight: string;
+  privateThing: string;
   messageMeIf: string;
   ethnicity: string; bodyType: string; vaping: string; drugs: string;
   religion: string; sign: string; income: string; status: string; relationshipType: string;
@@ -248,9 +251,12 @@ function present(row: Record<string, unknown>): MemberProfile {
     languages: String(row.languages ?? ""),
     lifeDirection: String(row.life_direction ?? ""),
     goodAt: String(row.good_at ?? ""),
+    firstThings: String(row.first_things ?? ""),
     favorites: String(row.favorites ?? ""),
     sixThings: String(row.six_things ?? ""),
+    thinkingAbout: String(row.thinking_about ?? ""),
     fridayNight: String(row.friday_night ?? ""),
+    privateThing: String(row.private_thing ?? ""),
     messageMeIf: String(row.message_me_if ?? ""),
     ethnicity: String(row.ethnicity ?? ""), bodyType: String(row.body_type ?? ""),
     vaping: String(row.vaping ?? ""), drugs: String(row.drugs ?? ""),
@@ -292,9 +298,12 @@ const profileTextFields = [
   ["relationshipType", "relationship_type", 50],
   ["lifeDirection", "life_direction", 2000],
   ["goodAt", "good_at", 1500],
+  ["firstThings", "first_things", 1500],
   ["favorites", "favorites", 2000],
   ["sixThings", "six_things", 1500],
+  ["thinkingAbout", "thinking_about", 1500],
   ["fridayNight", "friday_night", 1500],
+  ["privateThing", "private_thing", 1500],
   ["messageMeIf", "message_me_if", 1500],
 ] as const;
 
@@ -406,8 +415,8 @@ export default {
                p.work, p.education, p.height, p.kids, p.pets, p.smoking,
                p.drinking, p.diet, p.languages, p.ethnicity, p.body_type,
                p.vaping, p.drugs, p.religion, p.sign, p.income, p.status,
-               p.relationship_type, p.life_direction, p.good_at, p.favorites,
-               p.six_things, p.friday_night, p.message_me_if,
+               p.relationship_type, p.life_direction, p.good_at, p.first_things, p.favorites,
+               p.six_things, p.thinking_about, p.friday_night, p.private_thing, p.message_me_if,
                p.created_at, p.updated_at
              FROM app_private.member_profile_routes route
              JOIN app_private.member_profiles p ON p.user_id = route.user_id
@@ -686,7 +695,7 @@ export default {
       if (request.method === "GET") {
         const result = await withMember(userId, async client => {
           const profile = await client.query(
-            `SELECT user_id, display_name, about_me, age, city_region, gender, pronouns, orientation, interested_in, relationship_goal, work, education, height, kids, pets, smoking, drinking, diet, languages, ethnicity, body_type, vaping, drugs, religion, sign, income, status, relationship_type, life_direction, good_at, favorites, six_things, friday_night, message_me_if, created_at, updated_at FROM app_private.member_profiles WHERE user_id = $1::uuid`,
+            `SELECT user_id, display_name, about_me, age, city_region, gender, pronouns, orientation, interested_in, relationship_goal, work, education, height, kids, pets, smoking, drinking, diet, languages, ethnicity, body_type, vaping, drugs, religion, sign, income, status, relationship_type, life_direction, good_at, first_things, favorites, six_things, thinking_about, friday_night, private_thing, message_me_if, created_at, updated_at FROM app_private.member_profiles WHERE user_id = $1::uuid`,
             [userId],
           );
           const geo = await client.query(

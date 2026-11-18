@@ -1,6 +1,7 @@
 import React,{useEffect,useState} from "react";
 import {NavLink,useParams,useSearchParams} from "react-router-dom";
 import {PUBLIC_DETAILS,PUBLIC_ESSAYS} from "./member-public-profile.mjs";
+import {essayDefinition} from "./member-essays.mjs";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {legacyHref} from "./legacy-links.mjs";
 
@@ -95,7 +96,7 @@ export default function PublicMemberProfile({Photo}) {
                 title={"Edit "+title} aria-label={"Edit "+title} disabled={busy} onClick={()=>editEssay(key)}>{PENCIL}</button>}</h2>
               {active===key&&profile.isOwner?
                 <form className="ogcl-essay-edit" onSubmit={saveEssay}>
-                  <textarea value={draft} rows={6} maxLength={key==="aboutMe"?5000:2000}
+                  <textarea value={draft} rows={6} maxLength={essayDefinition(key)?.max??1500}
                     autoFocus onChange={e=>setDraft(e.target.value)}/>
                   <div className="ogcl-essay-actions">
                     <button type="submit" disabled={busy}>{busy?"Saving…":"Save"}</button>

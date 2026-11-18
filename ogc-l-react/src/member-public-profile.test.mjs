@@ -16,8 +16,10 @@ test("public view only keeps explicit safe text and public answer identity",()=>
   assert.equal(result.age,31);
   assert.deepEqual(result.publicAnswers,[{questionId:"vault-5",optionId:"option-1"}]);
   assert.equal(JSON.stringify(result).includes("dont-show"),false);
-  assert.equal(JSON.stringify(result).includes("private"),false);
-  assert.ok(PUBLIC_ESSAYS.length>=7 && PUBLIC_DETAILS.length>=15);
+  assert.equal(JSON.stringify(result).includes("acceptableOptions"),false);
+  assert.equal(JSON.stringify(result).includes("dont-show"),false);
+  assert.equal(PUBLIC_ESSAYS.length,10);
+  assert.ok(PUBLIC_DETAILS.length>=15);
 });
 test("invalid slug, mismatched member identity or unverified answers cannot appear",()=>{
   assert.throws(()=>sanitizePublicProfile(p,"different-member"));
