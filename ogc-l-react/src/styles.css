@@ -630,3 +630,22 @@ button, input, textarea, select {font:inherit;}
 @media(max-width:800px){
   .ogcl-gallery-thumbs {grid-template-columns:repeat(3,minmax(0,1fr));}
 }
+
+/* Canonical four-group looking-for editor, 2014 compact form treatment. */
+.ogcl-looking-settings form {display:grid;gap:12px;max-width:720px;}
+.ogcl-looking-options {display:flex;align-items:flex-start;flex-wrap:wrap;gap:7px 14px;
+  margin:0;padding:9px 12px 10px;background:#f9fafb;border:1px solid #d6e0e9;}
+.ogcl-looking-options legend {font:bold 11px/17px Verdana,sans-serif;color:#264e79;padding:0 5px;}
+.ogcl-looking-options label {font:11px/17px Verdana,sans-serif;color:#555;display:flex;align-items:center;gap:4px;}
+.ogcl-looking-options input {accent-color:#2963a4;}
+.ogcl-looking-age {display:flex;flex-wrap:wrap;gap:12px;}
+.ogcl-looking-age label,.ogcl-looking-distance {font:bold 11px/17px Verdana,sans-serif;
+  display:flex;flex-direction:column;align-items:flex-start;gap:5px;color:#395e77;}
+.ogcl-looking-age select,.ogcl-looking-distance select {
+  background:#fff;border:1px solid #9cb2c7;border-radius:0;min-width:125px;
+  padding:5px;color:#264e79;font:12px/17px Verdana,sans-serif;
+}
+.ogcl-looking-distance select:disabled {opacity:.6;}
+.ogcl-looking-settings .ogcl-note {font-size:11px;margin:0;}
+.ogcl-looking-settings .ogcl-essay-actions {display:flex;gap:10px;flex-wrap:wrap;}
+.ogcl-looking-for li {line-height:1.6;}
