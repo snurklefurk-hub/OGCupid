@@ -1,3 +1,4 @@
+import {safeEssayProfile, composeEssayUpdate} from "./member-essays.mjs";
 // OGC-L member gateway. Does not own user accounts or store credentials.
 // The existing Neon Auth and production member Function remain authorities.
 export const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -223,6 +224,38 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
           return null;
         }
         return image;
+      } finally { clearTimeout(timer); }
+    },
+    async loadOwnEssays() {
+      const sessionResult = await bounded(authClient.getSession());
+      if (sessionResult?.error) throw new MemberAccessError("unauthorized", "Session unavailable.");
+      const user = checkedMember(sessionResult?.data?.user);
+      const jwt = await getJwt(sessionResult.data.session);
+      return safeEssayProfile(await readApi("/profile",jwt),user.id);
+    },
+    async saveOwnEssay(key, draft) {
+      const sessionResult = await bounded(authClient.getSession());
+      if (sessionResult?.error) throw new MemberAccessError("unauthorized", "Session unavailable.");
+      const user = checkedMember(sessionResult?.data?.user);
+      const jwt = await getJwt(sessionResult.data.session);
+      // Always read the newest saved bio/age to preserve unrelated profile
+      // fields even when a different tab modified them since this view loaded.
+      const current = safeEssayProfile(await readApi("/profile",jwt),user.id);
+      const update = composeEssayUpdate(current,key,draft);
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(),MAX_WAIT_MS);
+      try {
+        const response = await fetcher(endpoints.memberApiBaseUrl + "/profile",{
+          method:"PUT", credentials:"omit", cache:"no-store",
+          headers:{Authorization:"Bearer "+jwt, "Content-Type":"application/json",
+            Accept:"application/json"},
+          body:JSON.stringify(update),signal:controller.signal
+        });
+        requireResponse(response);
+        return safeEssayProfile(await bounded(response.json()),user.id);
+      } catch(error) {
+        if(error instanceof MemberAccessError) throw error;
+        throw new MemberAccessError("unavailable","Could not save this essay.");
       } finally { clearTimeout(timer); }
     },
     async signIn(email, password) {
