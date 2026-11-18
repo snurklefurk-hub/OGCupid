@@ -204,8 +204,13 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
       if (result?.error) throw new MemberAccessError("invalid", "Email or password was not accepted.");
     },
     async signOut() {
-      try { await bounded(authClient.signOut()); }
-      catch { /* Always clear local member UI; server may be temporarily unreachable. */ }
+      try {
+        const result = await bounded(authClient.signOut());
+        if (result?.error) throw new Error("Neon Auth rejected sign-out");
+      } catch {
+        throw new MemberAccessError("unavailable",
+          "Sign-out could not be confirmed. Please try again.");
+      }
     }
   });
 }
