@@ -1,4 +1,5 @@
 import {safeEssayProfile, composeEssayUpdate} from "./member-essays.mjs";
+import {sanitizePublicProfile} from "./member-public-profile.mjs";
 // OGC-L member gateway. Does not own user accounts or store credentials.
 // The existing Neon Auth and production member Function remain authorities.
 export const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -118,7 +119,7 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
   const endpoints = configuredMemberEndpoints(authBaseUrl, memberApiBaseUrl);
   if (!endpoints || !authClient) return null;
   async function readApi(path, jwt) {
-    if (!/^\/[a-z][a-z0-9-]*$/.test(path)) throw new MemberAccessError("unavailable", "Unsupported member API route.");
+    if (!/^\/[a-z][a-z0-9-]*$/.test(path) && !/^\/profiles\/[a-z0-9]+(?:-[a-z0-9]+)*$/.test(path)) throw new MemberAccessError("unavailable", "Unsupported member API route.");
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), MAX_WAIT_MS);
     try {
@@ -225,6 +226,15 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
         }
         return image;
       } finally { clearTimeout(timer); }
+    },
+    async getPublicProfile(slug) {
+      if (!SLUG.test(String(slug || ""))) {
+        throw new MemberAccessError("invalid","Invalid member profile address.");
+      }
+      const identity=await bounded(authClient.getSession());
+      const user=checkedMember(identity?.data?.user);
+      const jwt=await getJwt(identity?.data?.session);
+      return sanitizePublicProfile(await readApi("/profiles/"+slug,jwt),slug);
     },
     async loadOwnEssays() {
       const sessionResult = await bounded(authClient.getSession());
