@@ -81,7 +81,7 @@ export default function ProfileEditor() {
             {saved===essay.key && <p className="ogcl-save-confirmation" role="status">Saved.</p>}
           </section>)}
         </div>
-        <p><NavLink to="/questions">Edit your saved match question answers</NavLink></p>
+        <p><NavLink to="/questions">Edit your saved match question answers</NavLink> · <NavLink to="/settings">Profile Settings</NavLink></p>
         <p className="ogcl-quiet">Your other profile settings, question answers and photos are unchanged when you save an essay.</p>
       </>}
     </div>
