@@ -168,7 +168,7 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
   const endpoints = configuredMemberEndpoints(authBaseUrl, memberApiBaseUrl);
   if (!endpoints || !authClient) return null;
   async function readApi(path, jwt) {
-    if (!/^\\/[a-z][a-z0-9-]*$/.test(path) && !/^\\/profiles\\/[a-z0-9]+(?:-[a-z0-9]+)*$/.test(path) && !/^\\/messages\\/[0-9a-f-]{36}$/.test(path)) throw new MemberAccessError("unavailable", "Unsupported member API route.");
+    if (!/^\/[a-z][a-z0-9-]*$/.test(path) && !/^\/profiles\/[a-z0-9]+(?:-[a-z0-9]+)*$/.test(path) && !(path.startsWith("/messages/") && UUID.test(path.slice("/messages/".length)))) throw new MemberAccessError("unavailable", "Unsupported member API route.");
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), MAX_WAIT_MS);
     try {
