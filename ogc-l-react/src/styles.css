@@ -224,3 +224,27 @@ button, input, textarea, select {font:inherit;}
   .ogcl-directory-count {margin-left:0;width:100%;}
 }
 @media(max-width:480px) {.ogcl-directory {grid-template-columns:1fr;}}
+
+
+/* Editable profile essays, classic compact sections rather than modern cards. */
+.ogcl-essay-list {border-top:1px solid #cbd8e2;margin-top:17px;}
+.ogcl-essay {padding:14px 2px;border-bottom:1px solid #d9e2e9;}
+.ogcl-essay-title {display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.ogcl-essay-title h2 {font: bold 14px/1.4 Verdana,sans-serif;color:#1e4976;margin:0;}
+.ogcl-essay-title button,.ogcl-essay-actions button {
+  border:1px solid #9caebc;background:#f0f5f8;color:#245582;
+  border-radius:1px;cursor:pointer;padding:4px 10px;font-size:11px;
+}
+.ogcl-essay-body {white-space:pre-wrap;margin:9px 0 0;line-height:1.7;color:#2f4255;overflow-wrap:anywhere;}
+.ogcl-essay-empty {color:#8393a1;font-style:italic;margin:9px 0 0;}
+.ogcl-essay-edit {display:grid;gap:7px;margin:10px 0 0;}
+.ogcl-essay-edit textarea {
+  width:100%;border:1px solid #9eb8ce;padding:9px;
+  background:white;color:#26394c;resize:vertical;
+  min-height:100px;
+}
+.ogcl-essay-edit textarea:focus {outline:2px solid #94b7d8;}
+.ogcl-essay-actions {display:flex;gap:9px;align-items:center;flex-wrap:wrap;}
+.ogcl-essay-actions small {font-size:11px;color:#6a7d8d;margin-right:auto;}
+.ogcl-essay-actions button[type=submit] {background:#2e6598;color:white;border-color:#215281;}
+.ogcl-save-confirmation {color:#457727;font-size:11px;margin:6px 0 0;}
