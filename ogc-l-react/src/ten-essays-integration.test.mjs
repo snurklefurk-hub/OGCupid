@@ -49,7 +49,7 @@ test("server whitelist, SQL reads and migration persist new essays by canonical 
   const legacy=readFileSync(new URL("../../member-app/main.js",import.meta.url),"utf8");
   const peer=readFileSync(new URL("./PublicMemberProfile.jsx",import.meta.url),"utf8");
   for(const [key,col] of [["firstThings","first_things"],["thinkingAbout","thinking_about"],["privateThing","private_thing"]]){
-    assert.match(api,new RegExp('["'+key+'", "'+col+'", 1500]'.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')));
+    assert.ok(api.includes('["'+key+'", "'+col+'", 1500]'),"Missing server column whitelist for "+key);
     assert.match(api,new RegExp("row\\."+col));
     assert.match(api,new RegExp("p\\."+col));
     assert.match(migration,new RegExp("ADD COLUMN IF NOT EXISTS "+col));
