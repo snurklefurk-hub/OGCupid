@@ -1,5 +1,5 @@
 /**
- * OGCupid - Classic 2011 9-Essay Component
+ * OGCupid - Classic 2011 10-Essay Component
  * Self-contained module for rendering both preview and editor modes
  * Uses native classic.css classes (.og-preview-essay, .profile-field)
  */
@@ -70,6 +70,14 @@ export const CLASSIC_ESSAYS = Object.freeze([
     rows: 4
   },
   {
+    key: 'privateThing',
+    previewId: 'private-thing',
+    title: "The most private thing I'm willing to admit",
+    placeholder: "What would you tell someone who really wanted to know you?",
+    max: 1500,
+    rows: 4
+  },
+  {
     key: 'messageMeIf',
     previewId: 'message-me-if',
     title: 'You should message me if…',
@@ -108,7 +116,7 @@ export function formatEssayParagraphs(text) {
 }
 
 /**
- * Renders the 9-essay preview container (Profile Display mode)
+ * Renders the 10-essay preview container (Profile Display mode)
  * Matches .og-preview-essay structure from classic.css
  */
 export function renderEssaysPreview(profileData = {}, options = {}) {
@@ -142,7 +150,7 @@ export function renderEssaysPreview(profileData = {}, options = {}) {
 }
 
 /**
- * Renders the 9-essay form inputs (Profile Editor mode)
+ * Renders the 10-essay form inputs (Profile Editor mode)
  * Matches .profile-field-grid structure from classic.css
  */
 export function renderEssaysEditor(profileData = {}) {
