@@ -110,6 +110,11 @@ export function MemberSessionProvider({children}) {
     };
   }, [refresh]);
 
+  const getMemberGallery = useCallback(async id => {
+    if (!gateway) throw new MemberAccessError("unavailable","Member API is not configured.");
+    return gateway.getMemberGallery(id);
+  }, []);
+
   const getMemberAvatar = useCallback(async (id) => {
     if (!gateway) return null;
     return gateway.getMemberAvatar(id);
@@ -178,11 +183,11 @@ export function MemberSessionProvider({children}) {
   }, []);
 
   const value = useMemo(() => ({
-    ...session, refresh, signIn, signOut, getMemberAvatar,
+    ...session, refresh, signIn, signOut, getMemberAvatar, getMemberGallery,
     loadOwnEssays, saveOwnEssay, loadOwnSettings, saveOwnSetting, getPublicProfile,
     loadMatchAnswers, saveMatchAnswer, loadQuickmatchDecisions, saveQuickmatchDecision,
     loadInbox, loadConversation, sendMessage, setMessageBlock, reportMessage
-  }), [session, refresh, signIn, signOut, getMemberAvatar, loadOwnEssays, saveOwnEssay,
+  }), [session, refresh, signIn, signOut, getMemberAvatar, getMemberGallery, loadOwnEssays, saveOwnEssay,
     getPublicProfile, loadMatchAnswers, saveMatchAnswer]);
 
   return <MemberSessionContext.Provider value={value}>{children}</MemberSessionContext.Provider>;
