@@ -41,7 +41,7 @@ test("Vite has an explicit isolated Render root build path and copies only the l
 
 test("legacy account, profile and editorial links do not accidentally point at empty staging paths",()=>{
   assert.match(app,/import \{legacyHref\}/);
-  assert.match(app,/const profileHref = slug => "#\\/profiles\\/"/);
+  assert.ok(app.includes('const profileHref = slug => "#/profiles/"'));
   for(const path of ["/account/","/account/#welcome-title",
     "/account/?join=1","/ogtrends/","/account/persona.html"]){
     assert.ok(app.includes('legacyHref("'+path+'")'),path);
