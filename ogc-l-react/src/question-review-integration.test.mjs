@@ -27,9 +27,9 @@ test("saved answers can be selected and revised using the same Neon owner-only A
 });
 
 test("public member profile has no editor link for other members",()=>{
-  assert.match(profile, /profile\.isOwner[^\n]+to="\/questions"/);
+  assert.match(profile, /profile\\.isOwner&&<p><NavLink to="\\/questions"/);
   assert.match(about, /to="\/questions"/);
-  assert.match(app, /to="\/questions"/);
+  assert.match(app, /path="questions" element=\\{<MemberGate><MatchQuestions/);
 });
 
 test("member-facing Questions progress is one unsegmented pool",()=>{
