@@ -326,3 +326,26 @@ button, input, textarea, select {font:inherit;}
 .ogcl-quickmatch-like {background:#497f27;border-color:#38641e;}
 .ogcl-quickmatch-dislike {background:#a43f56;border-color:#802f43;}
 .ogcl-quickmatch-next {background:#fff;color:#2552a5;border-color:#a7b9cc;}
+
+/* Classic Quickmatch tabs, mutual lists and aspect-preserving photo row. */
+.ogcl-quickmatch-tabs {display:flex;gap:0;border-bottom:1px solid #b7c6d2;flex-wrap:wrap;margin-bottom:16px;}
+.ogcl-quickmatch-tabs button {padding:9px 15px;background:#e8edf3;color:#244d76;border:1px solid #b7c6d2;border-bottom:0;font-weight:bold;cursor:pointer;}
+.ogcl-quickmatch-tabs button[aria-current="page"] {background:#fff;color:#183b62;border-top:3px solid #2963a4;padding-top:7px;}
+.ogcl-quickmatch-view {max-width:960px;margin:15px auto;text-align:left;}
+.ogcl-quickmatch-member {border:1px solid #c7d5e0;background:#fdfefe;padding:12px;}
+.ogcl-quickmatch-photo-container {container-type:inline-size;width:100%;min-width:0;}
+.ogcl-quickmatch-photo-row {display:flex;align-items:center;justify-content:center;gap:12px;width:100%;overflow:hidden;}
+.ogcl-quickmatch-photo-row img {display:block;width:auto;height:auto;max-width:calc((100% - 24px) / 3);max-height:330px;object-fit:contain;flex:0 1 auto;}
+@container (max-width:760px) {
+  .ogcl-quickmatch-photo-row img:nth-child(n+3) {display:none;}
+  .ogcl-quickmatch-photo-row img {max-width:calc((100% - 12px) / 2);}
+}
+@container (max-width:470px) {
+  .ogcl-quickmatch-photo-row img:nth-child(n+2) {display:none;}
+  .ogcl-quickmatch-photo-row img {max-width:100%;}
+}
+.ogcl-quickmatch-no-photos {min-height:180px;background:#eef3f7;display:grid;place-items:center;color:#536a7c;padding:18px;}
+.ogcl-quickmatch-skip {display:block;border:0;background:none;color:#2963a4;text-decoration:underline;cursor:pointer;margin:3px auto;font-size:11px;}
+.ogcl-quickmatch-list .ogcl-member-link {min-width:0;overflow:hidden;}
+.ogcl-quickmatch-list .ogcl-member-photo {width:100%;object-fit:cover;}
+.ogcl-mutual-label {display:block;color:#3b6c2f;font-weight:bold;}
