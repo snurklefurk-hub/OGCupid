@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
+import {NavLink} from "react-router-dom";
 import {LIVE_ESSAYS} from "./member-essays.mjs";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
-import {legacyHref} from "./legacy-links.mjs";
 
 // This editor writes only the essays that the live Neon API already stores.
 // Each save updates one field; other preferences, images and location remain.
@@ -56,7 +56,7 @@ export default function ProfileEditor() {
       {loading && <p role="status">Loading saved essays…</p>}
       {error && <p className="ogcl-error" role="alert">{error}</p>}
       {profile && <>
-        <p><strong>{profile.displayName}</strong>{profile.slug && <> · <a href={legacyHref("/profiles/"+profile.slug)}>View public profile</a></>}</p>
+        <p><strong>{profile.displayName}</strong>{profile.slug && <> · <NavLink to={"/profiles/"+profile.slug}>View public profile</NavLink></>}</p>
         <div className="ogcl-essay-list">
           {LIVE_ESSAYS.map(essay=><section className="ogcl-essay" key={essay.key}>
             <div className="ogcl-essay-title">

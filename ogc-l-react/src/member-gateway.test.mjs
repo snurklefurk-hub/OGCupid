@@ -220,3 +220,32 @@ test("avatars reject invalid identities and unsupported media rather than using 
   }});
   assert.equal(await badPhoto.getMemberAvatar(THEM),null);
 });
+
+
+test("native peer profile is a JWT-gated read of public fields only",async()=>{
+  const {service,calls}=mockGateway({responseFor:async(url)=>{
+    const path=new URL(url).pathname;
+    if(path==="/profiles/peer-member")return good({
+      profile:{
+        userId:THEM,slug:"peer-member",displayName:"Peer Member",
+        age:29,cityRegion:"Atlanta",aboutMe:"Hello world",messageMeIf:"Say hi",
+        email:"secret@invalid.example"
+      },
+      publicAnswers:[{questionId:"vault-5",optionId:"option-1",note:"secret"}],
+      isOwner:false,personaCode:"DBSDf"
+    });
+    throw Error("Unexpected path "+path);
+  }});
+  const peer=await service.getPublicProfile("peer-member");
+  assert.equal(peer.slug,"peer-member");
+  assert.equal(peer.essays.messageMeIf,"Say hi");
+  assert.equal(JSON.stringify(peer).includes("secret"),false);
+  assert.equal(calls.length,1);
+  assert.equal(calls[0][0],"/profiles/peer-member");
+  assert.equal(calls[0][1].headers.Authorization,"Bearer header.payload.signature");
+});
+test("invalid peer profile routes fail before private network requests",async()=>{
+  const {service,calls}=mockGateway();
+  await assert.rejects(service.getPublicProfile("../secret"),error=>error.code==="invalid");
+  assert.equal(calls.length,0);
+});

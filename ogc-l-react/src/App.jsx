@@ -6,13 +6,14 @@ import {selectRecommendedMembers} from "./member-gateway.mjs";
 import {filterAndSortMembers, pageMembers, shuffledMembers} from "./member-directory.mjs";
 import {legacyHref} from "./legacy-links.mjs";
 import ProfileEditor from "./ProfileEditor.jsx";
+import PublicMemberProfile from "./PublicMemberProfile.jsx";
 
-const profileHref = slug => legacyHref("/profiles/" + encodeURIComponent(slug));
+const profileHref = slug => "#/profiles/" + encodeURIComponent(slug);
 const questionScore = member => member.matchPercent === null
   ? "Not enough shared answers"
   : member.matchPercent + "% question match · " + member.commonQuestions + " shared";
 
-function MemberPhoto({member}) {
+export function MemberPhoto({member}) {
   const {kind, getMemberAvatar} = useMemberSession();
   const [url, setUrl] = useState(null);
   useEffect(() => {
@@ -297,6 +298,7 @@ export default function App() {
         <Route index element={<Navigate to={defaultRoute} replace />} />
         <Route path="matches" element={<MemberGate><MemberDirectory /></MemberGate>} />
         <Route path="profile" element={<MemberGate><ProfileEditor /></MemberGate>} />
+        <Route path="profiles/:slug" element={<MemberGate><PublicMemberProfile Photo={MemberPhoto} /></MemberGate>} />
         <Route path="quickmatch" element={<MemberGate><MemberDirectory quick /></MemberGate>} />
         {Object.entries(views).map(([path, [title, intro, footnote]]) => (
           <Route key={path} path={path} element={
