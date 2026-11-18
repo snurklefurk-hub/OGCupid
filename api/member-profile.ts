@@ -785,7 +785,7 @@ export default {
           .every(key => Object.prototype.hasOwnProperty.call(fields, key))) {
           return json(request, { error: "Incomplete location preferences" }, 400);
         }
-        if (!validRadius(fields.searchRadiusMiles)) {
+        if (fields.searchRadiusMiles !== null && !validRadius(fields.searchRadiusMiles)) {
           return json(request, { error: "Choose a valid distance" }, 400);
         }
         searchRadiusMiles = fields.searchRadiusMiles as number | null;
