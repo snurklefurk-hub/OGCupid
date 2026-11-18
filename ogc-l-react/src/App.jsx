@@ -102,6 +102,7 @@ function RightRail() {
               <a href={legacyHref("/account/")}>Your account</a>}
             {profileUnavailable && <p>Profile details could not load. Try refreshing.</p>}
             <NavLink to="/profile">Edit About essays</NavLink>
+            <NavLink to="/questions">Edit match questions</NavLink>
             <button type="button" className="ogcl-side-button" onClick={session.signOut}>Sign out</button>
           </>
         ) : kind === "onboarding" ? (
