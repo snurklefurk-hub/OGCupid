@@ -1,5 +1,6 @@
 import {safeEssayProfile, composeEssayUpdate} from "./member-essays.mjs";
 import {sanitizeOwnProfileSettings,composeSettingUpdate} from "./member-settings.mjs";
+import {lookingForUpdate} from "./member-looking-for.mjs";
 import {sanitizePublicProfile} from "./member-public-profile.mjs";
 // OGC-L member gateway. Does not own user accounts or store credentials.
 // The existing Neon Auth and production member Function remain authorities.
@@ -495,6 +496,28 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
       }catch(error){
         if(error instanceof MemberAccessError)throw error;
         throw new MemberAccessError("unavailable","Profile setting could not be saved.");
+      }finally{clearTimeout(timer);}
+    },
+    async saveOwnLookingFor(draft) {
+      const identity=await bounded(authClient.getSession());
+      if(identity?.error)throw new MemberAccessError("unauthorized","Session unavailable.");
+      const me=checkedMember(identity?.data?.user);
+      const jwt=await getJwt(identity?.data?.session);
+      const current=sanitizeOwnProfileSettings(await readApi("/profile",jwt),me.id);
+      const update=lookingForUpdate({...current,...current.lookingFor},draft);
+      const controller=new AbortController();
+      const timer=setTimeout(()=>controller.abort(),MAX_WAIT_MS);
+      try{
+        const response=await fetcher(endpoints.memberApiBaseUrl+"/profile",{
+          method:"PUT",credentials:"omit",cache:"no-store",
+          headers:{Authorization:"Bearer "+jwt,"Content-Type":"application/json",
+            Accept:"application/json"},body:JSON.stringify(update),signal:controller.signal
+        });
+        requireResponse(response);
+        return sanitizeOwnProfileSettings(await bounded(response.json()),me.id);
+      }catch(error){
+        if(error instanceof MemberAccessError)throw error;
+        throw new MemberAccessError("unavailable","Looking-for preferences could not be saved.");
       }finally{clearTimeout(timer);}
     },
     async loadOwnEssays() {
