@@ -1,6 +1,6 @@
 // Credential-free live smoke against the isolated Neon development Function.
 // This checks auth/CORS guardrails only; it NEVER sends messages or accesses accounts.
-const base=process.env.OGC_DEV_MEMBER_API_URL;
+const base=process.env.OGC_MEMBER_API_URL;
 if(!base || !/^https:\/\/[a-z0-9.-]+\/$/.test(base))
   throw Error("Expected exact HTTPS development Function origin with trailing slash.");
 const peer="00000000-0000-4000-8000-000000000002";
@@ -29,4 +29,4 @@ await probe("messages","GET","https://untrusted.invalid",403);
 const preflight=await probe("messages","OPTIONS",allowed,204);
 if(preflight.headers.get("access-control-allow-origin")!==allowed)
   throw Error("Authorized browser preflight was not allowed.");
-process.stdout.write("Dev Neon messages auth + CORS smoke passed; no member data read or written.\n");
+process.stdout.write("Neon messages auth + CORS smoke passed; no member data read or written.\n");
