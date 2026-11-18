@@ -36,7 +36,7 @@ test("public profile response explicitly excludes email, private answers and sto
   assert.match(answerProjection,/SECURITY DEFINER/);
   assert.match(answerProjection,/current_member_is_active/);
   assert.match(selected,/SELECT question_id,option_id,note,is_private/);
-  assert.match(selected,/String\(row\.user_id\)\.toLowerCase\(\) === userId/);
+  assert.match(selected,/String\(row\.user_id\)\.toLowerCase\(\)\s*===\s*userId/);
   assert.match(migration,/member_profiles_authenticated_read/);
   assert.match(migration,/is_private = false AND app_private\.current_member_is_active\(\)/);
   assert.match(photos,/FOR SELECT TO ogcupid_member_api/);
