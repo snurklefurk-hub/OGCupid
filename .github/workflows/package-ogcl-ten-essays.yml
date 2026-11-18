@@ -1,0 +1,42 @@
+name: Package verified ten-essay Neon member Function
+on:
+  push:
+    branches: [feature/ogcl-ten-canonical-essays-20261118]
+    paths:
+      - 'api/member-profile.ts'
+      - 'member-app/profile-essays.js'
+      - 'ogc-l-react/src/member-essays.mjs'
+      - '.github/workflows/package-ogcl-ten-essays.yml'
+permissions:
+  contents: write
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - name: Verify all ten essays and bundle active JWT-gated Function
+        run: |
+          npm ci
+          node --test member-app/profile-essays.test.js api/profile-query.test.js api/profile-choices.test.js api/member-messages.test.js
+          npm install --no-save esbuild@0.25.12
+          npx esbuild api/member-profile.ts --bundle --platform=node --target=node24 --format=esm --banner:js="import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);" --outfile="$RUNNER_TEMP/index.mjs"
+          node --check "$RUNNER_TEMP/index.mjs"
+          (cd "$RUNNER_TEMP" && zip -9 -q members.zip index.mjs)
+          base64 -w0 "$RUNNER_TEMP/members.zip" > dev/ogcl-ten-essays-members-function.b64
+      - name: Commit credential-free bundle for isolated deployment
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f dev/ogcl-ten-essays-members-function.b64
+          if ! git diff --cached --quiet; then
+            git commit -m "build: package canonical ten-essay member Function"
+            git pull --rebase origin feature/ogcl-ten-canonical-essays-20261118
+            git push origin HEAD:feature/ogcl-ten-canonical-essays-20261118
+          fi
