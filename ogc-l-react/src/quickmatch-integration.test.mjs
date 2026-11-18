@@ -107,7 +107,7 @@ test("up to three genuine member JPEGs are loaded with JWT, respecting album ord
 test("Quickmatch route is member-gated, old faux-vote state removed and only mutual thumbnails open full profiles",()=>{
   const read=name=>readFileSync(new URL(name,import.meta.url),"utf8");
   const app=read("./App.jsx"),view=read("./QuickmatchView.jsx");
-  const photos=read("./QuickmatchPhotos.jsx"),provider=read("./MemberSessionProvider.jsx");
+  const photos=read("./QuickmatchPhotos.jsx"),restricted=read("./QuickmatchRestrictedProfile.jsx"),provider=read("./MemberSessionProvider.jsx");
   const css=read("./styles.css");
   assert.match(app, /<MemberGate><QuickmatchView Photo=\{MemberPhoto\} \/><\/MemberGate>/);
   assert.match(provider,/loadQuickmatchDecisions, saveQuickmatchDecision, getQuickmatchPhotos/);
@@ -117,7 +117,11 @@ test("Quickmatch route is member-gated, old faux-vote state removed and only mut
   assert.match(view,/remaining\.length>=5/);
   assert.match(view,/tab==="incoming" && !mutual/);
   assert.match(view,/mutual \?/);
-  assert.match(view,/<QuickmatchPhotos memberId=\{candidate\.userId\}/);
+  assert.match(view,/<QuickmatchRestrictedProfile member=\{candidate\}/);
+  assert.match(restricted,/<QuickmatchPhotos memberId=\{member\.userId\}/);
+  assert.match(restricted,/getPublicProfile\(member\.slug\)/);
+  assert.match(restricted,/profile\.essays\.messageMeIf/);
+  assert.match(restricted,/profile\.details\.orientation/);
   assert.match(photos,/getQuickmatchPhotos\(memberId\)/);
   assert.match(photos,/URL\.revokeObjectURL\(url\)/);
   assert.match(css, /object-fit:contain/);
