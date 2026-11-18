@@ -3,8 +3,9 @@ import {Navigate, NavLink, Outlet, Route, Routes} from "react-router-dom";
 import {defaultRoute, primaryNavigation} from "./navigation.mjs";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {selectRecommendedMembers} from "./member-gateway.mjs";
+import {legacyHref} from "./legacy-links.mjs";
 
-const profileHref = slug => "/profiles/" + encodeURIComponent(slug);
+const profileHref = slug => legacyHref("/profiles/" + encodeURIComponent(slug));
 const questionScore = member => member.matchPercent === null
   ? "Not enough shared answers"
   : member.matchPercent + "% question match · " + member.commonQuestions + " shared";
@@ -24,7 +25,7 @@ function LeftRail() {
   const recommendations = useMemo(() => selectRecommendedMembers(discovery), [discovery]);
   return (
     <aside className="ogcl-left" aria-label="Primary navigation">
-      <a className="ogcl-brand" href="/account/" aria-label="OG Cupid member home">
+      <a className="ogcl-brand" href={legacyHref("/account/")} aria-label="OG Cupid member home">
         <img src="/brand/ogcupid-logo-white.png" width="218" height="54" alt="OG Cupid" />
       </a>
       <nav className="ogcl-primary" aria-label="OG Cupid main">
@@ -67,7 +68,7 @@ function RightRail() {
             <h2>View your profile</h2>
             <p>{profile?.displayName || user?.name || "OG Cupid member"}</p>
             {profile?.slug ? <a href={profileHref(profile.slug)}>Your member profile</a> :
-              <a href="/account/">Your account</a>}
+              <a href={legacyHref("/account/")}>Your account</a>}
             {profileUnavailable && <p>Profile details could not load. Try refreshing.</p>}
             <button type="button" className="ogcl-side-button" onClick={session.signOut}>Sign out</button>
           </>
@@ -79,22 +80,22 @@ function RightRail() {
               aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent}>
               <span style={{width: percent + "%"}} />
             </div>
-            <a href="/account/#welcome-title">Continue your setup</a>
+            <a href={legacyHref("/account/#welcome-title")}>Continue your setup</a>
             <button type="button" className="ogcl-side-button" onClick={session.signOut}>Sign out</button>
           </>
         ) : (
           <>
             <h2>Your profile</h2>
             <p>Sign in to view your saved account and recommendations.</p>
-            <a href="/account/">Existing member site</a>
+            <a href={legacyHref("/account/")}>Existing member site</a>
           </>
         )}
       </section>
       <section className="ogcl-side-card">
         <h2>Stay curious</h2>
         <p>Don't judge a profile by the photo alone.</p>
-        <a href="/ogtrends/">Read OgTrends</a>
-        <a href="/account/persona.html">Dating Persona Test</a>
+        <a href={legacyHref("/ogtrends/")}>Read OgTrends</a>
+        <a href={legacyHref("/account/persona.html")}>Dating Persona Test</a>
       </section>
     </aside>
   );
@@ -147,7 +148,7 @@ function SignInForm() {
           <button type="submit" disabled={busy}>{busy ? "Checking account…" : "Sign in"}</button>
           {(error || sessionError) && <p className="ogcl-error" role="alert">{error || sessionError}</p>}
         </form>
-        <p><a href="/account/?join=1">Create an account</a> · <a href="/account/">Forgot your password?</a></p>
+        <p><a href={legacyHref("/account/?join=1")}>Create an account</a> · <a href={legacyHref("/account/")}>Forgot your password?</a></p>
         <p className="ogcl-note">New accounts and unfinished onboarding still use the established member app while their views are migrated.</p>
       </div>
     </section>
@@ -166,7 +167,7 @@ function MemberGate({children}) {
       <header className="ogcl-view-head"><h1>Finish getting started</h1></header>
       <div className="ogcl-content-panel">
         <p>Your account is signed in. Complete onboarding before using member discovery.</p>
-        <p><a href="/account/#welcome-title">Continue onboarding</a></p>
+        <p><a href={legacyHref("/account/#welcome-title")}>Continue onboarding</a></p>
       </div>
     </section>
   );
@@ -176,7 +177,7 @@ function MemberGate({children}) {
       <div className="ogcl-content-panel">
         <p>{error || "We couldn't confirm your account status."}</p>
         <button type="button" className="ogcl-button" onClick={refresh}>Retry account check</button>
-        <p><a href="/account/">Open existing member site</a></p>
+        <p><a href={legacyHref("/account/")}>Open existing member site</a></p>
       </div>
     </section>
   );

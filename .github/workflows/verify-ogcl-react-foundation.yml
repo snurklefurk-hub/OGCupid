@@ -6,7 +6,9 @@ on:
       - 'ogc-l-react/**'
       - '.github/workflows/verify-ogcl-react-foundation.yml'
   push:
-    branches: [feature/ogcl-react-vite-shell-foundation]
+    branches:
+      - 'feature/ogcl-react-vite-shell-foundation'
+      - 'feature/ogcl-render-staging-20261117'
     paths:
       - 'ogc-l-react/**'
       - '.github/workflows/verify-ogcl-react-foundation.yml'
@@ -20,17 +22,31 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Install isolated preview dependencies
+      - name: Install isolated React preview dependencies
         working-directory: ogc-l-react
         run: npm install --no-audit --no-fund
-      - name: Verify main navigation invariants
+      - name: Verify routing, identity and staging contracts
         working-directory: ogc-l-react
         run: npm test
-      - name: Compile isolated React/Vite shell
+      - name: Compile subpath preview
         working-directory: ogc-l-react
         run: npm run build
-      - name: Guard live application files
+      - name: Guard subpath preview output
         run: |
           test -s public/ogc-l/index.html
-          grep -q 'ogc-l/assets/' public/ogc-l/index.html
+          test -s public/ogc-l/brand/ogcupid-logo-white.png
+          grep -q '/ogc-l/assets/' public/ogc-l/index.html
+          git diff --quiet -- index.html public/account public/profiles
+      - name: Compile independent Render staging site at root
+        working-directory: ogc-l-react
+        env:
+          OGCL_DEPLOY_BASE: /
+          VITE_OGCL_LEGACY_ORIGIN: https://ogcupid.onrender.com
+        run: npm run build
+      - name: Guard root staging output and legacy isolation
+        run: |
+          test -s public/ogc-l/index.html
+          test -s public/ogc-l/brand/ogcupid-logo-white.png
+          grep -q '/assets/' public/ogc-l/index.html
+          ! grep -q '/ogc-l/assets/' public/ogc-l/index.html
           git diff --quiet -- index.html public/account public/profiles
