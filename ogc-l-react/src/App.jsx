@@ -3,7 +3,7 @@ import {Navigate, NavLink, Outlet, Route, Routes} from "react-router-dom";
 import {defaultRoute, primaryNavigation} from "./navigation.mjs";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {selectRecommendedMembers} from "./member-gateway.mjs";
-import {filterAndSortMembers, pageMembers, shuffledMembers} from "./member-directory.mjs";
+import {filterAndSortMembers, pageMembers} from "./member-directory.mjs";
 import {legacyHref} from "./legacy-links.mjs";
 import ProfileEditor from "./ProfileEditor.jsx";
 import PublicMemberProfile from "./PublicMemberProfile.jsx";
@@ -38,17 +38,14 @@ export function MemberPhoto({member}) {
     : <span className="ogcl-member-photo ogcl-photo-placeholder" aria-hidden="true">♥</span>;
 }
 
-function MemberCard({member, restricted = false}) {
-  const body = <>
+function MemberCard({member}) {
+  return <a className="ogcl-member-link" href={profileHref(member.slug)}>
     <MemberPhoto member={member} />
     <span className="ogcl-member-copy">
       <strong>{member.displayName}</strong>
       <small>{questionScore(member)}</small>
     </span>
-  </>;
-  return restricted
-    ? <div className="ogcl-member-link ogcl-quickmatch-member">{body}</div>
-    : <a className="ogcl-member-link" href={profileHref(member.slug)}>{body}</a>;
+  </a>;
 }
 
 function LeftRail() {
@@ -232,57 +229,41 @@ function PreviewView({title, intro, footnote, children}) {
   );
 }
 
-function MemberDirectory({quick = false}) {
+function MemberDirectory() {
   const {discovery, discoveryUnavailable, refresh} = useMemberSession();
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("match");
   const [page, setPage] = useState(1);
-  const [quickIndex, setQuickIndex] = useState(0);
-  // A temporary browse queue, not a Like/Dislike record. Actual Quickmatch
-  // decisions will require an authenticated persistence endpoint.
-  const browseQueue = useMemo(() => shuffledMembers(discovery), [discovery]);
   const ordered = useMemo(() => filterAndSortMembers(discovery, {search, sort}), [discovery, search, sort]);
   const directoryPage = useMemo(() => pageMembers(ordered, page), [ordered, page]);
   useEffect(() => { setPage(1); }, [search, sort]);
-  const candidate = browseQueue.length ? browseQueue[quickIndex % browseQueue.length] : null;
-  return <PreviewView
-    title={quick ? "Quickmatch" : "Matches"}
-    intro={quick ? "Meet another person from the real member directory." : "Browse members who've completed their profiles."}>
+  return <PreviewView title="Matches" intro="Browse members who've completed their profiles.">
     <p className="ogcl-note">Compatibility is a provisional question-only calculation. A missing score means there aren't enough shared answers.</p>
     {discoveryUnavailable ? <div role="alert"><p>Member discovery couldn't load.</p>
       <button type="button" className="ogcl-button" onClick={refresh}>Try again</button></div> :
-    quick ? (candidate ? <>
-      <div className="ogcl-quickmatch-view">
-        <MemberCard key={candidate.userId} member={candidate} restricted />
-        <p className="ogcl-quiet">This is a browse preview, not a recorded Like or Dislike. Matching decisions will be enabled when the secure backend is ready.</p>
-        {browseQueue.length > 1 && <button type="button" className="ogcl-button"
-          onClick={() => setQuickIndex(index => index + 1)}>See another member</button>}
-        <p>To open full profiles and contact members, use <NavLink to="/matches">MATCHES</NavLink>.</p>
-      </div>
-    </> : <p>No Quickmatch-eligible member previews are available yet.</p>) :
-    <>
-      <div className="ogcl-directory-tools">
-        <label>Find by username
-          <input type="search" maxLength={80} value={search} placeholder="Search members"
-            onChange={event => setSearch(event.target.value)} />
-        </label>
-        <label>Sort results
-          <select value={sort} onChange={event => setSort(event.target.value)}>
-            <option value="match">Highest match %</option>
-            <option value="name">Username A–Z</option>
-          </select>
-        </label>
-        <span className="ogcl-directory-count">{ordered.length} matching {ordered.length === 1 ? "member" : "members"}</span>
-      </div>
-      {directoryPage.items.length ? <div className="ogcl-directory">{directoryPage.items.map(p =>
-        <MemberCard key={p.userId} member={p} />)}</div> :
-        <p>{search ? "No members match that username." : "No discoverable members are available yet."}</p>}
-      {directoryPage.totalPages > 1 && <nav className="ogcl-pages" aria-label="Matches pages">
-        {Array.from({length:directoryPage.totalPages},(_,index) => index + 1).map(n =>
-          <button key={n} type="button" aria-current={n===directoryPage.page ? "page" : undefined}
-            onClick={() => setPage(n)}>{n}</button>)}
-      </nav>}
-    </>}
+      <>
+        <div className="ogcl-directory-tools">
+          <label>Find by username
+            <input type="search" maxLength={80} value={search} placeholder="Search members"
+              onChange={event => setSearch(event.target.value)} />
+          </label>
+          <label>Sort results
+            <select value={sort} onChange={event => setSort(event.target.value)}>
+              <option value="match">Highest match %</option>
+              <option value="name">Username A–Z</option>
+            </select>
+          </label>
+          <span className="ogcl-directory-count">{ordered.length} matching {ordered.length === 1 ? "member" : "members"}</span>
+        </div>
+        {directoryPage.items.length ? <div className="ogcl-directory">{directoryPage.items.map(p =>
+          <MemberCard key={p.userId} member={p} />)}</div> :
+          <p>{search ? "No members match that username." : "No discoverable members are available yet."}</p>}
+        {directoryPage.totalPages > 1 && <nav className="ogcl-pages" aria-label="Matches pages">
+          {Array.from({length:directoryPage.totalPages},(_,index) => index + 1).map(n =>
+            <button key={n} type="button" aria-current={n===directoryPage.page ? "page" : undefined}
+              onClick={() => setPage(n)}>{n}</button>)}
+        </nav>}
+      </>}
   </PreviewView>;
 }
 
