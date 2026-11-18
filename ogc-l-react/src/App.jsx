@@ -6,6 +6,7 @@ import {selectRecommendedMembers} from "./member-gateway.mjs";
 import {filterAndSortMembers, pageMembers} from "./member-directory.mjs";
 import {legacyHref} from "./legacy-links.mjs";
 import ProfileEditor from "./ProfileEditor.jsx";
+import ProfileSettings from "./ProfileSettings.jsx";
 import PublicMemberProfile from "./PublicMemberProfile.jsx";
 import QuickmatchView from "./QuickmatchView.jsx";
 import MessagesView from "./MessagesView.jsx";
@@ -101,6 +102,7 @@ function RightRail() {
               <a href={legacyHref("/account/")}>Your account</a>}
             {profileUnavailable && <p>Profile details could not load. Try refreshing.</p>}
             <NavLink to="/profile">Edit About essays</NavLink>
+            <NavLink to="/settings">Profile Settings</NavLink>
             <NavLink to="/questions">Edit match questions</NavLink>
             <button type="button" className="ogcl-side-button" onClick={session.signOut}>Sign out</button>
           </>
@@ -280,6 +282,7 @@ export default function App() {
         <Route index element={<Navigate to={defaultRoute} replace />} />
         <Route path="matches" element={<MemberGate><MemberDirectory /></MemberGate>} />
         <Route path="profile" element={<MemberGate><ProfileEditor /></MemberGate>} />
+        <Route path="settings" element={<MemberGate><ProfileSettings /></MemberGate>} />
         <Route path="profiles/:slug" element={<MemberGate><PublicMemberProfile Photo={MemberPhoto} /></MemberGate>} />
         <Route path="questions" element={<MemberGate><MatchQuestions /></MemberGate>} />
         <Route path="quickmatch" element={<MemberGate><QuickmatchView Photo={MemberPhoto} /></MemberGate>} />
