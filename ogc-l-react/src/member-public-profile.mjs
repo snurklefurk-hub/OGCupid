@@ -54,7 +54,10 @@ export function sanitizePublicProfile(payload,slug) {
     userId:p.userId.toLowerCase(),slug,
     displayName:p.displayName.trim().slice(0,60),
     age, cityRegion:textValue(p.cityRegion,100),
-    essays,details, publicAnswers:Object.freeze(answers),
+    essays,details,lookingFor:Object.freeze({
+      interestedIn:textValue(p.interestedIn,120),
+      relationshipGoal:textValue(p.relationshipGoal,100)
+    }),publicAnswers:Object.freeze(answers),
     personaCode:typeof payload.personaCode==="string" && /^[A-Za-z0-9]{4,8}$/.test(payload.personaCode)
       ? payload.personaCode:null,
     isOwner:payload.isOwner===true
