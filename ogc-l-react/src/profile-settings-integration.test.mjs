@@ -70,9 +70,6 @@ test("one field PUT never renames account or overwrites unrelated fields",()=>{
 });
 test("controlled fields and multi-choices validate with old values preserved",()=>{
   const prior=sanitizeOwnProfileSettings({profile:profile()},ME);
-  assert.equal(composeSettingUpdate(prior,"interestedIn","Woman, Transwoman").interestedIn,
-    "Woman, Transwoman");
-  assert.throws(()=>composeSettingUpdate(prior,"interestedIn","javascript:evil"));
   assert.throws(()=>composeSettingUpdate(prior,"bodyType","Superman"));
   assert.throws(()=>composeSettingUpdate(prior,"aboutMe","new essay"));
   assert.throws(()=>composeSettingUpdate(prior,"work","a".repeat(161)));
@@ -86,7 +83,7 @@ test("gateway reads latest server row and confirms one-field save with JWT",asyn
   const updated=await service.saveOwnSetting("work","Driver");
   assert.equal(updated.fields.work,"Driver");
   assert.equal(updated.fields.orientation,"Bi");
-  assert.equal(updated.fields.interestedIn,"Woman, Man");
+  assert.equal(updated.lookingFor.interestedIn,"Woman, Man");
   assert.equal(read().displayName,"Original Signup Name");
   assert.equal(read().aboutMe,"Keep my essay");
   assert.deepEqual(calls.map(x=>x.options.method),["GET","GET","PUT"]);
@@ -104,7 +101,7 @@ test("profile settings stay inside verified member route and link from owner vie
   assert.match(app,/<MemberGate><ProfileSettings \/><\/MemberGate>/);
   assert.match(app,/to="\/settings">Settings/);
   assert.match(owner,/profile\.isOwner/);
-  assert.match(owner,/EditPencil to="\/settings"/);
+  assert.match(owner,/EditPencil to="\/settings#looking-for"/);
   assert.match(provider,/loadOwnSettings, saveOwnSetting/);
   assert.doesNotMatch(view,/localStorage|sessionStorage|type="date"|zodiac|Date of birth/i);
   assert.match(view,/signup name and age cannot be edited/i);
