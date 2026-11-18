@@ -26,8 +26,11 @@ test("saved answers can be selected and revised using the same Neon owner-only A
   assert.doesNotMatch(jsx,/localStorage|sessionStorage/i);
 });
 
-test("public member profile has no editor link for other members",()=>{
-  assert.match(profile, /profile\.isOwner&&<p><NavLink to="\/questions"/);
+test("answered profile tab uses an owner-only inline editor",()=>{
+  const view=source("./ProfileQuestions.jsx");
+  assert.match(profile, /<ProfileQuestions profile=\{profile\}/);
+  assert.match(view, /profile\.isOwner&&myAnswer&&<button/);
+  assert.match(view, /saveMatchAnswer\(answer\)/);
   assert.match(about, /to="\/questions"/);
   assert.match(app, /path="questions" element=\{<MemberGate><MatchQuestions/);
 });

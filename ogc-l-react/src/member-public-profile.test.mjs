@@ -14,7 +14,7 @@ test("public view only keeps explicit safe text and public answer identity",()=>
   assert.equal(result.essays.messageMeIf,"Send me a book recommendation.");
   assert.equal(result.details.work,"Writer");
   assert.equal(result.age,31);
-  assert.deepEqual(result.publicAnswers,[{questionId:"vault-5",optionId:"option-1"}]);
+  assert.deepEqual(result.publicAnswers,[{questionId:"vault-5",optionId:"option-1",note:"private",isPrivate:false}]);
   assert.equal(JSON.stringify(result).includes("dont-show"),false);
   assert.equal(JSON.stringify(result).includes("acceptableOptions"),false);
   assert.equal(JSON.stringify(result).includes("dont-show"),false);
