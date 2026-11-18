@@ -140,6 +140,7 @@ function geoDetails(row: GeoRow) {
     searchOriginKey: String(row?.search_origin_shard ?? ""),
     searchOriginLabel: String(row?.search_origin_label ?? ""),
     searchRadiusMiles: row?.search_radius_miles == null ? null : Number(row.search_radius_miles),
+    hasValidatedLocality: row?.locality_id != null,
   };
 }
 
@@ -196,6 +197,8 @@ type MemberProfile = {
   displayName: string;
   aboutMe: string;
   age: number | null;
+  preferredAgeMin: number | null;
+  preferredAgeMax: number | null;
   cityRegion: string;
   gender: string;
   pronouns: string;
@@ -233,6 +236,8 @@ function present(row: Record<string, unknown>): MemberProfile {
     displayName: String(row.display_name),
     aboutMe: String(row.about_me),
     age: row.age == null ? null : Number(row.age),
+    preferredAgeMin: row.preferred_age_min == null ? null : Number(row.preferred_age_min),
+    preferredAgeMax: row.preferred_age_max == null ? null : Number(row.preferred_age_max),
     cityRegion: String(row.city_region ?? ""),
     gender: String(row.gender ?? ""),
     pronouns: String(row.pronouns ?? ""),
@@ -415,7 +420,9 @@ export default {
                p.work, p.education, p.height, p.kids, p.pets, p.smoking,
                p.drinking, p.diet, p.languages, p.ethnicity, p.body_type,
                p.vaping, p.drugs, p.religion, p.sign, p.income, p.status,
-               p.relationship_type, p.life_direction, p.good_at, p.first_things, p.favorites,
+               p.relationship_type, p.preferred_age_min, p.preferred_age_max,
+                app_private.visible_member_search_radius(p.user_id) AS profile_search_radius_miles,
+                p.life_direction, p.good_at, p.first_things, p.favorites,
                p.six_things, p.thinking_about, p.friday_night, p.private_thing, p.message_me_if,
                p.created_at, p.updated_at
              FROM app_private.member_profile_routes route
@@ -431,7 +438,8 @@ export default {
             "SELECT app_private.visible_member_persona($1::uuid) AS code",
             [row.user_id]);
           return {
-            profile: { ...present(row), slug },
+            profile: { ...present(row), slug,
+              profileSearchRadiusMiles: row.profile_search_radius_miles == null ? null : Number(row.profile_search_radius_miles) },
             isOwner: String(row.user_id).toLowerCase() === userId,
             publicAnswers: answers.rows.map(answer => ({
               questionId: String(answer.question_id),
@@ -695,7 +703,7 @@ export default {
       if (request.method === "GET") {
         const result = await withMember(userId, async client => {
           const profile = await client.query(
-            `SELECT user_id, display_name, about_me, age, city_region, gender, pronouns, orientation, interested_in, relationship_goal, work, education, height, kids, pets, smoking, drinking, diet, languages, ethnicity, body_type, vaping, drugs, religion, sign, income, status, relationship_type, life_direction, good_at, first_things, favorites, six_things, thinking_about, friday_night, private_thing, message_me_if, created_at, updated_at FROM app_private.member_profiles WHERE user_id = $1::uuid`,
+            `SELECT user_id, display_name, about_me, age, city_region, gender, pronouns, orientation, interested_in, relationship_goal, work, education, height, kids, pets, smoking, drinking, diet, languages, ethnicity, body_type, vaping, drugs, religion, sign, income, status, relationship_type, preferred_age_min, preferred_age_max, life_direction, good_at, first_things, favorites, six_things, thinking_about, friday_night, private_thing, message_me_if, created_at, updated_at FROM app_private.member_profiles WHERE user_id = $1::uuid`,
             [userId],
           );
           const geo = await client.query(
@@ -751,8 +759,24 @@ export default {
       }
       // Older editor versions do not send any geo keys: keep their existing
       // locality preferences untouched when they save ordinary essay fields.
-      const geoSupplied = ["locality", "searchOrigin", "searchRadiusMiles"]
-        .some(key => Object.prototype.hasOwnProperty.call(fields, key));
+      const hasOwn=(key: string) => Object.prototype.hasOwnProperty.call(fields,key);
+      const geoSupplied = ["locality","searchOrigin"].some(hasOwn);
+      const radiusOnly = hasOwn("searchRadiusMiles") && !geoSupplied;
+      const validRadius=(value: unknown) =>
+        Number.isInteger(value) && [0,10,25,50,100,250,500].includes(value as number);
+      if (radiusOnly && !validRadius(fields.searchRadiusMiles))
+        return json(request,{error:"Choose an approved distance preference"},400);
+      const preferredAgeSupplied=hasOwn("preferredAgeMin")||hasOwn("preferredAgeMax");
+      if (preferredAgeSupplied && (!hasOwn("preferredAgeMin")||!hasOwn("preferredAgeMax")))
+        return json(request,{error:"Choose both minimum and maximum ages"},400);
+      const minPref=fields.preferredAgeMin, maxPref=fields.preferredAgeMax;
+      if (preferredAgeSupplied &&
+        !(minPref===null && maxPref===null) &&
+        !(Number.isInteger(minPref) && Number.isInteger(maxPref) &&
+          (minPref as number)>=18 && (maxPref as number)<=99 &&
+          (minPref as number)<=(maxPref as number))) {
+        return json(request,{error:"Choose ages from 18 through 99, minimum first"},400);
+      }
       let locality: CanonicalPlace | null = null;
       let searchOrigin: CanonicalPlace | null = null;
       let searchRadiusMiles: number | null = null;
@@ -761,8 +785,7 @@ export default {
           .every(key => Object.prototype.hasOwnProperty.call(fields, key))) {
           return json(request, { error: "Incomplete location preferences" }, 400);
         }
-        if (fields.searchRadiusMiles !== null &&
-            ![10, 25, 50, 100, 250].includes(fields.searchRadiusMiles as number)) {
+        if (fields.searchRadiusMiles !== null && !validRadius(fields.searchRadiusMiles)) {
           return json(request, { error: "Choose a valid distance" }, 400);
         }
         searchRadiusMiles = fields.searchRadiusMiles as number | null;
@@ -800,7 +823,7 @@ export default {
         .filter(([key]) => Object.prototype.hasOwnProperty.call(fields, key))
         .map(([, column]) => `${column} = EXCLUDED.${column}`);
       const paramList = columns.map((_, index) => `$${index + 5}`);
-      const allReturned = ["user_id", "display_name", "about_me", "age", ...columns, "created_at", "updated_at"];
+      const allReturned = ["user_id", "display_name", "about_me", "age", "preferred_age_min", "preferred_age_max", ...columns, "created_at", "updated_at"];
       const sql = `INSERT INTO app_private.member_profiles
            (user_id, display_name, about_me, adult_attested_at, age, ${columns.join(", ")})
          VALUES ($1::uuid, $2, $3, now(), $4, ${paramList.join(", ")})
@@ -833,7 +856,32 @@ export default {
           throw new Error("Account display name is unavailable");
         }
         const saved = await client.query(sql, [userId, displayName, aboutMe, age, ...extraValues]);
+        if (preferredAgeSupplied) {
+          await client.query(
+            "UPDATE app_private.member_profiles SET preferred_age_min=$2,preferred_age_max=$3,updated_at=now() WHERE user_id=$1::uuid",
+            [userId,minPref,maxPref]);
+          saved.rows[0].preferred_age_min=minPref;
+          saved.rows[0].preferred_age_max=maxPref;
+        }
+        if (radiusOnly) {
+          // Keep search radius in the existing canonical locality row. A
+          // genuine saved profile location must exist; never use device GPS.
+          const radiusUpdated=await client.query(
+            "UPDATE app_private.member_localities SET search_radius_miles=$2,updated_at=now() " +
+            "WHERE user_id=$1::uuid AND locality_id IS NOT NULL RETURNING user_id",
+            [userId,fields.searchRadiusMiles]);
+          if (!radiusUpdated.rowCount) throw new Error("Validated profile location required for distance preference");
+        }
         if (geoSupplied) {
+          // Initial saved locality defaults to 50 miles as approved. Existing
+          // accounts with an intentionally null legacy radius remain untouched
+          // unless the member explicitly chooses a new distance.
+          let radiusForWrite=searchRadiusMiles;
+          if (locality && radiusForWrite===null) {
+            const oldLocation=await client.query(
+              "SELECT user_id FROM app_private.member_localities WHERE user_id=$1::uuid",[userId]);
+            if (!oldLocation.rowCount) radiusForWrite=50;
+          }
           await client.query(
             "INSERT INTO app_private.member_localities " +
             "(user_id, locality_id, locality_shard, locality_lat, locality_lon, " +
@@ -846,7 +894,7 @@ export default {
             "search_origin_lon=EXCLUDED.search_origin_lon, search_radius_miles=EXCLUDED.search_radius_miles, updated_at=now()",
             [userId, locality?.id ?? null, locality?.key ?? null, locality?.lat ?? null, locality?.lon ?? null,
              searchOrigin?.id ?? null, searchOrigin?.key ?? null, searchOrigin?.label ?? null,
-             searchOrigin?.lat ?? null, searchOrigin?.lon ?? null, searchRadiusMiles],
+             searchOrigin?.lat ?? null, searchOrigin?.lon ?? null, radiusForWrite],
           );
         }
         const geo = await client.query(

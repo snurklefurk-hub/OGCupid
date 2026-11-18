@@ -59,7 +59,13 @@ export function sanitizePublicProfile(payload,slug) {
     age, cityRegion:textValue(p.cityRegion,100),
     essays,details,lookingFor:Object.freeze({
       interestedIn:textValue(p.interestedIn,120),
-      relationshipGoal:textValue(p.relationshipGoal,100)
+      relationshipGoal:textValue(p.relationshipGoal,100),
+      preferredAgeMin:Number.isInteger(p.preferredAgeMin) && p.preferredAgeMin>=18 && p.preferredAgeMin<=99
+        ? p.preferredAgeMin : null,
+      preferredAgeMax:Number.isInteger(p.preferredAgeMax) && p.preferredAgeMax>=18 && p.preferredAgeMax<=99
+        ? p.preferredAgeMax : null,
+      profileSearchRadiusMiles:[0,10,25,50,100,250,500].includes(p.profileSearchRadiusMiles)
+        ? p.profileSearchRadiusMiles : null
     }),publicAnswers:Object.freeze(answers),
     personaCode:typeof payload.personaCode==="string" && /^[A-Za-z0-9]{4,8}$/.test(payload.personaCode)
       ? payload.personaCode:null,

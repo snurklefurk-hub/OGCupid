@@ -1,3 +1,4 @@
+import {validAgeRange} from "./member-looking-for.mjs";
 // Staging Profile Settings: only fields stored by the established Neon /profile API.
 // Signup display name, DOB, and derived age are deliberately NOT writable here.
 const genders=["Man","Woman","Transman","Transwoman","Something else"];
@@ -8,9 +9,6 @@ const fields=[
   {key:"orientation",label:"Orientation",max:60,group:"identity",
     options:["Gay","Straight","Bi","Something else"]},
   {key:"pronouns",label:"Pronouns",max:40,group:"identity"},
-  {key:"interestedIn",label:"Interested in",max:120,group:"looking",multi:genders},
-  {key:"relationshipGoal",label:"Open to",max:100,group:"looking",
-    multi:["long-term dating","short-term dating","new friends","casual sex","activity partners"]},
   {key:"relationshipType",label:"Relationship style",max:50,group:"details",
     options:["Monogamous","Polyamorous"]},
   {key:"work",label:"Job",max:160,group:"details"},
@@ -52,6 +50,10 @@ export function sanitizeOwnProfileSettings(payload,memberId) {
     (p.age!==null && (!Number.isInteger(p.age)||p.age<18||p.age>120))) {
     throw Error("Verified member profile settings are unavailable");
   }
+  if(!validAgeRange(p.preferredAgeMin??null,p.preferredAgeMax??null) ||
+    (p.searchRadiusMiles!==null && p.searchRadiusMiles!==undefined &&
+     ![0,10,25,50,100,250,500].includes(p.searchRadiusMiles)))
+    throw Error("Saved looking-for preferences are invalid");
   const values={};
   for(const def of PROFILE_SETTINGS_FIELDS){
     if(typeof p[def.key]!=="string" || p[def.key].length>def.max)
@@ -61,7 +63,15 @@ export function sanitizeOwnProfileSettings(payload,memberId) {
   return Object.freeze({
     userId:memberId.toLowerCase(),displayName:p.displayName.slice(0,60),
     slug:typeof p.slug==="string"&&SLUG.test(p.slug)?p.slug:null,
-    age:p.age,aboutMe:p.aboutMe,fields:Object.freeze(values)
+    age:p.age,aboutMe:p.aboutMe,fields:Object.freeze(values),
+    lookingFor:Object.freeze({
+      interestedIn:typeof p.interestedIn==="string"?p.interestedIn:"",
+      relationshipGoal:typeof p.relationshipGoal==="string"?p.relationshipGoal:"",
+      preferredAgeMin:p.preferredAgeMin??null,
+      preferredAgeMax:p.preferredAgeMax??null,
+      searchRadiusMiles:p.searchRadiusMiles??null,
+      hasValidatedLocality:p.hasValidatedLocality===true
+    })
   });
 }
 export function composeSettingUpdate(profile,key,value) {
