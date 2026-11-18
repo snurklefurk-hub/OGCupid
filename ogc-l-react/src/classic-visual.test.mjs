@@ -65,9 +65,10 @@ test("Quickmatch renders original two heart icons, not CRUD buttons",()=>{
   assert.match(quick,/HeartDecision kind="dislike"/);
   assert.match(hearts,/stroke="#9e1543"/);
   assert.match(hearts,/stroke="#5a6b7b"/);
-  assert.match(quick,/remaining.length>=5/);
+  assert.match(quick,/queueOrder\.length>=5/);
   assert.doesNotMatch(quick,/>See another<|>Revisit skipped members<|>Undo</);
-  assert.match(quick,/await saveQuickmatchDecision\(candidate.userId,decision\)/);
+  assert.match(quick,/await saveQuickmatchDecision\(targetUserId,decision\)/);
+  assert.match(quick,/await vote\(candidate.userId,decision\)/);
 });
 
 test("member profile has owner-only green pencils and in-place four-tab layout",()=>{

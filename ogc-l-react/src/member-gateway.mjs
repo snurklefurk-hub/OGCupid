@@ -114,6 +114,27 @@ export function sanitizeQuickmatchDecisions(data) {
   return decisions;
 }
 
+export function sanitizeQuickmatchState(data) {
+  const decisions=sanitizeQuickmatchDecisions(data);
+  const ids=(value,name,limit=5000)=>{
+    if(!Array.isArray(value) || value.length>limit ||
+        !value.every(id=>typeof id==="string"&&UUID.test(id)))
+      throw new MemberAccessError("unavailable","Invalid Quickmatch "+name+" response.");
+    return [...new Set(value.map(id=>id.toLowerCase()))];
+  };
+  const eligibleUserIds=ids(data.eligibleUserIds,"queue",250);
+  const outgoingLikes=ids(data.outgoingLikes,"outgoing likes");
+  const incomingLikes=ids(data.incomingLikes,"incoming likes");
+  const mutualUserIds=ids(data.mutualUserIds,"mutual likes");
+  const outgoing=new Set(outgoingLikes),incoming=new Set(incomingLikes);
+  if(mutualUserIds.some(id=>!outgoing.has(id)||!incoming.has(id)))
+    throw new MemberAccessError("unavailable","Inconsistent Quickmatch mutual state.");
+  return Object.freeze({decisions,eligibleUserIds:new Set(eligibleUserIds),
+    outgoingLikes:Object.freeze(outgoingLikes),
+    incomingLikes:Object.freeze(incomingLikes),
+    mutualUserIds:new Set(mutualUserIds)});
+}
+
 function checkedPrivateMessage(m,me,peer){
   if(!m || !UUID.test(String(m.id||"")) || !UUID.test(String(m.senderId||"")) ||
      !UUID.test(String(m.recipientId||"")) || typeof m.body!=="string" || m.body.length>2000 ||
@@ -358,7 +379,7 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
       if(sessionResult?.error)throw new MemberAccessError("unauthorized","Session unavailable.");
       checkedMember(sessionResult?.data?.user);
       const jwt=await getJwt(sessionResult?.data?.session);
-      return sanitizeQuickmatchDecisions(await readApi("/quickmatch",jwt));
+      return sanitizeQuickmatchState(await readApi("/quickmatch",jwt));
     },
     async saveQuickmatchDecision(targetUserId,decision) {
       if(!UUID.test(String(targetUserId||"")) || !["like","dislike"].includes(decision))

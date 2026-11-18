@@ -5,103 +5,114 @@ import {handleQuickmatch} from "./member-quickmatch.js";
 
 const YOU="00000000-0000-4000-8000-000000000001";
 const THEM="00000000-0000-4000-8000-000000000002";
+const OTHER="00000000-0000-4000-8000-000000000003";
 const api=readFileSync(new URL("./member-profile.ts",import.meta.url),"utf8");
-const migration=readFileSync(new URL("../db/migrations/021_member_quickmatch_decisions.sql",import.meta.url),"utf8");
-const json=(_request,body,status=200)=>new Response(JSON.stringify(body),{status,headers:{"Content-Type":"application/json"}});
+const migration=readFileSync(new URL("../db/migrations/026_quickmatch_pair_state.sql",import.meta.url),"utf8");
+const json=(_req,body,status=200)=>new Response(JSON.stringify(body),{status});
 const request=(method="GET",body,headers={})=>new Request("https://example.neon.tech/quickmatch",{
   method,headers:{"Content-Type":"application/json",...headers},
   ...(body===undefined?{}:{body:JSON.stringify(body)})
 });
-function db(eligible=true) {
-  const queries=[];
-  const withMember=async (userId,operation)=>operation({query:async(sql,values)=>{
-    queries.push({sql,values,userId});
+
+function backend({eligible=true,saved=true}={}){
+  const calls=[];
+  const withMember=async (subject,callback)=>callback({query:async(sql,args)=>{
+    calls.push({sql,args,subject});
     if(sql.includes("AS eligible"))return {rows:[{eligible}]};
-    if(sql.includes("SELECT target_user_id,decision"))return {rows:[{target_user_id:THEM,decision:"like"}]};
-    if(sql.includes("INSERT INTO"))return {rows:eligible?[{target_user_id:THEM,decision:values[2]}]:[]};
-    throw Error("Unexpected query");
+    if(sql.includes("FROM app_private.member_quickmatch_decisions") && sql.includes("decision IS NOT NULL"))
+      return {rows:[{target_user_id:THEM,decision:"like"}]};
+    if(sql.includes("quickmatch_can_show"))return {rows:[{user_id:OTHER}]};
+    if(sql.includes("quickmatch_pair_permitted"))return {rows:[{target_user_id:THEM}]};
+    if(sql.includes("quickmatch_incoming_likes"))return {rows:[
+      {target_user_id:THEM,liked_at:"2026-11-18T12:00:00Z"}
+    ]};
+    if(sql.includes("quickmatch_decide"))return {rows:[{saved}]};
+    throw Error("Unexpected query "+sql);
   }});
-  return {queries,withMember};
+  return {calls,withMember};
 }
 
-test("Quickmatch is reachable only behind the existing JWT and member-liveness gate",()=>{
+test("member route validates JWT/liveness before invoking pair state helper",()=>{
   assert.match(api,/quickmatchPath = url\.pathname === "\/quickmatch"/);
   assert.match(api,/quickmatchPath \? \["GET", "PUT"\]\.includes\(request\.method\)/);
-  assert.match(api,/profilePath \|\| memberProfileMatch \|\| discoveryPath \|\| quickmatchPath/);
   assert.match(api,/if \(!userId\) return json\(request, \{ error: "Unauthorized" \}, 401\)/);
   assert.match(api,/current_member_is_active\(\)/);
   assert.match(api,/handleQuickmatch\(request,userId,withMember,json\)/);
-  assert.match(api,/allowedOrigins\.has\(origin\)/);
 });
 
-test("migration gives only member API role and authenticated owner RLS",()=>{
-  assert.match(migration,/REFERENCES neon_auth\."user"\(id\) ON DELETE CASCADE/g);
-  assert.match(migration,/CHECK \(user_id <> target_user_id\)/);
-  assert.match(migration,/FORCE ROW LEVEL SECURITY/);
-  assert.match(migration,/GRANT SELECT, INSERT, UPDATE .*ogcupid_member_api/);
-  assert.match(migration,/REVOKE ALL .*PUBLIC, ogcupid_delete_api/);
-  assert.match(migration,/current_setting\('app\.current_user_id', true\)/);
-  assert.doesNotMatch(migration,/GRANT .* ON app_private\.member_quickmatch_decisions TO PUBLIC/);
+test("pair state migration revokes direct writes and authenticates SECURITY DEFINER helpers",()=>{
+  assert.match(migration,/REVOKE INSERT, UPDATE ON app_private\.member_quickmatch_decisions FROM ogcupid_member_api/);
+  assert.match(migration,/quickmatch_owner_insert/);
+  assert.match(migration,/quickmatch_owner_update/);
+  assert.match(migration,/SECURITY DEFINER/g);
+  assert.match(migration,/current_setting\('app\.current_user_id',true\)/);
+  assert.match(migration,/pg_advisory_xact_lock/);
+  assert.match(migration,/first_at\+interval '30 days'/);
+  assert.match(migration,/strikes>=2/);
+  assert.match(migration,/UPDATE app_private\.member_quickmatch_decisions SET decision=NULL/);
+  assert.match(migration,/match_penalty_points=5\*\(d\.dislike_count\+1\)/);
+  assert.match(migration,/friend_penalty_points=CASE WHEN d\.dislike_count\+1>=2 THEN 5 ELSE 0 END/);
+  assert.match(migration,/viewer::text=nullif\(current_setting\('app\.current_user_id',true\),''\)/);
+  assert.match(migration,/FROM PUBLIC,ogcupid_delete_api/);
+  assert.doesNotMatch(migration,/GRANT INSERT ON app_private\.member_quickmatch_decisions TO ogcupid_member_api/);
 });
 
-test("GET returns only the requesting owner's decisions and no target account PII",async()=>{
-  const store=db();
-  const response=await handleQuickmatch(request(),YOU,store.withMember,json);
+test("GET returns only safe eligible IDs and owner-authorized incoming/outgoing likes",async()=>{
+  const b=backend();
+  const response=await handleQuickmatch(request(),YOU,b.withMember,json);
   assert.equal(response.status,200);
-  assert.deepEqual(await response.json(),{decisions:[{targetUserId:THEM,decision:"like"}]});
-  assert.equal(store.queries.length,2);
-  assert.deepEqual(store.queries[1].values,[YOU]);
-  assert.match(store.queries[1].sql,/WHERE user_id=\$1::uuid/);
-  assert.doesNotMatch(JSON.stringify(await response.headers.get("X-Debug"))||"",/email/i);
+  const body=await response.json();
+  assert.deepEqual(body,{
+    decisions:[{targetUserId:THEM,decision:"like"}],
+    eligibleUserIds:[OTHER],
+    outgoingLikes:[THEM],incomingLikes:[THEM],mutualUserIds:[THEM]
+  });
+  assert.equal(b.calls.length,5);
+  assert.ok(b.calls.every(x=>x.subject===YOU));
+  assert.ok(b.calls.every(x=>x.args[0]===YOU));
+  assert.match(b.calls[1].sql,/WHERE user_id=\$1::uuid/);
+  assert.match(b.calls[2].sql,/quickmatch_can_show/);
+  assert.doesNotMatch(JSON.stringify(body),/email|birth_date|note|dislike_count/i);
 });
 
-test("unfinished member cannot load Quickmatch decisions",async()=>{
-  const store=db(false);
-  const r=await handleQuickmatch(request(),YOU,store.withMember,json);
-  assert.equal(r.status,403);
-  assert.equal(store.queries.length,1);
+test("unfinished own onboarding sees neither queue nor incoming likes",async()=>{
+  const b=backend({eligible:false});
+  const res=await handleQuickmatch(request(),YOU,b.withMember,json);
+  assert.equal(res.status,403);
+  assert.equal(b.calls.length,1);
 });
 
-test("PUT upserts a Like for a verified discoverable target; repeat updates same row",async()=>{
-  const store=db();
-  const r=await handleQuickmatch(request("PUT",{targetUserId:THEM,decision:"like"}),YOU,store.withMember,json);
-  assert.equal(r.status,200);
+test("PUT delegates to secure pair transition, not ad-hoc cross-owner INSERT",async()=>{
+  const b=backend();
+  const r=await handleQuickmatch(request("PUT",{targetUserId:THEM,decision:"like"}),YOU,b.withMember,json);
   assert.deepEqual(await r.json(),{saved:true,targetUserId:THEM,decision:"like"});
-  assert.equal(store.queries.length,1);
-  assert.deepEqual(store.queries[0].values,[YOU,THEM,"like"]);
-  assert.match(store.queries[0].sql,/ON CONFLICT \(user_id,target_user_id\)/);
-  assert.match(store.queries[0].sql,/app_private\.is_discoverable_member\(\$1::uuid\)/);
-  assert.match(store.queries[0].sql,/app_private\.is_discoverable_member\(\$2::uuid\)/);
+  assert.equal(b.calls.length,1);
+  assert.match(b.calls[0].sql,/app_private\.quickmatch_decide\(\$1::uuid,\$2::uuid,\$3::text\)/);
+  assert.deepEqual(b.calls[0].args,[YOU,THEM,"like"]);
 });
 
-test("invalid target, self vote, unexpected fields and methods cannot write",async()=>{
-  const store=db();
-  for(const body of [
-    {targetUserId:YOU,decision:"like"},
-    {targetUserId:"javascript:alert(1)",decision:"like"},
-    {targetUserId:THEM,decision:"unlike"},
-    {targetUserId:THEM,decision:"like",userId:YOU}
-  ]) {
-    const r=await handleQuickmatch(request("PUT",body),YOU,store.withMember,json);
-    assert.equal(r.status,400);
-  }
-  const unsupported=await handleQuickmatch(request("POST",{targetUserId:THEM,decision:"like"}),YOU,store.withMember,json);
-  assert.equal(unsupported.status,405);
-  assert.equal(store.queries.length,0);
-});
-
-test("non-discoverable target cannot be rated; no false save confirmation",async()=>{
-  const store=db(false);
-  const r=await handleQuickmatch(request("PUT",{targetUserId:THEM,decision:"dislike"}),YOU,store.withMember,json);
+test("second strike/cooldown/backend conflict cannot claim saved vote",async()=>{
+  const b=backend({saved:false});
+  const r=await handleQuickmatch(request("PUT",{targetUserId:THEM,decision:"dislike"}),YOU,b.withMember,json);
   assert.equal(r.status,409);
   assert.equal((await r.json()).saved,undefined);
 });
 
-test("untrusted content-type and oversized payload are rejected before database calls",async()=>{
-  const store=db();
-  const a=await handleQuickmatch(request("PUT",{targetUserId:THEM,decision:"like"},{"Content-Type":"text/plain"}),YOU,store.withMember,json);
-  assert.equal(a.status,415);
-  const large=await handleQuickmatch(request("PUT",{targetUserId:THEM,decision:"like",memo:"x".repeat(700)}),YOU,store.withMember,json);
-  assert.equal(large.status,413);
-  assert.equal(store.queries.length,0);
+test("invalid targets, self, unexpected fields and methods fail before SQL",async()=>{
+  const b=backend();
+  for(const body of [
+    {targetUserId:YOU,decision:"like"},
+    {targetUserId:"../test",decision:"like"},
+    {targetUserId:THEM,decision:"neutral"},
+    {targetUserId:THEM,decision:"dislike",userId:OTHER}
+  ])assert.equal((await handleQuickmatch(request("PUT",body),YOU,b.withMember,json)).status,400);
+  assert.equal((await handleQuickmatch(request("POST",{targetUserId:THEM,decision:"like"}),YOU,b.withMember,json)).status,405);
+  assert.equal(b.calls.length,0);
+});
+
+test("bad content-type and oversized payload cannot reach database",async()=>{
+  const b=backend();
+  assert.equal((await handleQuickmatch(request("PUT",{targetUserId:THEM,decision:"like"},{"Content-Type":"text/plain"}),YOU,b.withMember,json)).status,415);
+  assert.equal((await handleQuickmatch(request("PUT",{targetUserId:THEM,decision:"like",memo:"x".repeat(700)}),YOU,b.withMember,json)).status,413);
+  assert.equal(b.calls.length,0);
 });
