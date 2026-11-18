@@ -32,7 +32,11 @@ jobs:
           node --check "$RUNNER_TEMP/messages-member-function.mjs"
       - name: Smoke development Neon messaging auth and CORS (no member credentials)
         env:
-          OGC_DEV_MEMBER_API_URL: https://br-tiny-wave-bbnpjp0m-members.compute.c-15.us-east-1.aws.neon.tech/
+          OGC_MEMBER_API_URL: https://br-tiny-wave-bbnpjp0m-members.compute.c-15.us-east-1.aws.neon.tech/
+        run: node scripts/smoke-ogcl-messages.mjs
+      - name: Smoke shared Neon messaging auth and CORS (no member credentials)
+        env:
+          OGC_MEMBER_API_URL: https://br-plain-unit-bbcbxpqq-members.compute.c-15.us-east-1.aws.neon.tech/
         run: node scripts/smoke-ogcl-messages.mjs
       - name: Validate member session, inbox UI and staging build
         working-directory: ogc-l-react
