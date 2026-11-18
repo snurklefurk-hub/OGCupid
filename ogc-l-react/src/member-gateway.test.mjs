@@ -249,3 +249,35 @@ test("invalid peer profile routes fail before private network requests",async()=
   await assert.rejects(service.getPublicProfile("../secret"),error=>error.code==="invalid");
   assert.equal(calls.length,0);
 });
+
+
+test("member question progress is loaded only with a verified JWT",async()=>{
+  const {service,calls}=mockGateway({responseFor:async(url)=>{
+    if(new URL(url).pathname==="/answers")return good({answers:[
+      {questionId:"vault-5",optionId:"option-1",acceptableOptions:["option-1"],
+        importance:10,isPrivate:false,note:""}
+    ]});
+    throw Error("Unexpected member path");
+  }});
+  const result=await service.loadMatchAnswers();
+  assert.equal(result.answers.length,1);
+  assert.equal(calls.length,1);
+  assert.equal(calls[0][0],"/answers");
+  assert.equal(calls[0][1].headers.Authorization,"Bearer header.payload.signature");
+});
+test("match answer saves require a positive server acknowledgment and never persist JWT in browser storage",async()=>{
+  const answer={questionId:"vault-5",optionId:"option-1",acceptableOptions:["option-1"],
+    importance:1,isPrivate:false,note:""};
+  const {service,calls}=mockGateway({responseFor:async(url,options)=>{
+    if(new URL(url).pathname==="/answers" && options.method==="PUT")return good({saved:true});
+    throw Error("Unexpected request");
+  }});
+  const r=await service.saveMatchAnswer(answer);
+  assert.equal(r.saved,true);
+  assert.equal(calls.length,1);
+  assert.equal(calls[0][1].method,"PUT");
+  assert.equal(calls[0][1].headers.Authorization,"Bearer header.payload.signature");
+  assert.deepEqual(JSON.parse(calls[0][1].body),answer);
+  const {service:rejected}=mockGateway({responseFor:async()=>good({saved:false})});
+  await assert.rejects(rejected.saveMatchAnswer(answer),e=>e.code==="unavailable");
+});
