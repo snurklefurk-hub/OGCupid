@@ -61,7 +61,8 @@ test("GET returns only safe eligible IDs and owner-authorized incoming/outgoing 
   const b=backend();
   const response=await handleQuickmatch(request(),YOU,b.withMember,json);
   assert.equal(response.status,200);
-  assert.deepEqual(await response.json(),{
+  const body=await response.json();
+  assert.deepEqual(body,{
     decisions:[{targetUserId:THEM,decision:"like"}],
     eligibleUserIds:[OTHER],
     outgoingLikes:[THEM],incomingLikes:[THEM],mutualUserIds:[THEM]
@@ -71,7 +72,7 @@ test("GET returns only safe eligible IDs and owner-authorized incoming/outgoing 
   assert.ok(b.calls.every(x=>x.args[0]===YOU));
   assert.match(b.calls[1].sql,/WHERE user_id=\$1::uuid/);
   assert.match(b.calls[2].sql,/quickmatch_can_show/);
-  assert.doesNotMatch(JSON.stringify(await response.json()),/email|birth_date|note|dislike_count/i);
+  assert.doesNotMatch(JSON.stringify(body),/email|birth_date|note|dislike_count/i);
 });
 
 test("unfinished own onboarding sees neither queue nor incoming likes",async()=>{
