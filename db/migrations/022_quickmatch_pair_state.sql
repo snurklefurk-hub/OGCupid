@@ -68,7 +68,7 @@ DECLARE strikes integer; first_at timestamptz;
 BEGIN
   IF actor IS NULL OR target IS NULL OR actor=target
      OR actor::text IS DISTINCT FROM nullif(current_setting('app.current_user_id',true),'')
-     OR choice NOT IN ('like','dislike')
+     OR choice IS NULL OR choice NOT IN ('like','dislike')
   THEN RETURN false; END IF;
   IF NOT app_private.is_discoverable_member(actor)
      OR NOT app_private.is_discoverable_member(target)
