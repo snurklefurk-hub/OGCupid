@@ -99,6 +99,19 @@ export function sanitizeDiscovery(data, memberId) {
     }));
 }
 
+export function sanitizeQuickmatchDecisions(data) {
+  if(!Array.isArray(data?.decisions) || data.decisions.length>5000)
+    throw new MemberAccessError("unavailable","Invalid Quickmatch decision response.");
+  const decisions=new Map();
+  for(const item of data.decisions){
+    if(!UUID.test(String(item?.targetUserId||"")) ||
+        !["like","dislike"].includes(item?.decision))
+      throw new MemberAccessError("unavailable","Invalid Quickmatch decision record.");
+    decisions.set(item.targetUserId.toLowerCase(),item.decision);
+  }
+  return decisions;
+}
+
 export function selectRecommendedMembers(profiles, rng = Math.random) {
   const candidates = Array.isArray(profiles) ? profiles : [];
   const high = candidates.filter(p => typeof p.matchPercent === "number" && p.matchPercent > 75);
@@ -226,6 +239,42 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
         }
         return image;
       } finally { clearTimeout(timer); }
+    },
+    async loadQuickmatchDecisions() {
+      const sessionResult=await bounded(authClient.getSession());
+      if(sessionResult?.error)throw new MemberAccessError("unauthorized","Session unavailable.");
+      checkedMember(sessionResult?.data?.user);
+      const jwt=await getJwt(sessionResult?.data?.session);
+      return sanitizeQuickmatchDecisions(await readApi("/quickmatch",jwt));
+    },
+    async saveQuickmatchDecision(targetUserId,decision) {
+      if(!UUID.test(String(targetUserId||"")) || !["like","dislike"].includes(decision))
+        throw new MemberAccessError("invalid","Invalid Quickmatch decision.");
+      const sessionResult=await bounded(authClient.getSession());
+      if(sessionResult?.error)throw new MemberAccessError("unauthorized","Session unavailable.");
+      const user=checkedMember(sessionResult?.data?.user);
+      if(user.id===targetUserId.toLowerCase())throw new MemberAccessError("invalid","Cannot rate yourself.");
+      const jwt=await getJwt(sessionResult?.data?.session);
+      const controller=new AbortController();
+      const timer=setTimeout(()=>controller.abort(),MAX_WAIT_MS);
+      try{
+        const response=await fetcher(endpoints.memberApiBaseUrl+"/quickmatch",{
+          method:"PUT",credentials:"omit",cache:"no-store",
+          headers:{Authorization:"Bearer "+jwt,"Content-Type":"application/json",
+            Accept:"application/json"},
+          body:JSON.stringify({targetUserId:targetUserId.toLowerCase(),decision}),
+          signal:controller.signal
+        });
+        requireResponse(response);
+        const confirmation=await bounded(response.json());
+        if(confirmation?.saved!==true || confirmation?.decision!==decision ||
+           confirmation?.targetUserId!==targetUserId.toLowerCase())
+          throw new MemberAccessError("unavailable","Quickmatch save was not confirmed.");
+        return confirmation;
+      }catch(error){
+        if(error instanceof MemberAccessError)throw error;
+        throw new MemberAccessError("unavailable","Could not save Quickmatch decision.");
+      }finally{clearTimeout(timer);}
     },
     async loadMatchAnswers() {
       const identity=await bounded(authClient.getSession());

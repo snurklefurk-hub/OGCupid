@@ -317,3 +317,12 @@ button, input, textarea, select {font:inherit;}
 .ogcl-question-review {display:grid;gap:5px;margin:0 0 18px;color:#244b7b;font-size:12px;font-weight:bold;max-width:760px;}
 .ogcl-question-review select {min-height:36px;width:100%;background:#fff;border:1px solid #aec1d0;padding:7px;color:#263c51;}
 .ogcl-question-any {border-top:1px dashed #cad8e4;margin-top:8px;padding-top:10px;}
+
+/* Quickmatch decisions are persisted only after Neon confirms the write. */
+.ogcl-quickmatch-view {max-width:340px;margin:18px auto;text-align:center;}
+.ogcl-quickmatch-member {display:block;overflow:hidden;padding:0;text-align:left;}
+.ogcl-quickmatch-member .ogcl-member-photo {aspect-ratio:1;max-height:340px;}
+.ogcl-quickmatch-actions {display:flex;flex-wrap:wrap;justify-content:center;gap:9px;margin:14px 0;}
+.ogcl-quickmatch-like {background:#497f27;border-color:#38641e;}
+.ogcl-quickmatch-dislike {background:#a43f56;border-color:#802f43;}
+.ogcl-quickmatch-next {background:#fff;color:#2552a5;border-color:#a7b9cc;}
