@@ -2,9 +2,10 @@ import React, {useEffect, useMemo, useState} from "react";
 import {Navigate, NavLink, Outlet, Route, Routes} from "react-router-dom";
 import {defaultRoute, primaryNavigation} from "./navigation.mjs";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
-import {selectRecommendedMembers} from "./member-gateway.mjs";
+import {SidebarPromos, ProfileFloater, ProfileRefinement} from "./ClassicSidebar.jsx";
 import {filterAndSortMembers, pageMembers} from "./member-directory.mjs";
 import {legacyHref} from "./legacy-links.mjs";
+import {recommendedPhotoMembers} from "./classic-editorial.mjs";
 import ProfileEditor from "./ProfileEditor.jsx";
 import ProfileSettings from "./ProfileSettings.jsx";
 import PublicMemberProfile from "./PublicMemberProfile.jsx";
@@ -21,7 +22,7 @@ export function MemberPhoto({member}) {
   const {kind, getMemberAvatar} = useMemberSession();
   const [url, setUrl] = useState(null);
   useEffect(() => {
-    if (kind !== "member" || !member?.userId) return;
+    if (!["member","onboarding"].includes(kind) || !member?.userId) return;
     let closed = false;
     let created = null;
     setUrl(null);
@@ -53,87 +54,68 @@ function MemberCard({member}) {
 function LeftRail() {
   const {kind, discovery, discoveryUnavailable} = useMemberSession();
   const isMember = kind === "member";
-  const recommendations = useMemo(() => selectRecommendedMembers(discovery), [discovery]);
+  const recommendations = useMemo(() => recommendedPhotoMembers(discovery), [discovery]);
   return (
     <aside className="ogcl-left" aria-label="Primary navigation">
       <a className="ogcl-brand" href={legacyHref("/account/")} aria-label="OG Cupid member home">
-        <img src="/brand/ogcupid-logo-white.png" width="218" height="54" alt="OG Cupid" />
+        <img src="/brand/ogcupid-logo-white.png" width="172" height="42" alt="OG Cupid" />
       </a>
       <nav className="ogcl-primary" aria-label="OG Cupid main">
-        {primaryNavigation.map(({path, label, icon}) =>
-          isMember ? (
-            <NavLink key={path} to={path}
-              className={({isActive}) => isActive ? "ogcl-nav-link active" : "ogcl-nav-link"}>
-              <span aria-hidden="true">{icon}</span>{label}
-            </NavLink>
-          ) : (
-            <span key={path} className="ogcl-nav-link ogcl-locked" aria-disabled="true">
-              <span aria-hidden="true">{icon}</span>{label}
-            </span>
-          ))}
+        {primaryNavigation.map(({path,label,icon}) =>
+          isMember ? <NavLink key={path} to={path}
+            className={({isActive})=>isActive?"ogcl-nav-link active":"ogcl-nav-link"}>
+            <span className="ogcl-nav-glyph" aria-hidden="true">{icon}</span><span>{label}</span>
+          </NavLink> : <span key={path} className="ogcl-nav-link ogcl-locked" aria-disabled="true">
+            <span className="ogcl-nav-glyph" aria-hidden="true">{icon}</span><span>{label}</span>
+          </span>
+        )}
       </nav>
       <section className="ogcl-left-note" aria-label="Suggested members">
         <h2>You might like</h2>
-        {!isMember ? <p>Sign in and finish onboarding to see members.</p> :
-          discoveryUnavailable ? <p>Recommendations are temporarily unavailable.</p> :
-            recommendations.length
-              ? <div className="ogcl-member-list">{recommendations.map(member =>
-                  <MemberCard key={member.userId} member={member} />)}</div>
-              : <p>No discoverable profiles are available yet.</p>}
+        {isMember && !discoveryUnavailable &&
+          <div className="ogcl-suggested-thumbnails">
+            {recommendations.map(member=><a key={member.userId} href={profileHref(member.slug)}
+              aria-label={"View member profile: "+member.displayName}>
+              <MemberPhoto member={member}/>
+            </a>)}
+          </div>}
       </section>
+      <SidebarPromos side="left"/>
     </aside>
   );
 }
 
 function RightRail() {
-  const session = useMemberSession();
-  const {kind, user, profile, profileUnavailable, onboarding} = session;
-  const progressKeys = ["identity", "locality", "profile", "photo", "quiz", "explored"];
-  const finished = progressKeys.filter(k => onboarding?.[k] === true).length;
-  const percent = Math.round((finished / progressKeys.length) * 100);
+  const {kind,user,onboarding} = useMemberSession();
+  const keys=["identity","locality","profile","photo","quiz","explored"];
+  const percent=Math.round(keys.filter(key=>onboarding?.[key]===true).length/keys.length*100);
   return (
-    <aside className="ogcl-right" aria-label="Account and discovery">
-      <section className="ogcl-side-card">
-        {kind === "member" ? (
-          <>
-            <h2>View your profile</h2>
-            <p>{profile?.displayName || user?.name || "OG Cupid member"}</p>
-            {profile?.slug ? <a href={profileHref(profile.slug)}>Your member profile</a> :
-              <a href={legacyHref("/account/")}>Your account</a>}
-            {profileUnavailable && <p>Profile details could not load. Try refreshing.</p>}
-            <NavLink to="/profile">Edit About essays</NavLink>
-            <NavLink to="/settings">Profile Settings</NavLink>
-            <NavLink to="/questions">Edit match questions</NavLink>
-            <button type="button" className="ogcl-side-button" onClick={session.signOut}>Sign out</button>
-          </>
-        ) : kind === "onboarding" ? (
-          <>
-            <h2>Complete your profile</h2>
-            <p>{percent}% complete · {onboarding?.answerCount ?? 0} questions answered</p>
-            <div className="ogcl-progress" aria-label="Onboarding completion" role="progressbar"
-              aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent}>
-              <span style={{width: percent + "%"}} />
-            </div>
-            <a href={legacyHref("/account/#welcome-title")}>Continue your setup</a>
-            <button type="button" className="ogcl-side-button" onClick={session.signOut}>Sign out</button>
-          </>
-        ) : (
-          <>
-            <h2>Your profile</h2>
-            <p>Sign in to view your saved account and recommendations.</p>
-            <a href={legacyHref("/account/")}>Existing member site</a>
-          </>
-        )}
-      </section>
-      <section className="ogcl-side-card">
-        <h2>Stay curious</h2>
-        <p>Don't judge a profile by the photo alone.</p>
-        <a href={legacyHref("/ogtrends/")}>Read OgTrends</a>
-        <a href={legacyHref("/account/persona.html")}>Dating Persona Test</a>
-        <NavLink to="/questions">Answer match questions</NavLink>
-      </section>
+    <aside className="ogcl-right" aria-label="Profile and site features">
+      {kind==="onboarding" && <section className="ogcl-side-card ogcl-onboarding-widget">
+        {user?.id && onboarding?.photo && <MemberPhoto member={{userId:user.id}}/>}
+        <h2>Complete your profile</h2>
+        <p>{percent}% complete</p>
+        <div className="ogcl-progress" role="progressbar" aria-label="Profile completion"
+          aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent}>
+          <span style={{width:percent+"%"}}/>
+        </div>
+        <a href={legacyHref("/account/#welcome-title")}>Continue your setup</a>
+      </section>}
+      <ProfileRefinement/>
+      <SidebarPromos side="right"/>
     </aside>
   );
+}
+
+function TopMemberNav() {
+  const session=useMemberSession();
+  return <nav className="ogcl-top-links" aria-label="Member account">
+    {session.kind==="member" && <>
+      <NavLink to={session.profile?.slug?"/profiles/"+session.profile.slug:"/profile"}>Profile</NavLink>
+      <NavLink to="/settings">Settings</NavLink>
+      <button type="button" onClick={session.signOut}>Sign out</button>
+    </>}
+  </nav>;
 }
 
 function AppShell() {
@@ -142,10 +124,11 @@ function AppShell() {
       <a className="ogcl-skip" href="#ogcl-content">Skip to content</a>
       <LeftRail />
       <main id="ogcl-content" className="ogcl-center" tabIndex={-1}>
-        <div className="ogcl-banner">OG CUPID <span>MEMBERS</span></div>
+        <div className="ogcl-banner"><span className="ogcl-banner-accent" aria-hidden="true" /><TopMemberNav/></div>
         <Outlet />
       </main>
       <RightRail />
+      <ProfileFloater Photo={MemberPhoto}/>
     </div>
   );
 }
@@ -272,7 +255,9 @@ function MemberDirectory() {
 
 const views = {
   visitors: ["Visitors", "Who's been stopping by.",
-    "Visitor tracking isn't live yet. No activity is being recorded or invented."]
+    "Visitor tracking isn't live yet. No activity is being recorded or invented."],
+  community: ["Community", "More than a series of private conversations.",
+    "The shared community message board isn't open yet. No posts are being invented."]
 };
 
 export default function App() {
