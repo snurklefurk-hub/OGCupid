@@ -49,10 +49,17 @@ export function sanitizePublicProfile(payload,slug) {
   const age = Number.isInteger(p.age)&&p.age>=18&&p.age<=120 ? p.age : null;
   const essays=Object.freeze(Object.fromEntries(PUBLIC_ESSAYS.map(({key})=>[key,textValue(p[key],5000)])));
   const details=Object.freeze(Object.fromEntries(PUBLIC_DETAILS.map(({key})=>[key,textValue(p[key],200)])));
+  const owner=payload.isOwner===true;
   const answers=Array.isArray(payload.publicAnswers) ? payload.publicAnswers.filter(a=>
     a && typeof a.questionId==="string" && /^vault-[0-9]{1,25}$/.test(a.questionId) &&
-    typeof a.optionId==="string" && /^option-[0-9]{1,20}$/.test(a.optionId)
-  ).slice(0,410).map(a=>Object.freeze({questionId:a.questionId,optionId:a.optionId})):[];
+    typeof a.optionId==="string" && /^option-[0-9]{1,20}$/.test(a.optionId) &&
+    (a.isPrivate!==true || owner) &&
+    (a.note===undefined || (typeof a.note==="string" && a.note.length<=400))
+  ).slice(0,410).map(a=>Object.freeze({
+    questionId:a.questionId,optionId:a.optionId,
+    note:typeof a.note==="string"?a.note:"",
+    isPrivate:owner&&a.isPrivate===true
+  })):[];
   return Object.freeze({
     userId:p.userId.toLowerCase(),slug,
     displayName:p.displayName.trim().slice(0,60),
