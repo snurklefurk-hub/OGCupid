@@ -7,6 +7,15 @@ import { rankDiscoverableProfiles, SCORING_VERSION } from "./discovery-score.js"
 const MAX_CANDIDATES = 250;
 const PUBLIC_ANSWER_FIELDS = "user_id, question_id, option_id, acceptable_options, importance, is_private";
 
+export function adjustedViewerMatchPercent(rawPercent,penaltyPoints=0) {
+  // Never manufacture a score with no common-question evidence.
+  if(rawPercent===null)return null;
+  if(typeof rawPercent!=="number" || !Number.isFinite(rawPercent) ||
+     rawPercent<0 || rawPercent>100)throw new RangeError("Invalid base Match percent.");
+  if(![0,5,10].includes(penaltyPoints))throw new RangeError("Invalid Quickmatch penalty.");
+  return Math.max(0,rawPercent-penaltyPoints);
+}
+
 export async function handleDiscovery(request, userId, withMember, json) {
   if (request.method !== "GET") return json(request, {error:"Method not allowed"}, 405);
   try {
@@ -60,8 +69,7 @@ export async function handleDiscovery(request, userId, withMember, json) {
     );
     const profiles=ranked.map(member=>{
       const penalty=results.penalties.get(member.userId) || 0;
-      return {...member,matchPercent:member.matchPercent===null
-        ? null:Math.max(0,member.matchPercent-penalty)};
+      return {...member,matchPercent:adjustedViewerMatchPercent(member.matchPercent,penalty)};
     });
     return json(request, {
       profiles,
