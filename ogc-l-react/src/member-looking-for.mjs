@@ -40,7 +40,8 @@ export function multiChoiceString(raw,choices) {
   return values;
 }
 export function lookingForUpdate(profile,draft) {
-  if(!profile||typeof profile.aboutMe!=="string"||!ageOK(profile.age)&&profile.age!==null)
+  if(!profile||typeof profile.aboutMe!=="string"||
+    (profile.age!==null && (!Number.isInteger(profile.age)||profile.age<18||profile.age>120)))
     throw Error("Invalid owner profile");
   const interestedIn=Array.isArray(draft.genders)?draft.genders:[];
   const relationshipGoal=Array.isArray(draft.intentions)?draft.intentions:[];
