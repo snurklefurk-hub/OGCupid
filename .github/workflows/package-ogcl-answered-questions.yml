@@ -1,0 +1,43 @@
+name: Package authenticated member profile question projection
+on:
+  push:
+    branches: [feature/ogcl-member-profile-answered-questions-20261118]
+    paths:
+      - 'api/member-profile.ts'
+      - 'ogc-l-react/src/*'
+      - '.github/workflows/package-ogcl-answered-questions.yml'
+permissions:
+  contents: write
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: true}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - name: Test answers, render member UI and compile scoped Function
+        run: |
+          npm ci
+          node --test api/profile-query.test.js api/profile-choices.test.js api/member-messages.test.js
+          npm --prefix ogc-l-react install --no-audit --no-fund
+          npm --prefix ogc-l-react test
+          npm --prefix ogc-l-react run build
+          npm install --no-save esbuild@0.25.12
+          npx esbuild api/member-profile.ts --bundle --platform=node --target=node24 --format=esm --banner:js="import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);" --outfile="$RUNNER_TEMP/index.mjs"
+          node --check "$RUNNER_TEMP/index.mjs"
+          (cd "$RUNNER_TEMP" && zip -9 -q members.zip index.mjs)
+          base64 -w0 "$RUNNER_TEMP/members.zip" > dev/ogcl-answered-questions-members-function.b64
+      - name: Store bundled member Function on isolated feature branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f dev/ogcl-answered-questions-members-function.b64
+          if ! git diff --cached --quiet; then
+            git commit -m "build: package member answered-question projection"
+            git pull --rebase origin feature/ogcl-member-profile-answered-questions-20261118
+            git push origin HEAD:feature/ogcl-member-profile-answered-questions-20261118
+          fi
