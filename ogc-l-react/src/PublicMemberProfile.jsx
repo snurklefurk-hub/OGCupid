@@ -5,6 +5,7 @@ import {essayDefinition} from "./member-essays.mjs";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {legacyHref} from "./legacy-links.mjs";
 import ProfileGallery from "./ProfileGallery.jsx";
+import {formatLookingFor} from "./member-looking-for.mjs";
 
 const TABS=Object.freeze([
   {id:"about",label:"About"},
@@ -112,10 +113,9 @@ export default function PublicMemberProfile({Photo}) {
           </div>
           <aside className="ogcl-public-details">
             <section className="ogcl-looking-for">
-              <h2>I'm looking for {profile.isOwner&&<EditPencil to="/settings" label="looking-for preferences"/>}</h2>
+              <h2>I'm looking for {profile.isOwner&&<EditPencil to="/settings#looking-for" label="looking-for preferences"/>}</h2>
               <ul>
-                {profile.lookingFor.interestedIn&&<li>Interested in {profile.lookingFor.interestedIn}</li>}
-                {profile.lookingFor.relationshipGoal&&<li>Open to {profile.lookingFor.relationshipGoal}</li>}
+                {formatLookingFor(profile.lookingFor).map((line,index)=><li key={index}>{line}</li>)}
               </ul>
             </section>
             <section className="ogcl-my-details">
