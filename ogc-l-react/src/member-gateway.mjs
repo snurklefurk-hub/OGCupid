@@ -259,6 +259,38 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
         return image;
       } finally { clearTimeout(timer); }
     },
+    async getQuickmatchPhotos(targetId) {
+      if(!UUID.test(String(targetId||"")))return [];
+      const sessionResult=await bounded(authClient.getSession());
+      if(sessionResult?.error)throw new MemberAccessError("unauthorized","Session unavailable.");
+      checkedMember(sessionResult?.data?.user);
+      const jwt=await getJwt(sessionResult?.data?.session);
+      const controller=new AbortController();
+      const timer=setTimeout(()=>controller.abort(),MAX_WAIT_MS);
+      const get=async(path,media)=>{
+        const response=await fetcher(endpoints.memberApiBaseUrl+path,{
+          method:"GET",credentials:"omit",cache:"no-store",
+          headers:{Authorization:"Bearer "+jwt,Accept:media||"application/json"},
+          signal:controller.signal
+        });
+        requireResponse(response);
+        return bounded(media?response.blob():response.json());
+      };
+      try{
+        const album=await get("/photos/member/"+targetId.toLowerCase());
+        if(!Array.isArray(album?.photos))throw new MemberAccessError("unavailable","Invalid member photo response.");
+        const firstThree=album.photos.filter(p=>UUID.test(String(p?.id||""))).slice(0,3);
+        const fetched=await Promise.allSettled(firstThree.map(p=>get("/photos/"+p.id+"/bytes","image/jpeg")));
+        return fetched.flatMap(entry=>{
+          if(entry.status!=="fulfilled" || !(entry.value instanceof Blob) ||
+             entry.value.type!=="image/jpeg" || entry.value.size>2_500_000)return [];
+          return [entry.value];
+        });
+      }catch(error){
+        if(error instanceof MemberAccessError)throw error;
+        throw new MemberAccessError("unavailable","Could not load Quickmatch photos.");
+      }finally{clearTimeout(timer);}
+    },
     async loadQuickmatchDecisions() {
       const sessionResult=await bounded(authClient.getSession());
       if(sessionResult?.error)throw new MemberAccessError("unauthorized","Session unavailable.");
