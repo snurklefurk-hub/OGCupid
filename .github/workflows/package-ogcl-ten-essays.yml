@@ -6,6 +6,7 @@ on:
       - 'api/member-profile.ts'
       - 'member-app/profile-essays.js'
       - 'ogc-l-react/src/member-essays.mjs'
+      - 'ogc-l-react/src/*.test.mjs'
       - '.github/workflows/package-ogcl-ten-essays.yml'
 permissions:
   contents: write
