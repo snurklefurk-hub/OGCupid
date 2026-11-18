@@ -26,7 +26,7 @@ export async function handleDiscovery(request, userId, withMember, json) {
         [userId, MAX_CANDIDATES]
       );
       const members = selected.rows;
-      if (members.length === 0) return {members, viewerAnswers:[], byUser:new Map()};
+      if (members.length === 0) return {members, viewerAnswers:[], byUser:new Map(), penalties:new Map()};
 
       const ids = [userId, ...members.map(member => member.user_id)];
       const answers = await client.query(
@@ -43,16 +43,30 @@ export async function handleDiscovery(request, userId, withMember, json) {
         if (!byUser.has(id)) byUser.set(id, []);
         byUser.get(id).push(row);
       }
-      return {members, viewerAnswers:byUser.get(userId) || [], byUser};
+      // Actor-only Quickmatch penalties never alter the underlying question
+      // calculation or another member's pairwise scores.
+      const penaltyRows=await client.query(
+        `SELECT target_user_id,match_penalty_points
+         FROM app_private.member_quickmatch_decisions
+         WHERE user_id=$1::uuid AND match_penalty_points>0`,[userId]);
+      const penalties=new Map(penaltyRows.rows.map(row=>[
+        String(row.target_user_id),Number(row.match_penalty_points)
+      ]));
+      return {members, viewerAnswers:byUser.get(userId) || [], byUser,penalties};
     });
 
-    const profiles = rankDiscoverableProfiles(
+    const ranked = rankDiscoverableProfiles(
       results.members, results.viewerAnswers, results.byUser
     );
+    const profiles=ranked.map(member=>{
+      const penalty=results.penalties.get(member.userId) || 0;
+      return {...member,matchPercent:member.matchPercent===null
+        ? null:Math.max(0,member.matchPercent-penalty)};
+    });
     return json(request, {
       profiles,
       scoringVersion: SCORING_VERSION,
-      calculation: "Provisional reciprocal question-answer match only; not the full Match/Friend/Enemy engine",
+      calculation: "Provisional reciprocal question-answer match with owner-specific Quickmatch adjustment; Friend/Enemy not yet calculated",
       candidateLimit: MAX_CANDIDATES
     });
   } catch (error) {
