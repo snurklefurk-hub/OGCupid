@@ -124,6 +124,15 @@ export function MemberSessionProvider({children}) {
     return gateway.saveOwnEssay(key, draft);
   }, []);
 
+  const loadOwnAnswers = useCallback(async () => {
+    if (!gateway) throw new MemberAccessError("unavailable","Member API is not configured.");
+    return gateway.loadOwnAnswers();
+  }, []);
+  const saveOwnAnswer = useCallback(async (question,draft) => {
+    if (!gateway) throw new MemberAccessError("unavailable","Member API is not configured.");
+    return gateway.saveOwnAnswer(question,draft);
+  }, []);
+
   const getPublicProfile = useCallback(async slug => {
     if (!gateway) throw new MemberAccessError("unavailable", "Member API is not configured.");
     return gateway.getPublicProfile(slug);
@@ -140,7 +149,7 @@ export function MemberSessionProvider({children}) {
 
   const value = useMemo(() => ({
     ...session, refresh, signIn, signOut, getMemberAvatar,
-    loadOwnEssays, saveOwnEssay, getPublicProfile,
+    loadOwnEssays, saveOwnEssay, loadOwnAnswers, saveOwnAnswer, getPublicProfile,
     loadMatchAnswers, saveMatchAnswer
   }), [session, refresh, signIn, signOut, getMemberAvatar, loadOwnEssays, saveOwnEssay,
     getPublicProfile, loadMatchAnswers, saveMatchAnswer]);
