@@ -1,4 +1,5 @@
 import {safeEssayProfile, composeEssayUpdate} from "./member-essays.mjs";
+import {answerPayload} from "./member-questions.mjs";
 import {sanitizePublicProfile} from "./member-public-profile.mjs";
 // OGC-L member gateway. Does not own user accounts or store credentials.
 // The existing Neon Auth and production member Function remain authorities.
@@ -294,6 +295,38 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
       } catch(error) {
         if(error instanceof MemberAccessError) throw error;
         throw new MemberAccessError("unavailable","Could not save this essay.");
+      } finally { clearTimeout(timer); }
+    },
+    async loadOwnAnswers() {
+      const identity = await bounded(authClient.getSession());
+      if (identity?.error) throw new MemberAccessError("unauthorized","Session unavailable.");
+      checkedMember(identity?.data?.user);
+      const jwt = await getJwt(identity?.data?.session);
+      return readApi("/answers",jwt);
+    },
+    async saveOwnAnswer(question,draft) {
+      // Never trust a UI-generated choice or request owner identity from the client.
+      const payload = answerPayload(question,draft);
+      const identity = await bounded(authClient.getSession());
+      if (identity?.error) throw new MemberAccessError("unauthorized","Session unavailable.");
+      checkedMember(identity?.data?.user);
+      const jwt = await getJwt(identity?.data?.session);
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(),MAX_WAIT_MS);
+      try {
+        const response = await fetcher(endpoints.memberApiBaseUrl + "/answers",{
+          method:"PUT", credentials:"omit", cache:"no-store",
+          headers:{Authorization:"Bearer "+jwt,"Content-Type":"application/json",
+            Accept:"application/json"},
+          body:JSON.stringify(payload),signal:controller.signal
+        });
+        requireResponse(response);
+        const result = await bounded(response.json());
+        if (result?.saved !== true) throw new MemberAccessError("unavailable","Answer was not confirmed saved.");
+        return {...payload,updatedAt:result.updatedAt};
+      } catch(error) {
+        if (error instanceof MemberAccessError) throw error;
+        throw new MemberAccessError("unavailable","Could not save this question.");
       } finally { clearTimeout(timer); }
     },
     async signIn(email, password) {
