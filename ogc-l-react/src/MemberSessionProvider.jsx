@@ -52,7 +52,7 @@ export function MemberSessionProvider({children}) {
         // The Function can reject a stale Auth cookie or deleted member.
         // Auth sign-out is a best-effort cleanup, not the access check.
         setSession({...blank, kind:"guest", error:"Your previous session expired. Please sign in again."});
-        void gateway.signOut();
+        void gateway.signOut().catch(() => {});
       } else {
         setSession({...blank, kind:"error",
           error:"We couldn't verify your account. Please try again."});
@@ -80,10 +80,19 @@ export function MemberSessionProvider({children}) {
   }, [refresh]);
 
   const signOut = useCallback(async () => {
-    ++version.current;
-    setSession({...blank, kind:"guest"}); // Conceal member information immediately.
-    if (gateway) await gateway.signOut();
+    const current = ++version.current;
+    setSession(blank); // Conceal member information before contacting the server.
     lastChecked.current = 0;
+    try {
+      if (gateway) await gateway.signOut();
+      if (current === version.current) setSession({...blank, kind:"guest"});
+    } catch {
+      // Never claim the Neon server ended a session unless it confirmed it.
+      if (current === version.current) {
+        setSession({...blank, kind:"error",
+          error:"Sign-out could not be confirmed. Please close this tab and try again."});
+      }
+    }
   }, []);
 
   useEffect(() => {
