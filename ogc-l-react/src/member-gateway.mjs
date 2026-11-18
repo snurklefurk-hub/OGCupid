@@ -112,6 +112,42 @@ export function sanitizeQuickmatchDecisions(data) {
   return decisions;
 }
 
+function checkedPrivateMessage(m,me,peer){
+  if(!m || !UUID.test(String(m.id||"")) || !UUID.test(String(m.senderId||"")) ||
+     !UUID.test(String(m.recipientId||"")) || typeof m.body!=="string" || m.body.length>2000 ||
+     typeof m.createdAt!=="string" || !Number.isFinite(Date.parse(m.createdAt)) ||
+     !((m.senderId.toLowerCase()===me && m.recipientId.toLowerCase()===peer) ||
+       (m.senderId.toLowerCase()===peer && m.recipientId.toLowerCase()===me)))
+    throw new MemberAccessError("unavailable","Invalid private message response.");
+  return Object.freeze({id:m.id.toLowerCase(),senderId:m.senderId.toLowerCase(),
+    recipientId:m.recipientId.toLowerCase(),body:m.body,createdAt:m.createdAt});
+}
+export function sanitizeConversations(data,me) {
+  if(!UUID.test(me) || !Array.isArray(data?.conversations) || data.conversations.length>50)
+    throw new MemberAccessError("unavailable","Invalid inbox response.");
+  return Object.freeze(data.conversations.map(item=>{
+    if(!UUID.test(String(item?.peerId||"")) || item.peerId.toLowerCase()===me ||
+       !SLUG.test(String(item.slug||"")) || typeof item.displayName!=="string")
+      throw new MemberAccessError("unavailable","Invalid conversation peer.");
+    const peerId=item.peerId.toLowerCase();
+    return Object.freeze({peerId,slug:item.slug,
+      displayName:item.displayName.slice(0,60),
+      lastMessage:checkedPrivateMessage(item.lastMessage,me,peerId)});
+  }));
+}
+export function sanitizeConversation(data,me,peerId) {
+  if(!UUID.test(me) || !UUID.test(peerId) || !data?.peer ||
+     data.peer.userId?.toLowerCase()!==peerId ||
+     !SLUG.test(String(data.peer.slug||"")) || typeof data.peer.displayName!=="string" ||
+     !Array.isArray(data.messages) || data.messages.length>100 ||
+     typeof data.blocked!=="boolean" || typeof data.canSend!=="boolean")
+    throw new MemberAccessError("unavailable","Invalid private conversation response.");
+  return Object.freeze({peer:Object.freeze({userId:peerId,slug:data.peer.slug,
+    displayName:data.peer.displayName.slice(0,60)}),
+    blocked:data.blocked,canSend:data.canSend,
+    messages:Object.freeze(data.messages.map(m=>checkedPrivateMessage(m,me,peerId)))});
+}
+
 export function selectRecommendedMembers(profiles, rng = Math.random) {
   const candidates = Array.isArray(profiles) ? profiles : [];
   const high = candidates.filter(p => typeof p.matchPercent === "number" && p.matchPercent > 75);
@@ -132,7 +168,7 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
   const endpoints = configuredMemberEndpoints(authBaseUrl, memberApiBaseUrl);
   if (!endpoints || !authClient) return null;
   async function readApi(path, jwt) {
-    if (!/^\/[a-z][a-z0-9-]*$/.test(path) && !/^\/profiles\/[a-z0-9]+(?:-[a-z0-9]+)*$/.test(path)) throw new MemberAccessError("unavailable", "Unsupported member API route.");
+    if (!/^\/[a-z][a-z0-9-]*$/.test(path) && !/^\/profiles\/[a-z0-9]+(?:-[a-z0-9]+)*$/.test(path) && !(path.startsWith("/messages/") && UUID.test(path.slice("/messages/".length)))) throw new MemberAccessError("unavailable", "Unsupported member API route.");
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), MAX_WAIT_MS);
     try {
@@ -166,6 +202,34 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
       if (error instanceof MemberAccessError) throw error;
       throw new MemberAccessError("unavailable", "Unable to reach the sign-in service.");
     } finally { clearTimeout(timer); }
+  }
+
+  async function writeMessageApi(peerId,suffix,method,body) {
+    if(!UUID.test(String(peerId||"")) || !["","/block","/report"].includes(suffix) ||
+       !["POST","PUT","DELETE"].includes(method))
+      throw new MemberAccessError("invalid","Invalid messaging request.");
+    peerId=peerId.toLowerCase();
+    const identity=await bounded(authClient.getSession());
+    const member=checkedMember(identity?.data?.user);
+    if(member.id===peerId)throw new MemberAccessError("invalid","Cannot message yourself.");
+    const jwt=await getJwt(identity?.data?.session);
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),MAX_WAIT_MS);
+    try {
+      const response=await fetcher(endpoints.memberApiBaseUrl+"/messages/"+peerId+suffix,{
+        method,credentials:"omit",cache:"no-store",
+        headers:{Authorization:"Bearer "+jwt,Accept:"application/json",
+          ...(body?{"Content-Type":"application/json"}:{})},
+        ...(body?{body:JSON.stringify(body)}:{}),signal:controller.signal
+      });
+      if(response.status===409)throw new MemberAccessError("blocked","This member cannot receive messages.");
+      if(response.status===429)throw new MemberAccessError("rate_limited","Message limit reached. Please try later.");
+      requireResponse(response);
+      return await bounded(response.json());
+    }catch(error){
+      if(error instanceof MemberAccessError)throw error;
+      throw new MemberAccessError("unavailable","Unable to contact messaging service.");
+    }finally{clearTimeout(timer);}
   }
 
   return Object.freeze({
@@ -275,6 +339,47 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
         if(error instanceof MemberAccessError)throw error;
         throw new MemberAccessError("unavailable","Could not save Quickmatch decision.");
       }finally{clearTimeout(timer);}
+    },
+    async loadInbox() {
+      const identity=await bounded(authClient.getSession());
+      const member=checkedMember(identity?.data?.user);
+      const jwt=await getJwt(identity?.data?.session);
+      return sanitizeConversations(await readApi("/messages",jwt),member.id);
+    },
+    async loadConversation(peerId) {
+      if(!UUID.test(String(peerId||"")))throw new MemberAccessError("invalid","Invalid conversation.");
+      const identity=await bounded(authClient.getSession());
+      const member=checkedMember(identity?.data?.user);
+      peerId=peerId.toLowerCase();
+      if(peerId===member.id)throw new MemberAccessError("invalid","Cannot message yourself.");
+      const jwt=await getJwt(identity?.data?.session);
+      return sanitizeConversation(await readApi("/messages/"+peerId,jwt),member.id,peerId);
+    },
+    async sendMessage(peerId,body) {
+      if(typeof body!=="string" || !body.trim() || body.trim().length>2000)
+        throw new MemberAccessError("invalid","Messages must be 1 to 2000 characters.");
+      const identity=await bounded(authClient.getSession());
+      const member=checkedMember(identity?.data?.user);
+      if(!UUID.test(String(peerId||"")) || peerId.toLowerCase()===member.id)
+        throw new MemberAccessError("invalid","Invalid recipient.");
+      const response=await writeMessageApi(peerId,"","POST",{body:body.trim()});
+      if(response?.sent!==true || !response?.message)
+        throw new MemberAccessError("unavailable","Message was not confirmed.");
+      return checkedPrivateMessage(response.message,member.id,peerId.toLowerCase());
+    },
+    async setMessageBlock(peerId,blocked) {
+      const response=await writeMessageApi(peerId,"/block",blocked?"PUT":"DELETE");
+      if(response?.blocked!==blocked)
+        throw new MemberAccessError("unavailable","Block change was not confirmed.");
+      return blocked;
+    },
+    async reportMessage(peerId,messageId,reason) {
+      if(!UUID.test(String(messageId||"")) || !["spam","harassment","other"].includes(reason))
+        throw new MemberAccessError("invalid","Invalid report.");
+      const response=await writeMessageApi(peerId,"/report","POST",{messageId:messageId.toLowerCase(),reason});
+      if(response?.reported!==true)
+        throw new MemberAccessError("unavailable","Report was not confirmed.");
+      return true;
     },
     async loadMatchAnswers() {
       const identity=await bounded(authClient.getSession());

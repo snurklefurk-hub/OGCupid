@@ -8,6 +8,7 @@ import {legacyHref} from "./legacy-links.mjs";
 import ProfileEditor from "./ProfileEditor.jsx";
 import PublicMemberProfile from "./PublicMemberProfile.jsx";
 import QuickmatchView from "./QuickmatchView.jsx";
+import MessagesView from "./MessagesView.jsx";
 import MatchQuestions from "./MatchQuestions.jsx";
 
 const profileHref = slug => "#/profiles/" + encodeURIComponent(slug);
@@ -268,8 +269,6 @@ function MemberDirectory() {
 }
 
 const views = {
-  messages: ["Messages", "Conversations, not swipes.",
-    "Messaging isn't enabled in the current backend. No fabricated conversations."],
   visitors: ["Visitors", "Who's been stopping by.",
     "Visitor tracking isn't live yet. No activity is being recorded or invented."]
 };
@@ -284,6 +283,8 @@ export default function App() {
         <Route path="profiles/:slug" element={<MemberGate><PublicMemberProfile Photo={MemberPhoto} /></MemberGate>} />
         <Route path="questions" element={<MemberGate><MatchQuestions /></MemberGate>} />
         <Route path="quickmatch" element={<MemberGate><QuickmatchView Photo={MemberPhoto} /></MemberGate>} />
+        <Route path="messages" element={<MemberGate><MessagesView /></MemberGate>} />
+        <Route path="messages/:peerId" element={<MemberGate><MessagesView /></MemberGate>} />
         {Object.entries(views).map(([path, [title, intro, footnote]]) => (
           <Route key={path} path={path} element={
             <MemberGate><PreviewView title={title} intro={intro} footnote={footnote} /></MemberGate>
