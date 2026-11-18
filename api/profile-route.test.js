@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
 const api = readFileSync(new URL("./member-profile.ts",import.meta.url),"utf8");
 const migration = readFileSync(new URL("../db/migrations/017_member_only_profile_urls.sql",import.meta.url),"utf8");
 const photos = readFileSync(new URL("../db/migrations/018_member_profile_photo_read.sql",import.meta.url),"utf8");
+const answerProjection = readFileSync(new URL("../db/migrations/025_member_visible_question_answers.sql",import.meta.url),"utf8");
 const page = readFileSync(new URL("../public/profiles/index.html",import.meta.url),"utf8");
 const view = readFileSync(new URL("../public/profiles/view.js",import.meta.url),"utf8");
 
@@ -29,9 +30,12 @@ test("public profile response explicitly excludes email, private answers and sto
   const end = api.indexOf("if (deletePath || verifyPath) {",start);
   assert.ok(start > 0 && end > start);
   const selected = api.slice(start,end);
-  assert.doesNotMatch(selected,/p\.email|p\.birth_date|object_key|auth_password|acceptable_options|importance|a\.note/);
-  assert.match(selected,/WHERE user_id=\$1::uuid AND is_private=false/);
-  assert.match(selected,/SELECT question_id, option_id/);
+  assert.doesNotMatch(selected,/p\.email|p\.birth_date|object_key|auth_password|acceptable_options|importance/);
+  assert.match(selected,/visible_member_public_answers/);
+  assert.match(answerProjection,/a\.is_private=false/);
+  assert.match(answerProjection,/SECURITY DEFINER/);
+  assert.match(answerProjection,/current_member_is_active/);
+  assert.match(selected,/SELECT question_id,option_id,note,is_private/);
   assert.match(selected,/String\(row\.user_id\)\.toLowerCase\(\) === userId/);
   assert.match(migration,/member_profiles_authenticated_read/);
   assert.match(migration,/is_private = false AND app_private\.current_member_is_active\(\)/);
