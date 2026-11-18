@@ -1,0 +1,25 @@
+name: Smoke OGC-L staging HTTP and Neon browser origins
+on:
+  push:
+    branches: [feature/ogcl-staging-network-smoke, OGC-lovable]
+    paths:
+      - 'dev/smoke-ogcl-staging.mjs'
+      - '.github/workflows/smoke-ogcl-staging.yml'
+  pull_request:
+    branches: [OGC-lovable]
+    paths:
+      - 'dev/smoke-ogcl-staging.mjs'
+      - '.github/workflows/smoke-ogcl-staging.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  staging-live:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify standalone staging assets and Neon CORS (anonymous only)
+        run: node dev/smoke-ogcl-staging.mjs
