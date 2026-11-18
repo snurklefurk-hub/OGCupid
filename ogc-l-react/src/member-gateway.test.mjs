@@ -186,3 +186,37 @@ test("sign-in and sign-out use the existing Neon Auth methods",async()=>{
 test("timeout is bounded and does not grant access",async()=>{
   await assert.rejects(bounded(new Promise(()=>{}),5),MemberAccessError);
 });
+
+
+test("member avatars are genuine protected JPEG bytes, never an unauthenticated image URL",async()=>{
+  const PHOTO="00000000-0000-4000-8000-000000000009";
+  const image = new Blob(["jpeg-test"],{type:"image/jpeg"});
+  const {service,calls}=mockGateway({responseFor:async (url,options)=>{
+    const path = new URL(url).pathname;
+    if(path==="/photos/member/"+THEM) return good({photos:[
+      {id:PHOTO,isPrimary:true}
+    ]});
+    if(path==="/photos/"+PHOTO+"/bytes") return {ok:true,status:200,blob:async()=>image};
+    throw new Error("Unexpected path "+path);
+  }});
+  const blob=await service.getMemberAvatar(THEM);
+  assert.equal(blob,image);
+  assert.deepEqual(calls.map(([path])=>path),[
+    "/photos/member/"+THEM, "/photos/"+PHOTO+"/bytes"
+  ]);
+  assert.equal(calls[0][1].headers.Authorization,"Bearer header.payload.signature");
+  assert.equal(calls[1][1].credentials,"omit");
+  assert.equal(calls[1][1].cache,"no-store");
+});
+test("avatars reject invalid identities and unsupported media rather than using public image URLs",async()=>{
+  const {service,calls}=mockGateway();
+  assert.equal(await service.getMemberAvatar("javascript:evil"),null);
+  assert.equal(calls.length,0);
+  const PHOTO="00000000-0000-4000-8000-000000000009";
+  const {service:badPhoto}=mockGateway({responseFor:async url=>{
+    const path=new URL(url).pathname;
+    if(path.startsWith("/photos/member/"))return good({photos:[{id:PHOTO,isPrimary:true}]});
+    return {ok:true,status:200,blob:async()=>new Blob(["not a jpeg"],{type:"text/html"})};
+  }});
+  assert.equal(await badPhoto.getMemberAvatar(THEM),null);
+});
