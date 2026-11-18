@@ -5,6 +5,7 @@ import {essayDefinition} from "./member-essays.mjs";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {legacyHref} from "./legacy-links.mjs";
 import ProfileGallery from "./ProfileGallery.jsx";
+import ProfileQuestions from "./ProfileQuestions.jsx";
 import {formatLookingFor} from "./member-looking-for.mjs";
 
 const TABS=Object.freeze([
@@ -128,12 +129,7 @@ export default function PublicMemberProfile({Photo}) {
         {tab==="photos"&&<div className="ogcl-profile-subpage">
           <ProfileGallery userId={profile.userId} isOwner={profile.isOwner}/>
         </div>}
-        {tab==="questions"&&<div className="ogcl-profile-subpage">
-          <h2>Questions</h2>
-          <p><strong>{profile.publicAnswers.length}</strong> public match question{profile.publicAnswers.length===1?"":"s"} answered.</p>
-          <p className="ogcl-quiet">Private answers aren't shown here.</p>
-          {profile.isOwner&&<p><NavLink to="/questions">Review or answer match questions</NavLink></p>}
-        </div>}
+        {tab==="questions"&&<ProfileQuestions profile={profile}/>}
         {tab==="personality"&&<div className="ogcl-profile-subpage">
           <h2>Personality</h2>
           {profile.personaCode?<p>Dating Persona: <strong>{profile.personaCode}</strong></p>:
