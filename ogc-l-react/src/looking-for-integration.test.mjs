@@ -3,11 +3,12 @@ import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 import {createMemberGateway} from "./member-gateway.mjs";
 import {lookingForUpdate,validAgeRange,formatLookingFor,LOOKING_GENDERS,LOOKING_INTENTIONS,LOOKING_RADII} from "./member-looking-for.mjs";
-import {sanitizeOwnProfileSettings} from "./member-settings.mjs";
+import {sanitizeOwnProfileSettings,PROFILE_SETTINGS_FIELDS} from "./member-settings.mjs";
 import {sanitizePublicProfile} from "./member-public-profile.mjs";
 
 const ME="00000000-0000-4000-8000-000000000001";
-const raw={userId:ME,slug:"first-member",displayName:"First Member",aboutMe:"Saved essay",age:104,
+const raw={...Object.fromEntries(PROFILE_SETTINGS_FIELDS.map(f=>[f.key,""])),
+  userId:ME,slug:"first-member",displayName:"First Member",aboutMe:"Saved essay",age:104,
   interestedIn:"Everyone",relationshipGoal:"Long-term dating",
   preferredAgeMin:null,preferredAgeMax:null,searchRadiusMiles:25,hasValidatedLocality:true,
   work:"Writer",gender:"Woman"};
