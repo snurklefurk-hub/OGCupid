@@ -649,3 +649,32 @@ button, input, textarea, select {font:inherit;}
 .ogcl-looking-settings .ogcl-note {font-size:11px;margin:0;}
 .ogcl-looking-settings .ogcl-essay-actions {display:flex;gap:10px;flex-wrap:wrap;}
 .ogcl-looking-for li {line-height:1.6;}
+
+/* Saved Questions browser — compact 2014 panels, no editorial tier labels. */
+.ogcl-answered-controls {display:flex;gap:12px;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;margin:0 0 13px;padding:9px 10px;background:#edf2f7;border:1px solid #cedce7;
+  color:#555;font:11px/18px Verdana,sans-serif;}
+.ogcl-answered-controls label {display:flex;align-items:center;gap:8px;}
+.ogcl-answered-controls select {background:#fff;color:#264e79;border:1px solid #9ab3c7;
+  font:11px/18px Verdana,sans-serif;padding:5px;}
+.ogcl-answered-item {padding:10px 12px;margin:0 0 9px;border:1px solid #d1dce4;
+  background:linear-gradient(#fafafa,#fff 55px);color:#555;}
+.ogcl-answered-heading {display:flex;align-items:flex-start;gap:6px;margin:0 0 7px;}
+.ogcl-answered-heading h3 {flex:1;margin:0;color:#264e79;font:bold 12px/18px Verdana,sans-serif;}
+.ogcl-answered-heading small {padding:2px 5px;white-space:nowrap;font:10px/16px Verdana,sans-serif;color:#777;}
+.ogcl-answered-selected {margin:0 0 4px;font:11px/18px Verdana,sans-serif;}
+.ogcl-answered-note {font:11px/18px Verdana,sans-serif;margin:5px 0 0;
+  white-space:pre-wrap;border-left:2px solid #9bb6cd;padding-left:8px;color:#666;}
+.ogcl-answered-compare {margin:8px 0 0;padding:6px 8px;
+  display:flex;flex-wrap:wrap;gap:5px 14px;font:10px/16px Verdana,sans-serif;}
+.ogcl-answered-compare.yes {background:#edf7ec;border-left:2px solid #63a62f;}
+.ogcl-answered-compare.no {background:#fdf0f4;border-left:2px solid #f83265;}
+.ogcl-profile-question-edit {padding:8px;border-top:1px solid #d5e1e8;margin-top:9px;}
+.ogcl-profile-question-edit fieldset {margin:0 0 10px;padding:7px 9px;border:1px solid #d5dfe8;}
+.ogcl-profile-question-edit fieldset legend {font:bold 11px/18px Verdana,sans-serif;color:#264e79;}
+.ogcl-profile-question-edit fieldset>label {display:block;font:11px/20px Verdana,sans-serif;}
+.ogcl-profile-question-edit textarea {display:block;width:100%;box-sizing:border-box;
+  border:1px solid #9bb6c8;background:#fff;color:#555;padding:7px;
+  font:11px/18px Verdana,sans-serif;}
+.ogcl-profile-question-edit .ogcl-question-importance {display:flex;flex-wrap:wrap;gap:8px;}
+.ogcl-profile-question-edit .ogcl-question-importance label {font-size:11px;}
