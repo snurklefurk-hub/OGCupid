@@ -8,8 +8,8 @@ import {
   renderEssaysEditor
 } from './profile-essays.js';
 
-test('CLASSIC_ESSAYS contains all 9 classic prompts', () => {
-  assert.equal(CLASSIC_ESSAYS.length, 9);
+test('CLASSIC_ESSAYS contains all 10 approved classic prompts', () => {
+  assert.equal(CLASSIC_ESSAYS.length, 10);
   const expectedKeys = [
     'aboutMe',
     'lifeDirection',
@@ -19,6 +19,7 @@ test('CLASSIC_ESSAYS contains all 9 classic prompts', () => {
     'sixThings',
     'thinkingAbout',
     'fridayNight',
+    'privateThing',
     'messageMeIf'
   ];
   assert.deepEqual(CLASSIC_ESSAYS.map(e => e.key), expectedKeys);
@@ -54,12 +55,12 @@ test('renderEssaysPreview renders populated essays and omits empty for visitors'
   assert.equal(visitorHtml.includes('preview-six-things-section'), false);
 
   const ownerHtml = renderEssaysPreview(profile, { isOwner: true, showEmpty: true });
-  // All 9 sections appear for owner
+  // All 10 sections appear for owner
   assert.match(ownerHtml, /preview-six-things-section/);
   assert.match(ownerHtml, /essay-inline-edit/);
 });
 
-test('renderEssaysEditor generates all 9 textareas with counters', () => {
+test('renderEssaysEditor generates all 10 textareas with counters', () => {
   const profile = { aboutMe: 'Existing bio' };
   const editorHtml = renderEssaysEditor(profile);
 
