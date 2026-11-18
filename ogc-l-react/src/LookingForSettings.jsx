@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from "react";
-import {NavLink} from "react-router-dom";
+import {legacyHref} from "./legacy-links.mjs";
 import {
   LOOKING_GENDERS,LOOKING_INTENTIONS,LOOKING_RADII,AGE_CHOICES,
   validAgeRange
@@ -87,7 +87,7 @@ export default function LookingForSettings({profile,onSaved,saveOwnLookingFor}){
         </select>
       </label>
       {!hasLocality&&<p className="ogcl-note">Save a verified profile location before setting your search distance.
-        <a href="/account/#profile-title"> Edit your location</a>. Your other preferences can still be saved.</p>}
+        <a href={legacyHref("/account/#profile-title")}> Edit your location</a>. Your other preferences can still be saved.</p>}
       <CheckGroup title="Open to" options={LOOKING_INTENTIONS} selected={draft.intentions}
         disabled={busy} toggle={changeChoices("intentions","intentionsTouched")}/>
       {!draft.intentionsTouched&&legacyIntent.length>0&&
