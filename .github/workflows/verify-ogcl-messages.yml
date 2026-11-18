@@ -8,6 +8,7 @@ on:
       - 'api/member-profile.ts'
       - 'db/migrations/022_member_private_messages.sql'
       - 'ogc-l-react/**'
+      - 'scripts/smoke-ogcl-messages.mjs'
       - '.github/workflows/verify-ogcl-messages.yml'
 permissions:
   contents: read
@@ -29,6 +30,10 @@ jobs:
           npm install --no-save esbuild@0.25.12
           npx esbuild api/member-profile.ts --bundle --platform=node --target=node24 --format=esm --banner:js="import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);" --outfile="$RUNNER_TEMP/messages-member-function.mjs"
           node --check "$RUNNER_TEMP/messages-member-function.mjs"
+      - name: Smoke development Neon messaging auth and CORS (no member credentials)
+        env:
+          OGC_DEV_MEMBER_API_URL: https://br-tiny-wave-bbnpjp0m-members.compute.c-15.us-east-1.aws.neon.tech/
+        run: node scripts/smoke-ogcl-messages.mjs
       - name: Validate member session, inbox UI and staging build
         working-directory: ogc-l-react
         run: |
