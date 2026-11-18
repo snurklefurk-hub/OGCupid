@@ -33,6 +33,8 @@ const allowedOrigins = new Set([
   "https://ogcupid.com",
   "https://www.ogcupid.com",
   "https://ogcupid.onrender.com",
+  // Isolated OGC-L static preview. JWT, member liveness and RLS remain required.
+  "https://ogcupid-l-staging.onrender.com",
 ]);
 // Local browser testing is allowed ONLY for the isolated development branch.
 if (["dev/private-member-accounts","dev/canonical-onboarding-2026-11-13"].includes(process.env.NEON_BRANCH || "")) {
