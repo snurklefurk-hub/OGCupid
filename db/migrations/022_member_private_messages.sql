@@ -10,6 +10,9 @@ CREATE TABLE IF NOT EXISTS app_private.member_message_blocks (
   CONSTRAINT message_block_not_self CHECK (blocker_id <> blocked_id)
 );
 REVOKE ALL ON app_private.member_message_blocks FROM PUBLIC, ogcupid_delete_api;
+-- Neon may grant new tables to the API role by default. Strip every
+-- implicit privilege before explicitly assigning the minimal set below.
+REVOKE ALL ON app_private.member_message_blocks FROM ogcupid_member_api;
 GRANT SELECT, INSERT, DELETE ON app_private.member_message_blocks TO ogcupid_member_api;
 ALTER TABLE app_private.member_message_blocks ENABLE ROW LEVEL SECURITY;
 ALTER TABLE app_private.member_message_blocks FORCE ROW LEVEL SECURITY;
@@ -55,6 +58,9 @@ CREATE INDEX IF NOT EXISTS member_messages_sender_time
 CREATE INDEX IF NOT EXISTS member_messages_recipient_time
   ON app_private.member_messages(recipient_id, created_at DESC, id DESC);
 REVOKE ALL ON app_private.member_messages FROM PUBLIC, ogcupid_delete_api;
+-- Neon may grant new tables to the API role by default. Strip every
+-- implicit privilege before explicitly assigning the minimal set below.
+REVOKE ALL ON app_private.member_messages FROM ogcupid_member_api;
 GRANT SELECT, INSERT ON app_private.member_messages TO ogcupid_member_api;
 ALTER TABLE app_private.member_messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE app_private.member_messages FORCE ROW LEVEL SECURITY;
@@ -83,6 +89,9 @@ CREATE TABLE IF NOT EXISTS app_private.member_message_reports (
   UNIQUE (reporter_id, message_id)
 );
 REVOKE ALL ON app_private.member_message_reports FROM PUBLIC, ogcupid_delete_api;
+-- Neon may grant new tables to the API role by default. Strip every
+-- implicit privilege before explicitly assigning the minimal set below.
+REVOKE ALL ON app_private.member_message_reports FROM ogcupid_member_api;
 GRANT INSERT ON app_private.member_message_reports TO ogcupid_member_api;
 ALTER TABLE app_private.member_message_reports ENABLE ROW LEVEL SECURITY;
 ALTER TABLE app_private.member_message_reports FORCE ROW LEVEL SECURITY;
