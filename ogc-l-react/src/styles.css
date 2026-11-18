@@ -326,3 +326,32 @@ button, input, textarea, select {font:inherit;}
 .ogcl-quickmatch-like {background:#497f27;border-color:#38641e;}
 .ogcl-quickmatch-dislike {background:#a43f56;border-color:#802f43;}
 .ogcl-quickmatch-next {background:#fff;color:#2552a5;border-color:#a7b9cc;}
+
+/* Actual private member inbox; no synthetic activity or swipe-style bubbles. */
+.ogcl-inbox-list {margin:8px 0 22px;padding:0;list-style:none;border:1px solid #c5d2dc;}
+.ogcl-inbox-list li+li {border-top:1px solid #dce5eb;}
+.ogcl-conversation-link {display:grid;grid-template-columns:1fr auto;gap:3px 12px;
+  color:#235487;padding:12px 14px;text-decoration:none;background:#fff;}
+.ogcl-conversation-link:hover {background:#f0f5f9;}
+.ogcl-conversation-link small {color:#63798b;text-align:right;font-size:11px;}
+.ogcl-conversation-link span {grid-column:1/-1;color:#35485c;overflow-wrap:anywhere;font-size:12px;}
+.ogcl-thread-head {display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  border-bottom:1px solid #cbd9e4;padding-bottom:12px;}
+.ogcl-message-history {min-height:150px;max-height:60vh;overflow-y:auto;padding:10px 3px;}
+.ogcl-message {max-width:88%;margin:10px 0;padding:9px 12px;border:1px solid #cad8e3;
+  border-radius:3px;background:#f3f7fa;overflow-wrap:anywhere;}
+.ogcl-message.ogcl-sent {margin-left:auto;background:#edf6e7;border-color:#bed7ae;}
+.ogcl-message-body {white-space:pre-wrap;margin:0 0 7px;line-height:1.5;}
+.ogcl-message footer {display:flex;align-items:center;justify-content:space-between;gap:10px;
+  font-size:10px;color:#6c8192;}
+.ogcl-report-link {border:0;background:none;padding:0;color:#ad4050;cursor:pointer;font-size:11px;}
+.ogcl-report-form {display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:10px;}
+.ogcl-report-form select {margin-left:5px;}
+.ogcl-message-compose {border-top:1px solid #c9d7e0;padding-top:15px;display:grid;gap:8px;}
+.ogcl-message-compose label {font-weight:bold;color:#294e6d;}
+.ogcl-message-compose textarea {width:100%;box-sizing:border-box;border:1px solid #9fb6c6;
+  padding:8px 10px;background:#fff;color:#22384d;resize:vertical;}
+.ogcl-message-compose>div {display:flex;justify-content:space-between;align-items:center;gap:10px;
+  font-size:11px;color:#647b8c;}
+.ogcl-profile-message {display:inline-block;text-decoration:none;}
+@media(max-width:700px){.ogcl-message {max-width:96%;}}
