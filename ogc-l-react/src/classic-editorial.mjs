@@ -63,3 +63,17 @@ export function refinementDestination(destination,slug) {
     default:return null;
   }
 }
+
+/**
+ * This sidebar is deliberately strict: only genuinely scored members with
+ * a verified server-provided distance at most 100 miles may appear.
+ * If geographic evidence isn't available yet, show no photos rather
+ * than assert somebody is nearby or substitute low-score members.
+ */
+export function recommendedPhotoMembers(discovery,rng=Math.random){
+  const members=Array.isArray(discovery)?discovery:[];
+  return drawDistinct(members.filter(member=>
+    member && typeof member.matchPercent==="number" && member.matchPercent>75 &&
+    Number.isFinite(member.distanceMiles) && member.distanceMiles>=0 &&
+    member.distanceMiles<=100 && typeof member.slug==="string"),3,rng);
+}
