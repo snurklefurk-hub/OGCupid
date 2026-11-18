@@ -129,10 +129,21 @@ export function MemberSessionProvider({children}) {
     return gateway.getPublicProfile(slug);
   }, []);
 
+  const loadMatchAnswers = useCallback(async () => {
+    if(!gateway)throw new MemberAccessError("unavailable","Member API is not configured.");
+    return gateway.loadMatchAnswers();
+  }, []);
+  const saveMatchAnswer = useCallback(async answer => {
+    if(!gateway)throw new MemberAccessError("unavailable","Member API is not configured.");
+    return gateway.saveMatchAnswer(answer);
+  }, []);
+
   const value = useMemo(() => ({
     ...session, refresh, signIn, signOut, getMemberAvatar,
-    loadOwnEssays, saveOwnEssay, getPublicProfile
-  }), [session, refresh, signIn, signOut, getMemberAvatar, loadOwnEssays, saveOwnEssay, getPublicProfile]);
+    loadOwnEssays, saveOwnEssay, getPublicProfile,
+    loadMatchAnswers, saveMatchAnswer
+  }), [session, refresh, signIn, signOut, getMemberAvatar, loadOwnEssays, saveOwnEssay,
+    getPublicProfile, loadMatchAnswers, saveMatchAnswer]);
 
   return <MemberSessionContext.Provider value={value}>{children}</MemberSessionContext.Provider>;
 }
