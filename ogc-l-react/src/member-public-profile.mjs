@@ -8,9 +8,12 @@ export const PUBLIC_ESSAYS = Object.freeze([
   Object.freeze({key:"aboutMe",title:"My self-summary"}),
   Object.freeze({key:"lifeDirection",title:"What I'm doing with my life"}),
   Object.freeze({key:"goodAt",title:"I'm really good at"}),
+  Object.freeze({key:"firstThings",title:"The first things people usually notice about me"}),
   Object.freeze({key:"favorites",title:"Favorite books, movies, shows, music, food"}),
   Object.freeze({key:"sixThings",title:"The six things I could never do without"}),
+  Object.freeze({key:"thinkingAbout",title:"I spend a lot of time thinking about"}),
   Object.freeze({key:"fridayNight",title:"On a typical Friday night I am"}),
+  Object.freeze({key:"privateThing",title:"The most private thing I’m willing to admit"}),
   Object.freeze({key:"messageMeIf",title:"You should message me if"})
 ]);
 export const PUBLIC_DETAILS = Object.freeze([
