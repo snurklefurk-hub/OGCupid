@@ -1,0 +1,24 @@
+name: Smoke OGC-L Quickmatch development API
+on:
+  push:
+    branches: [feature/ogcl-quickmatch-pair-state-20261118]
+    paths:
+      - 'dev/smoke-ogcl-quickmatch-dev.mjs'
+      - '.github/workflows/smoke-ogcl-quickmatch-dev.yml'
+  pull_request:
+    branches: [OGC-lovable]
+    paths:
+      - 'dev/smoke-ogcl-quickmatch-dev.mjs'
+      - '.github/workflows/smoke-ogcl-quickmatch-dev.yml'
+permissions:
+  contents: read
+jobs:
+  anonymous-quickmatch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify development Neon pair Function rejects guests and untrusted origins
+        run: node dev/smoke-ogcl-quickmatch-dev.mjs
