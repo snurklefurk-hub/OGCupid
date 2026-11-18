@@ -4,9 +4,11 @@ on:
     branches: [OGC-lovable]
     paths:
       - 'api/member-quickmatch.js'
+      - 'api/member-discovery.js'
       - 'api/member-quickmatch.test.js'
       - 'api/member-profile.ts'
       - 'db/migrations/021_member_quickmatch_decisions.sql'
+      - 'db/migrations/022_quickmatch_pair_state.sql'
       - 'ogc-l-react/**'
       - '.github/workflows/verify-ogcl-quickmatch.yml'
 permissions:
@@ -22,7 +24,7 @@ jobs:
       - name: Validate backend Quickmatch syntax and RLS/authorization tests
         run: |
           node --check api/member-quickmatch.js
-          node --test api/member-quickmatch.test.js
+          node --test api/member-quickmatch.test.js api/discovery-route.test.js api/discovery-score.test.js
       - name: Compile the actual Neon member Function including Quickmatch
         run: |
           npm ci
