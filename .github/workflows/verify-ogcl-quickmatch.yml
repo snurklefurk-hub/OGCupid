@@ -36,4 +36,4 @@ jobs:
           npm test
           npm run build
       - name: Confirm no legacy production frontend was changed
-        run: git diff --quiet origin/OGC-lovable -- index.html public/account public/profiles
+        run: test -z "$(git status --porcelain -- index.html public/account public/profiles)"
