@@ -78,3 +78,40 @@ button, input, textarea, select {font:inherit;}
   .ogcl-view {padding:10px;}
   .ogcl-banner {padding:8px 12px;}
 }
+
+/* Member identity, onboarding and real recommendations. App shell dimensions
+   remain unchanged while account state and center routes switch. */
+.ogcl-locked {opacity:.55;cursor:not-allowed;}
+.ogcl-left .ogcl-member-list,.ogcl-directory {display:grid;gap:8px;}
+.ogcl-left-note .ogcl-member-link {
+  color:#e7eefb;text-decoration:none;border:1px solid #2c5083;
+  padding:10px;background:#1b3d71;
+}
+.ogcl-member-link {display:block;padding:11px 13px;border:1px solid #cfdae3;
+  background:#f9fbfd;text-decoration:none;}
+.ogcl-member-link:hover,.ogcl-member-link:focus-visible {border-color:#4b789e;background:#fff;}
+.ogcl-member-link strong {display:block;color:#254d7b;font-size:13px;}
+.ogcl-left-note .ogcl-member-link strong {color:#fff;}
+.ogcl-member-link span {display:block;color:#6b8293;font-size:11px;margin-top:4px;}
+.ogcl-left-note .ogcl-member-link span {color:#bad1eb;}
+.ogcl-side-button,.ogcl-button,.ogcl-signin-form button {
+  display:inline-block;cursor:pointer;background:#1d4d83;color:#fff;
+  border:1px solid #173e6c;border-radius:2px;min-height:33px;
+  padding:6px 12px;text-align:center;font-weight:bold;
+}
+.ogcl-side-button {margin-top:10px;min-height:28px;font-size:11px;}
+.ogcl-signin-form {display:grid;gap:12px;max-width:390px;margin-bottom:15px;}
+.ogcl-signin-form label {display:grid;gap:4px;font-weight:bold;color:#25496c;font-size:12px;}
+.ogcl-signin-form input {
+  display:block;width:100%;min-height:36px;
+  border:1px solid #bdcad5;padding:8px;background:#fff;color:#242e39;
+}
+.ogcl-signin-form button {width:max-content;}
+.ogcl-signin-form button:disabled {opacity:.7;cursor:progress;}
+.ogcl-error {margin:5px 0;color:#963453;font-weight:bold;}
+.ogcl-progress {height:11px;border:1px solid #7791b3;background:#0c2659;overflow:hidden;}
+.ogcl-progress span {display:block;height:100%;background:#63a62f;}
+.ogcl-directory {margin-top:15px;grid-template-columns:repeat(2,minmax(0,1fr));}
+@media(max-width:800px) {
+  .ogcl-directory {grid-template-columns:1fr;}
+}
