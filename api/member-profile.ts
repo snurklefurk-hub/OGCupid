@@ -11,6 +11,7 @@ import { handleOnboarding } from "./onboarding.js";
 import { handleFeedback } from "./member-feedback.js";
 import { handleDiscovery } from "./member-discovery.js";
 import { handleQuickmatch } from "./member-quickmatch.js";
+import { handleMessages } from "./member-messages.js";
 
 const required = ["DATABASE_URL", "NEON_AUTH_JWKS_URL", "NEON_AUTH_BASE_URL"] as const;
 for (const name of required) {
@@ -314,6 +315,7 @@ export default {
     const answersPath = url.pathname === "/answers" || url.pathname === "/answers/";
     const discoveryPath = url.pathname === "/discovery" || url.pathname === "/discovery/";
     const quickmatchPath = url.pathname === "/quickmatch" || url.pathname === "/quickmatch/";
+    const messagePath = /^\/messages(?:\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(?:\/(?:block|report))?)?\/?$/i.test(url.pathname);
     const photoPath = isPhotoPath(url.pathname);
     const onboardingPath = url.pathname === "/onboarding" || url.pathname === "/onboarding/";
     const feedbackPath = url.pathname === "/feedback" || url.pathname === "/feedback/";
@@ -322,7 +324,7 @@ export default {
     // A credential check that can NEVER call the privileged eraser.
     // Only enabled for the one disposable development account.
     const verifyPath = url.pathname === "/account/reauth-check" || url.pathname === "/account/reauth-check/";
-    if (!profilePath && !memberProfileMatch && !discoveryPath && !quickmatchPath && !answersPath && !emailPreferencesPath && !deletePath && !verifyPath && !photoPath && !onboardingPath && !feedbackPath) {
+    if (!profilePath && !memberProfileMatch && !discoveryPath && !quickmatchPath && !messagePath && !answersPath && !emailPreferencesPath && !deletePath && !verifyPath && !photoPath && !onboardingPath && !feedbackPath) {
       return json(request, { error: "Not found" }, 404);
     }
     // Self-service deletion is allowed only on the explicitly configured
@@ -344,7 +346,7 @@ export default {
            "5b03f41b-29b7-4a7a-9c72-71744dd8b2f2")) {
       return json(request, { error: "Not found" }, 404);
     }
-    const methodAllowed = memberProfileMatch ? request.method === "GET" : feedbackPath ? request.method === "POST" : discoveryPath ? request.method === "GET" : quickmatchPath ? ["GET", "PUT"].includes(request.method) : photoPath
+    const methodAllowed = memberProfileMatch ? request.method === "GET" : feedbackPath ? request.method === "POST" : discoveryPath ? request.method === "GET" : quickmatchPath ? ["GET", "PUT"].includes(request.method) : messagePath ? ["GET", "POST", "PUT", "DELETE"].includes(request.method) : photoPath
       ? photoMethodAllowed(url.pathname, request.method)
       : deletePath || verifyPath
         ? request.method === "POST"
@@ -357,7 +359,7 @@ export default {
     if (!userId) return json(request, { error: "Unauthorized" }, 401);
 
     try {
-      if (profilePath || memberProfileMatch || discoveryPath || quickmatchPath || answersPath || emailPreferencesPath || photoPath || onboardingPath || feedbackPath) {
+      if (profilePath || memberProfileMatch || discoveryPath || quickmatchPath || messagePath || answersPath || emailPreferencesPath || photoPath || onboardingPath || feedbackPath) {
         // A signed JWT can outlive the account/session that issued it.
         // Do not allow a deleted identity to read an empty profile as if it
         // were still a member, or attempt to recreate a profile via PUT.
@@ -385,6 +387,9 @@ export default {
       }
       if (quickmatchPath) {
         return await handleQuickmatch(request,userId,withMember,json);
+      }
+      if (messagePath) {
+        return await handleMessages(request,userId,url,withMember,json);
       }
 
       // Member-only profile read; a profile slug NEVER establishes edit
