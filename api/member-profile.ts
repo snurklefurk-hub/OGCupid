@@ -430,20 +430,30 @@ export default {
              WHERE route.slug = $1`, [slug]);
           const row = result.rows[0];
           if (!row) return null;
+          const isOwner=String(row.user_id).toLowerCase()===userId;
+          // FORCE RLS keeps owner-private answers visible to the owner only.
+          // For peers, this narrowly scoped SECURITY DEFINER projection exposes
+          // only confirmed PUBLIC answer/choice/explanation, never weights,
+          // private answers or another member's acceptable answer list.
           const answers = await client.query(
-            `SELECT question_id, option_id FROM app_private.member_match_answers
-             WHERE user_id=$1::uuid AND is_private=false
-             ORDER BY question_id LIMIT 410`, [row.user_id]);
+            isOwner
+              ? `SELECT question_id,option_id,note,is_private FROM app_private.member_match_answers
+                 WHERE user_id=$1::uuid ORDER BY question_id LIMIT 410`
+              : `SELECT question_id,option_id,note,false AS is_private
+                 FROM app_private.visible_member_public_answers($1::uuid)`,
+            [row.user_id]);
           const persona = await client.query(
             "SELECT app_private.visible_member_persona($1::uuid) AS code",
             [row.user_id]);
           return {
             profile: { ...present(row), slug,
               profileSearchRadiusMiles: row.profile_search_radius_miles == null ? null : Number(row.profile_search_radius_miles) },
-            isOwner: String(row.user_id).toLowerCase() === userId,
+            isOwner,
             publicAnswers: answers.rows.map(answer => ({
               questionId: String(answer.question_id),
-              optionId: String(answer.option_id)
+              optionId: String(answer.option_id),
+              note: String(answer.note ?? "").slice(0,400),
+              isPrivate: isOwner && answer.is_private===true
             })),
             personaCode: persona.rows[0]?.code ?? null
           };
