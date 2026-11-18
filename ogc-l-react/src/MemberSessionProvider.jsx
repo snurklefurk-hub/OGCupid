@@ -3,7 +3,7 @@ import {createAuthClient} from "@neon/auth";
 import {configuredMemberEndpoints, createMemberGateway, MemberAccessError} from "./member-gateway.mjs";
 
 // Only Vite's deliberately configured public endpoint URLs are used.
-// No account data, JWT, password or Neon DB credential is saved to localStorage.
+// Account data, JWTs, passwords and database credentials are not persisted by this app.
 const endpoints = configuredMemberEndpoints(
   import.meta.env.VITE_OGC_AUTH_URL,
   import.meta.env.VITE_OGC_MEMBER_API_URL
