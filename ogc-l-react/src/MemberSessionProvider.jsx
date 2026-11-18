@@ -138,6 +138,27 @@ export function MemberSessionProvider({children}) {
     return gateway.saveQuickmatchDecision(targetUserId,decision);
   }, []);
 
+  const loadInbox=useCallback(async()=>{
+    if(!gateway)throw new MemberAccessError("unavailable","Messaging is not configured.");
+    return gateway.loadInbox();
+  },[]);
+  const loadConversation=useCallback(async peerId=>{
+    if(!gateway)throw new MemberAccessError("unavailable","Messaging is not configured.");
+    return gateway.loadConversation(peerId);
+  },[]);
+  const sendMessage=useCallback(async(peerId,body)=>{
+    if(!gateway)throw new MemberAccessError("unavailable","Messaging is not configured.");
+    return gateway.sendMessage(peerId,body);
+  },[]);
+  const setMessageBlock=useCallback(async(peerId,blocked)=>{
+    if(!gateway)throw new MemberAccessError("unavailable","Messaging is not configured.");
+    return gateway.setMessageBlock(peerId,blocked);
+  },[]);
+  const reportMessage=useCallback(async(peerId,messageId,reason)=>{
+    if(!gateway)throw new MemberAccessError("unavailable","Messaging is not configured.");
+    return gateway.reportMessage(peerId,messageId,reason);
+  },[]);
+
   const loadMatchAnswers = useCallback(async () => {
     if(!gateway)throw new MemberAccessError("unavailable","Member API is not configured.");
     return gateway.loadMatchAnswers();
@@ -150,7 +171,8 @@ export function MemberSessionProvider({children}) {
   const value = useMemo(() => ({
     ...session, refresh, signIn, signOut, getMemberAvatar,
     loadOwnEssays, saveOwnEssay, getPublicProfile,
-    loadMatchAnswers, saveMatchAnswer, loadQuickmatchDecisions, saveQuickmatchDecision
+    loadMatchAnswers, saveMatchAnswer, loadQuickmatchDecisions, saveQuickmatchDecision,
+    loadInbox, loadConversation, sendMessage, setMessageBlock, reportMessage
   }), [session, refresh, signIn, signOut, getMemberAvatar, loadOwnEssays, saveOwnEssay,
     getPublicProfile, loadMatchAnswers, saveMatchAnswer]);
 
