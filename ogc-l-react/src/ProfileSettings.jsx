@@ -1,6 +1,7 @@
 import React,{useEffect,useState} from "react";
 import {NavLink} from "react-router-dom";
 import {PROFILE_SETTINGS_FIELDS} from "./member-settings.mjs";
+import LookingForSettings from "./LookingForSettings.jsx";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 
 const groups=[
@@ -10,7 +11,7 @@ const groups=[
 ];
 
 export default function ProfileSettings(){
-  const {loadOwnSettings,saveOwnSetting}=useMemberSession();
+  const {loadOwnSettings,saveOwnSetting,saveOwnLookingFor}=useMemberSession();
   const [saved,setSaved]=useState(null);
   const [loading,setLoading]=useState(true);
   const [active,setActive]=useState(null);
@@ -114,13 +115,13 @@ export default function ProfileSettings(){
             <div><dt>Age</dt><dd>{saved.age??"Not available"} <small>(read-only)</small></dd></div>
           </dl>
         </section>
+        <LookingForSettings profile={saved} saveOwnLookingFor={saveOwnLookingFor}
+          onSaved={profile=>{setSaved(profile);setNotice("Saved your looking-for preferences.");}}/>
         {groups.map(group=><section key={group.id} className="ogcl-settings-group">
           <h2>{group.title}</h2><p className="ogcl-quiet">{group.intro}</p>
           <dl>{PROFILE_SETTINGS_FIELDS.filter(f=>f.group===group.id).map(row)}</dl>
         </section>)}
-        <p className="ogcl-quiet">Location, search radius and age-range preferences are not editable in this React view yet.
-          This form only updates fields the existing member service already stores. It never changes your signup identity,
-          birthday, photos or saved match answers.</p>
+        <p className="ogcl-quiet">Your signup identity, birthday, photos, saved essays and match answers are never changed by saving these settings. Algorithmic recommendations will use these saved defaults when the matching filters are enabled.</p>
       </>}
     </div>
   </section>;
