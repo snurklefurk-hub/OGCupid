@@ -32,7 +32,8 @@ export const PROFILE_REFINEMENTS=Object.freeze([
 
 export function drawDistinct(items,count,rng=Math.random) {
   const pool=items.slice(),drawn=[];
-  for(let i=0;i<Math.min(count,pool.length);i++){
+  const target=Math.min(count,pool.length);
+  for(let i=0;i<target;i++){
     const n=Math.min(pool.length-1,Math.max(0,Math.floor(rng()*pool.length)));
     drawn.push(pool.splice(n,1)[0]);
   }
