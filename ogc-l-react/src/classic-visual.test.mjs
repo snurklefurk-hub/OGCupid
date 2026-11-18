@@ -19,7 +19,7 @@ test("2014 owner-approved desktop five-item navigation is compact and exact",()=
   assert.match(css,/@media\(min-width:801px\)/);
   assert.match(app,/<TopMemberNav\/>/);
   assert.match(app,/ProfileFloater Photo=\{MemberPhoto\}/);
-  assert.match(app,/path="community"/);
+  assert.match(app,/community: \["Community"/);
 });
 
 test("real member photo, not a name or fake progress, occupies completed-state floater",()=>{
