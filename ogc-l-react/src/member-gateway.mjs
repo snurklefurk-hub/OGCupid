@@ -227,6 +227,34 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
         return image;
       } finally { clearTimeout(timer); }
     },
+    async loadMatchAnswers() {
+      const identity=await bounded(authClient.getSession());
+      checkedMember(identity?.data?.user);
+      const jwt=await getJwt(identity?.data?.session);
+      return await readApi("/answers",jwt);
+    },
+    async saveMatchAnswer(answer) {
+      const identity=await bounded(authClient.getSession());
+      checkedMember(identity?.data?.user);
+      const jwt=await getJwt(identity?.data?.session);
+      const controller=new AbortController();
+      const timer=setTimeout(()=>controller.abort(),MAX_WAIT_MS);
+      try {
+        const response=await fetcher(endpoints.memberApiBaseUrl+"/answers",{
+          method:"PUT",credentials:"omit",cache:"no-store",
+          headers:{Authorization:"Bearer "+jwt,"Content-Type":"application/json",
+            Accept:"application/json"},
+          body:JSON.stringify(answer),signal:controller.signal
+        });
+        requireResponse(response);
+        const result=await bounded(response.json());
+        if(result?.saved!==true)throw new MemberAccessError("unavailable","Answer not confirmed.");
+        return result;
+      } catch(error) {
+        if(error instanceof MemberAccessError)throw error;
+        throw new MemberAccessError("unavailable","Unable to save question answer.");
+      } finally {clearTimeout(timer);}
+    },
     async getPublicProfile(slug) {
       if (!SLUG.test(String(slug || ""))) {
         throw new MemberAccessError("invalid","Invalid member profile address.");
