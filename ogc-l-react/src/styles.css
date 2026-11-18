@@ -278,3 +278,37 @@ button, input, textarea, select {font:inherit;}
   .ogcl-public-details {border-left:0;padding-left:0;}
   .ogcl-public-profile-top {grid-template-columns:120px minmax(0,1fr);}
 }
+
+
+/* Owner-curated match questions, old-OkCupid style forms. */
+.ogcl-question-progress {
+  display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  padding:10px 0 14px;border-bottom:1px solid #d5e0e9;margin-bottom:16px;
+}
+.ogcl-question-progress strong {color:#24537c;}
+.ogcl-question-progress span {font-size:11px;color:#677f91;}
+.ogcl-question-progress progress {width:100%;height:11px;accent-color:#47892e;}
+.ogcl-question-form {max-width:760px;}
+.ogcl-question-form h2 {font-size:19px;line-height:1.35;color:#244b7b;margin:4px 0 17px;}
+.ogcl-question-topic {font-size:11px;color:#6a879b;text-transform:uppercase;letter-spacing:.05em;font-weight:bold;}
+.ogcl-question-form fieldset {
+  border:0;border-top:1px solid #d9e3eb;padding:13px 0 10px;
+  margin:12px 0;
+}
+.ogcl-question-form legend {font-weight:bold;font-size:12px;color:#2c516f;padding:0 6px 0 0;}
+.ogcl-question-answer {
+  display:flex;gap:9px;align-items:flex-start;padding:7px 8px;
+  cursor:pointer;border-bottom:1px dotted #dae2e8;
+}
+.ogcl-question-answer:hover {background:#f3f6f9;}
+.ogcl-question-answer input {margin-top:3px;flex:0 0 auto;accent-color:#295d93;}
+.ogcl-question-answer span {line-height:1.55;overflow-wrap:anywhere;}
+.ogcl-question-importance {display:flex;flex-wrap:wrap;gap:8px 16px;}
+.ogcl-question-importance label {display:flex;gap:5px;align-items:center;font-size:12px;}
+.ogcl-question-importance input {accent-color:#295d93;}
+.ogcl-question-note {display:grid;gap:6px;font-size:12px;font-weight:bold;color:#365b7d;}
+.ogcl-question-note textarea {
+  border:1px solid #afc0ce;display:block;width:100%;
+  background:#fff;color:#2f4356;padding:8px;resize:vertical;font-weight:normal;
+}
+.ogcl-question-private {display:flex;align-items:center;gap:7px;font-size:12px;margin:12px 0 17px;}

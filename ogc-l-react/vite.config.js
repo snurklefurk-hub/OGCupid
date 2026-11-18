@@ -22,6 +22,12 @@ export default defineConfig({
       const destination = fileURLToPath(new URL("../public/ogc-l/brand/ogcupid-logo-white.png", import.meta.url));
       mkdirSync(fileURLToPath(new URL("../public/ogc-l/brand/", import.meta.url)), {recursive:true});
       copyFileSync(source, destination);
+      // Publish the existing owner-curated 410 question definitions unchanged,
+      // rather than shipping a new/generated copy or maintaining two banks.
+      const questionSource = fileURLToPath(new URL("../public/questions/question-bank.js", import.meta.url));
+      const questionDirectory = fileURLToPath(new URL("../public/ogc-l/questions/", import.meta.url));
+      mkdirSync(questionDirectory, {recursive:true});
+      copyFileSync(questionSource, fileURLToPath(new URL("../public/ogc-l/questions/question-bank.js", import.meta.url)));
     }
   }],
   build: {

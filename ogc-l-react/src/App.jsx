@@ -7,6 +7,7 @@ import {filterAndSortMembers, pageMembers, shuffledMembers} from "./member-direc
 import {legacyHref} from "./legacy-links.mjs";
 import ProfileEditor from "./ProfileEditor.jsx";
 import PublicMemberProfile from "./PublicMemberProfile.jsx";
+import MatchQuestions from "./MatchQuestions.jsx";
 
 const profileHref = slug => "#/profiles/" + encodeURIComponent(slug);
 const questionScore = member => member.matchPercent === null
@@ -127,6 +128,7 @@ function RightRail() {
         <p>Don't judge a profile by the photo alone.</p>
         <a href={legacyHref("/ogtrends/")}>Read OgTrends</a>
         <a href={legacyHref("/account/persona.html")}>Dating Persona Test</a>
+        <NavLink to="/questions">Answer match questions</NavLink>
       </section>
     </aside>
   );
@@ -286,9 +288,7 @@ const views = {
   messages: ["Messages", "Conversations, not swipes.",
     "Messaging isn't enabled in the current backend. No fabricated conversations."],
   visitors: ["Visitors", "Who's been stopping by.",
-    "Visitor tracking isn't live yet. No activity is being recorded or invented."],
-  questions: ["Match questions", "Better answers, better conversations.",
-    "Your existing saved question answers remain in the established account app until the editor is safely migrated."]
+    "Visitor tracking isn't live yet. No activity is being recorded or invented."]
 };
 
 export default function App() {
@@ -299,6 +299,7 @@ export default function App() {
         <Route path="matches" element={<MemberGate><MemberDirectory /></MemberGate>} />
         <Route path="profile" element={<MemberGate><ProfileEditor /></MemberGate>} />
         <Route path="profiles/:slug" element={<MemberGate><PublicMemberProfile Photo={MemberPhoto} /></MemberGate>} />
+        <Route path="questions" element={<MemberGate><MatchQuestions /></MemberGate>} />
         <Route path="quickmatch" element={<MemberGate><MemberDirectory quick /></MemberGate>} />
         {Object.entries(views).map(([path, [title, intro, footnote]]) => (
           <Route key={path} path={path} element={
