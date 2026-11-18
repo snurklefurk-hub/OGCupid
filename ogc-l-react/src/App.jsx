@@ -5,6 +5,7 @@ import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {selectRecommendedMembers} from "./member-gateway.mjs";
 import {filterAndSortMembers, pageMembers, shuffledMembers} from "./member-directory.mjs";
 import {legacyHref} from "./legacy-links.mjs";
+import ProfileEditor from "./ProfileEditor.jsx";
 
 const profileHref = slug => legacyHref("/profiles/" + encodeURIComponent(slug));
 const questionScore = member => member.matchPercent === null
@@ -98,6 +99,7 @@ function RightRail() {
             {profile?.slug ? <a href={profileHref(profile.slug)}>Your member profile</a> :
               <a href={legacyHref("/account/")}>Your account</a>}
             {profileUnavailable && <p>Profile details could not load. Try refreshing.</p>}
+            <NavLink to="/profile">Edit About essays</NavLink>
             <button type="button" className="ogcl-side-button" onClick={session.signOut}>Sign out</button>
           </>
         ) : kind === "onboarding" ? (
@@ -294,6 +296,7 @@ export default function App() {
       <Route element={<AppShell />}>
         <Route index element={<Navigate to={defaultRoute} replace />} />
         <Route path="matches" element={<MemberGate><MemberDirectory /></MemberGate>} />
+        <Route path="profile" element={<MemberGate><ProfileEditor /></MemberGate>} />
         <Route path="quickmatch" element={<MemberGate><MemberDirectory quick /></MemberGate>} />
         {Object.entries(views).map(([path, [title, intro, footnote]]) => (
           <Route key={path} path={path} element={
