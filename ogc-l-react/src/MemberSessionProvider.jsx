@@ -115,9 +115,19 @@ export function MemberSessionProvider({children}) {
     return gateway.getMemberAvatar(id);
   }, []);
 
+  const loadOwnEssays = useCallback(async () => {
+    if (!gateway) throw new MemberAccessError("unavailable", "Member API is not configured.");
+    return gateway.loadOwnEssays();
+  }, []);
+  const saveOwnEssay = useCallback(async (key, draft) => {
+    if (!gateway) throw new MemberAccessError("unavailable", "Member API is not configured.");
+    return gateway.saveOwnEssay(key, draft);
+  }, []);
+
   const value = useMemo(() => ({
-    ...session, refresh, signIn, signOut, getMemberAvatar
-  }), [session, refresh, signIn, signOut, getMemberAvatar]);
+    ...session, refresh, signIn, signOut, getMemberAvatar,
+    loadOwnEssays, saveOwnEssay
+  }), [session, refresh, signIn, signOut, getMemberAvatar, loadOwnEssays, saveOwnEssay]);
 
   return <MemberSessionContext.Provider value={value}>{children}</MemberSessionContext.Provider>;
 }
