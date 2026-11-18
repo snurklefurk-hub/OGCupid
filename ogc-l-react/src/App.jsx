@@ -1,8 +1,9 @@
-import React, {useMemo, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {Navigate, NavLink, Outlet, Route, Routes} from "react-router-dom";
 import {defaultRoute, primaryNavigation} from "./navigation.mjs";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {selectRecommendedMembers} from "./member-gateway.mjs";
+import {filterAndSortMembers, pageMembers, shuffledMembers} from "./member-directory.mjs";
 import {legacyHref} from "./legacy-links.mjs";
 
 const profileHref = slug => legacyHref("/profiles/" + encodeURIComponent(slug));
@@ -10,13 +11,40 @@ const questionScore = member => member.matchPercent === null
   ? "Not enough shared answers"
   : member.matchPercent + "% question match · " + member.commonQuestions + " shared";
 
-function MemberCard({member}) {
-  return (
-    <a className="ogcl-member-link" href={profileHref(member.slug)}>
+function MemberPhoto({member}) {
+  const {kind, getMemberAvatar} = useMemberSession();
+  const [url, setUrl] = useState(null);
+  useEffect(() => {
+    if (kind !== "member" || !member?.userId) return;
+    let closed = false;
+    let created = null;
+    setUrl(null);
+    void getMemberAvatar(member.userId).then(image => {
+      if (closed || !image) return;
+      created = URL.createObjectURL(image);
+      setUrl(created);
+    }).catch(() => { /* The card falls back if an image is not available. */ });
+    return () => {
+      closed = true;
+      if (created) URL.revokeObjectURL(created);
+    };
+  }, [kind, getMemberAvatar, member?.userId]);
+  return url
+    ? <img className="ogcl-member-photo" src={url} alt="" loading="lazy" />
+    : <span className="ogcl-member-photo ogcl-photo-placeholder" aria-hidden="true">♥</span>;
+}
+
+function MemberCard({member, restricted = false}) {
+  const body = <>
+    <MemberPhoto member={member} />
+    <span className="ogcl-member-copy">
       <strong>{member.displayName}</strong>
-      <span>{questionScore(member)}</span>
-    </a>
-  );
+      <small>{questionScore(member)}</small>
+    </span>
+  </>;
+  return restricted
+    ? <div className="ogcl-member-link ogcl-quickmatch-member">{body}</div>
+    : <a className="ogcl-member-link" href={profileHref(member.slug)}>{body}</a>;
 }
 
 function LeftRail() {
@@ -107,7 +135,7 @@ function AppShell() {
       <a className="ogcl-skip" href="#ogcl-content">Skip to content</a>
       <LeftRail />
       <main id="ogcl-content" className="ogcl-center" tabIndex={-1}>
-        <div className="ogcl-banner">OG CUPID <span>REACT SHELL PREVIEW</span></div>
+        <div className="ogcl-banner">OG CUPID <span>MEMBERS</span></div>
         <Outlet />
       </main>
       <RightRail />
@@ -139,7 +167,7 @@ function SignInForm() {
     <section className="ogcl-view" aria-labelledby="ogcl-signin-heading">
       <header className="ogcl-view-head">
         <h1 id="ogcl-signin-heading">Welcome to OG Cupid</h1>
-        <p>Sign in with your existing account. This preview uses the same Neon member system.</p>
+        <p>Sign in with your existing OG Cupid account.</p>
       </header>
       <div className="ogcl-content-panel">
         <form className="ogcl-signin-form" onSubmit={submit}>
@@ -198,18 +226,56 @@ function PreviewView({title, intro, footnote, children}) {
 }
 
 function MemberDirectory({quick = false}) {
-  const {discovery, discoveryUnavailable} = useMemberSession();
-  const choices = useMemo(() => quick && discovery.length
-    ? [discovery[Math.floor(Math.random() * discovery.length)]] : discovery,
-    [discovery, quick]);
+  const {discovery, discoveryUnavailable, refresh} = useMemberSession();
+  const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("match");
+  const [page, setPage] = useState(1);
+  const [quickIndex, setQuickIndex] = useState(0);
+  // A temporary browse queue, not a Like/Dislike record. Actual Quickmatch
+  // decisions will require an authenticated persistence endpoint.
+  const browseQueue = useMemo(() => shuffledMembers(discovery), [discovery]);
+  const ordered = useMemo(() => filterAndSortMembers(discovery, {search, sort}), [discovery, search, sort]);
+  const directoryPage = useMemo(() => pageMembers(ordered, page), [ordered, page]);
+  useEffect(() => { setPage(1); }, [search, sort]);
+  const candidate = browseQueue.length ? browseQueue[quickIndex % browseQueue.length] : null;
   return <PreviewView
     title={quick ? "Quickmatch" : "Matches"}
-    intro={quick ? "A little serendipity, without endless swiping." : "Find people worth getting to know."}>
-    <p className="ogcl-note">Question-only compatibility is provisional. Few shared questions mean low confidence.</p>
-    {discoveryUnavailable ? <p>Member discovery couldn't load. Refresh to try again.</p> :
-      choices.length ? <div className="ogcl-directory">{choices.map(p =>
+    intro={quick ? "Meet another person from the real member directory." : "Browse members who've completed their profiles."}>
+    <p className="ogcl-note">Compatibility is a provisional question-only calculation. A missing score means there aren't enough shared answers.</p>
+    {discoveryUnavailable ? <div role="alert"><p>Member discovery couldn't load.</p>
+      <button type="button" className="ogcl-button" onClick={refresh}>Try again</button></div> :
+    quick ? (candidate ? <>
+      <div className="ogcl-quickmatch-view">
+        <MemberCard key={candidate.userId} member={candidate} restricted />
+        <p className="ogcl-quiet">This is a browse preview, not a recorded Like or Dislike. Matching decisions will be enabled when the secure backend is ready.</p>
+        {browseQueue.length > 1 && <button type="button" className="ogcl-button"
+          onClick={() => setQuickIndex(index => index + 1)}>See another member</button>}
+        <p>To open full profiles and contact members, use <NavLink to="/matches">MATCHES</NavLink>.</p>
+      </div>
+    </> : <p>No Quickmatch-eligible member previews are available yet.</p>) :
+    <>
+      <div className="ogcl-directory-tools">
+        <label>Find by username
+          <input type="search" maxLength={80} value={search} placeholder="Search members"
+            onChange={event => setSearch(event.target.value)} />
+        </label>
+        <label>Sort results
+          <select value={sort} onChange={event => setSort(event.target.value)}>
+            <option value="match">Highest match %</option>
+            <option value="name">Username A–Z</option>
+          </select>
+        </label>
+        <span className="ogcl-directory-count">{ordered.length} matching {ordered.length === 1 ? "member" : "members"}</span>
+      </div>
+      {directoryPage.items.length ? <div className="ogcl-directory">{directoryPage.items.map(p =>
         <MemberCard key={p.userId} member={p} />)}</div> :
-        <p>No discoverable members are available yet.</p>}
+        <p>{search ? "No members match that username." : "No discoverable members are available yet."}</p>}
+      {directoryPage.totalPages > 1 && <nav className="ogcl-pages" aria-label="Matches pages">
+        {Array.from({length:directoryPage.totalPages},(_,index) => index + 1).map(n =>
+          <button key={n} type="button" aria-current={n===directoryPage.page ? "page" : undefined}
+            onClick={() => setPage(n)}>{n}</button>)}
+      </nav>}
+    </>}
   </PreviewView>;
 }
 

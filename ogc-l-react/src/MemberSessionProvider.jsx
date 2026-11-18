@@ -110,9 +110,14 @@ export function MemberSessionProvider({children}) {
     };
   }, [refresh]);
 
+  const getMemberAvatar = useCallback(async (id) => {
+    if (!gateway) return null;
+    return gateway.getMemberAvatar(id);
+  }, []);
+
   const value = useMemo(() => ({
-    ...session, refresh, signIn, signOut
-  }), [session, refresh, signIn, signOut]);
+    ...session, refresh, signIn, signOut, getMemberAvatar
+  }), [session, refresh, signIn, signOut, getMemberAvatar]);
 
   return <MemberSessionContext.Provider value={value}>{children}</MemberSessionContext.Provider>;
 }
