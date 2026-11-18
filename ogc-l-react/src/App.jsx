@@ -7,6 +7,7 @@ import {filterAndSortMembers, pageMembers, shuffledMembers} from "./member-direc
 import {legacyHref} from "./legacy-links.mjs";
 import ProfileEditor from "./ProfileEditor.jsx";
 import PublicMemberProfile from "./PublicMemberProfile.jsx";
+import QuickmatchView from "./QuickmatchView.jsx";
 import MatchQuestions from "./MatchQuestions.jsx";
 
 const profileHref = slug => "#/profiles/" + encodeURIComponent(slug);
@@ -301,7 +302,7 @@ export default function App() {
         <Route path="profile" element={<MemberGate><ProfileEditor /></MemberGate>} />
         <Route path="profiles/:slug" element={<MemberGate><PublicMemberProfile Photo={MemberPhoto} /></MemberGate>} />
         <Route path="questions" element={<MemberGate><MatchQuestions /></MemberGate>} />
-        <Route path="quickmatch" element={<MemberGate><MemberDirectory quick /></MemberGate>} />
+        <Route path="quickmatch" element={<MemberGate><QuickmatchView Photo={MemberPhoto} /></MemberGate>} />
         {Object.entries(views).map(([path, [title, intro, footnote]]) => (
           <Route key={path} path={path} element={
             <MemberGate><PreviewView title={title} intro={intro} footnote={footnote} /></MemberGate>
