@@ -1,0 +1,52 @@
+name: Package OGC-L staging CORS function without credentials
+on:
+  push:
+    branches: [feature/ogcl-staging-neon-cors]
+    paths:
+      - 'api/member-profile.ts'
+      - 'api/staging-cors-contract.test.js'
+      - '.github/workflows/package-ogcl-staging-cors.yml'
+  pull_request:
+    branches: [OGC-lovable]
+    paths:
+      - 'api/member-profile.ts'
+      - 'api/staging-cors-contract.test.js'
+      - '.github/workflows/package-ogcl-staging-cors.yml'
+permissions:
+  contents: write
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - name: Install existing backend dependencies and pinned bundler
+        run: |
+          npm ci
+          npm install --no-save esbuild@0.25.12
+      - name: Verify exact staging CORS and existing member auth/discovery regressions
+        run: |
+          node --test api/staging-cors-contract.test.js api/discovery-score.test.js api/discovery-route.test.js api/profile-route.test.js api/profile-query.test.js api/member-feedback.test.js api/job-moderation.test.js
+      - name: Bundle the production-compatible Neon member Function
+        run: |
+          npx esbuild api/member-profile.ts --bundle --platform=node --target=node24 --format=esm --banner:js="import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);" --outfile="$RUNNER_TEMP/index.mjs"
+          node --check "$RUNNER_TEMP/index.mjs"
+          (cd "$RUNNER_TEMP" && zip -9 -q members.zip index.mjs)
+          base64 -w0 "$RUNNER_TEMP/members.zip" > dev/ogcl-staging-members-function-bundle.b64
+      - name: Keep artifact on isolated feature branch only
+        if: github.event_name == 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f dev/ogcl-staging-members-function-bundle.b64
+          if ! git diff --cached --quiet; then
+            git commit -m "build: package Neon function with exact OGC-L staging CORS"
+            git pull --rebase origin feature/ogcl-staging-neon-cors
+            git push origin HEAD:feature/ogcl-staging-neon-cors
+          fi
