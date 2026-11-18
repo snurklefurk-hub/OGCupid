@@ -1,0 +1,46 @@
+name: Package protected JPEG CORS for OGC-L
+on:
+  push:
+    branches: [feature/ogcl-directory-photos-20261118]
+    paths:
+      - 'api/member-photos.js'
+      - 'api/staging-photo-cors.test.js'
+      - '.github/workflows/package-ogcl-directory-photos.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - name: Install locked backend dependencies and esbuild
+        run: |
+          npm ci
+          npm install --no-save esbuild@0.25.12
+      - name: Check photo CORS, existing auth/discovery and protected upload contracts
+        run: |
+          node --test api/staging-photo-cors.test.js api/staging-cors-contract.test.js api/photo-sanitize.test.js api/discovery-route.test.js api/discovery-score.test.js api/profile-route.test.js api/profile-query.test.js
+      - name: Bundle signed-in Neon member API
+        run: |
+          npx esbuild api/member-profile.ts --bundle --platform=node --target=node24 --format=esm --banner:js="import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);" --outfile="$RUNNER_TEMP/index.mjs"
+          node --check "$RUNNER_TEMP/index.mjs"
+          (cd "$RUNNER_TEMP" && zip -9 -q members.zip index.mjs)
+          base64 -w0 "$RUNNER_TEMP/members.zip" > dev/ogcl-directory-member-function.b64
+      - name: Commit credential-free deployable bundle on feature branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f dev/ogcl-directory-member-function.b64
+          if ! git diff --cached --quiet; then
+            git commit -m "build: package authenticated member photo CORS for OGC-L"
+            git pull --rebase origin feature/ogcl-directory-photos-20261118
+            git push origin HEAD:feature/ogcl-directory-photos-20261118
+          fi
