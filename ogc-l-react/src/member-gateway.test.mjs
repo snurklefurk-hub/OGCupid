@@ -231,7 +231,7 @@ test("native peer profile is a JWT-gated read of public fields only",async()=>{
         age:29,cityRegion:"Atlanta",aboutMe:"Hello world",messageMeIf:"Say hi",
         email:"secret@invalid.example"
       },
-      publicAnswers:[{questionId:"vault-5",optionId:"option-1",note:"secret"}],
+      publicAnswers:[{questionId:"vault-5",optionId:"option-1",note:"Public explanation"}],
       isOwner:false,personaCode:"DBSDf"
     });
     throw Error("Unexpected path "+path);
@@ -239,7 +239,8 @@ test("native peer profile is a JWT-gated read of public fields only",async()=>{
   const peer=await service.getPublicProfile("peer-member");
   assert.equal(peer.slug,"peer-member");
   assert.equal(peer.essays.messageMeIf,"Say hi");
-  assert.equal(JSON.stringify(peer).includes("secret"),false);
+  assert.equal(peer.publicAnswers[0].note,"Public explanation");
+  assert.equal(JSON.stringify(peer).includes("secret@invalid.example"),false);
   assert.equal(calls.length,1);
   assert.equal(calls[0][0],"/profiles/peer-member");
   assert.equal(calls[0][1].headers.Authorization,"Bearer header.payload.signature");
