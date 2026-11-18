@@ -4,6 +4,7 @@ import {PUBLIC_DETAILS,PUBLIC_ESSAYS} from "./member-public-profile.mjs";
 import {essayDefinition} from "./member-essays.mjs";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {legacyHref} from "./legacy-links.mjs";
+import ProfileGallery from "./ProfileGallery.jsx";
 
 const TABS=Object.freeze([
   {id:"about",label:"About"},
@@ -125,9 +126,7 @@ export default function PublicMemberProfile({Photo}) {
           </aside>
         </div>}
         {tab==="photos"&&<div className="ogcl-profile-subpage">
-          <h2>Photos</h2>
-          <div className="ogcl-profile-photo-gallery"><Photo member={{userId:profile.userId}}/></div>
-          {profile.isOwner&&<p><a href={legacyHref("/account/")}>Manage your profile photos</a></p>}
+          <ProfileGallery userId={profile.userId} isOwner={profile.isOwner}/>
         </div>}
         {tab==="questions"&&<div className="ogcl-profile-subpage">
           <h2>Questions</h2>
