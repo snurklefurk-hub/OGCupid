@@ -56,7 +56,7 @@ export default function ProfileEditor() {
       {loading && <p role="status">Loading saved essays…</p>}
       {error && <p className="ogcl-error" role="alert">{error}</p>}
       {profile && <>
-        <p><strong>{profile.displayName}</strong> · <a href={legacyHref("/profiles/"+profile.slug)}>View public profile</a></p>
+        <p><strong>{profile.displayName}</strong>{profile.slug && <> · <a href={legacyHref("/profiles/"+profile.slug)}>View public profile</a></>}</p>
         <div className="ogcl-essay-list">
           {LIVE_ESSAYS.map(essay=><section className="ogcl-essay" key={essay.key}>
             <div className="ogcl-essay-title">
