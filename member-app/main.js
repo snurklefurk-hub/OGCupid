@@ -726,7 +726,7 @@ function renderQuestion() {
 
 // OG Cupid's classic long-form profile is entirely owner-editable. The
 // preview uses textContent and DOM nodes, never member-submitted HTML.
-const longProfileFields = Object.freeze(["cityRegion","work","education","height","kids","pets","smoking","drinking","diet","ethnicity","bodyType","vaping","drugs","religion","sign","income","status","relationshipType","lifeDirection","goodAt","firstThings","favorites","sixThings","thinkingAbout","fridayNight","messageMeIf"]);
+const longProfileFields = Object.freeze(["cityRegion","work","education","height","kids","pets","smoking","drinking","diet","ethnicity","bodyType","vaping","drugs","religion","sign","income","status","relationshipType","lifeDirection","goodAt","firstThings","favorites","sixThings","thinkingAbout","fridayNight","privateThing","messageMeIf"]);
 const previewEssays = Object.freeze([["aboutMe","about","about-section"],["lifeDirection","life-direction","life-direction-section"],["goodAt","good-at","good-at-section"],["favorites","favorites","favorites-section"],["sixThings","six-things","six-things-section"],["fridayNight","friday-night","friday-night-section"],["messageMeIf","message-me-if","message-me-if-section"]]);
 const previewDetails = Object.freeze([["Orientation","orientation"],["Ethnicity","ethnicity"],["Height","height"],["Body Type","bodyType"],["Diet","diet"],["Smokes","smoking"],["Vapes","vaping"],["Drinks","drinking"],["Drugs","drugs"],["Religion","religion"],["Sign","sign"],["Education","education"],["Job","work"],["Income","income"],["Status","status"],["Type","relationshipType"],["Offspring","kids"],["Pets","pets"],["Speaks","languages"]]);
 
