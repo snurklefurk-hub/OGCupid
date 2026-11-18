@@ -2,6 +2,7 @@ import React,{useEffect,useMemo,useState} from "react";
 import {NavLink} from "react-router-dom";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {pageMembers,shuffledMembers} from "./member-directory.mjs";
+import QuickmatchPhotos from "./QuickmatchPhotos.jsx";
 
 // The server decides bilateral suppression and eligibility. Neither a target's
 // private Dislikes nor another member's answer data enter frontend state.
@@ -94,7 +95,7 @@ export default function QuickmatchView({Photo}) {
       {!loading && quickState && !discoveryUnavailable && tab==="matches" && (candidate?<>
         <article className="ogcl-quickmatch-view" aria-label="Restricted Quickmatch member preview">
           <div className="ogcl-member-link ogcl-quickmatch-member">
-            <Photo member={candidate}/>
+            <QuickmatchPhotos memberId={candidate.userId}/>
             <span className="ogcl-member-copy">
               <strong>{candidate.displayName}</strong><small>{score(candidate)}</small>
             </span>
