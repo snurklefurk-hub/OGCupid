@@ -26,10 +26,9 @@ function CheckGroup({options,selected,toggle,title,disabled}){
   </fieldset>;
 }
 
-export default function LookingForSettings({profile,onSaved}){
+export default function LookingForSettings({profile,onSaved,saveOwnLookingFor}){
   const [draft,setDraft]=useState(()=>initial(profile));
   const [busy,setBusy]=useState(false),[error,setError]=useState("");
-  const {saveOwnLookingFor}=profile.actions;
   useEffect(()=>{setDraft(initial(profile));setError("");},[profile]);
   const changeChoices=(key,flag)=>(option,checked)=>setDraft(prev=>{
     const next=new Set(prev[key]);
