@@ -189,6 +189,42 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
         discoveryUnavailable: discoverResult.status !== "fulfilled"
       };
     },
+    // Loads only a primary JPEG authorized by the existing member Function.
+    // No URLs, credentials or image bytes are stored in browser storage.
+    async getMemberAvatar(targetId) {
+      if (!UUID.test(String(targetId || ""))) return null;
+      const identity = await bounded(authClient.getSession());
+      checkedMember(identity?.data?.user);
+      const jwt = await getJwt(identity?.data?.session);
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), MAX_WAIT_MS);
+      const get = async (path, binary = false) => {
+        try {
+          const response = await fetcher(endpoints.memberApiBaseUrl + path, {
+            method: "GET", credentials: "omit", cache: "no-store",
+            headers: {Authorization: "Bearer " + jwt, Accept: binary ? "image/jpeg" : "application/json"},
+            signal: controller.signal
+          });
+          requireResponse(response);
+          return await bounded(binary ? response.blob() : response.json());
+        } catch (error) {
+          if (error instanceof MemberAccessError) throw error;
+          throw new MemberAccessError("unavailable", "Unable to load member photo.");
+        }
+      };
+      try {
+        const album = await get("/photos/member/" + targetId.toLowerCase());
+        if (!Array.isArray(album?.photos)) return null;
+        const selected = album.photos.find(p => p?.isPrimary && UUID.test(p?.id || "")) ||
+          album.photos.find(p => UUID.test(p?.id || ""));
+        if (!selected) return null;
+        const image = await get("/photos/" + selected.id + "/bytes", true);
+        if (!(image instanceof Blob) || image.type !== "image/jpeg" || image.size > 2_500_000) {
+          return null;
+        }
+        return image;
+      } finally { clearTimeout(timer); }
+    },
     async signIn(email, password) {
       if (typeof email !== "string" || typeof password !== "string" ||
           email.length > 254 || email.trim().length < 3 || !password) {
