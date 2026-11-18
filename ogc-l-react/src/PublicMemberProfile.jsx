@@ -40,7 +40,7 @@ export default function PublicMemberProfile({Photo}) {
             <h2>{profile.displayName}</h2>
             <p>{[profile.age ? profile.age+" years old":null,profile.cityRegion].filter(Boolean).join(" · ")}</p>
             {profile.personaCode && <p>Dating Persona: <strong>{profile.personaCode}</strong></p>}
-            {profile.isOwner && <p><NavLink to="/profile">Edit your About essays</NavLink> · <NavLink to="/questions">Edit match questions</NavLink></p>}
+            {profile.isOwner && <p><NavLink to="/profile">Edit your About essays</NavLink> · <NavLink to="/questions">Edit match questions</NavLink> · <NavLink to="/settings">Profile Settings</NavLink></p>}
             {!profile.isOwner && <p><NavLink className="ogcl-button ogcl-profile-message" to={"/messages/"+profile.userId}>Send a message</NavLink></p>}
           </div>
         </div>
