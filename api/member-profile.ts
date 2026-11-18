@@ -873,6 +873,15 @@ export default {
           if (!radiusUpdated.rowCount) throw new Error("Validated profile location required for distance preference");
         }
         if (geoSupplied) {
+          // Initial saved locality defaults to 50 miles as approved. Existing
+          // accounts with an intentionally null legacy radius remain untouched
+          // unless the member explicitly chooses a new distance.
+          let radiusForWrite=searchRadiusMiles;
+          if (locality && radiusForWrite===null) {
+            const oldLocation=await client.query(
+              "SELECT user_id FROM app_private.member_localities WHERE user_id=$1::uuid",[userId]);
+            if (!oldLocation.rowCount) radiusForWrite=50;
+          }
           await client.query(
             "INSERT INTO app_private.member_localities " +
             "(user_id, locality_id, locality_shard, locality_lat, locality_lon, " +
@@ -885,7 +894,7 @@ export default {
             "search_origin_lon=EXCLUDED.search_origin_lon, search_radius_miles=EXCLUDED.search_radius_miles, updated_at=now()",
             [userId, locality?.id ?? null, locality?.key ?? null, locality?.lat ?? null, locality?.lon ?? null,
              searchOrigin?.id ?? null, searchOrigin?.key ?? null, searchOrigin?.label ?? null,
-             searchOrigin?.lat ?? null, searchOrigin?.lon ?? null, searchRadiusMiles],
+             searchOrigin?.lat ?? null, searchOrigin?.lon ?? null, radiusForWrite],
           );
         }
         const geo = await client.query(
