@@ -305,6 +305,53 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
         return image;
       } finally { clearTimeout(timer); }
     },
+    async getMemberGallery(targetId) {
+      // Exactly the existing member-scoped list and JPEG byte endpoints.
+      // No raw storage keys, public URLs, cookies, or browser-persisted data.
+      if (!UUID.test(String(targetId || ""))) return [];
+      const identity=await bounded(authClient.getSession());
+      checkedMember(identity?.data?.user);
+      const jwt=await getJwt(identity?.data?.session);
+      const controller=new AbortController();
+      const timer=setTimeout(()=>controller.abort(),MAX_WAIT_MS);
+      const fetchProtected=async(path,binary=false)=>{
+        try {
+          const response=await fetcher(endpoints.memberApiBaseUrl+path,{
+            method:"GET",credentials:"omit",cache:"no-store",
+            headers:{Authorization:"Bearer "+jwt,Accept:binary?"image/jpeg":"application/json"},
+            signal:controller.signal
+          });
+          requireResponse(response);
+          return await bounded(binary?response.blob():response.json());
+        }catch(error){
+          if(error instanceof MemberAccessError)throw error;
+          throw new MemberAccessError("unavailable","Unable to load member photos.");
+        }
+      };
+      try {
+        const album=await fetchProtected("/photos/member/"+targetId.toLowerCase());
+        if(!Array.isArray(album?.photos)||album.photos.length>5)
+          throw new MemberAccessError("unavailable","Invalid member photo list.");
+        const ids=new Set();
+        const records=album.photos.map(photo=>{
+          if(!UUID.test(String(photo?.id||"")) || ids.has(photo.id.toLowerCase()) ||
+            typeof photo.isPrimary!=="boolean" ||
+            !Number.isInteger(photo.sortOrder) || photo.sortOrder<0 ||
+            photo.sortOrder>5)
+            throw new MemberAccessError("unavailable","Invalid member photo metadata.");
+          ids.add(photo.id.toLowerCase());
+          return {id:photo.id.toLowerCase(),isPrimary:photo.isPrimary,sortOrder:photo.sortOrder};
+        });
+        const images=await Promise.all(records.map(async record=>{
+          const image=await fetchProtected("/photos/"+record.id+"/bytes",true);
+          if(!(image instanceof Blob)||image.type!=="image/jpeg"||
+             image.size<=0||image.size>2_500_000)
+            throw new MemberAccessError("unavailable","Invalid member photo data.");
+          return Object.freeze({...record,image});
+        }));
+        return Object.freeze(images);
+      }finally{clearTimeout(timer);}
+    },
     async loadQuickmatchDecisions() {
       const sessionResult=await bounded(authClient.getSession());
       if(sessionResult?.error)throw new MemberAccessError("unauthorized","Session unavailable.");
