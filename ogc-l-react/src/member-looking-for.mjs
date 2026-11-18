@@ -52,11 +52,18 @@ export function lookingForUpdate(profile,draft) {
     throw Error("Choose valid interested-in, relationship and age preferences");
   const out={
     aboutMe:profile.aboutMe,age:profile.age,
-    interestedIn:LOOKING_GENDERS.filter(x=>interestedIn.includes(x.value)).map(x=>x.value).join(", "),
-    relationshipGoal:LOOKING_INTENTIONS.filter(x=>relationshipGoal.includes(x.value)).map(x=>x.value).join(", "),
+    // Historical "Everyone" and case-sensitive legacy intentions are not
+    // reinterpreted or cleared merely because a member edits their age.
+    interestedIn:draft.gendersTouched
+      ?LOOKING_GENDERS.filter(x=>interestedIn.includes(x.value)).map(x=>x.value).join(", ")
+      :String(profile.interestedIn||""),
+    relationshipGoal:draft.intentionsTouched
+      ?LOOKING_INTENTIONS.filter(x=>relationshipGoal.includes(x.value)).map(x=>x.value).join(", ")
+      :String(profile.relationshipGoal||""),
     preferredAgeMin:draft.preferredAgeMin,preferredAgeMax:draft.preferredAgeMax
   };
-  if(profile.hasValidatedLocality){
+  if(profile.hasValidatedLocality &&
+     (draft.radiusTouched || radiusValues.has(profile.searchRadiusMiles))){
     if(!radiusValues.has(draft.searchRadiusMiles))
       throw Error("Choose an approved saved-location distance");
     out.searchRadiusMiles=draft.searchRadiusMiles;
