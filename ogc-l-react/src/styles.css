@@ -312,3 +312,8 @@ button, input, textarea, select {font:inherit;}
   background:#fff;color:#2f4356;padding:8px;resize:vertical;font-weight:normal;
 }
 .ogcl-question-private {display:flex;align-items:center;gap:7px;font-size:12px;margin:12px 0 17px;}
+
+/* Saved question review stays in the same authentic member Questions view. */
+.ogcl-question-review {display:grid;gap:5px;margin:0 0 18px;color:#244b7b;font-size:12px;font-weight:bold;max-width:760px;}
+.ogcl-question-review select {min-height:36px;width:100%;background:#fff;border:1px solid #aec1d0;padding:7px;color:#263c51;}
+.ogcl-question-any {border-top:1px dashed #cad8e4;margin-top:8px;padding-top:10px;}
