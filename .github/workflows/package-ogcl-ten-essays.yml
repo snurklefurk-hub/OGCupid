@@ -25,7 +25,7 @@ jobs:
         run: |
           npm ci
           node --test member-app/profile-essays.test.js api/profile-query.test.js api/profile-choices.test.js api/member-messages.test.js
-          npm --prefix ogc-l-react ci --no-audit --no-fund
+          npm --prefix ogc-l-react install --no-audit --no-fund
           npm --prefix ogc-l-react test
           npm --prefix ogc-l-react run build
           npm install --no-save esbuild@0.25.12
