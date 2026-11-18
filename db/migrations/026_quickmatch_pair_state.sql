@@ -29,6 +29,7 @@ DROP POLICY IF EXISTS quickmatch_owner_update ON app_private.member_quickmatch_d
 -- Keep FORCE ROW LEVEL SECURITY in place for the decision table: the
 -- SECURITY DEFINER owner has BYPASSRLS on Neon and can process pair transitions
 -- without globally weakening the table's original authenticated-owner RLS.
+ALTER TABLE app_private.member_quickmatch_decisions FORCE ROW LEVEL SECURITY;
 
 CREATE OR REPLACE FUNCTION app_private.quickmatch_pair_permitted(viewer uuid, target uuid)
 RETURNS boolean LANGUAGE plpgsql STABLE SECURITY DEFINER
