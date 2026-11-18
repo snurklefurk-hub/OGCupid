@@ -124,10 +124,15 @@ export function MemberSessionProvider({children}) {
     return gateway.saveOwnEssay(key, draft);
   }, []);
 
+  const getPublicProfile = useCallback(async slug => {
+    if (!gateway) throw new MemberAccessError("unavailable", "Member API is not configured.");
+    return gateway.getPublicProfile(slug);
+  }, []);
+
   const value = useMemo(() => ({
     ...session, refresh, signIn, signOut, getMemberAvatar,
-    loadOwnEssays, saveOwnEssay
-  }), [session, refresh, signIn, signOut, getMemberAvatar, loadOwnEssays, saveOwnEssay]);
+    loadOwnEssays, saveOwnEssay, getPublicProfile
+  }), [session, refresh, signIn, signOut, getMemberAvatar, loadOwnEssays, saveOwnEssay, getPublicProfile]);
 
   return <MemberSessionContext.Provider value={value}>{children}</MemberSessionContext.Provider>;
 }
