@@ -77,6 +77,28 @@ await check("Neon member API rejects anonymous read and echoes staging origin",a
   required(typeof body.error==="string","expected safe unauthorized response");
 });
 
+await check("Quickmatch API denies anonymous reads and writes while permitting exact-origin preflight",async()=>{
+  const preflight=await get(MEMBER+"/quickmatch",{
+    method:"OPTIONS",
+    headers:{Origin:STAGING,"Access-Control-Request-Method":"PUT",
+      "Access-Control-Request-Headers":"authorization,content-type"}
+  });
+  required(preflight.status===204,"Quickmatch preflight HTTP "+preflight.status);
+  required(preflight.headers.get("access-control-allow-origin")===STAGING,
+    "Quickmatch CORS must accept exact staging origin");
+  const read=await get(MEMBER+"/quickmatch",{headers:{Origin:STAGING,Accept:"application/json"}});
+  required(read.status===401,"Anonymous Quickmatch read HTTP "+read.status);
+  required(read.headers.get("access-control-allow-origin")===STAGING,
+    "Quickmatch unauthorized read missing exact CORS");
+  const write=await get(MEMBER+"/quickmatch",{
+    method:"PUT",headers:{Origin:STAGING,"Content-Type":"application/json"},
+    body:JSON.stringify({targetUserId:"00000000-0000-4000-8000-000000000002",decision:"like"})
+  });
+  required(write.status===401,"Anonymous Quickmatch write HTTP "+write.status);
+  required(write.headers.get("access-control-allow-origin")===STAGING,
+    "Quickmatch unauthorized write missing exact CORS");
+});
+
 await check("Neon Auth allows the staging browser origin",async()=>{
   const res=await get(AUTH+"/get-session",{headers:{Origin:STAGING,Accept:"application/json"}});
   required(res.status===200||res.status===401,"Neon Auth session probe HTTP "+res.status);
