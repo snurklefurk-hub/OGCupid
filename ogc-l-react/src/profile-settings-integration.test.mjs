@@ -102,9 +102,9 @@ test("profile settings stay inside verified member route and link from owner vie
   const provider=readFileSync(new URL("./MemberSessionProvider.jsx",import.meta.url),"utf8");
   const view=readFileSync(new URL("./ProfileSettings.jsx",import.meta.url),"utf8");
   assert.match(app,/<MemberGate><ProfileSettings \/><\/MemberGate>/);
-  assert.match(app,/to="\/settings">Profile Settings/);
+  assert.match(app,/to="\\/settings">Settings/);
   assert.match(owner,/profile\.isOwner/);
-  assert.match(owner,/to="\/settings"/);
+  assert.match(owner,/EditPencil to="\\/settings"/);
   assert.match(provider,/loadOwnSettings, saveOwnSetting/);
   assert.doesNotMatch(view,/localStorage|sessionStorage|type="date"|zodiac|Date of birth/i);
   assert.match(view,/signup name and age cannot be edited/i);
