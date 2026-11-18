@@ -129,6 +129,11 @@ export function MemberSessionProvider({children}) {
     return gateway.getPublicProfile(slug);
   }, []);
 
+  const getQuickmatchPhotos = useCallback(async targetId => {
+    if(!gateway)throw new MemberAccessError("unavailable","Member API is not configured.");
+    return gateway.getQuickmatchPhotos(targetId);
+  }, []);
+
   const loadQuickmatchDecisions = useCallback(async () => {
     if(!gateway)throw new MemberAccessError("unavailable","Member API is not configured.");
     return gateway.loadQuickmatchDecisions();
@@ -150,7 +155,7 @@ export function MemberSessionProvider({children}) {
   const value = useMemo(() => ({
     ...session, refresh, signIn, signOut, getMemberAvatar,
     loadOwnEssays, saveOwnEssay, getPublicProfile,
-    loadMatchAnswers, saveMatchAnswer, loadQuickmatchDecisions, saveQuickmatchDecision
+    loadMatchAnswers, saveMatchAnswer, loadQuickmatchDecisions, saveQuickmatchDecision, getQuickmatchPhotos
   }), [session, refresh, signIn, signOut, getMemberAvatar, loadOwnEssays, saveOwnEssay,
     getPublicProfile, loadMatchAnswers, saveMatchAnswer]);
 
