@@ -1,0 +1,44 @@
+name: Package OGC-L saved looking-for preferences Function
+on:
+  push:
+    branches: [feature/ogcl-saved-looking-for-preferences-20261118]
+    paths:
+      - 'api/member-profile.ts'
+      - 'api/profile-choices.js'
+      - 'ogc-l-react/src/*'
+      - '.github/workflows/package-ogcl-looking-for.yml'
+permissions:
+  contents: write
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: true}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - name: Test backend, React views and compile production Function
+        run: |
+          npm ci
+          node --test api/profile-choices.test.js api/profile-query.test.js api/discovery-route.test.js api/member-messages.test.js
+          npm --prefix ogc-l-react install --no-audit --no-fund
+          npm --prefix ogc-l-react test
+          npm --prefix ogc-l-react run build
+          npm install --no-save esbuild@0.25.12
+          npx esbuild api/member-profile.ts --bundle --platform=node --target=node24 --format=esm --banner:js="import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);" --outfile="$RUNNER_TEMP/index.mjs"
+          node --check "$RUNNER_TEMP/index.mjs"
+          (cd "$RUNNER_TEMP" && zip -9 -q members.zip index.mjs)
+          base64 -w0 "$RUNNER_TEMP/members.zip" > dev/ogcl-looking-for-members-function.b64
+      - name: Store verified credential-free bundle on isolated branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f dev/ogcl-looking-for-members-function.b64
+          if ! git diff --cached --quiet; then
+            git commit -m "build: package saved looking-for member Function"
+            git pull --rebase origin feature/ogcl-saved-looking-for-preferences-20261118
+            git push origin HEAD:feature/ogcl-saved-looking-for-preferences-20261118
+          fi
