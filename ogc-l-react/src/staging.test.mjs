@@ -5,6 +5,8 @@ import {legacyHref} from "./legacy-links.mjs";
 
 const app=readFileSync(new URL("./App.jsx",import.meta.url),"utf8");
 const vite=readFileSync(new URL("../vite.config.js",import.meta.url),"utf8");
+const sidebars=readFileSync(new URL("./ClassicSidebar.jsx",import.meta.url),"utf8");
+const promotions=readFileSync(new URL("./classic-editorial.mjs",import.meta.url),"utf8");
 
 test("legacy link destinations stay local when OGC-L is an in-site preview",()=>{
   assert.equal(legacyHref("/account/",""),"/account/");
@@ -43,8 +45,11 @@ test("legacy account, profile and editorial links do not accidentally point at e
   assert.match(app,/import \{legacyHref\}/);
   assert.ok(app.includes('const profileHref = slug => "#/profiles/"'));
   for(const path of ["/account/","/account/#welcome-title",
-    "/account/?join=1","/ogtrends/","/account/persona.html"]){
+    "/account/?join=1"]){
     assert.ok(app.includes('legacyHref("'+path+'")'),path);
   }
+  assert.match(sidebars,/legacyHref\(destination\)/);
+  assert.match(promotions,/case "ogtrends":return/);
+  assert.match(promotions,/case "persona":return/);
   assert.doesNotMatch(app,/href="\/(?:account|ogtrends|profiles)\b/);
 });
