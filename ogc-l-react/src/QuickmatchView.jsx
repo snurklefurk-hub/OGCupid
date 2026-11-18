@@ -2,25 +2,25 @@ import React,{useEffect,useMemo,useState} from "react";
 import {NavLink} from "react-router-dom";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {shuffledMembers} from "./member-directory.mjs";
+import {HeartDecision} from "./QuickmatchHearts.jsx";
 
 // Decisions are private to the authenticated member and persisted in Neon.
 // A missing backend must never look like a successful Like/Dislike.
 export default function QuickmatchView({Photo}) {
   const {discovery,discoveryUnavailable,loadQuickmatchDecisions,saveQuickmatchDecision} = useMemberSession();
   const [decisions,setDecisions] = useState(null);
-  const [skipped,setSkipped] = useState(()=>new Set());
+  const [cursor,setCursor] = useState(0);
   const [loading,setLoading] = useState(true);
   const [busy,setBusy] = useState(false);
   const [error,setError] = useState("");
   const [message,setMessage] = useState("");
   const queue=useMemo(()=>shuffledMembers(discovery),[discovery]);
-  const remaining=useMemo(()=>queue.filter(member=>
-    !decisions?.has(member.userId) && !skipped.has(member.userId)),[queue,decisions,skipped]);
-  const candidate=decisions ? remaining[0]||null : null;
+  const remaining=useMemo(()=>queue.filter(member=>!decisions?.has(member.userId)),[queue,decisions]);
+  const candidate=decisions && remaining.length ? remaining[cursor % remaining.length] : null;
 
   useEffect(()=>{
     let active=true;
-    setLoading(true);setDecisions(null);setError("");setMessage("");setSkipped(new Set());
+    setLoading(true);setDecisions(null);setError("");setMessage("");setCursor(0);
     void loadQuickmatchDecisions().then(saved=>{
       if(!active)return;
       setDecisions(saved);setLoading(false);
@@ -38,6 +38,7 @@ export default function QuickmatchView({Photo}) {
     try {
       const confirmed=await saveQuickmatchDecision(candidate.userId,decision);
       setDecisions(previous=>new Map(previous).set(confirmed.targetUserId,confirmed.decision));
+      setCursor(0);
       setMessage(decision==="like"?"Like saved.":"Dislike saved.");
     } catch {
       setError("Your choice wasn't saved. You can try again without losing your place.");
@@ -58,30 +59,26 @@ export default function QuickmatchView({Photo}) {
       {message && <p role="status" className="ogcl-save-confirmation">{message}</p>}
       {!loading && decisions && !discoveryUnavailable && (candidate ? <>
         <article className="ogcl-quickmatch-view" aria-label="Quickmatch member">
-          <div className="ogcl-member-link ogcl-quickmatch-member">
-            <Photo member={candidate} />
-            <span className="ogcl-member-copy">
-              <strong>{candidate.displayName}</strong>
-              <small>{candidate.matchPercent===null ? "Not enough shared answers"
-                : candidate.matchPercent+"% question match · "+candidate.commonQuestions+" shared"}</small>
-            </span>
+          <div className="ogcl-quickmatch-intro">A little chemistry?</div>
+          <div className="ogcl-quickmatch-member">
+            <div className="ogcl-quickmatch-portrait"><Photo member={candidate}/></div>
+            <div className="ogcl-quickmatch-identity">
+              <h2>{candidate.displayName}</h2>
+              <p>{candidate.matchPercent===null ? "Not enough shared answers for a score yet"
+                : <><strong className="ogcl-match-score">{candidate.matchPercent}%</strong> question match</>}</p>
+              {candidate.commonQuestions>0 && <small>{candidate.commonQuestions} shared question{candidate.commonQuestions===1?"":"s"}</small>}
+            </div>
           </div>
-          <div className="ogcl-quickmatch-actions">
-            <button type="button" className="ogcl-button ogcl-quickmatch-dislike"
-              disabled={busy} onClick={()=>void rate("dislike")}>Dislike</button>
-            <button type="button" className="ogcl-button ogcl-quickmatch-like"
-              disabled={busy} onClick={()=>void rate("like")}>Like</button>
-            {remaining.length>1 && <button type="button" className="ogcl-button ogcl-quickmatch-next"
-              disabled={busy} onClick={()=>setSkipped(previous=>new Set(previous).add(candidate.userId))}>
-              See another
-            </button>}
+          <div className="ogcl-quickmatch-actions" aria-label="Make your choice">
+            <HeartDecision kind="dislike" disabled={busy} onClick={()=>void rate("dislike")}/>
+            <HeartDecision kind="like" disabled={busy} onClick={()=>void rate("like")}/>
           </div>
+          {remaining.length>=5 && <button type="button" className="ogcl-quickmatch-skip"
+              disabled={busy} onClick={()=>setCursor(previous=>previous+1)}>Skip for now</button>}
         </article>
       </> : <>
         <p>No new discoverable profiles in your Quickmatch queue right now.</p>
-        {skipped.size>0 && <button type="button" className="ogcl-button" onClick={()=>setSkipped(new Set())}>
-          Revisit skipped members
-        </button>}
+
       </>)}
       <p className="ogcl-quiet">See full member profiles in <NavLink to="/matches">MATCHES</NavLink>.
         Your saved Like/Dislike choices are not visible to other members.</p>
