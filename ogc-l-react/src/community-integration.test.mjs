@@ -8,6 +8,7 @@ const provider=read("./MemberSessionProvider.jsx");
 const admin=read("./AdminDashboard.jsx"),reporter=read("./CommunityReportsAdmin.jsx");
 test("Community is a single real chatroom and does not invent posts or presence",()=>{
   assert.match(app,/path="community" element=\{<MemberGate allowOnboarding><CommunityChat/);
+  assert.match(app,/kind==="onboarding" && path==="\/community"/);
   assert.match(ui,/communityRequest\("\/community"/);
   assert.match(ui,/role="log"/);
   assert.match(ui,/maxLength=\{500\}/);
