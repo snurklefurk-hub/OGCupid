@@ -1,5 +1,6 @@
 import React,{useEffect,useMemo,useRef,useState} from "react";
-import {NavLink,useSearchParams} from "react-router-dom";
+import {NavLink,useNavigate,useSearchParams} from "react-router-dom";
+import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {legacyHref} from "./legacy-links.mjs";
 import "./editorial.css";
 
@@ -10,6 +11,8 @@ import "./editorial.css";
 // would risk silent changes to members' results.
 export default function PersonaPage(){
   const [params]=useSearchParams();
+  const navigate=useNavigate();
+  const {kind,onboarding,refresh}=useMemberSession();
   const frame=useRef(null);
   const [loading,setLoading]=useState(true);
   const [height,setHeight]=useState(1150);
@@ -58,6 +61,32 @@ export default function PersonaPage(){
       if(interval)clearInterval(interval);
     };
   },[src]);
+  useEffect(()=>{
+    function onMessage(event){
+      const source=frame.current?.contentWindow;
+      if(!source || event.source!==source)return;
+      if(event.origin!==new URL(src,window.location.href).origin)return;
+      const kind=event.data?.type;
+      if(kind==="ogc-persona-saved"){
+        void refresh().then(()=>navigate("/onboarding",{replace:true}));
+      }else if(kind==="ogc-persona-onboarding-needed"){
+        navigate("/onboarding",{replace:true});
+      }else if(kind==="ogc-persona-auth-needed"){
+        void refresh().then(()=>navigate("/signin",{replace:true}));
+      }
+    }
+    window.addEventListener("message",onMessage);
+    return()=>window.removeEventListener("message",onMessage);
+  },[navigate,refresh,src]);
+  if(kind==="onboarding"&&!onboarding?.photo){
+    return <section className="ogcl-view ogcl-editorial-page">
+      <header className="ogcl-view-head"><h1>Before the Dating Persona Test</h1></header>
+      <div className="ogcl-content-panel">
+        <p>Finish your profile and choose a main photo first. Your progress is saved.</p>
+        <p><NavLink to="/onboarding">Continue onboarding</NavLink></p>
+      </div>
+    </section>;
+  }
   return <section className="ogcl-view ogcl-editorial-page ogcl-persona-wrapper">
     <header className="ogcl-view-head">
       <h1>The Dating Persona Test</h1>
