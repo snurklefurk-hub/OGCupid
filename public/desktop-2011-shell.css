@@ -1,17 +1,17 @@
 /* OG Cupid desktop member shell — Nov 17, 2026.
    Old OkCupid screenshot is the primary visual reference; 2011 tokens are
    inherited from /okc-2011.css. Only desktop member routes use the fixed rails.
-   The central pane is the sole vertical page scroller. */
+   The entire document is the scroll container; columns stay in the normal flow. */
 :root { --ogc-desktop-left:16%; --ogc-desktop-right:16%; }
 @media (min-width:1024px) {
   html:has(body.ogc-onboarding-active),
   html:has(body.ogc-onboarding-native),
   html:has(body.ogc-member-theme.is-authenticated),
-  html:has(.profile-site) {height:100%;overflow:hidden;background:#2552a5;}
+  html:has(.profile-site) {height:auto;overflow-y:auto;background:var(--okc-blue);}
   body.ogc-member-theme.is-authenticated,
   body.ogc-onboarding-active,
   body.ogc-onboarding-native,
-  body:has(.profile-site) {height:100vh;overflow:hidden;margin:0;background:#2552a5;}
+  body:has(.profile-site) {height:auto;min-height:100vh;overflow:visible;margin:0;background:var(--okc-blue);}
   body.ogc-onboarding-active > .shell,
   body.ogc-onboarding-native > .shell,
   body.ogc-member-theme.is-authenticated .shell,
@@ -19,10 +19,10 @@
   body.ogc-member-theme.is-authenticated.is-profile-setup .shell,
   body:has(.profile-site) .profile-site {
     display:grid!important;position:relative;width:100%!important;
-    max-width:none!important;height:100vh!important;min-height:0!important;
+    max-width:none!important;height:auto!important;min-height:100vh!important;
     margin:0!important;padding:0!important;gap:0!important;
     grid-template-columns:var(--ogc-desktop-left) minmax(0,1fr) var(--ogc-desktop-right)!important;
-    grid-template-rows:minmax(0,1fr)!important;align-items:stretch!important;
+    grid-template-rows:auto!important;align-items:stretch!important;
   }
   body.ogc-member-theme.is-authenticated .topline,
   body.ogc-member-theme.is-authenticated .member-legal-footer {display:none!important;}
@@ -34,16 +34,16 @@
   .profile-site .profile-rail {
     grid-column:1!important;grid-row:1!important;
     display:flex!important;flex-direction:column!important;
-    position:relative!important;height:100vh!important;min-height:0!important;
-    margin:0!important;padding:0!important;overflow-x:hidden;overflow-y:auto;
-    background:#122d65!important;border:0!important;border-radius:0!important;
-    scrollbar-width:thin;scrollbar-color:#244a73 #122d65;
+    position:relative!important;height:auto!important;min-height:0!important;
+    margin:0!important;padding:0!important;overflow-x:clip;overflow-y:visible;
+    background:var(--okc-navy)!important;border:0!important;border-radius:0!important;
+    scrollbar-width:thin;scrollbar-color:#244a73 var(--okc-navy);
   }
   body.ogc-member-theme.is-authenticated .masthead .brand-original,
   .profile-site .profile-logo {
     height:80px!important;min-height:80px!important;padding:13px 18px!important;
     display:flex!important;align-items:center;justify-content:center;
-    background:#2552a5!important;border:0!important;border-bottom:1px solid #3f69a2!important;
+    background:var(--okc-blue)!important;border:0!important;border-bottom:1px solid #3f69a2!important;
   }
   body.ogc-member-theme.is-authenticated .masthead .brand-original img,
   .profile-site .profile-logo img {width:min(200px,85%)!important;max-height:57px;object-fit:contain;}
@@ -56,7 +56,7 @@
   .profile-site .profile-rail nav {
     display:flex!important;flex-direction:column!important;flex:none!important;
     width:100%!important;gap:0!important;margin:0!important;padding:10px 0 0!important;
-    background:#122d65!important;border:0!important;
+    background:var(--okc-navy)!important;border:0!important;
   }
   body.ogc-member-theme.is-authenticated .masthead nav.classic-rail-nav a,
   .profile-site .profile-rail nav a {
@@ -67,7 +67,7 @@
     text-transform:uppercase!important;white-space:normal!important;letter-spacing:0!important;
     color:#e7eefb!important;text-decoration:none!important;
     border:0!important;border-bottom:1px solid #0b2453!important;border-radius:0!important;
-    box-shadow:inset 0 1px #284b7c!important;background:#122d65!important;
+    box-shadow:inset 0 1px #284b7c!important;background:var(--okc-navy)!important;
   }
   body.ogc-member-theme.is-authenticated .masthead nav.classic-rail-nav a:hover,
   body.ogc-member-theme.is-authenticated .masthead nav.classic-rail-nav a[aria-current],
@@ -81,10 +81,10 @@
   body.ogc-member-theme.is-authenticated.is-welcome-flow main#main,
   body.ogc-member-theme.is-authenticated.is-profile-setup main#main,
   .profile-site .profile-main {
-    grid-column:2!important;grid-row:1!important;height:100vh!important;
-    max-height:100vh!important;min-height:0!important;min-width:0!important;
-    margin:0!important;padding:0 0 28px!important;overflow-x:hidden!important;
-    overflow-y:auto!important;overscroll-behavior-y:contain;scrollbar-width:thin;
+    grid-column:2!important;grid-row:1!important;height:auto!important;
+    max-height:none!important;min-height:0!important;min-width:0!important;
+    margin:0!important;padding:0 0 28px!important;overflow-x:clip!important;
+    overflow-y:visible!important;scrollbar-width:thin;
     background:#f6f6f6!important;border:0!important;border-radius:0!important;box-shadow:none!important;
   }
   body.ogc-onboarding-active .period-promo-rail,
@@ -92,9 +92,9 @@
   body.ogc-member-theme.is-authenticated .period-promo-rail,
   .profile-site .period-promo-rail {
     grid-column:3!important;grid-row:1!important;position:relative!important;
-    align-self:stretch!important;height:100vh!important;min-height:0!important;
-    margin:0!important;padding:8px 10px!important;overflow-x:hidden;overflow-y:auto;
-    background:#2552a5!important;scrollbar-width:thin;scrollbar-color:#41639d #2552a5;
+    align-self:stretch!important;height:auto!important;min-height:0!important;
+    margin:0!important;padding:8px 10px!important;overflow-x:clip;overflow-y:visible;
+    background:var(--okc-blue)!important;scrollbar-width:thin;scrollbar-color:#41639d var(--okc-blue);
   }
   /* Canonical onboarding remains intact; only its viewport placement changes. */
   body.ogc-onboarding-active > .shell {display:grid!important;}
@@ -168,70 +168,70 @@
 /* Public/editorial pages share the same fixed desktop viewport geometry.
    Static content and real links remain exactly where their pages define them. */
 @media(min-width:1024px) {
-  html:has(body.okc) {height:100%;overflow:hidden;background:#2552a5;}
-  body.okc {height:100vh!important;min-height:0!important;overflow:hidden!important;background:#2552a5!important;}
+  html:has(body.okc) {height:auto;overflow-y:auto;background:var(--okc-blue);}
+  body.okc {height:auto!important;min-height:100vh!important;overflow:visible!important;background:var(--okc-blue)!important;}
   body.okc .page {
     position:relative!important;display:grid!important;
     width:100%!important;max-width:none!important;margin:0!important;
-    height:100vh!important;min-height:0!important;padding:0!important;
+    height:auto!important;min-height:100vh!important;padding:0!important;
     grid-template-columns:16% minmax(0,1fr) 16%!important;
-    grid-template-rows:minmax(0,1fr)!important;
+    grid-template-rows:auto!important;
     grid-template-areas:"rail main rrail"!important;align-items:stretch!important;gap:0!important;
   }
   body.okc .page > .rail {
     grid-area:rail!important;grid-column:1!important;grid-row:1!important;
-    height:100vh!important;min-height:0!important;margin:0!important;padding:0!important;
-    overflow:auto!important;background:#122d65!important;border:0!important;
+    height:auto!important;min-height:0!important;margin:0!important;padding:0!important;
+    overflow:visible!important;background:var(--okc-navy)!important;border:0!important;
     scrollbar-width:thin;
   }
   body.okc .page > .main-column {
     grid-area:main!important;grid-column:2!important;grid-row:1!important;
-    height:100vh!important;min-height:0!important;min-width:0!important;
-    margin:0!important;padding:0!important;overflow-x:hidden!important;overflow-y:auto!important;
-    background:#f6f6f6!important;overscroll-behavior-y:contain;scrollbar-width:thin;
+    height:auto!important;min-height:0!important;min-width:0!important;
+    margin:0!important;padding:0!important;overflow-x:clip!important;overflow-y:visible!important;
+    background:#f6f6f6!important;scrollbar-width:thin;
   }
   body.okc .page > .okc-rrail {
     grid-area:rrail!important;grid-column:3!important;grid-row:1!important;
-    height:100vh!important;min-height:0!important;min-width:0!important;
-    margin:0!important;padding:8px 10px!important;overflow:auto!important;
-    background:#2552a5!important;scrollbar-width:thin;
+    height:auto!important;min-height:0!important;min-width:0!important;
+    margin:0!important;padding:8px 10px!important;overflow:visible!important;
+    background:var(--okc-blue)!important;scrollbar-width:thin;
   }
   body.okc .rail-logo {
     display:flex!important;align-items:center!important;justify-content:center!important;
     height:80px!important;min-height:80px!important;
-    margin:0!important;padding:12px 18px!important;background:#2552a5!important;
+    margin:0!important;padding:12px 18px!important;background:var(--okc-blue)!important;
     border:0!important;border-bottom:1px solid #3f69a2!important;
   }
   body.okc .rail-logo img {width:min(200px,85%)!important;max-height:57px!important;object-fit:contain!important;}
   body.okc .page .rail nav.okc-railnav {
     display:flex!important;flex-direction:column!important;gap:0!important;
-    margin:0!important;padding:10px 0 0!important;background:#122d65!important;border:0!important;
+    margin:0!important;padding:10px 0 0!important;background:var(--okc-navy)!important;border:0!important;
   }
   body.okc .page .rail nav.okc-railnav a {
     display:flex!important;align-items:center!important;justify-content:flex-start!important;
     min-height:38px!important;width:100%!important;padding:10px 17px!important;
     color:#e7eefb!important;font:bold 12px/17px Verdana,Geneva,sans-serif!important;
     text-transform:uppercase!important;border:0!important;border-bottom:1px solid #0b2453!important;
-    background:#122d65!important;box-shadow:inset 0 1px #284b7c!important;
+    background:var(--okc-navy)!important;box-shadow:inset 0 1px #284b7c!important;
     text-decoration:none!important;
   }
   body.okc .page .rail nav.okc-railnav a:hover {
     background:#1d4075!important;color:#fff!important;border-left:3px solid #63a62f!important;padding-left:14px!important;
   }
-  body.okc .page .rail .rail-signin {margin-top:13px!important;border-top:1px solid #1c3680!important;background:#122d65!important;}
+  body.okc .page .rail .rail-signin {margin-top:13px!important;border-top:1px solid #1c3680!important;background:var(--okc-navy)!important;}
   body.okc .page .main-column .panel {
     background:#f6f6f6!important;border:0!important;border-radius:0!important;box-shadow:none!important;
   }
   body.okc .page .main-column .panel-header,
   body.okc .page .main-column .mast {
-    background:linear-gradient(#f1f1f1,#d9d9d9)!important;border:0!important;border-bottom:1px solid #cacaca!important;
+    background:#fff!important;border:0!important;border-bottom:1px solid #cacaca!important;
   }
   body.okc .page .okc-rrail .okc-rbox {
     background:#112c62!important;border:1px solid #244a80!important;
     margin:0 0 8px!important;padding:12px!important;border-radius:0!important;box-shadow:none!important;
   }
   body.okc .page .main-column .okc-toplinks {
-    margin:0!important;background:#2552a5!important;height:24px!important;
+    margin:0!important;background:var(--okc-blue)!important;height:24px!important;
   }
 }
 

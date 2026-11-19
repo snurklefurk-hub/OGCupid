@@ -5,36 +5,9 @@
  * responsive capabilities are intentionally preserved.
  * Load this AFTER the preexisting page-specific sheets.
  */
+@import url("./okc-2011-tokens.css");
+
 :root {
-  --okc-blue:#2963a4;
-  --okc-blue-top:#3a77b8;
-  --okc-blue-light:#3d85ce;
-  --okc-navy:#183b62;
-  --okc-navy-deep:#0b2847;
-  --okc-navy-line:#244a73;
-  --okc-navy-shadow:#0a2847;
-  --okc-sky:#d5e1ed;
-  --okc-sky-mid:#8fb3d6;
-  --okc-pink:#f83265;
-  --okc-pink-dark:#d21d51;
-  --okc-green:#63a62f;
-  --okc-green-dark:#4c9020;
-  --okc-green-pale:#e8f2e0;
-  --okc-paper:#f6f6f6;
-  --okc-paper-dim:#e9e9e9;
-  --okc-ink:#555555;
-  --okc-ink-soft:#999999;
-  --okc-ink-strong:#303030;
-  --okc-heading:#264e79;
-  --okc-qblue:#2a5a94;
-  --okc-line:#dddddd;
-  --okc-rowline:#c2d4e6;
-  --okc-pale-blue:#e7eef5;
-  --okc-yellow:#f5e663;
-  --okc-gold:#f4b402;
-  --okc-black:#111111;
-  --okc-white:#ffffff;
-  --okc-footer:#222222;
   --sky:var(--okc-blue); --sky-glow:var(--okc-blue-top);
   --navy:var(--okc-navy); --navy-dark:var(--okc-navy-deep); --pink:var(--okc-pink);
   --link:var(--okc-blue); --link-dark:var(--okc-heading);
