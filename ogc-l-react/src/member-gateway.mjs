@@ -265,8 +265,8 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
       "/account/delete":new Set(["POST"]),
       "/email-preferences":new Set(["GET","PUT"])
     };
-    const photoPrimary=/^\\/photos\\/[0-9a-f-]{36}\\/primary$/i.test(path)&&method==="POST";
-    const photoDelete=/^\\/photos\\/[0-9a-f-]{36}$/i.test(path)&&method==="DELETE";
+    const photoPrimary=/^\/photos\/[0-9a-f-]{36}\/primary$/i.test(path)&&method==="POST";
+    const photoDelete=/^\/photos\/[0-9a-f-]{36}$/i.test(path)&&method==="DELETE";
     if(!allowed[path]?.has(method) && !photoPrimary && !photoDelete)
       throw new MemberAccessError("invalid","Unsupported account request.");
     const session=await bounded(authClient.getSession());
