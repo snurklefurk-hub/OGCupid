@@ -36,11 +36,6 @@ for(const asset of assets)
 const stagingRobots='<meta name="robots" content="noindex,nofollow,noarchive">';
 if(!html.includes(stagingRobots))throw new Error("Unexpected staging meta tag");
 html=html.replace(stagingRobots,'<meta name="robots" content="index,follow">');
-// Reuse the deployed authenticated beta feedback drawer without loading any
-// old homepage/session redirect script that would hijack React routing.
-const feedback='<script defer src="/feedback-widget.js"></script>';
-if(!html.includes(feedback)) html=html.replace("</body>","  "+feedback+"\n</body>");
-if(!html.includes(feedback)) throw new Error("Production beta feedback widget missing");
 
 if(/VITE_OGC_(AUTH|MEMBER_API)_URL|DATABASE_URL|NEON_AUTH_JWKS_URL|sk_live/i.test(html))
   throw new Error("Possible environment setting leaked into published HTML");
