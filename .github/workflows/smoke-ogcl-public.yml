@@ -1,0 +1,32 @@
+name: Verify live OG Cupid React public pages and Persona
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'public/index.html'
+      - 'public/assets/**'
+      - 'public/ogtrends/**'
+      - 'public/contact/index.html'
+      - 'public/privacy/index.html'
+      - 'public/terms/index.html'
+      - 'public/quiz/index.html'
+      - 'public/questions/index.html'
+      - 'public/account/persona.html'
+      - 'scripts/smoke-ogcl-public.mjs'
+      - '.github/workflows/smoke-ogcl-public.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  live-public-routes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify live page text, React shell, Persona, account and canonical redirects
+        env:
+          OGC_PRODUCTION_ORIGIN: https://ogcupid.onrender.com
+        run: node scripts/smoke-ogcl-public.mjs
