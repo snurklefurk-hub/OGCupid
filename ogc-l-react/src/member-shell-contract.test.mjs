@@ -20,12 +20,15 @@ test("member routes and sidebar navigation are both gated on verified membership
   assert.match(app, /ogcl-locked/);
 });
 
-test("onboarding and sign-in use existing Neon credentials; new account is delegated",()=>{
-  assert.match(app, /Continue onboarding/);
-  assert.match(app, /\/account\/#welcome-title/);
-  assert.match(app, /\/account\/\?join=1/);
+test("onboarding, registration, recovery and account actions live inside React",()=>{
+  assert.match(app, /<Route path="onboarding" element=\{<Onboarding/);
+  assert.match(app, /<Route path="join" element=\{<JoinForm/);
+  assert.match(app, /<Route path="recover" element=\{<RecoveryForm/);
+  assert.match(app, /<Route path="account" element=\{<AccountManagement/);
+  assert.match(app, /<MemberGate allowOnboarding><MatchQuestions/);
   assert.match(app, /type="password"/);
   assert.match(app, /form\.elements\.password\.value = ""/);
+  assert.doesNotMatch(app, /legacyHref\("\/account/);
 });
 
 test("sign-out clears private state before backend confirmation",()=>{
