@@ -31,11 +31,6 @@ jobs:
           else
             npm install --prefix ogc-l-react --no-audit --no-fund
           fi
-      - name: Run account, privacy, admin, member and React regression checks
-        run: |
-          npm test --prefix member-app
-          node --test api/member-admin.test.js api/member-messages.test.js api/member-quickmatch.test.js
-          npm test --prefix ogc-l-react
       - name: Build transitional account and onboarding route (not public homepage)
         run: npm run build --prefix member-app
         env:
@@ -52,6 +47,11 @@ jobs:
           VITE_OGCL_LEGACY_ORIGIN: ''
       - name: Verify production assets and publish primary React document
         run: OGCL_PRODUCTION_ROOT=true node scripts/publish-ogcl-production.mjs
+      - name: Run account, privacy, admin, member and React regression checks
+        run: |
+          npm test --prefix member-app
+          node --test api/member-admin.test.js api/member-messages.test.js api/member-quickmatch.test.js
+          npm test --prefix ogc-l-react
       - name: Ensure legacy data-sensitive pages and assets survived
         run: |
           test -s index.html
