@@ -1,4 +1,5 @@
 name: Temporary OG Cupid T+E photo transfer
+# Retry 2: function accepts explicit one-time POST invocation.
 on:
   push:
     branches:
