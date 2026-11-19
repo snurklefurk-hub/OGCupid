@@ -19,7 +19,7 @@
   body.ogc-member-theme.is-authenticated.is-profile-setup .shell,
   body:has(.profile-site) .profile-site {
     display:grid!important;position:relative;width:100%!important;
-    max-width:none!important;height:auto!important;min-height:auto!important;
+    max-width:none!important;height:auto!important;min-height:100vh!important;
     margin:0!important;padding:0!important;gap:0!important;
     grid-template-columns:var(--ogc-desktop-left) minmax(0,1fr) var(--ogc-desktop-right)!important;
     grid-template-rows:auto!important;align-items:stretch!important;
@@ -169,11 +169,11 @@
    Static content and real links remain exactly where their pages define them. */
 @media(min-width:1024px) {
   html:has(body.okc) {height:auto;overflow-y:auto;background:var(--okc-blue);}
-  body.okc {height:auto!important;min-height:auto!important;overflow:visible!important;background:var(--okc-blue)!important;}
+  body.okc {height:auto!important;min-height:100vh!important;overflow:visible!important;background:var(--okc-blue)!important;}
   body.okc .page {
     position:relative!important;display:grid!important;
     width:100%!important;max-width:none!important;margin:0!important;
-    height:auto!important;min-height:auto!important;padding:0!important;
+    height:auto!important;min-height:100vh!important;padding:0!important;
     grid-template-columns:16% minmax(0,1fr) 16%!important;
     grid-template-rows:auto!important;
     grid-template-areas:"rail main rrail"!important;align-items:stretch!important;gap:0!important;
