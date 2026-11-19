@@ -49,8 +49,8 @@ export function promotionDestination(destination,slug) {
     case "personality":return slug?"/profiles/"+slug+"?tab=personality":null;
     case "questions":return "/questions";
     case "matches":return "/matches";
-    case "persona":return "/account/persona.html";
-    case "ogtrends":return "/ogtrends/";
+    case "persona":return "/persona";
+    case "ogtrends":return "/ogtrends";
     default:return null;
   }
 }
