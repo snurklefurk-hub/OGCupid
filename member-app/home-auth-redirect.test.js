@@ -100,14 +100,14 @@ test("network failures and five-second timeout leave public homepage accessible"
 });
 
 test("React root owns session routing without legacy home redirect or spoofable local auth", () => {
-  assert.doesNotMatch(source, /localStorage|sessionStorage|document\\.cookie/);
-  assert.match(source, /session\\s*&&\\s*user\\?\\.id/);
+  assert.doesNotMatch(source, /localStorage|sessionStorage|document\.cookie/);
+  assert.match(source, /session\s*&&\s*user\?\.id/);
   const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
   const provider = readFileSync(new URL("../ogc-l-react/src/MemberSessionProvider.jsx", import.meta.url),"utf8");
-  assert.match(html, /<div id="root"><\\/div>/);
-  assert.match(html, /src="\\/assets\\/index-[^"]+\\.js"/);
-  assert.doesNotMatch(html,/home-auth-redirect\\.js/);
-  assert.match(provider,/setSession\\(blank\\)/);
-  assert.match(provider,/gateway\\.load\\(\\)/);
-  assert.match(provider,/setSession\\(\\.\\.\\.blank, kind:"guest"/);
+  assert.match(html, /<div id="root"><\/div>/);
+  assert.match(html, /src="\/assets\/index-[^"]+\.js"/);
+  assert.doesNotMatch(html,/home-auth-redirect\.js/);
+  assert.match(provider,/setSession\(blank\)/);
+  assert.match(provider,/gateway\.load\(\)/);
+  assert.match(provider,/setSession\(\{\.\.\.blank, kind:"guest"/);
 });
