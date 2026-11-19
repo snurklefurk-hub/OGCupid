@@ -1,0 +1,61 @@
+name: Verify and publish 2011 single-scroll UI candidate
+on:
+  push:
+    branches: [feature/2011-single-scroll-style-20261119]
+    paths:
+      - 'ogc-l-react/**'
+      - 'public/desktop-2011-shell.css'
+      - 'public/desktop-2011-shell.test.js'
+      - 'public/okc-2011.css'
+      - 'public/okc-2011-tokens.css'
+      - '.github/workflows/build-2011-single-scroll.yml'
+permissions:
+  contents: write
+concurrency:
+  group: ogc-2011-single-scroll
+  cancel-in-progress: false
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install React app dependencies
+        run: npm ci --prefix ogc-l-react
+      - name: Verify member logic and period-style regression checks
+        run: |
+          npm test --prefix ogc-l-react
+          node --test public/desktop-2011-shell.test.js
+      - name: Compile React public site using the shared palette
+        env:
+          OGCL_PRODUCTION_ROOT: 'true'
+          VITE_OGC_AUTH_URL: https://ep-hidden-breeze-bbdn5nsb.neonauth.c-15.us-east-1.aws.neon.tech/neondb/auth
+          VITE_OGC_MEMBER_API_URL: https://br-plain-unit-bbcbxpqq-members.compute.c-15.us-east-1.aws.neon.tech/profile
+          VITE_OGC_REGISTRATION_ENABLED: 'true'
+        run: |
+          npm run build --prefix ogc-l-react
+          OGCL_PRODUCTION_ROOT=true node scripts/publish-ogcl-production.mjs
+          test -s index.html
+          test -s public/index.html
+          test -s public/okc-2011-tokens.css
+          test -s public/account/index.html
+          test -s public/terms/index.html
+          grep -q '/assets/' index.html
+          ! grep -q 'noindex,nofollow' index.html
+      - name: Commit compiled CSS assets only to candidate branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A -f index.html public/index.html public/assets
+          if ! git diff --cached --quiet; then
+            git commit -m 'build: publish single-scroll React styles'
+            for attempt in 1 2 3; do
+              git pull --rebase origin feature/2011-single-scroll-style-20261119
+              if git push origin HEAD:feature/2011-single-scroll-style-20261119; then exit 0; fi
+            done
+            exit 1
+          fi
