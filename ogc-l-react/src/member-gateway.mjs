@@ -305,7 +305,43 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
     }finally{clearTimeout(timer);}
   }
 
+  // One shared room for authenticated members, including unfinished onboarding.
+  // Each request fetches a live Neon Auth bearer token, never a stored user ID.
+  async function communityRequest(path,method="GET",payload=null) {
+    const route=/^\/community(?:\?after=(?:0|[1-9][0-9]{0,15})|\/[1-9][0-9]{0,15}\/report|\/reports(?:\/[1-9][0-9]{0,15}\/action)?)?$/;
+    if(!route.test(path)||!["GET","POST"].includes(method)||
+       method==="GET" && (path.includes("/report")||path.includes("/action"))||
+       method==="POST" && (path.includes("?after=")||path==="/community/reports")||
+       (method==="POST" && (!payload||typeof payload!=="object"||Array.isArray(payload)||JSON.stringify(payload).length>1000)))
+      throw new MemberAccessError("invalid","Invalid community request.");
+    const identity=await bounded(authClient.getSession());
+    if(identity?.error)throw new MemberAccessError("unauthorized","Session unavailable.");
+    checkedMember(identity?.data?.user);
+    const jwt=await getJwt(identity?.data?.session);
+    const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),MAX_WAIT_MS);
+    try {
+      const response=await fetcher(endpoints.memberApiBaseUrl+path,{
+        method,credentials:"omit",cache:"no-store",
+        headers:{Authorization:"Bearer "+jwt,Accept:"application/json",
+          ...(method==="POST"?{"Content-Type":"application/json"}:{})},
+        ...(method==="POST"?{body:JSON.stringify(payload)}:{}),signal:controller.signal
+      });
+      if(response.status===403)throw new MemberAccessError("forbidden","Community access unavailable.");
+      if(response.status===429)throw new MemberAccessError("rate_limited","Slow down before posting again.");
+      if(response.status===400||response.status===409||response.status===413)
+        throw new MemberAccessError("invalid","Message or report was not accepted.");
+      requireResponse(response);
+      const data=await bounded(response.json());
+      if(!data||typeof data!=="object")throw new MemberAccessError("unavailable","Invalid chat response.");
+      return data;
+    }catch(e){
+      if(e instanceof MemberAccessError)throw e;
+      throw new MemberAccessError("unavailable","Chatroom is unavailable. Try again.");
+    }finally{clearTimeout(timer);}
+  }
+
   return Object.freeze({
+    communityRequest,
     accountRequest,
     async signUp(name,email,password,callbackURL){
       if(typeof name!=="string"||name.trim().length<2||name.trim().length>60||

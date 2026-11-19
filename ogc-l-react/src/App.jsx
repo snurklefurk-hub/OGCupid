@@ -11,6 +11,7 @@ import ProfileSettings from "./ProfileSettings.jsx";
 import PublicMemberProfile from "./PublicMemberProfile.jsx";
 import QuickmatchView from "./QuickmatchView.jsx";
 import MessagesView from "./MessagesView.jsx";
+import CommunityChat from "./CommunityChat.jsx";
 import AdminDashboard from "./AdminDashboard.jsx";
 import MatchQuestions from "./MatchQuestions.jsx";
 import Onboarding from "./Onboarding.jsx";
@@ -66,7 +67,7 @@ function LeftRail() {
       </NavLink>
       <nav className="ogcl-primary" aria-label="OG Cupid main">
         {primaryNavigation.map(({path,label,icon}) =>
-          isMember ? <NavLink key={path} to={path}
+          (isMember || (kind==="onboarding" && path==="/community")) ? <NavLink key={path} to={path}
             className={({isActive})=>isActive?"ogcl-nav-link active":"ogcl-nav-link"}>
             <span className="ogcl-nav-glyph" aria-hidden="true">{icon}</span><span>{label}</span>
           </NavLink> : <span key={path} className="ogcl-nav-link ogcl-locked" aria-disabled="true">
@@ -293,8 +294,6 @@ function MemberDirectory() {
 const views = {
   visitors: ["Visitors", "Who's been stopping by.",
     "Visitor tracking isn't live yet. No activity is being recorded or invented."],
-  community: ["Community", "More than a series of private conversations.",
-    "The shared community message board isn't open yet. No posts are being invented."]
 };
 
 export default function App() {
@@ -324,6 +323,7 @@ export default function App() {
         <Route path="questions" element={<MemberGate allowOnboarding><MatchQuestions /></MemberGate>} />
         <Route path="quickmatch" element={<MemberGate><QuickmatchView Photo={MemberPhoto} /></MemberGate>} />
         <Route path="messages" element={<MemberGate><MessagesView /></MemberGate>} />
+        <Route path="community" element={<MemberGate allowOnboarding><CommunityChat /></MemberGate>} />
         <Route path="admin" element={<AdminGate><AdminDashboard /></AdminGate>} />
         <Route path="messages/:peerId" element={<MemberGate><MessagesView /></MemberGate>} />
         {Object.entries(views).map(([path, [title, intro, footnote]]) => (

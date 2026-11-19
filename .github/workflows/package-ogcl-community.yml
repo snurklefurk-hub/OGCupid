@@ -1,0 +1,52 @@
+name: Package OGC Community member Function
+on:
+  push:
+    branches: [feature/community-chatroom-20261119]
+    paths:
+      - 'api/member-community.js'
+      - 'api/member-community.test.js'
+      - 'api/member-admin.test.js'
+      - 'api/member-profile.ts'
+      - '.github/workflows/package-ogcl-community.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - name: Install locked backend dependencies
+        run: |
+          npm ci
+          npm install --no-save esbuild@0.25.12
+      - name: Test community, moderation and existing member API
+        run: |
+          node --test api/member-community.test.js api/member-admin.test.js api/member-messages.test.js api/member-quickmatch.test.js api/onboarding.test.js
+      - name: Bundle member Function without its runtime secrets
+        run: |
+          npx esbuild api/member-profile.ts --bundle --platform=node --target=node24 --format=esm --banner:js="import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);" --outfile="$RUNNER_TEMP/index.mjs"
+          node --check "$RUNNER_TEMP/index.mjs"
+          (cd "$RUNNER_TEMP" && zip -9 -q members.zip index.mjs)
+          mkdir -p dev
+          base64 -w0 "$RUNNER_TEMP/members.zip" > dev/ogcl-community-members-function.b64
+      - name: Commit validated bundle to feature branch only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f dev/ogcl-community-members-function.b64
+          if ! git diff --cached --quiet; then
+            git commit -m "build: package reviewed OGC community member Function"
+            for retry in 1 2 3; do
+              git pull --rebase origin feature/community-chatroom-20261119
+              if git push origin HEAD:feature/community-chatroom-20261119; then exit 0; fi
+            done
+            exit 1
+          fi

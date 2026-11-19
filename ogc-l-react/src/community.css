@@ -1,0 +1,58 @@
+/* Old-school chatroom, matching the site's restrained 2011 OkCupid-era UI. */
+.ogcl-community{min-width:0}
+.ogcl-community-panel{margin:14px 16px 24px;border:1px solid #aebfd0;background:#fff;
+  box-shadow:0 1px 2px #1d426422;display:flex;flex-direction:column;min-height:440px}
+.ogcl-community-topline{background:#183b62;color:#fff;border-bottom:1px solid #0b2847;
+  padding:9px 12px;display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;
+  font:12px/1.5 Verdana,sans-serif}
+.ogcl-community-topline strong{font-size:13px}
+.ogcl-community-topline span{color:#d5e1ed;flex:1}
+.ogcl-community-topline button{border:1px solid #8fb3d6;background:#244a73;
+  color:#fff;font:11px Verdana,sans-serif;padding:4px 9px;cursor:pointer}
+.ogcl-community-log{height:clamp(340px,58vh,680px);min-height:260px;overflow-y:auto;
+  overscroll-behavior:contain;padding:12px 15px;line-height:1.7;scrollbar-gutter:stable;
+  font:12px/1.7 Verdana,"Bitstream Vera Sans",sans-serif;color:#303030}
+.ogcl-community-system{margin:0 0 10px;color:#777;font-style:italic}
+.ogcl-community-line{margin:0;padding:3px 0;overflow-wrap:anywhere;white-space:pre-wrap}
+.ogcl-community-line:nth-of-type(even){background:#f8fafc}
+.ogcl-community-line time{color:#999;margin-right:5px;white-space:nowrap;font-size:11px}
+.ogcl-community-name{font-weight:700;color:#2963a4!important;text-decoration:none}
+.ogcl-community-line a.ogcl-community-name:hover{text-decoration:underline}
+.ogcl-community-colon{color:#555;font-weight:bold}
+.ogcl-community-text{white-space:pre-wrap;word-break:break-word}
+.ogcl-community-report{background:transparent;border:0;color:#999;text-decoration:underline;
+  cursor:pointer;margin-left:10px;font:10px Verdana,sans-serif}
+.ogcl-community-report:hover{color:#b52b42}
+.ogcl-community-report-form{display:flex;flex-wrap:wrap;gap:7px;align-items:center;
+  margin:6px 0 8px 50px;padding:8px;border:1px solid #d5e1ed;background:#e7eef5}
+.ogcl-community-report-form select{margin-left:5px;max-width:210px}
+.ogcl-community-report-form button{background:#fff;color:#2963a4;border:1px solid #c2d4e6;
+  padding:5px 8px;cursor:pointer;font:11px Verdana,sans-serif}
+.ogcl-community-compose{display:flex;align-items:center;gap:9px;background:#e9e9e9;
+  border-top:1px solid #c2d4e6;padding:11px 13px}
+.ogcl-community-compose label{color:#183b62;font:bold 12px Verdana,sans-serif}
+.ogcl-community-compose input{min-width:0;flex:1;padding:9px 10px;min-height:38px;
+  background:#fff;border:1px solid #8fb3d6;border-radius:2px;
+  font:13px/1.4 Verdana,sans-serif;color:#303030}
+.ogcl-community-compose input:focus{outline:2px solid #8fb3d6;outline-offset:1px}
+.ogcl-community-compose button{min-width:72px;min-height:38px;padding:8px 13px;
+  background:linear-gradient(#3d85ce,#2963a4);color:#fff;border:1px solid #244a73;
+  border-radius:3px;font:bold 12px Verdana,sans-serif;cursor:pointer}
+.ogcl-community-compose button:disabled{opacity:.55;cursor:not-allowed}
+.ogcl-community-footnote{padding:6px 13px 10px;margin:0;font:10px/1.5 Verdana,sans-serif;
+  color:#777;background:#f6f6f6}
+.ogcl-community-error,.ogcl-community-status{margin:0;padding:7px 13px;
+  font:12px/1.6 Verdana,sans-serif}
+.ogcl-community-error{color:#8d202e;background:#fff1f0;border-top:1px solid #ecc3c4}
+.ogcl-community-status{color:#3d7927;background:#edf7e7}
+@media(max-width:600px){
+  .ogcl-community-panel{margin:8px 6px 18px}
+  .ogcl-community-log{height:58vh;min-height:280px;padding:8px}
+  .ogcl-community-topline{padding:7px}
+  .ogcl-community-topline span{flex-basis:100%;order:3}
+  .ogcl-community-compose{gap:6px;padding:8px}
+  .ogcl-community-compose label{position:absolute;left:-9999px}
+  .ogcl-community-compose button{min-width:58px;padding:8px}
+  .ogcl-community-report{margin-left:4px}
+  .ogcl-community-report-form{margin-left:0}
+}
