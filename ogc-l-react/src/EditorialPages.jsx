@@ -45,7 +45,7 @@ export function inSiteRoute(url){
   return null;
 }
 
-export function EmbeddedEditorial({pageKey}){
+export function EmbeddedEditorial({pageKey,onboarding=false}){
   const page=EDITORIAL_PAGES[pageKey];
   const frame=useRef(null),observer=useRef(null);
   const navigate=useNavigate();
@@ -124,7 +124,7 @@ export function EmbeddedEditorial({pageKey}){
     {error&&<p className="ogcl-error" role="alert">{error} <a href={page.path}>Open full page</a></p>}
     {!ready&&!error&&<p role="status" className="ogcl-editorial-status">Loading {page.title}…</p>}
     <iframe ref={frame} title={page.title} className="ogcl-editorial-frame"
-      src={page.path+(page.path.includes("?")?"&":"?")+"ogcl_embed=1"}
+      src={page.path+(page.path.includes("?")?"&":"?")+"ogcl_embed=1"+(onboarding?"&onboarding=1":"")}
       loading="eager" onLoad={mounted} style={{height:height+"px"}}/>
   </section>;
 }
@@ -143,5 +143,5 @@ export function PersonaRoute(){
       <NavLink to="/onboarding">Continue onboarding</NavLink></div>
   </section>;
   if(kind!=="member"&&kind!=="onboarding")return <section className="ogcl-view"><p>Member status couldn't be confirmed. <NavLink to="/signin">Sign in again</NavLink>.</p></section>;
-  return <EmbeddedEditorial pageKey="persona"/>;
+  return <EmbeddedEditorial pageKey="persona" onboarding={kind==="onboarding"}/>;
 }
