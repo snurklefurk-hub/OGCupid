@@ -39,7 +39,7 @@ const legacy=[
  ["/privacy/","/privacy","Privacy"],
  ["/terms/","/terms","Terms"],
  ["/quiz/","/persona","Dating Persona"],
- ["/questions/","/questions","Dating Persona"]
+ ["/questions/","/questions","Match questions"]
 ];
 for(const [path,hash,content]of legacy){
   const {body}=await fetchPage(path);
