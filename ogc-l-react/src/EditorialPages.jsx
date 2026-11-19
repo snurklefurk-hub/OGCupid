@@ -81,7 +81,20 @@ export function EmbeddedEditorial({pageKey,onboarding=false}){
       if(!anchor||anchor.hasAttribute("download")||(anchor.target&&anchor.target!=="_self"))return;
       let target;
       try{target=new URL(anchor.href,el.contentWindow.location.href);}catch{return;}
-      if(target.pathname===el.contentWindow.location.pathname && target.hash&&target.hash!=="#")return;
+      if(target.pathname===el.contentWindow.location.pathname && target.hash&&target.hash!=="#"){
+        // Legal TOCs and research footnotes must scroll the ONE React page,
+        // not an invisible scrollport inside a full-height iframe.
+        let destination=null;
+        try{destination=doc.getElementById(decodeURIComponent(target.hash.slice(1)));}catch{}
+        if(destination){
+          event.preventDefault();
+          const parent=el.closest(".ogcl-center");
+          const top=parent.scrollTop+el.getBoundingClientRect().top-
+            parent.getBoundingClientRect().top+destination.getBoundingClientRect().top-12;
+          parent.scrollTo({top:Math.max(0,top),behavior:"smooth"});
+        }
+        return;
+      }
       const route=inSiteRoute(target);
       if(route){event.preventDefault();navigate(route);}
     };
