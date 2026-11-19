@@ -88,10 +88,11 @@ export function EmbeddedEditorial({pageKey,onboarding=false}){
         try{destination=doc.getElementById(decodeURIComponent(target.hash.slice(1)));}catch{}
         if(destination){
           event.preventDefault();
-          const parent=el.closest(".ogcl-center");
-          const top=parent.scrollTop+el.getBoundingClientRect().top-
-            parent.getBoundingClientRect().top+destination.getBoundingClientRect().top-12;
-          parent.scrollTo({top:Math.max(0,top),behavior:"smooth"});
+          // Editorial pages still render in same-origin iframes during the
+          // React migration. The viewport, not the center column, now scrolls.
+          const top=window.scrollY+el.getBoundingClientRect().top+
+            destination.getBoundingClientRect().top-12;
+          window.scrollTo({top:Math.max(0,top),behavior:"smooth"});
         }
         return;
       }
