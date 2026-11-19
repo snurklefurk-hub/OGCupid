@@ -41,13 +41,14 @@ test("Vite has an explicit isolated Render root build path and copies only the l
   assert.match(vite,/copyFileSync\(source, destination\)/);
 });
 
-test("legacy account, profile and editorial links do not accidentally point at empty staging paths",()=>{
+test("native account and member navigation does not escape to the old member app",()=>{
   assert.match(app,/import \{legacyHref\}/);
   assert.ok(app.includes('const profileHref = slug => "#/profiles/"'));
-  for(const path of ["/account/","/account/#welcome-title",
-    "/account/?join=1"]){
-    assert.ok(app.includes('legacyHref("'+path+'")'),path);
+  for(const path of ['<Route path="join"','<Route path="onboarding"','<Route path="recover"',
+    '<Route path="photos"','<Route path="account"']){
+    assert.ok(app.includes(path),path);
   }
+  assert.doesNotMatch(app,/legacyHref\("\/account/);
   assert.match(sidebars,/legacyHref\(destination\)/);
   assert.match(promotions,/case "ogtrends":return/);
   assert.match(promotions,/case "persona":return/);
