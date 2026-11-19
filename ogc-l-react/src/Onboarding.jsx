@@ -278,7 +278,7 @@ export default function Onboarding(){
         <NavLink to="/account">Account settings and deletion</NavLink>
         <NavLink to="/verify">Verify email</NavLink>
         <button type="button" onClick={()=>void signOut()}>Sign out</button>
-        <a href={legacyHref("/contact/")}>Contact</a>
+        <NavLink to="/contact">Contact</NavLink>
       </nav>
       </>}
     </div>
