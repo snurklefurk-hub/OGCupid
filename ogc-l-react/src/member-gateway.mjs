@@ -256,6 +256,35 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
   }
 
   return Object.freeze({
+    async adminRequest(path,method="GET",payload=null){
+      if(!/^\/admin(?:\/(?:members|reports)(?:\/[0-9a-f-]{36}(?:\/(?:action|reinstate))?)?)?$/.test(path) ||
+         !["GET","POST"].includes(method))
+        throw new MemberAccessError("invalid","Unsupported admin request.");
+      const session=await bounded(authClient.getSession());
+      if(session?.error)throw new MemberAccessError("unauthorized","Session unavailable.");
+      checkedMember(session?.data?.user);
+      const jwt=await getJwt(session?.data?.session);
+      const controller=new AbortController();
+      const timer=setTimeout(()=>controller.abort(),MAX_WAIT_MS);
+      try{
+        const response=await fetcher(endpoints.memberApiBaseUrl+path,{
+          method,credentials:"omit",cache:"no-store",
+          headers:{Authorization:"Bearer "+jwt,Accept:"application/json",
+            ...(payload?{"Content-Type":"application/json"}:{})},
+          ...(payload?{body:JSON.stringify(payload)}:{}),signal:controller.signal
+        });
+        if(response.status===403)throw new MemberAccessError("forbidden","Administrator access required.");
+        if(response.status===409||response.status===400)
+          throw new MemberAccessError("invalid","That moderation action is no longer available.");
+        requireResponse(response);
+        const data=await bounded(response.json());
+        if(!data||!("data" in data))throw new MemberAccessError("unavailable","Invalid admin response.");
+        return data.data;
+      }catch(err){
+        if(err instanceof MemberAccessError)throw err;
+        throw new MemberAccessError("unavailable","Admin request failed.");
+      }finally{clearTimeout(timer);}
+    },
     async load() {
       let sessionResult;
       try { sessionResult = await bounded(authClient.getSession()); }
