@@ -13,6 +13,10 @@ const memberApiUrl = local
   : (import.meta.env.VITE_OGC_MEMBER_API_URL || "");
 
 function returnToAccount() {
+  if(new URLSearchParams(window.location.search).get("embedded")==="1"&&window.parent!==window){
+    window.parent.postMessage({type:"ogc-persona-auth-needed"},window.location.origin);
+    return;
+  }
   const url = new URL("/account/", window.location.origin);
   url.searchParams.set("join", "persona");
   window.location.replace(url.toString());
