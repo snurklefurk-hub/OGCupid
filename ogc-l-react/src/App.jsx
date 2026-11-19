@@ -67,7 +67,7 @@ function LeftRail() {
       </NavLink>
       <nav className="ogcl-primary" aria-label="OG Cupid main">
         {primaryNavigation.map(({path,label,icon}) =>
-          isMember ? <NavLink key={path} to={path}
+          (isMember || (kind==="onboarding" && path==="/community")) ? <NavLink key={path} to={path}
             className={({isActive})=>isActive?"ogcl-nav-link active":"ogcl-nav-link"}>
             <span className="ogcl-nav-glyph" aria-hidden="true">{icon}</span><span>{label}</span>
           </NavLink> : <span key={path} className="ogcl-nav-link ogcl-locked" aria-disabled="true">
