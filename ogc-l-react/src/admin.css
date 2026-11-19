@@ -44,3 +44,37 @@
 .ogcl-admin-table td small{display:block;color:#657484;margin-top:4px}
 @media(max-width:1050px){.ogcl-admin-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.ogcl-admin-grid{grid-template-columns:1fr}.ogcl-admin-list{max-height:240px}}
 @media(max-width:600px){.ogcl-admin .ogcl-content-panel{padding:14px 10px}.ogcl-admin-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.ogcl-admin-stat strong{font-size:24px}.ogcl-admin-toolbar nav button{padding:8px 9px}.ogcl-admin-search input{min-width:0;width:100%}}
+
+/* Administrator member editor — explicit writes, never inline peer edits. */
+.ogcl-admin-member-editor{min-width:0}
+.ogcl-admin-edit-reason{display:flex;flex-direction:column;gap:7px;font-weight:700;font-size:12px;margin:14px 0;color:#244866}
+.ogcl-admin-edit-reason textarea{width:100%;min-height:65px}
+.ogcl-admin-editor-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0 20px}
+.ogcl-admin-editor-field{border:1px solid #cdd9e4;background:#f8fafc;padding:12px;display:flex;flex-direction:column;gap:10px}
+.ogcl-admin-editor-field label,.ogcl-admin-question-picker label,.ogcl-admin-question-form>label{display:flex;flex-direction:column;gap:7px;color:#244866;font-size:12px;font-weight:700}
+.ogcl-admin-editor-field textarea,.ogcl-admin-editor-field input,.ogcl-admin-editor-field select{width:100%}
+.ogcl-admin-editor-field button{align-self:flex-start}
+.ogcl-admin-age-range{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;padding:16px 0}
+.ogcl-admin-age-range h3{flex-basis:100%}
+.ogcl-admin-age-range label{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:700}
+.ogcl-admin-age-range input{width:100px}
+.ogcl-admin-photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin:16px 0}
+.ogcl-admin-photo-card{border:1px solid #ccd7df;padding:12px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.ogcl-admin-photo-card img{width:100%;height:200px;object-fit:cover;background:#e5edf5}
+.ogcl-admin-photo-card label,.ogcl-admin-photo-upload{display:flex;flex-direction:column;gap:8px;font-size:12px}
+.ogcl-admin-photo-card input{max-width:100%}
+.ogcl-admin-photo-card>div{display:flex;flex-wrap:wrap;gap:7px}
+.ogcl-admin-photo-card button{border:1px solid #94afc3;padding:7px;cursor:pointer}
+.ogcl-admin-question-picker{margin:14px 0}
+.ogcl-admin-question-picker select{width:100%}
+.ogcl-admin-question-form{border:1px solid #bfd0df;background:#fff;padding:16px;display:flex;flex-direction:column;gap:15px}
+.ogcl-admin-question-form fieldset{border:1px solid #d9e3ea;display:flex;flex-direction:column;gap:9px;padding:12px}
+.ogcl-admin-question-form fieldset label{display:flex;gap:8px;align-items:baseline;font-weight:normal}
+.ogcl-admin-question-form>label textarea{width:100%}
+.ogcl-admin-action-buttons{display:flex;flex-wrap:wrap;gap:8px}
+.ogcl-admin-answers-list{max-height:420px;overflow:auto;border:1px solid #cedbe5}
+.ogcl-admin-answers-list button{display:block;width:100%;padding:11px;text-align:left;border:0;border-bottom:1px solid #d5e0e8;background:white;color:#183b62;cursor:pointer}
+.ogcl-admin-answers-list button:hover{background:#edf3f9}
+.ogcl-admin-answers-list button strong,.ogcl-admin-answers-list button small{display:block}
+.ogcl-admin-answers-list button small{color:#657484;margin-top:4px}
+@media(max-width:760px){.ogcl-admin-editor-fields{grid-template-columns:1fr}}

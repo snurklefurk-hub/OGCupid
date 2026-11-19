@@ -1,3 +1,4 @@
+import {isAdminEditorPath,adminEditorMethodAllowed,handleAdminEditor} from "./admin-member-editor.js";
 // Administrator-only member API. JWT identity and liveness are verified
 // upstream; SQL SECURITY DEFINER functions independently check the live
 // Neon Auth admin role for every read and write.
@@ -21,14 +22,16 @@ async function bodyFor(request,keys){
   return {body:parsed};
 }
 
-export function isAdminPath(pathname){return adminRoute.test(pathname);}
+export function isAdminPath(pathname){return adminRoute.test(pathname)||isAdminEditorPath(pathname);}
 export function adminMethodAllowed(pathname,method){
+  if(isAdminEditorPath(pathname))return adminEditorMethodAllowed(pathname,method);
   const m=pathname.match(adminRoute);
   if(!m)return false;
   return m[3] ? method==="POST" && (m[3]==="action"||m[3]==="reinstate")
     : method==="GET";
 }
 export async function handleAdmin(request,userId,url,withMember,json){
+  if(isAdminEditorPath(url.pathname))return handleAdminEditor(request,userId,url,withMember,json);
   const m=url.pathname.match(adminRoute);
   if(!m)return json(request,{error:"Not found"},404);
   if(!adminMethodAllowed(url.pathname,request.method))

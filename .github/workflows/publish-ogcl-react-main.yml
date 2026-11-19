@@ -1,0 +1,61 @@
+name: Publish OG Cupid React production updates
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'ogc-l-react/**'
+      - '.github/workflows/publish-ogcl-react-main.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: publish-ogcl-react-main
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: ogc-l-react/package-lock.json
+      - name: Install locked React dependencies
+        run: npm ci --prefix ogc-l-react
+      - name: Test React member and admin contracts
+        run: npm test --prefix ogc-l-react
+      - name: Build live React frontend without removing existing pages
+        run: npm run build --prefix ogc-l-react
+        env:
+          OGCL_PRODUCTION_ROOT: 'true'
+          VITE_OGC_AUTH_URL: https://ep-hidden-breeze-bbdn5nsb.neonauth.c-15.us-east-1.aws.neon.tech/neondb/auth
+          VITE_OGC_MEMBER_API_URL: https://br-plain-unit-bbcbxpqq-members.compute.c-15.us-east-1.aws.neon.tech/profile
+          VITE_OGC_REGISTRATION_ENABLED: 'true'
+      - name: Verify production root and existing protected/static routes
+        run: |
+          OGCL_PRODUCTION_ROOT=true node scripts/publish-ogcl-production.mjs
+          test -s public/account/index.html
+          test -s public/profiles/index.html
+          test -s public/questions/question-bank.js
+          test -s public/quiz/index.html
+          test -s public/ogtrends/index.html
+          grep -q '/assets/' index.html
+          ! grep -q 'noindex,nofollow' index.html
+      - name: Publish verified compiled files to live main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -f index.html public/index.html public/assets
+          if ! git diff --cached --quiet; then
+            git commit -m "build: publish updated OG Cupid React member and admin UI"
+            for attempt in 1 2 3 4 5 6; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+              sleep 2
+            done
+            echo "Failed to publish after six rebased attempts" >&2
+            exit 1
+          fi

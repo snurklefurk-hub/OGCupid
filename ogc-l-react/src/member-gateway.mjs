@@ -403,27 +403,41 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
     },
     async adminRequest(path,method="GET",payload=null){
       const pathname=path.split("?")[0];
-      if(!/^\/admin(?:\/(?:members|reports)(?:\/[0-9a-f-]{36}(?:\/(?:action|reinstate))?)?)?$/.test(pathname) ||
+      const memberId="[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
+      const editing=new RegExp("^/admin/members/"+memberId+"/(?:content|field|age-range|answers(?:/vault-[0-9]{1,25})?|photos(?:/"+memberId+"(?:/(?:bytes|primary|replace))?)?)$","i");
+      if(!(/^\/admin(?:\/(?:members|reports)(?:\/[0-9a-f-]{36}(?:\/(?:action|reinstate))?)?)?$/.test(pathname)||
+          editing.test(pathname)) ||
          (path.includes("?") && (!path.startsWith("/admin/members?q=") || method!=="GET")) ||
-         !["GET","POST"].includes(method))
+         !["GET","POST","PUT","DELETE"].includes(method))
         throw new MemberAccessError("invalid","Unsupported admin request.");
       const session=await bounded(authClient.getSession());
       if(session?.error)throw new MemberAccessError("unauthorized","Session unavailable.");
       checkedMember(session?.data?.user);
       const jwt=await getJwt(session?.data?.session);
+      const imageResponse=/\/photos\/[0-9a-f-]{36}\/bytes$/i.test(pathname);
+      const form=typeof FormData!=="undefined" && payload instanceof FormData;
+      const raw=payload===null?null:form?payload:JSON.stringify(payload);
+      if(!form && raw && raw.length>12000)
+        throw new MemberAccessError("invalid","Admin update exceeds permitted size.");
       const controller=new AbortController();
       const timer=setTimeout(()=>controller.abort(),MAX_WAIT_MS);
       try{
         const response=await fetcher(endpoints.memberApiBaseUrl+path,{
           method,credentials:"omit",cache:"no-store",
-          headers:{Authorization:"Bearer "+jwt,Accept:"application/json",
-            ...(payload?{"Content-Type":"application/json"}:{})},
-          ...(payload?{body:JSON.stringify(payload)}:{}),signal:controller.signal
+          headers:{Authorization:"Bearer "+jwt,Accept:imageResponse?"image/jpeg":"application/json",
+            ...(raw&&!form?{"Content-Type":"application/json"}:{})},
+          ...(raw?{body:raw}:{}),signal:controller.signal
         });
         if(response.status===403)throw new MemberAccessError("forbidden","Administrator access required.");
-        if(response.status===409||response.status===400)
-          throw new MemberAccessError("invalid","That moderation action is no longer available.");
+        if(response.status===409||response.status===400||response.status===413||response.status===415)
+          throw new MemberAccessError("invalid","Invalid or stale admin edit. Reload and try again.");
         requireResponse(response);
+        if(imageResponse){
+          const blob=await bounded(response.blob());
+          if(blob.type!=="image/jpeg"||blob.size>2_500_000)
+            throw new MemberAccessError("unavailable","Invalid photo response.");
+          return blob;
+        }
         const data=await bounded(response.json());
         if(!data||!("data" in data))throw new MemberAccessError("unavailable","Invalid admin response.");
         return data.data;

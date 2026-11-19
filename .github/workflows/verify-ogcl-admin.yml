@@ -1,12 +1,15 @@
 name: Verify OGC-L administrator dashboard
 on:
   pull_request:
-    branches: [OGC-lovable]
+    branches: [OGC-lovable, main]
     paths:
       - 'api/member-admin.js'
+      - 'api/admin-member-editor.js'
+      - 'api/admin-member-editor.test.js'
       - 'api/member-admin.test.js'
       - 'api/member-profile.ts'
       - 'db/migrations/027_admin_moderation.sql'
+      - 'db/migrations/030_admin_member_content_editor.sql'
       - 'ogc-l-react/**'
       - 'scripts/smoke-ogcl-admin.mjs'
       - '.github/workflows/verify-ogcl-admin.yml'
@@ -23,7 +26,8 @@ jobs:
       - name: Validate admin handler and role-bound contract
         run: |
           node --check api/member-admin.js
-          node --test api/member-admin.test.js
+          node --check api/admin-member-editor.js
+          node --test api/member-admin.test.js api/admin-member-editor.test.js
       - name: Bundle real member Function with admin routes
         run: |
           npm ci

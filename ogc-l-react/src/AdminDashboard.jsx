@@ -2,6 +2,7 @@ import React,{useCallback,useEffect,useMemo,useState} from "react";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import "./admin.css";
 import CommunityReportsAdmin from "./CommunityReportsAdmin.jsx";
+import AdminMemberEditor from "./AdminMemberEditor.jsx";
 
 const choices=[
   ["start_review","Mark under review"],
@@ -20,6 +21,7 @@ const shortId=id=>typeof id==="string"?id.slice(0,8):"—";
 export default function AdminDashboard(){
   const {adminRequest}=useMemberSession();
   const [tab,setTab]=useState("overview");
+  const [editingMember,setEditingMember]=useState(null);
   const [summary,setSummary]=useState(null);
   const [members,setMembers]=useState([]);
   const [reports,setReports]=useState([]);
@@ -211,7 +213,10 @@ export default function AdminDashboard(){
 
       {tab==="community"&&<CommunityReportsAdmin/>}
 
-      {tab==="members"&&<section className="ogcl-admin-section">
+      {tab==="members"&&(editingMember?
+        <AdminMemberEditor key={editingMember.id} member={editingMember}
+          onClose={()=>setEditingMember(null)}/>:
+        <section className="ogcl-admin-section">
         <h2>Member accounts</h2>
         <form className="ogcl-admin-search" onSubmit={e=>{e.preventDefault();setQuery(search.trim());void reload(search.trim());}}>
           <label>Search name or email<input type="search" maxLength={80} value={search}
@@ -229,13 +234,15 @@ export default function AdminDashboard(){
             <td>{stamp(m.createdAt)}</td>
             <td>{m.banned?(m.banExpires&&new Date(m.banExpires)<=new Date()?"Suspension expired":
               m.banExpires?"Suspended until "+stamp(m.banExpires):"Permanently banned"):"Active"}</td>
-            <td>{m.banned&&!m.banExpires&&m.role!=="admin"?
+            <td><button type="button" className="ogcl-button ogcl-secondary" disabled={busy}
+                onClick={()=>setEditingMember(m)}>Edit profile, photos & answers</button>
+              {m.banned&&!m.banExpires&&m.role!=="admin"?
               <button type="button" className="ogcl-button ogcl-secondary" disabled={busy}
                 onClick={()=>void reinstate(m)}>Reinstate</button>:"—"}</td>
           </tr>)}</tbody>
         </table></div>
         <p className="ogcl-admin-muted">Limited to the 100 most recent matching accounts. Member passwords are never shown. Permanent bans require an explicit reinstatement reason.</p>
-      </section>}
+      </section>)}
 
       {tab==="audit"&&<section className="ogcl-admin-section"><h2>Recent moderation actions</h2>
         {summary.recentActions?.length?<div className="ogcl-admin-table-scroll">
