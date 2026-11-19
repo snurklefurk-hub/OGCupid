@@ -12,10 +12,12 @@ const memberApiUrl = local
   ? (import.meta.env.VITE_OGC_MEMBER_API_URL || "https://br-tiny-wave-bbnpjp0m-members.compute.c-15.us-east-1.aws.neon.tech/profile")
   : (import.meta.env.VITE_OGC_MEMBER_API_URL || "");
 
-function returnToAccount() {
-  const url = new URL("/account/", window.location.origin);
-  url.searchParams.set("join", "persona");
-  window.location.replace(url.toString());
+function returnToAccount(reason="signin") {
+  if(window.parent!==window) {
+    window.parent.postMessage({type:"ogc:persona-auth-required",reason},window.location.origin);
+    return;
+  }
+  window.location.replace(reason==="onboarding"?"/#/onboarding":"/#/signin");
 }
 
 async function checkMembership() {
@@ -48,7 +50,7 @@ async function checkMembership() {
     if(!response.ok){returnToAccount();return;}
     const status=await response.json();
     if(!status.photo && !status.explored){
-      window.location.replace("/account/#welcome-title");return;
+      returnToAccount("onboarding");return;
     }
     // Reveal only after Neon Auth and the member's server-backed photo stage.
     document.documentElement.classList.remove("member-gated");

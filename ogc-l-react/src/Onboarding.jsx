@@ -263,7 +263,7 @@ export default function Onboarding(){
         <p>Answer 25 match questions to unlock member discovery. Your answers are saved as you go.</p>
         <NavLink className="ogcl-button" to="/questions">Answer match questions</NavLink>
         <p className="ogcl-note">Alternatively, you can take the 40-question Dating Persona Test.</p>
-        <a href={legacyHref("/account/persona.html?onboarding=1")}>Take the Dating Persona Test</a>
+        <NavLink to="/persona">Take the Dating Persona Test</NavLink>
         <p><button type="button" className="ogcl-button ogcl-secondary" disabled={busy}
           onClick={()=>void load()}>Check my saved progress</button></p>
         {error&&<p className="ogcl-error">{error}</p>}

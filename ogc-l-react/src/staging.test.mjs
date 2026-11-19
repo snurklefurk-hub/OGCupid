@@ -33,16 +33,19 @@ test("malicious or malformed legacy origins cannot be injected into redirects",(
   assert.throws(()=>legacyHref("javascript:evil","https://ogcupid.onrender.com"));
 });
 
-test("Vite has an explicit isolated Render root build path and copies only the logo",()=>{
+test("Vite staging isolates the React root and copies published Persona/editorial assets",()=>{
   assert.match(vite,/process\.env\.OGCL_DEPLOY_BASE \|\| "\/ogc-l\/"/);
   assert.match(vite,/outDir: "\.\.\/public\/ogc-l"/);
   assert.match(vite,/emptyOutDir: true/);
   assert.match(vite,/ogcupid-logo-white\.png/);
   assert.match(vite,/copyFileSync\(source, destination\)/);
+  assert.match(vite,/ogcl-embedded\.css/);
+  assert.match(vite,/persona-assets/);
+  assert.match(vite,/account\/persona\.html/);
 });
 
 test("native account and member navigation does not escape to the old member app",()=>{
-  assert.match(app,/import \{legacyHref\}/);
+  assert.match(app,/import \{EmbeddedEditorial,PersonaRoute\}/);
   assert.ok(app.includes('const profileHref = slug => "#/profiles/"'));
   for(const path of ['<Route path="join"','<Route path="onboarding"','<Route path="recover"',
     '<Route path="photos"','<Route path="account"']){
@@ -52,5 +55,7 @@ test("native account and member navigation does not escape to the old member app
   assert.match(sidebars,/legacyHref\(destination\)/);
   assert.match(promotions,/case "ogtrends":return/);
   assert.match(promotions,/case "persona":return/);
+  assert.match(app,/<Route path="persona"/);
+  assert.match(app,/<Route path="ogtrends\/zero"/);
   assert.doesNotMatch(app,/href="\/(?:account|ogtrends|profiles)\b/);
 });
