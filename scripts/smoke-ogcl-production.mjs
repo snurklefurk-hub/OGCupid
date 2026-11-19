@@ -35,7 +35,8 @@ for(const path of assets){
   if(path===expectedJs){
     const js=await response.text();
     for(const marker of ["Create your OG Cupid account","Recover your account","Welcome to OG Cupid","Permanently delete my account",
-      "The Dating Persona Test","OgTrends #0: The Big Idea","Privacy Policy","Terms & Conditions","ogcl-embedded.css"]){
+      "The Dating Persona Test","OgTrends #0: The Big Idea","Privacy Policy","Terms & Conditions","ogcl-embedded.css",
+      "Community Chat","OG Cupid · The Lounge"]){
       if(!js.includes(marker))throw Error("Native React member workflow missing from release bundle: "+marker);
     }
   }
@@ -84,6 +85,10 @@ for(const path of ["/brand/ogcupid-logo-white.png","/favicon.png"]){
   const r=await fetch(origin+path,{signal:AbortSignal.timeout(15000)});
   if(r.status!==200)throw new Error("Missing "+path+": "+r.status);
 }
+const room=await fetch("https://br-plain-unit-bbcbxpqq-members.compute.c-15.us-east-1.aws.neon.tech/community",{
+  headers:{Origin:origin},signal:AbortSignal.timeout(15000)
+});
+if(room.status!==401)throw new Error("Anonymous community endpoint returned "+room.status);
 const admin=await fetch("https://br-plain-unit-bbcbxpqq-members.compute.c-15.us-east-1.aws.neon.tech/admin",{
   headers:{Origin:origin},signal:AbortSignal.timeout(15000)
 });
