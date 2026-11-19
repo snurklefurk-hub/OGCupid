@@ -3,7 +3,9 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 const html=fs.readFileSync(new URL('./persona.html',import.meta.url),'utf8');
-const script=html.match(/<script>\s*([\s\S]*?)<\/script>/)[1];
+const script=[...html.matchAll(/<script>\\s*([\\s\\S]*?)<\\/script>/g)]
+  .map(match=>match[1]).find(body=>body.includes("const sides =")&&body.includes("const questions ="));
+assert.ok(script,"Published Persona quiz engine is missing");
 class Element {
  constructor(tag='div'){this.tagName=tag;this.children=[];this.dataset={};this.style={};this.hidden=false;this.events={};this.classList={add:()=>{}};this.attributes={};this._text='';}
  set textContent(v){this._text=String(v);this.children=[];}
