@@ -1,6 +1,18 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <!-- Canonical profile URLs now enter the unified React member profile.
+       The legacy renderer stays in Git history as a rollback option. -->
+  <script>
+    (function () {
+      var path = location.pathname.match(/^\/profiles\/([a-z0-9]+(?:-[a-z0-9]+)*)\/?$/);
+      if (!path) return;
+      var known = {photos:true,questions:true,personality:true};
+      var tab = String(location.hash || "").replace(/^#/, "").toLowerCase();
+      var suffix = known[tab] ? "?tab=" + tab : "";
+      location.replace("/#/profiles/" + encodeURIComponent(path[1]) + suffix);
+    }());
+  </script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow,noarchive">
