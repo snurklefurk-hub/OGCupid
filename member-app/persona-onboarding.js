@@ -68,7 +68,13 @@ async function savePersona(result) {
     notice.textContent="✓ Saved to your OG Cupid profile.";
     document.getElementById("ogc-persona-save-retry")?.remove();
     if(new URLSearchParams(location.search).get("onboarding")==="1") {
-      location.replace("/account/#welcome-title");
+      // Onboarding lives in React now. Notify only our same-origin parent if
+      // embedded; a direct standalone Persona visit navigates to React.
+      if(window.parent!==window) {
+        window.parent.postMessage({type:"ogc:persona-saved"},window.location.origin);
+      } else {
+        window.location.replace("/#/onboarding");
+      }
     }
   } catch(e) {
     notice.textContent=e instanceof Error?e.message:"Could not save this result.";
