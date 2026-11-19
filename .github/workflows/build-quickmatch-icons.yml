@@ -1,0 +1,45 @@
+name: Build Quickmatch icon replacement
+on:
+  push:
+    branches: [feature/quickmatch-uploaded-hearts-20261119]
+    paths:
+      - 'ogc-l-react/**'
+      - 'public/quickmatch-hearts.webp'
+      - '.github/workflows/build-quickmatch-icons.yml'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install React app
+        run: npm ci --prefix ogc-l-react
+      - name: Check Quickmatch icons and behavior
+        run: node --test ogc-l-react/src/quickmatch-integration.test.mjs
+      - name: Build live React assets
+        env:
+          OGCL_PRODUCTION_ROOT: 'true'
+          VITE_OGC_AUTH_URL: https://ep-hidden-breeze-bbdn5nsb.neonauth.c-15.us-east-1.aws.neon.tech/neondb/auth
+          VITE_OGC_MEMBER_API_URL: https://br-plain-unit-bbcbxpqq-members.compute.c-15.us-east-1.aws.neon.tech/profile
+          VITE_OGC_REGISTRATION_ENABLED: 'true'
+        run: |
+          npm run build --prefix ogc-l-react
+          OGCL_PRODUCTION_ROOT=true node scripts/publish-ogcl-production.mjs
+          grep -q '/assets/' index.html
+          test -s public/quickmatch-hearts.webp
+      - name: Commit generated static assets on feature branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -f index.html public/index.html public/assets
+          if ! git diff --cached --quiet; then
+            git commit -m "build: publish user's Quickmatch heart assets"
+            git pull --rebase origin feature/quickmatch-uploaded-hearts-20261119
+            git push origin HEAD:feature/quickmatch-uploaded-hearts-20261119
+          fi
