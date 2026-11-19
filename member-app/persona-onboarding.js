@@ -68,7 +68,9 @@ async function savePersona(result) {
     notice.textContent="✓ Saved to your OG Cupid profile.";
     document.getElementById("ogc-persona-save-retry")?.remove();
     if(new URLSearchParams(location.search).get("onboarding")==="1") {
-      location.replace("/account/#welcome-title");
+      if(new URLSearchParams(location.search).get("embedded")==="1"&&window.parent!==window){
+        window.parent.postMessage({type:"ogc-persona-saved"} ,location.origin);
+      }else location.replace("/account/#welcome-title");
     }
   } catch(e) {
     notice.textContent=e instanceof Error?e.message:"Could not save this result.";
