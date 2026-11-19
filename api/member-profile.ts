@@ -362,12 +362,13 @@ export default {
            "5b03f41b-29b7-4a7a-9c72-71744dd8b2f2")) {
       return json(request, { error: "Not found" }, 404);
     }
-    const methodAllowed = adminPath ? adminMethodAllowed(url.pathname,request.method) : memberProfileMatch ? request.method === "GET" : feedbackPath ? request.method === "POST" : discoveryPath ? request.method === "GET" : quickmatchPath ? ["GET", "PUT"].includes(request.method) : messagePath ? ["GET", "POST", "PUT", "DELETE"].includes(request.method) : photoPath
+    const methodAllowed = memberProfileMatch ? request.method === "GET" : feedbackPath ? request.method === "POST" : discoveryPath ? request.method === "GET" : quickmatchPath ? ["GET", "PUT"].includes(request.method) : messagePath ? ["GET", "POST", "PUT", "DELETE"].includes(request.method) : photoPath
       ? photoMethodAllowed(url.pathname, request.method)
       : deletePath || verifyPath
         ? request.method === "POST"
         : request.method === "GET" || request.method === "PUT";
-    if (!methodAllowed) {
+    if ((adminPath && !adminMethodAllowed(url.pathname,request.method)) ||
+        (!adminPath && !methodAllowed)) {
       return json(request, { error: "Method not allowed" }, 405);
     }
 
