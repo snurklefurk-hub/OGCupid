@@ -518,7 +518,14 @@ button, input, textarea, select {font:inherit;}
 .ogcl-heart-decision:hover:not(:disabled),.ogcl-heart-decision:focus-visible {
   border-color:#2963a4;background:linear-gradient(#fff,#dbe9f5);}
 .ogcl-heart-decision:disabled {opacity:.55;cursor:progress;}
-.ogcl-heart-decision .ogcl-heart-icon {width:72px;height:63px;}
+/* The uploaded two-panel transparent sprite is preserved exactly:
+   left pane = arrow-shot Like; right pane = dejected Dislike. */
+.ogcl-heart-icon {display:inline-block;flex:none;aspect-ratio:1;
+  background-image:url("/quickmatch-hearts.webp");
+  background-repeat:no-repeat;background-size:200% 100%;}
+.ogcl-heart-like {background-position:left center;}
+.ogcl-heart-dislike {background-position:right center;}
+.ogcl-heart-decision .ogcl-heart-icon {width:72px;height:72px;}
 .ogcl-heart-decision span {font:bold 12px/16px Verdana,sans-serif;}
 .ogcl-heart-positive span {color:#a8184e;}
 .ogcl-heart-negative span {color:#607183;}
@@ -739,7 +746,7 @@ button, input, textarea, select {font:inherit;}
   height:auto;aspect-ratio:1;object-fit:cover;}
 .ogcl-mutual-heart {position:absolute;top:6px;right:6px;width:31px;height:28px;
   display:grid;place-items:center;background:#183b62;border:1px solid #d5e1ed;}
-.ogcl-mutual-heart svg {display:block;width:27px;height:25px;}
+.ogcl-mutual-heart .ogcl-heart-icon {width:27px;height:27px;}
 .ogcl-quickmatch-list .ogcl-member-copy {display:block;padding:7px 4px;}
 .ogcl-quickmatch-list .ogcl-member-copy strong {font:bold 12px/18px Verdana,sans-serif;color:#2963a4;}
 .ogcl-quickmatch-list .ogcl-member-copy small {display:block;
@@ -754,7 +761,7 @@ button, input, textarea, select {font:inherit;}
 .ogcl-like-back {display:flex;align-items:center;gap:9px;
   background:#edf2f7;border:1px solid #b7c6d2;color:#183b62;
   padding:5px 13px;margin:10px auto;cursor:pointer;font:bold 11px/19px Verdana,sans-serif;}
-.ogcl-like-back svg {width:40px;height:33px;}
+.ogcl-like-back .ogcl-heart-icon {width:40px;height:40px;}
 .ogcl-like-back:disabled {opacity:.5;cursor:progress;}
 @media(max-width:800px){
   .ogcl-quickmatch-list {grid-template-columns:repeat(2,minmax(0,1fr));}
