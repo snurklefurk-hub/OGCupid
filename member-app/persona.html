@@ -1,6 +1,23 @@
 <!doctype html>
 <html lang="en" class="member-gated">
 <head>
+
+
+  <script>
+  (function(){
+    var q=new URLSearchParams(location.search);
+    if(q.get("embedded")==="1"){
+      document.documentElement.classList.add("ogcl-persona-embedded");
+      return;
+    }
+    if(q.get("legacy")==="1")return;
+    var result=new URLSearchParams();
+    ["persona","style","onboarding"].forEach(function(key){
+      if(q.get(key))result.set(key,q.get(key));
+    });
+    location.replace("/#/persona"+(result.toString()?"?"+result.toString():""));
+  }());
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#2963a4">
@@ -487,6 +504,55 @@ body { min-width:320px; }
   <link rel="stylesheet" href="/okc-2011.css?v=1">
   <link rel="icon" type="image/png" href="/favicon.png?v=3">
   <link rel="stylesheet" href="/okc-period-site.css?v=2">
+<style>
+  html.ogcl-persona-embedded,html.ogcl-persona-embedded body{
+    padding:0!important;margin:0!important;width:100%!important;
+    min-width:0!important;max-width:none!important;
+    background:#fff!important;overflow-x:hidden!important;
+  }
+  html.ogcl-persona-embedded .page.persona-page{
+    display:block!important;grid-template-columns:none!important;
+    padding:0!important;margin:0!important;max-width:none!important;
+    min-width:0!important;width:100%!important;
+    background:#fff!important;border:0!important;box-shadow:none!important;
+  }
+  html.ogcl-persona-embedded .rail,
+  html.ogcl-persona-embedded .member-quiz-header,
+  html.ogcl-persona-embedded .skip,
+  html.ogcl-persona-embedded footer,
+  html.ogcl-persona-embedded .okc-toplinks,
+  html.ogcl-persona-embedded .okc-rrail{
+    display:none!important;
+  }
+  html.ogcl-persona-embedded .main-column,
+  html.ogcl-persona-embedded .panel{
+    max-width:none!important;min-width:0!important;width:100%!important;
+    display:block!important;margin:0!important;padding:0!important;
+    border:0!important;box-shadow:none!important;background:#fff!important;
+  }
+  html.ogcl-persona-embedded .standalone-quiz{
+    max-width:100%!important;min-width:0!important;
+    padding:8px 10px 22px!important;margin:0!important;
+  }
+  html.ogcl-persona-embedded .persona-zone{
+    margin:0!important;padding:0!important;max-width:100%!important;
+    width:100%!important;border:0!important;
+  }
+  html.ogcl-persona-embedded .persona-heading{padding:12px!important}
+  html.ogcl-persona-embedded .persona-heading h2{
+    font-size:clamp(23px,4vw,35px)!important;
+  }
+  html.ogcl-persona-embedded .persona-ribbon{font-size:10px!important}
+  html.ogcl-persona-embedded .persona-app{
+    box-shadow:none!important;max-width:100%!important;
+  }
+  @media(max-width:650px){
+    html.ogcl-persona-embedded .persona-heading{display:block!important}
+    html.ogcl-persona-embedded .persona-ribbon{display:none!important}
+    html.ogcl-persona-embedded .persona-content{padding:12px!important}
+    html.ogcl-persona-embedded .standalone-quiz{padding:3px!important}
+  }
+</style>
 </head>
 <body class="ogc-persona-theme">
 <a class="skip" href="#main">Skip to quiz</a>
@@ -2016,6 +2082,11 @@ body { min-width:320px; }
     show("result");
   }
   function resultUrl(){
+    if(new URLSearchParams(window.location.search).get("embedded")==="1"){
+      const shared=new URL(window.location.origin+"/");
+      shared.hash="/persona?persona="+encodeURIComponent(code+style);
+      return shared.toString();
+    }
     const url=new URL(window.location.href);
     url.searchParams.set("persona",code+style);
     url.searchParams.delete("style");
