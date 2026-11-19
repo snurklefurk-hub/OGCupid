@@ -10,6 +10,17 @@ const choices = {
   status: ['Single', 'Seeing someone', 'Married'],
   relationshipType: ['Monogamous', 'Polyamorous'],
 };
+const lookingForChoices={
+  interestedIn:['Man','Woman','Transman','Transwoman','Something else'],
+  relationshipGoal:['new friends','short-term dating','long-term dating','casual sex','activity partners']
+};
 export function validProfileChoice(key, value, previous) {
-  return !choices[key] || value === '' || value === previous || choices[key].includes(value);
+  if(value === previous || value === '')return true;
+  if(choices[key])return choices[key].includes(value);
+  if(lookingForChoices[key]){
+    const values=value.split(', ');
+    return values.length<=5 && values.length===new Set(values).size &&
+      values.every(option=>lookingForChoices[key].includes(option));
+  }
+  return true;
 }

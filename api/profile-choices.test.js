@@ -16,3 +16,13 @@ test('legacy values can be retained, replaced, or explicitly cleared', () => {
   assert.equal(validProfileChoice('bodyType', '', 'legacy'), true);
   assert.equal(validProfileChoice('bodyType', 'Average', 'legacy'), true);
 });
+
+test('only canonical gender and intention sets can be selected, legacy values survive unchanged',()=>{
+  assert.equal(validProfileChoice('interestedIn','Man, Woman'),true);
+  assert.equal(validProfileChoice('interestedIn','Everyone','Everyone'),true);
+  assert.equal(validProfileChoice('interestedIn','Everyone',''),false);
+  assert.equal(validProfileChoice('interestedIn','Woman, Woman'),false);
+  assert.equal(validProfileChoice('relationshipGoal','new friends, long-term dating'),true);
+  assert.equal(validProfileChoice('relationshipGoal','Long-term dating','Long-term dating'),true);
+  assert.equal(validProfileChoice('relationshipGoal','new friends, something else'),false);
+});

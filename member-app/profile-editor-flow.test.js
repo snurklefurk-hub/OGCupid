@@ -17,7 +17,8 @@ test("all saved profile fields stay in one form, even though only one stage disp
   assert.equal((form.match(/data-profile-section="basics"/g)||[]).length,2);
   assert.equal((form.match(/data-profile-section="details"/g)||[]).length,1);
   assert.equal((form.match(/data-profile-section="essays"/g)||[]).length,1);
-  for(const field of ['name="age"','name="searchRadiusMiles"','name="ethnicity"','name="languageName1"','name="aboutMe"'])assert.ok(form.includes(field),field);
+  for(const field of ['name="age"','name="searchRadiusMiles"','name="ethnicity"','name="languageName1"'])assert.ok(form.includes(field),field);
+  assert.ok(form.includes('id="profile-essays-editor"'));
   assert.match(form,/id="profile-edit-step-nav"/);
   assert.match(form,/id="profile-save-button"/);
 });

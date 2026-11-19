@@ -7,6 +7,15 @@ import { rankDiscoverableProfiles, SCORING_VERSION } from "./discovery-score.js"
 const MAX_CANDIDATES = 250;
 const PUBLIC_ANSWER_FIELDS = "user_id, question_id, option_id, acceptable_options, importance, is_private";
 
+export function adjustedViewerMatchPercent(rawPercent,penaltyPoints=0) {
+  // Never manufacture a score with no common-question evidence.
+  if(rawPercent===null)return null;
+  if(typeof rawPercent!=="number" || !Number.isFinite(rawPercent) ||
+     rawPercent<0 || rawPercent>100)throw new RangeError("Invalid base Match percent.");
+  if(![0,5,10].includes(penaltyPoints))throw new RangeError("Invalid Quickmatch penalty.");
+  return Math.max(0,rawPercent-penaltyPoints);
+}
+
 export async function handleDiscovery(request, userId, withMember, json) {
   if (request.method !== "GET") return json(request, {error:"Method not allowed"}, 405);
   try {
@@ -26,7 +35,7 @@ export async function handleDiscovery(request, userId, withMember, json) {
         [userId, MAX_CANDIDATES]
       );
       const members = selected.rows;
-      if (members.length === 0) return {members, viewerAnswers:[], byUser:new Map()};
+      if (members.length === 0) return {members, viewerAnswers:[], byUser:new Map(), penalties:new Map()};
 
       const ids = [userId, ...members.map(member => member.user_id)];
       const answers = await client.query(
@@ -43,16 +52,29 @@ export async function handleDiscovery(request, userId, withMember, json) {
         if (!byUser.has(id)) byUser.set(id, []);
         byUser.get(id).push(row);
       }
-      return {members, viewerAnswers:byUser.get(userId) || [], byUser};
+      // Actor-only Quickmatch penalties never alter the underlying question
+      // calculation or another member's pairwise scores.
+      const penaltyRows=await client.query(
+        `SELECT target_user_id,match_penalty_points
+         FROM app_private.member_quickmatch_decisions
+         WHERE user_id=$1::uuid AND match_penalty_points>0`,[userId]);
+      const penalties=new Map(penaltyRows.rows.map(row=>[
+        String(row.target_user_id),Number(row.match_penalty_points)
+      ]));
+      return {members, viewerAnswers:byUser.get(userId) || [], byUser,penalties};
     });
 
-    const profiles = rankDiscoverableProfiles(
+    const ranked = rankDiscoverableProfiles(
       results.members, results.viewerAnswers, results.byUser
     );
+    const profiles=ranked.map(member=>{
+      const penalty=results.penalties.get(member.userId) || 0;
+      return {...member,matchPercent:adjustedViewerMatchPercent(member.matchPercent,penalty)};
+    });
     return json(request, {
       profiles,
       scoringVersion: SCORING_VERSION,
-      calculation: "Provisional reciprocal question-answer match only; not the full Match/Friend/Enemy engine",
+      calculation: "Provisional reciprocal question-answer match with owner-specific Quickmatch adjustment; Friend/Enemy not yet calculated",
       candidateLimit: MAX_CANDIDATES
     });
   } catch (error) {

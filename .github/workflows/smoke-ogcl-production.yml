@@ -1,0 +1,25 @@
+name: Verify OG Cupid React production cutover
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'public/index.html'
+      - 'public/assets/**'
+      - 'member-app/**'
+      - '.github/workflows/smoke-ogcl-production.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  production-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check served React root and surviving account/legal routes
+        env:
+          OGC_PRODUCTION_ORIGIN: https://ogcupid.onrender.com
+        run: node scripts/smoke-ogcl-production.mjs

@@ -1,0 +1,48 @@
+name: Verify OGC-L private member messaging
+on:
+  pull_request:
+    branches: [OGC-lovable]
+    paths:
+      - 'api/member-messages.js'
+      - 'api/member-messages.test.js'
+      - 'api/member-profile.ts'
+      - 'db/migrations/022_member_private_messages.sql'
+      - 'ogc-l-react/**'
+      - 'scripts/smoke-ogcl-messages.mjs'
+      - '.github/workflows/verify-ogcl-messages.yml'
+permissions:
+  contents: read
+jobs:
+  private-messages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate messaging handler and exact access-control tests
+        run: |
+          node --check api/member-messages.js
+          node --test api/member-messages.test.js api/member-quickmatch.test.js api/discovery-route.test.js
+      - name: Bundle actual Neon Function containing messaging
+        run: |
+          npm ci
+          npm install --no-save esbuild@0.25.12
+          npx esbuild api/member-profile.ts --bundle --platform=node --target=node24 --format=esm --banner:js="import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);" --outfile="$RUNNER_TEMP/messages-member-function.mjs"
+          node --check "$RUNNER_TEMP/messages-member-function.mjs"
+      - name: Smoke development Neon messaging auth and CORS (no member credentials)
+        env:
+          OGC_MEMBER_API_URL: https://br-tiny-wave-bbnpjp0m-members.compute.c-15.us-east-1.aws.neon.tech/
+        run: node scripts/smoke-ogcl-messages.mjs
+      - name: Smoke shared Neon messaging auth and CORS (no member credentials)
+        env:
+          OGC_MEMBER_API_URL: https://br-plain-unit-bbcbxpqq-members.compute.c-15.us-east-1.aws.neon.tech/
+        run: node scripts/smoke-ogcl-messages.mjs
+      - name: Validate member session, inbox UI and staging build
+        working-directory: ogc-l-react
+        run: |
+          npm install --no-audit --no-fund
+          npm test
+          npm run build
+      - name: Confirm production legacy entrypoints unchanged
+        run: test -z "$(git status --porcelain -- index.html public/account public/profiles)"

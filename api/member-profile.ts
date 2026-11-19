@@ -10,6 +10,9 @@ import { validProfileChoice } from "./profile-choices.js";
 import { handleOnboarding } from "./onboarding.js";
 import { handleFeedback } from "./member-feedback.js";
 import { handleDiscovery } from "./member-discovery.js";
+import { handleQuickmatch } from "./member-quickmatch.js";
+import { handleMessages } from "./member-messages.js";
+import { isAdminPath, adminMethodAllowed, handleAdmin } from "./member-admin.js";
 
 const required = ["DATABASE_URL", "NEON_AUTH_JWKS_URL", "NEON_AUTH_BASE_URL"] as const;
 for (const name of required) {
@@ -33,6 +36,8 @@ const allowedOrigins = new Set([
   "https://ogcupid.com",
   "https://www.ogcupid.com",
   "https://ogcupid.onrender.com",
+  // Isolated OGC-L static preview. JWT, member liveness and RLS remain required.
+  "https://ogcupid-l-staging.onrender.com",
 ]);
 // Local browser testing is allowed ONLY for the isolated development branch.
 if (["dev/private-member-accounts","dev/canonical-onboarding-2026-11-13"].includes(process.env.NEON_BRANCH || "")) {
@@ -136,6 +141,7 @@ function geoDetails(row: GeoRow) {
     searchOriginKey: String(row?.search_origin_shard ?? ""),
     searchOriginLabel: String(row?.search_origin_label ?? ""),
     searchRadiusMiles: row?.search_radius_miles == null ? null : Number(row.search_radius_miles),
+    hasValidatedLocality: row?.locality_id != null,
   };
 }
 
@@ -192,6 +198,8 @@ type MemberProfile = {
   displayName: string;
   aboutMe: string;
   age: number | null;
+  preferredAgeMin: number | null;
+  preferredAgeMax: number | null;
   cityRegion: string;
   gender: string;
   pronouns: string;
@@ -210,9 +218,12 @@ type MemberProfile = {
   languages: string;
   lifeDirection: string;
   goodAt: string;
+  firstThings: string;
   favorites: string;
   sixThings: string;
+  thinkingAbout: string;
   fridayNight: string;
+  privateThing: string;
   messageMeIf: string;
   ethnicity: string; bodyType: string; vaping: string; drugs: string;
   religion: string; sign: string; income: string; status: string; relationshipType: string;
@@ -226,6 +237,8 @@ function present(row: Record<string, unknown>): MemberProfile {
     displayName: String(row.display_name),
     aboutMe: String(row.about_me),
     age: row.age == null ? null : Number(row.age),
+    preferredAgeMin: row.preferred_age_min == null ? null : Number(row.preferred_age_min),
+    preferredAgeMax: row.preferred_age_max == null ? null : Number(row.preferred_age_max),
     cityRegion: String(row.city_region ?? ""),
     gender: String(row.gender ?? ""),
     pronouns: String(row.pronouns ?? ""),
@@ -244,9 +257,12 @@ function present(row: Record<string, unknown>): MemberProfile {
     languages: String(row.languages ?? ""),
     lifeDirection: String(row.life_direction ?? ""),
     goodAt: String(row.good_at ?? ""),
+    firstThings: String(row.first_things ?? ""),
     favorites: String(row.favorites ?? ""),
     sixThings: String(row.six_things ?? ""),
+    thinkingAbout: String(row.thinking_about ?? ""),
     fridayNight: String(row.friday_night ?? ""),
+    privateThing: String(row.private_thing ?? ""),
     messageMeIf: String(row.message_me_if ?? ""),
     ethnicity: String(row.ethnicity ?? ""), bodyType: String(row.body_type ?? ""),
     vaping: String(row.vaping ?? ""), drugs: String(row.drugs ?? ""),
@@ -288,9 +304,12 @@ const profileTextFields = [
   ["relationshipType", "relationship_type", 50],
   ["lifeDirection", "life_direction", 2000],
   ["goodAt", "good_at", 1500],
+  ["firstThings", "first_things", 1500],
   ["favorites", "favorites", 2000],
   ["sixThings", "six_things", 1500],
+  ["thinkingAbout", "thinking_about", 1500],
   ["fridayNight", "friday_night", 1500],
+  ["privateThing", "private_thing", 1500],
   ["messageMeIf", "message_me_if", 1500],
 ] as const;
 
@@ -310,6 +329,9 @@ export default {
     const memberProfileMatch = url.pathname.match(/^\/profiles\/([a-z0-9]+(?:-[a-z0-9]+)*)\/?$/);
     const answersPath = url.pathname === "/answers" || url.pathname === "/answers/";
     const discoveryPath = url.pathname === "/discovery" || url.pathname === "/discovery/";
+    const quickmatchPath = url.pathname === "/quickmatch" || url.pathname === "/quickmatch/";
+    const messagePath = /^\/messages(?:\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(?:\/(?:block|report))?)?\/?$/i.test(url.pathname);
+    const adminPath = isAdminPath(url.pathname);
     const photoPath = isPhotoPath(url.pathname);
     const onboardingPath = url.pathname === "/onboarding" || url.pathname === "/onboarding/";
     const feedbackPath = url.pathname === "/feedback" || url.pathname === "/feedback/";
@@ -318,7 +340,7 @@ export default {
     // A credential check that can NEVER call the privileged eraser.
     // Only enabled for the one disposable development account.
     const verifyPath = url.pathname === "/account/reauth-check" || url.pathname === "/account/reauth-check/";
-    if (!profilePath && !memberProfileMatch && !discoveryPath && !answersPath && !emailPreferencesPath && !deletePath && !verifyPath && !photoPath && !onboardingPath && !feedbackPath) {
+    if (!profilePath && !memberProfileMatch && !discoveryPath && !quickmatchPath && !messagePath && !adminPath && !answersPath && !emailPreferencesPath && !deletePath && !verifyPath && !photoPath && !onboardingPath && !feedbackPath) {
       return json(request, { error: "Not found" }, 404);
     }
     // Self-service deletion is allowed only on the explicitly configured
@@ -340,12 +362,13 @@ export default {
            "5b03f41b-29b7-4a7a-9c72-71744dd8b2f2")) {
       return json(request, { error: "Not found" }, 404);
     }
-    const methodAllowed = memberProfileMatch ? request.method === "GET" : feedbackPath ? request.method === "POST" : discoveryPath ? request.method === "GET" : photoPath
+    const methodAllowed = memberProfileMatch ? request.method === "GET" : feedbackPath ? request.method === "POST" : discoveryPath ? request.method === "GET" : quickmatchPath ? ["GET", "PUT"].includes(request.method) : messagePath ? ["GET", "POST", "PUT", "DELETE"].includes(request.method) : photoPath
       ? photoMethodAllowed(url.pathname, request.method)
       : deletePath || verifyPath
         ? request.method === "POST"
         : request.method === "GET" || request.method === "PUT";
-    if (!methodAllowed) {
+    if ((adminPath && !adminMethodAllowed(url.pathname,request.method)) ||
+        (!adminPath && !methodAllowed)) {
       return json(request, { error: "Method not allowed" }, 405);
     }
 
@@ -353,7 +376,7 @@ export default {
     if (!userId) return json(request, { error: "Unauthorized" }, 401);
 
     try {
-      if (profilePath || memberProfileMatch || discoveryPath || answersPath || emailPreferencesPath || photoPath || onboardingPath || feedbackPath) {
+      if (profilePath || memberProfileMatch || discoveryPath || quickmatchPath || messagePath || adminPath || answersPath || emailPreferencesPath || photoPath || onboardingPath || feedbackPath) {
         // A signed JWT can outlive the account/session that issued it.
         // Do not allow a deleted identity to read an empty profile as if it
         // were still a member, or attempt to recreate a profile via PUT.
@@ -379,6 +402,15 @@ export default {
       if (discoveryPath) {
         return await handleDiscovery(request,userId,withMember,json);
       }
+      if (quickmatchPath) {
+        return await handleQuickmatch(request,userId,withMember,json);
+      }
+      if (messagePath) {
+        return await handleMessages(request,userId,url,withMember,json);
+      }
+      if (adminPath) {
+        return await handleAdmin(request,userId,url,withMember,json);
+      }
 
       // Member-only profile read; a profile slug NEVER establishes edit
       // ownership. JWT identity and active-member status were verified above.
@@ -394,27 +426,40 @@ export default {
                p.work, p.education, p.height, p.kids, p.pets, p.smoking,
                p.drinking, p.diet, p.languages, p.ethnicity, p.body_type,
                p.vaping, p.drugs, p.religion, p.sign, p.income, p.status,
-               p.relationship_type, p.life_direction, p.good_at, p.favorites,
-               p.six_things, p.friday_night, p.message_me_if,
+               p.relationship_type, p.preferred_age_min, p.preferred_age_max,
+                app_private.visible_member_search_radius(p.user_id) AS profile_search_radius_miles,
+                p.life_direction, p.good_at, p.first_things, p.favorites,
+               p.six_things, p.thinking_about, p.friday_night, p.private_thing, p.message_me_if,
                p.created_at, p.updated_at
              FROM app_private.member_profile_routes route
              JOIN app_private.member_profiles p ON p.user_id = route.user_id
              WHERE route.slug = $1`, [slug]);
           const row = result.rows[0];
           if (!row) return null;
+          const isOwner=String(row.user_id).toLowerCase()===userId;
+          // FORCE RLS keeps owner-private answers visible to the owner only.
+          // For peers, this narrowly scoped SECURITY DEFINER projection exposes
+          // only confirmed PUBLIC answer/choice/explanation, never weights,
+          // private answers or another member's acceptable answer list.
           const answers = await client.query(
-            `SELECT question_id, option_id FROM app_private.member_match_answers
-             WHERE user_id=$1::uuid AND is_private=false
-             ORDER BY question_id LIMIT 410`, [row.user_id]);
+            isOwner
+              ? `SELECT question_id,option_id,note,is_private FROM app_private.member_match_answers
+                 WHERE user_id=$1::uuid ORDER BY question_id LIMIT 410`
+              : `SELECT question_id,option_id,note,false AS is_private
+                 FROM app_private.visible_member_public_answers($1::uuid)`,
+            [row.user_id]);
           const persona = await client.query(
             "SELECT app_private.visible_member_persona($1::uuid) AS code",
             [row.user_id]);
           return {
-            profile: { ...present(row), slug },
-            isOwner: String(row.user_id).toLowerCase() === userId,
+            profile: { ...present(row), slug,
+              profileSearchRadiusMiles: row.profile_search_radius_miles == null ? null : Number(row.profile_search_radius_miles) },
+            isOwner,
             publicAnswers: answers.rows.map(answer => ({
               questionId: String(answer.question_id),
-              optionId: String(answer.option_id)
+              optionId: String(answer.option_id),
+              note: String(answer.note ?? "").slice(0,400),
+              isPrivate: isOwner && answer.is_private===true
             })),
             personaCode: persona.rows[0]?.code ?? null
           };
@@ -674,7 +719,7 @@ export default {
       if (request.method === "GET") {
         const result = await withMember(userId, async client => {
           const profile = await client.query(
-            `SELECT user_id, display_name, about_me, age, city_region, gender, pronouns, orientation, interested_in, relationship_goal, work, education, height, kids, pets, smoking, drinking, diet, languages, ethnicity, body_type, vaping, drugs, religion, sign, income, status, relationship_type, life_direction, good_at, favorites, six_things, friday_night, message_me_if, created_at, updated_at FROM app_private.member_profiles WHERE user_id = $1::uuid`,
+            `SELECT user_id, display_name, about_me, age, city_region, gender, pronouns, orientation, interested_in, relationship_goal, work, education, height, kids, pets, smoking, drinking, diet, languages, ethnicity, body_type, vaping, drugs, religion, sign, income, status, relationship_type, preferred_age_min, preferred_age_max, life_direction, good_at, first_things, favorites, six_things, thinking_about, friday_night, private_thing, message_me_if, created_at, updated_at FROM app_private.member_profiles WHERE user_id = $1::uuid`,
             [userId],
           );
           const geo = await client.query(
@@ -730,8 +775,24 @@ export default {
       }
       // Older editor versions do not send any geo keys: keep their existing
       // locality preferences untouched when they save ordinary essay fields.
-      const geoSupplied = ["locality", "searchOrigin", "searchRadiusMiles"]
-        .some(key => Object.prototype.hasOwnProperty.call(fields, key));
+      const hasOwn=(key: string) => Object.prototype.hasOwnProperty.call(fields,key);
+      const geoSupplied = ["locality","searchOrigin"].some(hasOwn);
+      const radiusOnly = hasOwn("searchRadiusMiles") && !geoSupplied;
+      const validRadius=(value: unknown) =>
+        Number.isInteger(value) && [0,10,25,50,100,250,500].includes(value as number);
+      if (radiusOnly && !validRadius(fields.searchRadiusMiles))
+        return json(request,{error:"Choose an approved distance preference"},400);
+      const preferredAgeSupplied=hasOwn("preferredAgeMin")||hasOwn("preferredAgeMax");
+      if (preferredAgeSupplied && (!hasOwn("preferredAgeMin")||!hasOwn("preferredAgeMax")))
+        return json(request,{error:"Choose both minimum and maximum ages"},400);
+      const minPref=fields.preferredAgeMin, maxPref=fields.preferredAgeMax;
+      if (preferredAgeSupplied &&
+        !(minPref===null && maxPref===null) &&
+        !(Number.isInteger(minPref) && Number.isInteger(maxPref) &&
+          (minPref as number)>=18 && (maxPref as number)<=99 &&
+          (minPref as number)<=(maxPref as number))) {
+        return json(request,{error:"Choose ages from 18 through 99, minimum first"},400);
+      }
       let locality: CanonicalPlace | null = null;
       let searchOrigin: CanonicalPlace | null = null;
       let searchRadiusMiles: number | null = null;
@@ -740,8 +801,7 @@ export default {
           .every(key => Object.prototype.hasOwnProperty.call(fields, key))) {
           return json(request, { error: "Incomplete location preferences" }, 400);
         }
-        if (fields.searchRadiusMiles !== null &&
-            ![10, 25, 50, 100, 250].includes(fields.searchRadiusMiles as number)) {
+        if (fields.searchRadiusMiles !== null && !validRadius(fields.searchRadiusMiles)) {
           return json(request, { error: "Choose a valid distance" }, 400);
         }
         searchRadiusMiles = fields.searchRadiusMiles as number | null;
@@ -779,7 +839,7 @@ export default {
         .filter(([key]) => Object.prototype.hasOwnProperty.call(fields, key))
         .map(([, column]) => `${column} = EXCLUDED.${column}`);
       const paramList = columns.map((_, index) => `$${index + 5}`);
-      const allReturned = ["user_id", "display_name", "about_me", "age", ...columns, "created_at", "updated_at"];
+      const allReturned = ["user_id", "display_name", "about_me", "age", "preferred_age_min", "preferred_age_max", ...columns, "created_at", "updated_at"];
       const sql = `INSERT INTO app_private.member_profiles
            (user_id, display_name, about_me, adult_attested_at, age, ${columns.join(", ")})
          VALUES ($1::uuid, $2, $3, now(), $4, ${paramList.join(", ")})
@@ -812,7 +872,32 @@ export default {
           throw new Error("Account display name is unavailable");
         }
         const saved = await client.query(sql, [userId, displayName, aboutMe, age, ...extraValues]);
+        if (preferredAgeSupplied) {
+          await client.query(
+            "UPDATE app_private.member_profiles SET preferred_age_min=$2,preferred_age_max=$3,updated_at=now() WHERE user_id=$1::uuid",
+            [userId,minPref,maxPref]);
+          saved.rows[0].preferred_age_min=minPref;
+          saved.rows[0].preferred_age_max=maxPref;
+        }
+        if (radiusOnly) {
+          // Keep search radius in the existing canonical locality row. A
+          // genuine saved profile location must exist; never use device GPS.
+          const radiusUpdated=await client.query(
+            "UPDATE app_private.member_localities SET search_radius_miles=$2,updated_at=now() " +
+            "WHERE user_id=$1::uuid AND locality_id IS NOT NULL RETURNING user_id",
+            [userId,fields.searchRadiusMiles]);
+          if (!radiusUpdated.rowCount) throw new Error("Validated profile location required for distance preference");
+        }
         if (geoSupplied) {
+          // Initial saved locality defaults to 50 miles as approved. Existing
+          // accounts with an intentionally null legacy radius remain untouched
+          // unless the member explicitly chooses a new distance.
+          let radiusForWrite=searchRadiusMiles;
+          if (locality && radiusForWrite===null) {
+            const oldLocation=await client.query(
+              "SELECT user_id FROM app_private.member_localities WHERE user_id=$1::uuid",[userId]);
+            if (!oldLocation.rowCount) radiusForWrite=50;
+          }
           await client.query(
             "INSERT INTO app_private.member_localities " +
             "(user_id, locality_id, locality_shard, locality_lat, locality_lon, " +
@@ -825,7 +910,7 @@ export default {
             "search_origin_lon=EXCLUDED.search_origin_lon, search_radius_miles=EXCLUDED.search_radius_miles, updated_at=now()",
             [userId, locality?.id ?? null, locality?.key ?? null, locality?.lat ?? null, locality?.lon ?? null,
              searchOrigin?.id ?? null, searchOrigin?.key ?? null, searchOrigin?.label ?? null,
-             searchOrigin?.lat ?? null, searchOrigin?.lon ?? null, searchRadiusMiles],
+             searchOrigin?.lat ?? null, searchOrigin?.lon ?? null, radiusForWrite],
           );
         }
         const geo = await client.query(

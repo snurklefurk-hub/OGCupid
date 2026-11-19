@@ -1,0 +1,39 @@
+name: Verify OGC-L Quickmatch persistence
+on:
+  pull_request:
+    branches: [OGC-lovable]
+    paths:
+      - 'api/member-quickmatch.js'
+      - 'api/member-quickmatch.test.js'
+      - 'api/member-profile.ts'
+      - 'db/migrations/021_member_quickmatch_decisions.sql'
+      - 'ogc-l-react/**'
+      - '.github/workflows/verify-ogcl-quickmatch.yml'
+permissions:
+  contents: read
+jobs:
+  quickmatch-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate backend Quickmatch syntax and RLS/authorization tests
+        run: |
+          node --check api/member-quickmatch.js
+          node --test api/member-quickmatch.test.js
+      - name: Compile the actual Neon member Function including Quickmatch
+        run: |
+          npm ci
+          npm install --no-save esbuild@0.25.12
+          npx esbuild api/member-profile.ts --bundle --platform=node --target=node24 --format=esm --banner:js="import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);" --outfile="$RUNNER_TEMP/quickmatch-member-function.mjs"
+          node --check "$RUNNER_TEMP/quickmatch-member-function.mjs"
+      - name: Verify React Quickmatch authorization and state contracts
+        working-directory: ogc-l-react
+        run: |
+          npm install --no-audit --no-fund
+          npm test
+          npm run build
+      - name: Confirm no legacy production frontend was changed
+        run: test -z "$(git status --porcelain -- index.html public/account public/profiles)"
