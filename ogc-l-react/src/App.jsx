@@ -66,12 +66,12 @@ function LeftRail() {
         <img src="/brand/ogcupid-logo-white.png" width="172" height="42" alt="OG Cupid" />
       </NavLink>
       <nav className="ogcl-primary" aria-label="OG Cupid main">
-        {primaryNavigation.map(({path,label,icon}) =>
+        {primaryNavigation.map(({path,label}) =>
           (isMember || (kind==="onboarding" && path==="/community")) ? <NavLink key={path} to={path}
             className={({isActive})=>isActive?"ogcl-nav-link active":"ogcl-nav-link"}>
-            <span className="ogcl-nav-glyph" aria-hidden="true">{icon}</span><span>{label}</span>
+            <span>{label}</span>
           </NavLink> : <span key={path} className="ogcl-nav-link ogcl-locked" aria-disabled="true">
-            <span className="ogcl-nav-glyph" aria-hidden="true">{icon}</span><span>{label}</span>
+            <span>{label}</span>
           </span>
         )}
       </nav>
