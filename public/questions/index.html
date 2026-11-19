@@ -1,6 +1,16 @@
 <!doctype html>
 <html lang="en">
 <head>
+<script>
+(function(){
+  // Keep original HTML accessible to non-script clients and ?legacy=1 rollback.
+  if(new URLSearchParams(location.search).get("legacy")==="1")return;
+  var anchor=String(location.hash||"").replace(/^#/,"");
+  var section=/^[a-zA-Z0-9_-]{1,100}$/.test(anchor)?"?section="+encodeURIComponent(anchor):"";
+  location.replace("/#/questions"+section);
+}());
+</script>
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
