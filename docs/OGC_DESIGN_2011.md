@@ -2,6 +2,14 @@
 
 **Approved:** November 16, 2026. Basis: owner's uploaded image, “OkCupid, circa 2011 — Design Token Card.” This is styling guidance for OG Cupid, not permission to copy historic OkCupid branding, user profiles, copyrighted creative, or compatibility math.
 
+## Updated layout and React migration decision — November 19, 2026
+
+The owner's current instruction **supersedes every older fixed-rail/center-only scrolling note**. Desktop remains a three-column 16% / 68% / 16% composition, but the whole document scrolls naturally; there must not be separate left, center, and right scrollbars or a viewport-locked shell. Keep the mobile browser functional. This is implemented in both the live React CSS and the temporarily preserved legacy desktop stylesheet.
+
+The production home document serves the React app. Retained static `/account/` and profile entrypoints redirect to React by default; older code exists as rollback/compatibility material. **Not everything is yet native React:** Persona, OgTrends, legal, and Contact documents are still rendered as same-origin HTML inside React iframes. Treat this as migration debt, not a reason to maintain two long-term frontends. Port these pages to native React, verify parity, and only then retire their old renderers.
+
+Use `public/okc-2011-tokens.css` as the canonical source of all 29 palette colors; both `public/okc-2011.css` and `ogc-l-react/src/styles.css` import it. Preserve authored content, account security, and matching behavior during visual changes. See [PR #47](https://github.com/snurklefurk-hub/OGCupid/pull/47).
+
 ## Palette — exact sRGB tokens
 
 | CSS token | Hex | Use |
