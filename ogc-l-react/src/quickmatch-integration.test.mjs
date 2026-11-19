@@ -96,6 +96,14 @@ test("Quickmatch UI preserves original hearts and restricts full-profile links t
   assert.match(photos,/getMemberGallery\(memberId\)/);
   assert.match(photos,/URL\.revokeObjectURL\(url\)/);
   assert.match(css,/object-fit:contain/);
+  assert.match(css,/quickmatch-hearts\\.webp/);
+  assert.match(css,/ogcl-heart-like/);
+  assert.match(css,/ogcl-heart-dislike/);
+  assert.match(read("./QuickmatchHearts.jsx"),/ogcl-heart-like/);
+  assert.match(read("./QuickmatchHearts.jsx"),/ogcl-heart-dislike/);
+  const image=readFileSync(new URL("../../public/quickmatch-hearts.webp",import.meta.url));
+  assert.equal(image.toString("ascii",0,4),"RIFF");
+  assert.equal(image.toString("ascii",8,12),"WEBP");
   assert.match(css,/@container \(max-width:760px\)/);
   assert.doesNotMatch(view,/localStorage|sessionStorage|sendMessage|>Undo</);
 });
