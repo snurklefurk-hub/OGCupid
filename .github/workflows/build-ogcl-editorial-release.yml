@@ -95,6 +95,7 @@ jobs:
           test -s public/ogc-l/terms/index.html
           test -s public/ogc-l/contact/index.html
           test -s public/ogc-l/persona-assets/DBLMf.gif
+          test -s public/ogc-l/profile-assets/porchlight.webp
           test -s public/ogc-l/locations/sa.json
           test -s public/ogc-l/account/assets/persona-D_H1RH6T.js || ls -al public/ogc-l/account/assets/
           grep -q 'ogcl-embed' public/ogc-l/ogcl-embedded.css
