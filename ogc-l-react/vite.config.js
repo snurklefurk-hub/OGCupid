@@ -29,6 +29,9 @@ export default defineConfig({
       const destination = fileURLToPath(new URL("../public/ogc-l/brand/ogcupid-logo-white.png", import.meta.url));
       mkdirSync(fileURLToPath(new URL("../public/ogc-l/brand/", import.meta.url)), {recursive:true});
       copyFileSync(source, destination);
+      // Shared owner-supplied Quickmatch icons (left=Like, right=Dislike).
+      copyFileSync(fileURLToPath(new URL("../public/quickmatch-hearts.webp",import.meta.url)),
+        fileURLToPath(new URL("../public/ogc-l/quickmatch-hearts.webp",import.meta.url)));
       // Publish the existing owner-curated 410 question definitions unchanged,
       // rather than shipping a new/generated copy or maintaining two banks.
       const questionSource = fileURLToPath(new URL("../public/questions/question-bank.js", import.meta.url));
