@@ -4,7 +4,8 @@ import {defaultRoute, primaryNavigation} from "./navigation.mjs";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {SidebarPromos, ProfileFloater, ProfileRefinement} from "./ClassicSidebar.jsx";
 import {filterAndSortMembers, pageMembers} from "./member-directory.mjs";
-import {legacyHref} from "./legacy-links.mjs";
+import PublishedPage from "./PublishedPage.jsx";
+import PersonaPage from "./PersonaPage.jsx";
 import {recommendedPhotoMembers} from "./classic-editorial.mjs";
 import ProfileEditor from "./ProfileEditor.jsx";
 import ProfileSettings from "./ProfileSettings.jsx";
@@ -138,6 +139,17 @@ function TopMemberNav() {
   </nav>;
 }
 
+const publicNavigation=[
+  ["/ogtrends","OgTrends"],["/persona","Dating Persona"],
+  ["/contact","Contact"],["/privacy","Privacy"],["/terms","Terms"]
+];
+function PublicNavigation(){
+  return <nav className="ogcl-public-links" aria-label="Explore OG Cupid and site information">
+    {publicNavigation.map(([path,label])=><NavLink key={path} to={path}
+      className={({isActive})=>isActive?"active":""}>{label}</NavLink>)}
+  </nav>;
+}
+
 function AppShell() {
   return (
     <div className="ogcl-app">
@@ -145,6 +157,7 @@ function AppShell() {
       <LeftRail />
       <main id="ogcl-content" className="ogcl-center" tabIndex={-1}>
         <div className="ogcl-banner"><span className="ogcl-banner-accent" aria-hidden="true" /><TopMemberNav/></div>
+        <PublicNavigation />
         <Outlet />
       </main>
       <RightRail />
@@ -190,7 +203,7 @@ function SignInForm() {
         </form>
         <p><NavLink to="/join">Make your profile</NavLink> · <NavLink to="/recover">Forgot your password?</NavLink> · <NavLink to="/verify">Verify email</NavLink></p>
         <p className="ogcl-note">New here? Create a free account to share more than a photo and a swipe.</p>
-        <p className="ogcl-note"><a href={legacyHref("/ogtrends/")}>Read OgTrends</a> · <a href={legacyHref("/privacy/")}>Privacy policy</a> · <a href={legacyHref("/terms/")}>Terms</a></p>
+        <p className="ogcl-note"><NavLink to="/ogtrends">Read OgTrends</NavLink> · <NavLink to="/privacy">Privacy policy</NavLink> · <NavLink to="/terms">Terms</NavLink></p>
       </div>
     </section>
   );
@@ -288,6 +301,15 @@ export default function App() {
       <Route element={<AppShell />}>
         <Route index element={<Navigate to={defaultRoute} replace />} />
         <Route path="signin" element={<SignInForm />} />
+        <Route path="persona" element={<MemberGate allowOnboarding><PersonaPage/></MemberGate>} />
+        <Route path="quiz" element={<Navigate to="/persona" replace/>} />
+        <Route path="ogtrends" element={<PublishedPage page="ogtrends"/>} />
+        <Route path="ogtrends/zero" element={<PublishedPage page="ogtrends/zero"/>} />
+        <Route path="ogtrends/perfect-profile" element={<PublishedPage page="ogtrends/perfect-profile"/>} />
+        <Route path="ogtrends/references" element={<PublishedPage page="ogtrends/references"/>} />
+        <Route path="contact" element={<PublishedPage page="contact"/>} />
+        <Route path="privacy" element={<PublishedPage page="privacy"/>} />
+        <Route path="terms" element={<PublishedPage page="terms"/>} />
         <Route path="join" element={<JoinForm/>} />
         <Route path="recover" element={<RecoveryForm/>} />
         <Route path="verify" element={<VerifyForm/>} />
