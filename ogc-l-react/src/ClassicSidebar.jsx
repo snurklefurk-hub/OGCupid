@@ -1,17 +1,20 @@
 import React from "react";
 import {NavLink} from "react-router-dom";
-import {legacyHref} from "./legacy-links.mjs";
 import {
   PAGE_PROMOTIONS,PAGE_REFINEMENT,promotionDestination,refinementDestination
 } from "./classic-editorial.mjs";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 
-function Tile({title,body,destination,external=false,refinement=false}) {
+function reactRoute(destination){
+  if(destination==="/account/persona.html")return "/persona";
+  if(destination==="/account/")return "/account";
+  return destination?.replace(/\/$/,"") || null;
+}
+function Tile({title,body,destination,refinement=false}) {
   const inner=<><strong>{title}</strong><span>{body}</span></>;
   const cls=refinement?"ogcl-editorial-card ogcl-editorial-refinement":"ogcl-editorial-card";
   if(!destination)return <div className={cls+" ogcl-inert"}>{inner}</div>;
-  if(external)return <a className={cls} href={legacyHref(destination)}>{inner}</a>;
-  return <NavLink className={cls} to={destination}>{inner}</NavLink>;
+  return <NavLink className={cls} to={reactRoute(destination)}>{inner}</NavLink>;
 }
 
 export function SidebarPromos({side}) {
@@ -21,9 +24,8 @@ export function SidebarPromos({side}) {
   return <div className="ogcl-editorial-stack" aria-label={side==="right"?"More OG Cupid":"Explore OG Cupid"}>
     {tiles.map(tile=>{
       const url=kind==="member"?promotionDestination(tile.destination,profile?.slug):null;
-      const external=url?.startsWith("/ogtrends/")||url?.startsWith("/account/");
       return <Tile key={tile.title} title={tile.title} body={tile.body}
-        destination={url} external={external}/>;
+        destination={url}/>;
     })}
   </div>;
 }
