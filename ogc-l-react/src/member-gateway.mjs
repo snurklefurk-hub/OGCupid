@@ -255,7 +255,114 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
     }finally{clearTimeout(timer);}
   }
 
+  // Scoped server request for native React account/onboarding workflows.
+  // Existing production member Function remains the only data authority.
+  async function accountRequest(path,method="GET",body=null) {
+    const allowed={
+      "/onboarding":new Set(["GET","PUT"]),
+      "/profile":new Set(["GET","PUT"]),
+      "/photos":new Set(["GET","POST"]),
+      "/account/delete":new Set(["POST"]),
+      "/email-preferences":new Set(["GET","PUT"])
+    };
+    if(!allowed[path]?.has(method))
+      throw new MemberAccessError("invalid","Unsupported account request.");
+    const session=await bounded(authClient.getSession());
+    if(session?.error)throw new MemberAccessError("unauthorized","Session is unavailable.");
+    checkedMember(session?.data?.user);
+    const jwt=await getJwt(session?.data?.session);
+    const isPhoto=path==="/photos"&&method==="POST";
+    if(isPhoto && (!(body instanceof Blob)||body.type!=="image/jpeg"||
+         body.size<=80||body.size>2_500_000))
+      throw new MemberAccessError("invalid","Upload a cropped JPEG (2.5 MB maximum).");
+    if(!isPhoto && method!=="GET" && (!body||typeof body!=="object"||
+      Array.isArray(body)||JSON.stringify(body).length>12000))
+      throw new MemberAccessError("invalid","Invalid account update.");
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),MAX_WAIT_MS);
+    try {
+      const response=await fetcher(endpoints.memberApiBaseUrl+path,{
+        method,credentials:"omit",cache:"no-store",
+        headers:{
+          Authorization:"Bearer "+jwt,Accept:"application/json",
+          ...(method!=="GET"?{"Content-Type":isPhoto?"image/jpeg":"application/json"}:{})
+        },
+        ...(method!=="GET"?{body:isPhoto?body:JSON.stringify(body)}:{}),
+        signal:controller.signal
+      });
+      if(response.status===400||response.status===409||response.status===413)
+        throw new MemberAccessError("invalid","Please check your entry and try again.");
+      if(response.status===429)throw new MemberAccessError("rate_limited","Too many attempts. Try again later.");
+      requireResponse(response);
+      const result=await bounded(response.json());
+      if(!result || typeof result!=="object")throw new MemberAccessError("unavailable","Invalid account response.");
+      return result;
+    }catch(error){
+      if(error instanceof MemberAccessError)throw error;
+      throw new MemberAccessError("unavailable","Could not reach the account service.");
+    }finally{clearTimeout(timer);}
+  }
+
   return Object.freeze({
+    accountRequest,
+    async signUp(name,email,password,callbackURL){
+      if(typeof name!=="string"||name.trim().length<2||name.trim().length>60||
+         typeof email!=="string"||email.trim().length>254||
+         typeof password!=="string"||password.length<12||
+         typeof callbackURL!=="string"||!callbackURL.startsWith("https://"))
+        throw new MemberAccessError("invalid","Check your display name, email and password.");
+      const result=await bounded(authClient.signUp.email({
+        name:name.trim(),email:email.trim(),password,callbackURL
+      }));
+      if(result?.error)throw new MemberAccessError("invalid","Account could not be created with those details.");
+      return true;
+    },
+    async requestEmailVerification(email,callbackURL){
+      if(typeof email!=="string"||!email.includes("@"))
+        throw new MemberAccessError("invalid","Enter a valid email.");
+      const result=await bounded(authClient.sendVerificationEmail({email:email.trim(),callbackURL}));
+      if(result?.error)throw new MemberAccessError("unavailable","Couldn't send verification email.");
+      return true;
+    },
+    async requestRecovery(email){
+      if(typeof email!=="string"||!email.includes("@"))
+        throw new MemberAccessError("invalid","Enter a valid email.");
+      const method=authClient.forgetPassword?.emailOtp||
+        authClient.emailOtp?.requestPasswordReset;
+      if(typeof method!=="function")
+        throw new MemberAccessError("unavailable","Recovery is unavailable.");
+      const result=authClient.forgetPassword?.emailOtp
+        ? await bounded(authClient.forgetPassword.emailOtp({email:email.trim()}))
+        : await bounded(authClient.emailOtp.requestPasswordReset({email:email.trim()}));
+      if(result?.error)throw new MemberAccessError("unavailable","Couldn't send a recovery code.");
+      return true;
+    },
+    async resetPassword(email,otp,password){
+      if(typeof email!=="string"||typeof otp!=="string"||otp.trim().length<4||
+         typeof password!=="string"||password.length<12)
+        throw new MemberAccessError("invalid","Enter your email, recovery code and new password.");
+      if(typeof authClient.emailOtp?.resetPassword!=="function")
+        throw new MemberAccessError("unavailable","Password recovery is unavailable.");
+      const result=await bounded(authClient.emailOtp.resetPassword({
+        email:email.trim(),otp:otp.trim(),password
+      }));
+      if(result?.error)throw new MemberAccessError("invalid","Recovery code or password was not accepted.");
+      return true;
+    },
+    async deleteMyAccount(password,confirm){
+      if(confirm!=="DELETE"||typeof password!=="string"||password.length<12)
+        throw new MemberAccessError("invalid","Enter your current password and type DELETE.");
+      const session=await bounded(authClient.getSession());
+      checkedMember(session?.data?.user);
+      const email=session?.data?.user?.email;
+      if(typeof email!=="string"||!email.includes("@"))
+        throw new MemberAccessError("unauthorized","Your verified account email is unavailable.");
+      const result=await accountRequest("/account/delete","POST",{email,password,confirm});
+      if(result.deleted!==true)throw new MemberAccessError("unavailable","Deletion was not confirmed.");
+      // The Auth user row and sessions were already removed by the server.
+      try{await bounded(authClient.signOut());}catch{}
+      return true;
+    },
     async adminRequest(path,method="GET",payload=null){
       const pathname=path.split("?")[0];
       if(!/^\/admin(?:\/(?:members|reports)(?:\/[0-9a-f-]{36}(?:\/(?:action|reinstate))?)?)?$/.test(pathname) ||
