@@ -58,9 +58,9 @@ function LeftRail() {
   const recommendations = useMemo(() => recommendedPhotoMembers(discovery), [discovery]);
   return (
     <aside className="ogcl-left" aria-label="Primary navigation">
-      <a className="ogcl-brand" href={legacyHref("/account/")} aria-label="OG Cupid member home">
+      <NavLink className="ogcl-brand" to="/matches" aria-label="OG Cupid member home">
         <img src="/brand/ogcupid-logo-white.png" width="172" height="42" alt="OG Cupid" />
-      </a>
+      </NavLink>
       <nav className="ogcl-primary" aria-label="OG Cupid main">
         {primaryNavigation.map(({path,label,icon}) =>
           isMember ? <NavLink key={path} to={path}
@@ -172,8 +172,8 @@ function SignInForm() {
   return (
     <section className="ogcl-view" aria-labelledby="ogcl-signin-heading">
       <header className="ogcl-view-head">
-        <h1 id="ogcl-signin-heading">Welcome to OG Cupid</h1>
-        <p>Sign in with your existing OG Cupid account.</p>
+        <h1 id="ogcl-signin-heading">Online dating is dead because it sucks.</h1>
+        <p>It doesn’t have to. We’re bringing back thoughtful profiles, real compatibility, and the gloriously weird internet where people actually got to know each other.</p>
       </header>
       <div className="ogcl-content-panel">
         <form className="ogcl-signin-form" onSubmit={submit}>
@@ -182,8 +182,9 @@ function SignInForm() {
           <button type="submit" disabled={busy}>{busy ? "Checking account…" : "Sign in"}</button>
           {(error || sessionError) && <p className="ogcl-error" role="alert">{error || sessionError}</p>}
         </form>
-        <p><a href={legacyHref("/account/?join=1")}>Create an account</a> · <a href={legacyHref("/account/")}>Forgot your password?</a></p>
-        <p className="ogcl-note">New accounts and unfinished onboarding still use the established member app while their views are migrated.</p>
+        <p><a href={legacyHref("/account/?join=1")}>Make your profile</a> · <a href={legacyHref("/account/")}>Forgot your password?</a></p>
+        <p className="ogcl-note">New here? Create a free account to share more than a photo and a swipe.</p>
+        <p className="ogcl-note"><a href={legacyHref("/ogtrends/")}>Read OgTrends</a> · <a href={legacyHref("/privacy/")}>Privacy policy</a> · <a href={legacyHref("/terms/")}>Terms</a></p>
       </div>
     </section>
   );
