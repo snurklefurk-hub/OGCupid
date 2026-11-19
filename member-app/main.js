@@ -362,6 +362,15 @@ function syncMemberProfileLinks(completedOnboarding) {
 
 function renderMemberPage() {
   const completedOnboarding = Boolean(currentUser && onboarding?.complete);
+  // Transitional bridge for production React cutover. Account creation,
+  // recovery, onboarding and deletion remain fully available here; members
+  // whose completed onboarding is confirmed by the server enter React.
+  if (import.meta.env.VITE_OGCL_LIVE_CUTOVER === "true" &&
+      completedOnboarding &&
+      (!window.location.hash || window.location.hash === "#member-title")) {
+    window.location.replace("/#/matches");
+    return;
+  }
   const profileUrl = syncMemberProfileLinks(completedOnboarding);
   if (profileUrl && ["#profile-title","#preview-title","#photos-title"].includes(window.location.hash)) {
     window.location.replace(profileUrl + (window.location.hash === "#photos-title" ? "#photos" : ""));
