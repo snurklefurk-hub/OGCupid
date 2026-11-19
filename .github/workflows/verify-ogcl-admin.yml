@@ -8,6 +8,7 @@ on:
       - 'api/member-profile.ts'
       - 'db/migrations/027_admin_moderation.sql'
       - 'ogc-l-react/**'
+      - 'scripts/smoke-ogcl-admin.mjs'
       - '.github/workflows/verify-ogcl-admin.yml'
 permissions:
   contents: read
@@ -29,6 +30,8 @@ jobs:
           npm install --no-save esbuild@0.25.12
           npx esbuild api/member-profile.ts --bundle --platform=node --target=node24 --format=esm --banner:js="import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);" --outfile="$RUNNER_TEMP/admin-member-function.mjs"
           node --check "$RUNNER_TEMP/admin-member-function.mjs"
+      - name: Smoke real dev and shared Neon admin routes without credentials
+        run: node scripts/smoke-ogcl-admin.mjs
       - name: Verify React admin dashboard and bundle
         working-directory: ogc-l-react
         run: |
