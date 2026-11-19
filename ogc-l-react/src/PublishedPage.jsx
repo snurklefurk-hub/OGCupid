@@ -1,6 +1,6 @@
 import React,{useEffect,useMemo,useRef} from "react";
 import {useLocation,useParams} from "react-router-dom";
-import {useMemberSession} from "./MemberSessionProvider.jsx";
+import {reactPathForLegacy} from "./editorial-routes.mjs";
 import trendsHtml from "../../public/ogtrends/index.html?raw";
 import zeroHtml from "../../public/ogtrends/zero/index.html?raw";
 import perfectHtml from "../../public/ogtrends/perfect-profile/index.html?raw";
@@ -25,25 +25,6 @@ export const LEGACY_PUBLIC_PAGES=Object.freeze({
   terms:Object.freeze({title:"Terms & Conditions",html:termsHtml,origin:"/terms/",kind:"legal"})
 });
 
-export function reactPathForLegacy(href){
-  if(typeof href!=="string")return null;
-  if(href.startsWith("#")||href.startsWith("mailto:")||href.startsWith("tel:"))return null;
-  let url;
-  try{url=new URL(href,"https://ogcupid.onrender.com");}
-  catch{return null;}
-  if(url.origin!=="https://ogcupid.onrender.com")return null;
-  const path=url.pathname.replace(/\/index\.html$/,"/").replace(/\/+$/,"")||"/";
-  if(path==="/account")return url.searchParams.get("join")==="1"?"/#/join":"/#/signin";
-  if(path==="/account/persona.html"||path==="/quiz")return "/#/persona"+(url.search?url.search:"");
-  if(path==="/questions")return "/#/questions";
-  if(path==="/")return "/#/matches";
-  const allowed=["/ogtrends","/ogtrends/zero","/ogtrends/perfect-profile","/ogtrends/references",
-    "/contact","/privacy","/terms"];
-  if(allowed.includes(path))return "/#"+path+(url.hash?"?section="+encodeURIComponent(url.hash.slice(1)):"");
-  const slug=/^\/profiles\/([a-z0-9]+(?:-[a-z0-9]+)*)$/.exec(path);
-  if(slug)return "/#/profiles/"+slug[1];
-  return null;
-}
 
 export function extractPublishedContent(source,origin){
   if(typeof DOMParser==="undefined")throw Error("This browser cannot display the original article.");
@@ -90,7 +71,6 @@ export default function PublishedPage({page}){
   const meta=LEGACY_PUBLIC_PAGES[page];
   const root=useRef(null);
   const location=useLocation();
-  const {kind}=useMemberSession();
   if(!meta)return <section className="ogcl-view" role="alert">This page is not available.</section>;
   const html=useMemo(()=>extractPublishedContent(meta.html,meta.origin),[meta]);
   usePublishedTitle(meta.title);
