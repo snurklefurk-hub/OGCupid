@@ -4,7 +4,7 @@ import {defaultRoute, primaryNavigation} from "./navigation.mjs";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {SidebarPromos, ProfileFloater, ProfileRefinement} from "./ClassicSidebar.jsx";
 import {filterAndSortMembers, pageMembers} from "./member-directory.mjs";
-import {legacyHref} from "./legacy-links.mjs";
+import {EmbeddedEditorial,PersonaRoute} from "./EditorialPages.jsx";
 import {recommendedPhotoMembers} from "./classic-editorial.mjs";
 import ProfileEditor from "./ProfileEditor.jsx";
 import ProfileSettings from "./ProfileSettings.jsx";
@@ -73,6 +73,11 @@ function LeftRail() {
             <span className="ogcl-nav-glyph" aria-hidden="true">{icon}</span><span>{label}</span>
           </span>
         )}
+      </nav>
+      <nav className="ogcl-public-nav" aria-label="More on OG Cupid">
+        <NavLink to="/persona">Dating Persona Test</NavLink>
+        <NavLink to="/ogtrends">OgTrends</NavLink>
+        <NavLink to="/contact">Contact</NavLink>
       </nav>
       <section className="ogcl-left-note" aria-label="Suggested members">
         <h2>You might like</h2>
@@ -146,6 +151,16 @@ function AppShell() {
       <main id="ogcl-content" className="ogcl-center" tabIndex={-1}>
         <div className="ogcl-banner"><span className="ogcl-banner-accent" aria-hidden="true" /><TopMemberNav/></div>
         <Outlet />
+        <footer className="ogcl-footer" aria-label="Site information">
+          <span>OG Cupid · Independent, not affiliated with OkCupid or Match Group.</span>
+          <nav aria-label="Site links">
+            <NavLink to="/ogtrends">OgTrends</NavLink>
+            <NavLink to="/persona">Dating Persona</NavLink>
+            <NavLink to="/contact">Contact</NavLink>
+            <NavLink to="/privacy">Privacy</NavLink>
+            <NavLink to="/terms">Terms</NavLink>
+          </nav>
+        </footer>
       </main>
       <RightRail />
       <ProfileFloater Photo={MemberPhoto}/>
@@ -190,7 +205,7 @@ function SignInForm() {
         </form>
         <p><NavLink to="/join">Make your profile</NavLink> · <NavLink to="/recover">Forgot your password?</NavLink> · <NavLink to="/verify">Verify email</NavLink></p>
         <p className="ogcl-note">New here? Create a free account to share more than a photo and a swipe.</p>
-        <p className="ogcl-note"><a href={legacyHref("/ogtrends/")}>Read OgTrends</a> · <a href={legacyHref("/privacy/")}>Privacy policy</a> · <a href={legacyHref("/terms/")}>Terms</a></p>
+        <p className="ogcl-note"><NavLink to="/ogtrends">Read OgTrends</NavLink> · <NavLink to="/privacy">Privacy policy</NavLink> · <NavLink to="/terms">Terms</NavLink></p>
       </div>
     </section>
   );
@@ -293,6 +308,14 @@ export default function App() {
         <Route path="verify" element={<VerifyForm/>} />
         <Route path="onboarding" element={<Onboarding/>} />
         <Route path="account" element={<AccountManagement/>} />
+        <Route path="persona" element={<PersonaRoute/>} />
+        <Route path="ogtrends" element={<EmbeddedEditorial pageKey="ogtrends"/>} />
+        <Route path="ogtrends/zero" element={<EmbeddedEditorial pageKey="zero"/>} />
+        <Route path="ogtrends/perfect-profile" element={<EmbeddedEditorial pageKey="perfect-profile"/>} />
+        <Route path="ogtrends/references" element={<EmbeddedEditorial pageKey="references"/>} />
+        <Route path="privacy" element={<EmbeddedEditorial pageKey="privacy"/>} />
+        <Route path="terms" element={<EmbeddedEditorial pageKey="terms"/>} />
+        <Route path="contact" element={<EmbeddedEditorial pageKey="contact"/>} />
         <Route path="photos" element={<MemberGate><PhotoManager/></MemberGate>} />
         <Route path="matches" element={<MemberGate><MemberDirectory /></MemberGate>} />
         <Route path="profile" element={<MemberGate><ProfileEditor /></MemberGate>} />
