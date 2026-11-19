@@ -1,0 +1,43 @@
+name: Verify OGC-L administrator dashboard
+on:
+  pull_request:
+    branches: [OGC-lovable]
+    paths:
+      - 'api/member-admin.js'
+      - 'api/member-admin.test.js'
+      - 'api/member-profile.ts'
+      - 'db/migrations/027_admin_moderation.sql'
+      - 'ogc-l-react/**'
+      - 'scripts/smoke-ogcl-admin.mjs'
+      - '.github/workflows/verify-ogcl-admin.yml'
+permissions:
+  contents: read
+jobs:
+  admin-security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate admin handler and role-bound contract
+        run: |
+          node --check api/member-admin.js
+          node --test api/member-admin.test.js
+      - name: Bundle real member Function with admin routes
+        run: |
+          npm ci
+          npm install --no-save esbuild@0.25.12
+          npx esbuild api/member-profile.ts --bundle --platform=node --target=node24 --format=esm --banner:js="import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);" --outfile="$RUNNER_TEMP/admin-member-function.mjs"
+          node --check "$RUNNER_TEMP/admin-member-function.mjs"
+      - name: Smoke real dev and shared Neon admin routes without credentials
+        run: node scripts/smoke-ogcl-admin.mjs
+      - name: Verify React admin dashboard and bundle
+        working-directory: ogc-l-react
+        run: |
+          npm install --no-audit --no-fund
+          npm test
+          OGCL_DEPLOY_BASE=/ npm run build
+      - name: Confirm production legacy entrypoints unchanged
+        run: |
+          test -z "$(git status --porcelain -- index.html public/account public/profiles)"

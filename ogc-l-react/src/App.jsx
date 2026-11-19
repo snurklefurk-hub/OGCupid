@@ -11,6 +11,7 @@ import ProfileSettings from "./ProfileSettings.jsx";
 import PublicMemberProfile from "./PublicMemberProfile.jsx";
 import QuickmatchView from "./QuickmatchView.jsx";
 import MessagesView from "./MessagesView.jsx";
+import AdminDashboard from "./AdminDashboard.jsx";
 import MatchQuestions from "./MatchQuestions.jsx";
 
 const profileHref = slug => "#/profiles/" + encodeURIComponent(slug);
@@ -107,12 +108,27 @@ function RightRail() {
   );
 }
 
+function AdminLink() {
+  const {kind,adminRequest}=useMemberSession();
+  const [allowed,setAllowed]=useState(false);
+  useEffect(()=>{
+    let active=true;setAllowed(false);
+    if(kind==="member"||kind==="onboarding")void adminRequest("/admin").then(()=>{if(active)setAllowed(true);})
+      .catch(()=>{if(active)setAllowed(false);});
+    return ()=>{active=false;};
+  },[kind,adminRequest]);
+  return allowed?<NavLink to="/admin">Admin</NavLink>:null;
+}
+
 function TopMemberNav() {
   const session=useMemberSession();
   return <nav className="ogcl-top-links" aria-label="Member account">
-    {session.kind==="member" && <>
-      <NavLink to={session.profile?.slug?"/profiles/"+session.profile.slug:"/profile"}>Profile</NavLink>
-      <NavLink to="/settings">Settings</NavLink>
+    {(session.kind==="member"||session.kind==="onboarding") && <>
+      {session.kind==="member"&&<>
+        <NavLink to={session.profile?.slug?"/profiles/"+session.profile.slug:"/profile"}>Profile</NavLink>
+        <NavLink to="/settings">Settings</NavLink>
+      </>}
+      <AdminLink />
       <button type="button" onClick={session.signOut}>Sign out</button>
     </>}
   </nav>;
@@ -201,6 +217,13 @@ function MemberGate({children}) {
   );
 }
 
+// Administration is independent of dating-profile onboarding. The admin
+// Function still verifies JWT liveness AND database role before every call.
+function AdminGate({children}) {
+  const {kind}=useMemberSession();
+  return kind==="onboarding"?children:<MemberGate>{children}</MemberGate>;
+}
+
 function PreviewView({title, intro, footnote, children}) {
   return (
     <section className="ogcl-view" aria-labelledby="ogcl-view-title">
@@ -272,6 +295,7 @@ export default function App() {
         <Route path="questions" element={<MemberGate><MatchQuestions /></MemberGate>} />
         <Route path="quickmatch" element={<MemberGate><QuickmatchView Photo={MemberPhoto} /></MemberGate>} />
         <Route path="messages" element={<MemberGate><MessagesView /></MemberGate>} />
+        <Route path="admin" element={<AdminGate><AdminDashboard /></AdminGate>} />
         <Route path="messages/:peerId" element={<MemberGate><MessagesView /></MemberGate>} />
         {Object.entries(views).map(([path, [title, intro, footnote]]) => (
           <Route key={path} path={path} element={

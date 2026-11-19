@@ -187,11 +187,16 @@ export function MemberSessionProvider({children}) {
     return gateway.saveMatchAnswer(answer);
   }, []);
 
+  const adminRequest=useCallback(async(path,method="GET",body=null)=>{
+    if(!gateway)throw new MemberAccessError("unavailable","Admin service not configured.");
+    return gateway.adminRequest(path,method,body);
+  },[]);
+
   const value = useMemo(() => ({
     ...session, refresh, signIn, signOut, getMemberAvatar, getMemberGallery,
     loadOwnEssays, saveOwnEssay, loadOwnSettings, saveOwnSetting, saveOwnLookingFor, getPublicProfile,
     loadMatchAnswers, saveMatchAnswer, loadQuickmatchDecisions, saveQuickmatchDecision,
-    loadInbox, loadConversation, sendMessage, setMessageBlock, reportMessage
+    loadInbox, loadConversation, sendMessage, setMessageBlock, reportMessage, adminRequest
   }), [session, refresh, signIn, signOut, getMemberAvatar, getMemberGallery, loadOwnEssays, saveOwnEssay,
     getPublicProfile, loadMatchAnswers, saveMatchAnswer]);
 
