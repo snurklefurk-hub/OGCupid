@@ -51,7 +51,7 @@ export default function PersonaPage(){
       }
     };
     node.addEventListener("load",onLoad);
-    if(node.contentDocument?.readyState==="complete")onLoad();
+    try{if(node.contentDocument?.readyState==="complete")onLoad();}catch{ /* Staging fallback may be cross-origin. */ }
     return()=>{
       node.removeEventListener("load",onLoad);
       observer?.disconnect();
