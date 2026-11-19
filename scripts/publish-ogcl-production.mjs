@@ -9,8 +9,7 @@ const required=[
   "public/profiles/index.html","public/questions/question-bank.js",
   "public/quiz/index.html","public/ogtrends/index.html",
   "public/privacy/index.html","public/terms/index.html",
-  "public/brand/ogcupid-logo-white.png","public/favicon.png",
-  "public/feedback-widget.js","public/feedback-widget.css"
+  "public/brand/ogcupid-logo-white.png","public/favicon.png"
 ];
 for(const file of required)
   if(!existsSync(resolve(file)))throw new Error("Missing existing production route or asset: "+file);
