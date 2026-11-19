@@ -1,0 +1,103 @@
+name: Build OG Cupid React editorial and Persona unification release candidate
+on:
+  push:
+    branches: [feature/react-public-pages-20261119]
+    paths:
+      - 'ogc-l-react/**'
+      - 'member-app/**'
+      - 'public/profiles/index.html'
+      - 'public/account/persona.html'
+      - 'public/ogtrends/**'
+      - 'public/contact/index.html'
+      - 'public/privacy/index.html'
+      - 'public/terms/index.html'
+      - 'public/quiz/index.html'
+      - 'public/questions/index.html'
+      - 'public/profile-showcase.js'
+      - 'scripts/publish-ogcl-production.mjs'
+      - '.github/workflows/build-react-public-release.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: ogcl-public-content-candidate
+  cancel-in-progress: false
+jobs:
+  validate-and-publish-candidate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install locked member app dependencies and React shell
+        run: |
+          npm ci --prefix member-app
+          if [ -f ogc-l-react/package-lock.json ]; then
+            npm ci --prefix ogc-l-react
+          else
+            npm install --prefix ogc-l-react --no-audit --no-fund
+          fi
+      - name: Build rollback-only legacy account assets with unified URL bridge
+        run: npm run build --prefix member-app
+        env:
+          VITE_OGC_AUTH_URL: https://ep-hidden-breeze-bbdn5nsb.neonauth.c-15.us-east-1.aws.neon.tech/neondb/auth
+          VITE_OGC_MEMBER_API_URL: https://br-plain-unit-bbcbxpqq-members.compute.c-15.us-east-1.aws.neon.tech/profile
+          VITE_OGC_REGISTRATION_ENABLED: 'true'
+          VITE_OGCL_LIVE_CUTOVER: 'true'
+      - name: Build React frontend into existing public static directory without cleanup
+        run: npm run build --prefix ogc-l-react
+        env:
+          OGCL_PRODUCTION_ROOT: 'true'
+          VITE_OGC_AUTH_URL: https://ep-hidden-breeze-bbdn5nsb.neonauth.c-15.us-east-1.aws.neon.tech/neondb/auth
+          VITE_OGC_MEMBER_API_URL: https://br-plain-unit-bbcbxpqq-members.compute.c-15.us-east-1.aws.neon.tech/profile
+          VITE_OGCL_LEGACY_ORIGIN: ''
+          VITE_OGC_REGISTRATION_ENABLED: 'true'
+      - name: Verify production assets and publish primary React document
+        run: OGCL_PRODUCTION_ROOT=true node scripts/publish-ogcl-production.mjs
+      - name: Run account, privacy, admin, member and React regression checks
+        run: |
+          npm test --prefix member-app
+          node --test api/member-admin.test.js api/member-messages.test.js api/member-quickmatch.test.js
+          npm test --prefix ogc-l-react
+          node --test ogc-l-react/src/public-pages-integration.test.mjs
+      - name: Ensure legacy data-sensitive pages and assets survived
+        run: |
+          test -s index.html
+          test -s public/index.html
+          test -s public/account/index.html
+          test -s public/account/persona.html
+          test -s public/profiles/index.html
+          test -s public/quiz/index.html
+          test -s public/questions/question-bank.js
+          test -s public/ogtrends/index.html
+          grep -q 'legacy.*emergency\|legacy' public/account/index.html
+          grep -q 'location.replace' public/profiles/index.html
+          grep -q 'ogcl-persona-embedded' public/account/persona.html
+          grep -q 'location.replace' public/ogtrends/index.html
+          grep -q 'location.replace' public/privacy/index.html
+          grep -q 'location.replace' public/terms/index.html
+          grep -q 'location.replace' public/contact/index.html
+          grep -q 'location.replace' public/quiz/index.html
+          grep -q 'location.replace' public/questions/index.html
+          grep -q '/assets/' index.html
+          ! grep -q 'noindex,nofollow' index.html
+          grep -q 'VITE_OGCL_LIVE_CUTOVER' member-app/main.js
+      - name: Commit verified static candidate to feature branch, not live main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -f index.html public/index.html public/assets public/account ogc-l-react/package-lock.json
+          if ! git diff --cached --quiet; then
+            git commit -m "build: publish protected React root and transitional account assets"
+            for attempt in 1 2 3; do
+              git pull --rebase origin feature/react-public-pages-20261119
+              if git push origin HEAD:feature/react-public-pages-20261119; then
+                exit 0
+              fi
+            done
+            echo "Could not publish validated candidate branch" >&2
+            exit 1
+          fi
