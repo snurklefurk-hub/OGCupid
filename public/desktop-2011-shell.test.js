@@ -22,7 +22,7 @@ test("CSS contains real line breaks, not literal backslash-n escapes in selector
     "Literal backslash-n in a selector makes signed-in .shell rules fail to match");
 });
 
-test("member account and profile share edge-to-edge 16 / 68 / 16 viewport grid", () => {
+test("account and profile keep the 16 / 68 / 16 desktop grid in normal document flow", () => {
   assert.match(css, /--ogc-desktop-left:16%;\s*--ogc-desktop-right:16%/);
   const block = sharedRule(
     "body.ogc-member-theme.is-authenticated .shell",
@@ -30,32 +30,33 @@ test("member account and profile share edge-to-edge 16 / 68 / 16 viewport grid",
   );
   assert.match(block, /max-width:none!important/);
   assert.match(block, /width:100%!important/);
-  assert.match(block, /height:100vh!important/);
+  assert.match(block, /height:auto!important/);
+  assert.match(block, /min-height:100vh!important/);
   assert.match(block, /margin:0!important/);
   assert.match(block, /padding:0!important/);
   assert.match(block, /grid-template-columns:var\(--ogc-desktop-left\) minmax\(0,1fr\) var\(--ogc-desktop-right\)!important/);
 });
 
-test("both pages use the same left/nav, center-scroll, and right rail grid positions", () => {
+test("both pages use the same left, center, and right grid positions without separate scrolling", () => {
   const left = sharedRule(
     "body.ogc-member-theme.is-authenticated .masthead",
     ".profile-site .profile-rail"
   );
   assert.match(left, /grid-column:1!important;grid-row:1!important/);
-  assert.match(left, /height:100vh!important/);
+  assert.match(left, /height:auto!important/);
   const center = sharedRule(
     "body.ogc-member-theme.is-authenticated main#main",
     ".profile-site .profile-main"
   );
   assert.match(center, /grid-column:2!important;grid-row:1!important/);
-  assert.match(center, /height:100vh!important/);
-  assert.match(center, /overflow-y:auto!important/);
+  assert.match(center, /height:auto!important/);
+  assert.match(center, /overflow-y:visible!important/);
   const right = sharedRule(
     "body.ogc-member-theme.is-authenticated .period-promo-rail",
     ".profile-site .period-promo-rail"
   );
   assert.match(right, /grid-column:3!important;grid-row:1!important/);
-  assert.match(right, /height:100vh!important/);
+  assert.match(right, /height:auto!important/);
 });
 
 test("CSS is last in both published pages, and Vite rebuild preserves that order", () => {
