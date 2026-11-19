@@ -99,10 +99,15 @@ test("network failures and five-second timeout leave public homepage accessible"
   assert.deepEqual(timeout.redirects, []);
 });
 
-test("no spoofable local user flag is used and the homepage hides during verification", () => {
-  assert.doesNotMatch(source, /localStorage|sessionStorage|document\.cookie/);
-  assert.match(source, /session\s*&&\s*user\?\.id/);
+test("React root owns session routing without legacy home redirect or spoofable local auth", () => {
+  assert.doesNotMatch(source, /localStorage|sessionStorage|document\\.cookie/);
+  assert.match(source, /session\\s*&&\\s*user\\?\\.id/);
   const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
-  assert.match(html, /html\.ogc-session-pending body\{visibility:hidden\}/);
-  assert.match(html, /src="\/home-auth-redirect\.js\?v=1"/);
+  const provider = readFileSync(new URL("../ogc-l-react/src/MemberSessionProvider.jsx", import.meta.url),"utf8");
+  assert.match(html, /<div id="root"><\\/div>/);
+  assert.match(html, /src="\\/assets\\/index-[^"]+\\.js"/);
+  assert.doesNotMatch(html,/home-auth-redirect\\.js/);
+  assert.match(provider,/setSession\\(blank\\)/);
+  assert.match(provider,/gateway\\.load\\(\\)/);
+  assert.match(provider,/setSession\\(\\.\\.\\.blank, kind:"guest"/);
 });
