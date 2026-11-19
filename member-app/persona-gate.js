@@ -52,7 +52,10 @@ async function checkMembership() {
     if(!response.ok){returnToAccount();return;}
     const status=await response.json();
     if(!status.photo && !status.explored){
-      window.location.replace("/account/#welcome-title");return;
+      if(new URLSearchParams(window.location.search).get("embedded")==="1"&&window.parent!==window){
+        window.parent.postMessage({type:"ogc-persona-onboarding-needed"},window.location.origin);
+      }else window.location.replace("/account/#welcome-title");
+      return;
     }
     // Reveal only after Neon Auth and the member's server-backed photo stage.
     document.documentElement.classList.remove("member-gated");
