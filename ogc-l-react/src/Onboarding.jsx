@@ -1,6 +1,7 @@
 import React,{useEffect,useRef,useState} from "react";
 import {Navigate,NavLink,useNavigate} from "react-router-dom";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
+import {legacyHref} from "./legacy-links.mjs";
 import PhotoManager from "./PhotoManager.jsx";
 import "./account.css";
 
@@ -262,7 +263,7 @@ export default function Onboarding(){
         <p>Answer 25 match questions to unlock member discovery. Your answers are saved as you go.</p>
         <NavLink className="ogcl-button" to="/questions">Answer match questions</NavLink>
         <p className="ogcl-note">Alternatively, you can take the 40-question Dating Persona Test.</p>
-        <a href="/account/persona.html?onboarding=1">Take the Dating Persona Test</a>
+        <a href={legacyHref("/account/persona.html?onboarding=1")}>Take the Dating Persona Test</a>
         <p><button type="button" className="ogcl-button ogcl-secondary" disabled={busy}
           onClick={()=>void load()}>Check my saved progress</button></p>
         {error&&<p className="ogcl-error">{error}</p>}
@@ -277,7 +278,7 @@ export default function Onboarding(){
         <NavLink to="/account">Account settings and deletion</NavLink>
         <NavLink to="/verify">Verify email</NavLink>
         <button type="button" onClick={()=>void signOut()}>Sign out</button>
-        <a href="/contact/">Contact</a>
+        <a href={legacyHref("/contact/")}>Contact</a>
       </nav>
       </>}
     </div>
