@@ -23,7 +23,7 @@ test("all seven original articles/legal documents have React routes and nonempty
     assert.ok(source.includes(marker),route+" lost original text");
     assert.ok(page.includes(route),route+" missing from editorial config");
     assert.ok(app.includes('path="'+route+'"'),route+" missing React route");
-    assert.ok(source.includes('location.replace("/#'+route+'"'),route+" old URL not unified");
+    assert.ok(source.includes('location.replace("/#/'+route+'"'),route+" old URL not unified");
     assert.match(source,/legacy/);
   }
 });
