@@ -36,9 +36,13 @@ test("sign-out clears private state before backend confirmation",()=>{
   assert.match(provider, /Sign-out could not be confirmed/);
 });
 
-test("shell layout dimensions and scroll behavior are preserved",()=>{
+test("three-column shell uses native document scrolling rather than per-column scrollbars",()=>{
   assert.match(css, /grid-template-columns:16% minmax\(0,1fr\) 16%/);
-  assert.match(css, /\.ogcl-center\s*\{[^}]*overflow:auto/);
+  assert.match(css, /height:auto;width:100%;min-height:100vh/);
+  assert.match(css, /\.ogcl-left, \.ogcl-right \{height:auto;overflow:visible/);
+  assert.match(css, /\.ogcl-center \{height:auto;[^}]*overflow:visible/);
+  assert.doesNotMatch(css, /height:100dvh|\.ogcl-center \{[^}]*overflow:auto/);
+  assert.match(css, /position:absolute;z-index:25;right:10px;top:6px/);
   assert.match(app, /<LeftRail\s*\/>\s*<main[^>]*>[^]*<Outlet\s*\/>[^]*<RightRail\s*\/>/);
 });
 
