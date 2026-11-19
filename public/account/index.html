@@ -1,6 +1,22 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <!-- Existing /account URLs now enter the unified React app. Preserve
+       ?legacy=1 only as a non-default emergency rollback path. -->
+  <script>
+    (function(){
+      var url=new URL(location.href);
+      if(url.searchParams.get("legacy")==="1")return;
+      var oldHash=String(location.hash||"").toLowerCase();
+      var map={"#welcome-title":"/onboarding","#member-title":"/matches",
+        "#profile-title":"/profile","#photos-title":"/photos",
+        "#question-title":"/questions","#questions-title":"/questions",
+        "#settings-title":"/account","#preview-title":"/profile"};
+      var destination=url.searchParams.get("join")==="1"?"/join":
+        url.searchParams.has("recover")?"/recover":map[oldHash]||"/signin";
+      location.replace("/#"+destination);
+    }());
+  </script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#2963a4">
