@@ -14,7 +14,7 @@ const memberApiUrl = local
 
 function returnToAccount() {
   if(new URLSearchParams(window.location.search).get("embedded")==="1"&&window.parent!==window){
-    window.parent.postMessage({type:"ogc-persona-auth-needed"},window.location.origin);
+    window.parent.postMessage({type:"ogc-persona-auth-needed"},"*");
     return;
   }
   const url = new URL("/account/", window.location.origin);
@@ -53,7 +53,7 @@ async function checkMembership() {
     const status=await response.json();
     if(!status.photo && !status.explored){
       if(new URLSearchParams(window.location.search).get("embedded")==="1"&&window.parent!==window){
-        window.parent.postMessage({type:"ogc-persona-onboarding-needed"},window.location.origin);
+        window.parent.postMessage({type:"ogc-persona-onboarding-needed"},"*");
       }else window.location.replace("/account/#welcome-title");
       return;
     }
