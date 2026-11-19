@@ -257,7 +257,9 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
 
   return Object.freeze({
     async adminRequest(path,method="GET",payload=null){
-      if(!/^\/admin(?:\/(?:members|reports)(?:\/[0-9a-f-]{36}(?:\/(?:action|reinstate))?)?)?$/.test(path) ||
+      const pathname=path.split("?")[0];
+      if(!/^\/admin(?:\/(?:members|reports)(?:\/[0-9a-f-]{36}(?:\/(?:action|reinstate))?)?)?$/.test(pathname) ||
+         (path.includes("?") && (!path.startsWith("/admin/members?q=") || method!=="GET")) ||
          !["GET","POST"].includes(method))
         throw new MemberAccessError("invalid","Unsupported admin request.");
       const session=await bounded(authClient.getSession());
