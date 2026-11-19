@@ -59,14 +59,14 @@ test("Persona routes require authenticated member and onboarding photo prerequis
   assert.match(gate,/ogc:persona-auth-required/);
   assert.match(saver,/ogc:persona-saved/);
   assert.match(editorial,/event\.origin!==window\.location\.origin/);
-  assert.match(editorial,/event\.source!==frame\.current\?\.contentWindow/);
+  assert.doesNotMatch(editorial,/<iframe|contentDocument/);
   assert.match(saver,/step:"persona"/);
 });
-test("static content is embedded same-origin without cloning or corrupting published HTML",()=>{
-  assert.match(editorial,/inSiteRoute\(target\)/);
-  assert.match(editorial,/contentDocument/);
-  assert.match(editorial,/ResizeObserver/);
-  assert.match(editorial,/ogcl-embedded\.css/);
+test("static content mounts into the React document without an iframe",()=>{
+  assert.match(editorial,/DOMParser/);
+  assert.match(editorial,/host\.current\.replaceChildren/);
+  assert.match(editorial,/inSiteRoute\(new URL/);
+  assert.doesNotMatch(editorial,/<iframe|contentDocument|ResizeObserver/);
   assert.match(contentCss,/html\.ogcl-embed/);
   for(const name of ["ogtrends","privacy","terms","contact","persona-assets","brand"])
     assert.ok(staged.includes('"'+name+'"'),name);

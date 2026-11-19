@@ -1,4 +1,4 @@
-import React,{useCallback,useEffect,useRef,useState} from "react";
+import React,{useEffect,useRef,useState} from "react";
 import {NavLink,useNavigate} from "react-router-dom";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import "./editorial.css";
@@ -47,73 +47,39 @@ export function inSiteRoute(url){
 
 export function EmbeddedEditorial({pageKey,onboarding=false}){
   const page=EDITORIAL_PAGES[pageKey];
-  const frame=useRef(null),observer=useRef(null);
+  const host=useRef(null);
   const navigate=useNavigate();
   const {refresh}=useMemberSession();
   const [ready,setReady]=useState(false),[error,setError]=useState("");
-  const [height,setHeight]=useState(720);
-  const measure=useCallback(()=>{
-    const doc=frame.current?.contentDocument;
-    if(!doc)return;
-    // The CSS removes viewport-height wrappers; this is one scrollable app,
-    // not a nested 2-scrollbar iframe.
-    const next=Math.ceil(Math.max(
-      doc.body?.scrollHeight||0,doc.documentElement?.scrollHeight||0,
-      doc.body?.offsetHeight||0,360
-    ));
-    if(Number.isFinite(next)&&next>0&&next<250000)
-      setHeight(previous=>Math.abs(previous-next)>3?next:previous);
-  },[]);
-  const mounted=useCallback(()=>{
-    const el=frame.current;
-    const doc=el?.contentDocument;
-    if(!doc){setError("This page couldn't be embedded safely. Open the original page instead.");return;}
-    observer.current?.disconnect();
-    const link=doc.createElement("link");
-    link.rel="stylesheet";link.href="/ogcl-embedded.css";
-    link.dataset.ogclEmbed="true";
-    if(!doc.querySelector('[data-ogcl-embed="true"]'))doc.head.appendChild(link);
-    doc.documentElement.classList.add("ogcl-embed");
-    doc.body?.classList.add("ogcl-embed");
-    const goLink=event=>{
-      if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.altKey||event.shiftKey)return;
+  useEffect(()=>{
+    let disposed=false;
+    const click=event=>{
       const anchor=event.target?.closest?.("a[href]");
-      if(!anchor||anchor.hasAttribute("download")||(anchor.target&&anchor.target!=="_self"))return;
-      let target;
-      try{target=new URL(anchor.href,el.contentWindow.location.href);}catch{return;}
-      if(target.pathname===el.contentWindow.location.pathname && target.hash&&target.hash!=="#"){
-        // Legal TOCs and research footnotes must scroll the ONE React page,
-        // not an invisible scrollport inside a full-height iframe.
-        let destination=null;
-        try{destination=doc.getElementById(decodeURIComponent(target.hash.slice(1)));}catch{}
-        if(destination){
-          event.preventDefault();
-          // Editorial pages still render in same-origin iframes during the
-          // React migration. The viewport, not the center column, now scrolls.
-          const top=window.scrollY+el.getBoundingClientRect().top+
-            destination.getBoundingClientRect().top-12;
-          window.scrollTo({top:Math.max(0,top),behavior:"smooth"});
-        }
-        return;
-      }
-      const route=inSiteRoute(target);
-      if(route){event.preventDefault();navigate(route);}
+      if(!anchor||event.defaultPrevented||event.metaKey||event.ctrlKey||event.shiftKey)return;
+      try{const route=inSiteRoute(new URL(anchor.href,window.location.href));if(route){event.preventDefault();navigate(route);}}catch{}
     };
-    doc.addEventListener("click",goLink,true);
-    if(typeof ResizeObserver!=="undefined"){
-      observer.current=new ResizeObserver(()=>measure());
-      if(doc.body)observer.current.observe(doc.body);
-      if(doc.querySelector(".main-column"))observer.current.observe(doc.querySelector(".main-column"));
-    }
-    link.addEventListener("load",measure,{once:true});
-    el.contentWindow?.addEventListener("load",measure,{once:true});
-    requestAnimationFrame(measure);
-    setReady(true);setError("");
-    return ()=>doc.removeEventListener("click",goLink,true);
-  },[navigate,measure]);
+    const load=async()=>{
+      try{
+        const response=await fetch(page.path+(page.path.includes("?")?"&":"?")+"ogcl_embed=1"+(onboarding?"&onboarding=1":""),{credentials:"same-origin"});
+        if(!response.ok)throw new Error();
+        const parsed=new DOMParser().parseFromString(await response.text(),"text/html");
+        if(disposed||!host.current)return;
+        host.current.replaceChildren(...Array.from(parsed.body.childNodes).map(node=>document.importNode(node,true)));
+        host.current.addEventListener("click",click);
+        for(const source of parsed.querySelectorAll("script")){
+          const script=document.createElement("script");
+          if(source.src)script.src=source.src;else script.textContent=source.textContent;
+          host.current.appendChild(script);
+        }
+        setReady(true);
+      }catch{if(!disposed)setError("This page could not load.");}
+    };
+    void load();
+    return()=>{disposed=true;host.current?.removeEventListener("click",click);};
+  },[page.path,onboarding,navigate]);
   useEffect(()=>{
     const handler=event=>{
-      if(event.origin!==window.location.origin||event.source!==frame.current?.contentWindow)return;
+      if(event.origin!==window.location.origin)return;
       if(event.data?.type==="ogc:persona-saved"){
         void refresh().then(()=>navigate("/onboarding"));
       }
@@ -124,9 +90,6 @@ export function EmbeddedEditorial({pageKey,onboarding=false}){
     window.addEventListener("message",handler);
     return()=>window.removeEventListener("message",handler);
   },[navigate,refresh]);
-  useEffect(()=>()=>{
-    observer.current?.disconnect();
-  },[pageKey]);
   if(!page)return null;
   const breadcrumb=pageKey==="persona"?"/onboarding":pageKey==="zero"||pageKey==="perfect-profile"||pageKey==="references"?"/ogtrends":"/matches";
   return <section className="ogcl-view ogcl-editorial" aria-label={page.title}>
@@ -137,9 +100,7 @@ export function EmbeddedEditorial({pageKey,onboarding=false}){
     </div>
     {error&&<p className="ogcl-error" role="alert">{error} <a href={page.path}>Open full page</a></p>}
     {!ready&&!error&&<p role="status" className="ogcl-editorial-status">Loading {page.title}…</p>}
-    <iframe ref={frame} title={page.title} className="ogcl-editorial-frame"
-      src={page.path+(page.path.includes("?")?"&":"?")+"ogcl_embed=1"+(onboarding?"&onboarding=1":"")}
-      loading="eager" onLoad={mounted} style={{height:height+"px"}}/>
+    <div ref={host} className="ogcl-editorial-native" aria-label={page.title}/>
   </section>;
 }
 
