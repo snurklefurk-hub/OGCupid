@@ -2,6 +2,7 @@
 <html lang="en" class="member-gated">
 <head>
 
+
   <script>
   (function(){
     var q=new URLSearchParams(location.search);
@@ -35,60 +36,11 @@
   
   <link rel="icon" type="image/png" href="/favicon.png?v=3">
   
+<style>html.ogcl-persona-embedded,html.ogcl-persona-embedded body{background:#fff!important;width:100%!important;min-width:0!important;max-width:none!important;margin:0!important;padding:0!important;overflow-x:hidden!important}html.ogcl-persona-embedded .page.persona-page{width:100%!important;min-width:0!important;max-width:none!important;box-shadow:none!important;background:#fff!important;border:0!important;grid-template-columns:none!important;margin:0!important;padding:0!important;display:block!important}html.ogcl-persona-embedded .rail,html.ogcl-persona-embedded .member-quiz-header,html.ogcl-persona-embedded .skip,html.ogcl-persona-embedded footer,html.ogcl-persona-embedded .okc-toplinks,html.ogcl-persona-embedded .okc-rrail{display:none!important}html.ogcl-persona-embedded .main-column,html.ogcl-persona-embedded .panel{width:100%!important;min-width:0!important;max-width:none!important;box-shadow:none!important;background:#fff!important;border:0!important;margin:0!important;padding:0!important;display:block!important}html.ogcl-persona-embedded .standalone-quiz{min-width:0!important;max-width:100%!important;margin:0!important;padding:8px 10px 22px!important}html.ogcl-persona-embedded .persona-zone{border:0!important;width:100%!important;max-width:100%!important;margin:0!important;padding:0!important}html.ogcl-persona-embedded .persona-heading{padding:12px!important}html.ogcl-persona-embedded .persona-heading h2{font-size:clamp(23px,4vw,35px)!important}html.ogcl-persona-embedded .persona-ribbon{font-size:10px!important}html.ogcl-persona-embedded .persona-app{box-shadow:none!important;max-width:100%!important}@media (width<=650px){html.ogcl-persona-embedded .persona-heading{display:block!important}html.ogcl-persona-embedded .persona-ribbon{display:none!important}html.ogcl-persona-embedded .persona-content{padding:12px!important}html.ogcl-persona-embedded .standalone-quiz{padding:3px!important}}</style>
   <script type="module" crossorigin src="./assets/persona-D_H1RH6T.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/neon-auth-BIaN13e0.js">
   <link rel="stylesheet" href="/okc-2011.css?v=1">
   <link rel="stylesheet" href="/okc-period-site.css?v=2">
-
-<style>
-  html.ogcl-persona-embedded,html.ogcl-persona-embedded body{
-    padding:0!important;margin:0!important;width:100%!important;
-    min-width:0!important;max-width:none!important;
-    background:#fff!important;overflow-x:hidden!important;
-  }
-  html.ogcl-persona-embedded .page.persona-page{
-    display:block!important;grid-template-columns:none!important;
-    padding:0!important;margin:0!important;max-width:none!important;
-    min-width:0!important;width:100%!important;
-    background:#fff!important;border:0!important;box-shadow:none!important;
-  }
-  html.ogcl-persona-embedded .rail,
-  html.ogcl-persona-embedded .member-quiz-header,
-  html.ogcl-persona-embedded .skip,
-  html.ogcl-persona-embedded footer,
-  html.ogcl-persona-embedded .okc-toplinks,
-  html.ogcl-persona-embedded .okc-rrail{
-    display:none!important;
-  }
-  html.ogcl-persona-embedded .main-column,
-  html.ogcl-persona-embedded .panel{
-    max-width:none!important;min-width:0!important;width:100%!important;
-    display:block!important;margin:0!important;padding:0!important;
-    border:0!important;box-shadow:none!important;background:#fff!important;
-  }
-  html.ogcl-persona-embedded .standalone-quiz{
-    max-width:100%!important;min-width:0!important;
-    padding:8px 10px 22px!important;margin:0!important;
-  }
-  html.ogcl-persona-embedded .persona-zone{
-    margin:0!important;padding:0!important;max-width:100%!important;
-    width:100%!important;border:0!important;
-  }
-  html.ogcl-persona-embedded .persona-heading{padding:12px!important}
-  html.ogcl-persona-embedded .persona-heading h2{
-    font-size:clamp(23px,4vw,35px)!important;
-  }
-  html.ogcl-persona-embedded .persona-ribbon{font-size:10px!important}
-  html.ogcl-persona-embedded .persona-app{
-    box-shadow:none!important;max-width:100%!important;
-  }
-  @media(max-width:650px){
-    html.ogcl-persona-embedded .persona-heading{display:block!important}
-    html.ogcl-persona-embedded .persona-ribbon{display:none!important}
-    html.ogcl-persona-embedded .persona-content{padding:12px!important}
-    html.ogcl-persona-embedded .standalone-quiz{padding:3px!important}
-  }
-</style>
 </head>
 <body class="ogc-persona-theme">
 <a class="skip" href="#main">Skip to quiz</a>
@@ -1618,7 +1570,6 @@
     show("result");
   }
   function resultUrl(){
-    // Share the unified public React route, not an embedded legacy document.
     if(new URLSearchParams(window.location.search).get("embedded")==="1"){
       const shared=new URL(window.location.origin+"/");
       shared.hash="/persona?persona="+encodeURIComponent(code+style);
