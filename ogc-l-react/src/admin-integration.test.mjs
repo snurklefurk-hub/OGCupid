@@ -7,7 +7,8 @@ const provider=readFileSync(new URL("./MemberSessionProvider.jsx",import.meta.ur
 const gateway=readFileSync(new URL("./member-gateway.mjs",import.meta.url),"utf8");
 const css=readFileSync(new URL("./admin.css",import.meta.url),"utf8");
 test("admin page is member-gated, and navigation appears after server confirmation",()=>{
-  assert.match(app,/<MemberGate><AdminDashboard/);
+  assert.match(app,/<AdminGate><AdminDashboard/);
+  assert.match(app,/kind==="onboarding"\?children:<MemberGate>/);
   assert.match(app,/adminRequest\("\/admin"\)\.then/);
   assert.match(app,/return allowed\?<NavLink to="\/admin">Admin/);
   assert.doesNotMatch(app,/snurklefurk@gmail\.com/);
