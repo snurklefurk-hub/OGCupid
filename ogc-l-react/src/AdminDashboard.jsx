@@ -1,6 +1,7 @@
 import React,{useCallback,useEffect,useMemo,useState} from "react";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import "./admin.css";
+import CommunityReportsAdmin from "./CommunityReportsAdmin.jsx";
 
 const choices=[
   ["start_review","Mark under review"],
@@ -126,7 +127,7 @@ export default function AdminDashboard(){
     <div className="ogcl-content-panel">
       <div className="ogcl-admin-toolbar">
         <nav aria-label="Administration sections">
-          {["overview","reports","members","audit"].map(t=><button key={t} type="button"
+          {["overview","reports","community","members","audit"].map(t=><button key={t} type="button"
             className={tab===t?"selected":""} aria-current={tab===t?"page":undefined}
             onClick={()=>{setTab(t);setError("");setNotice("");}}>{t==="audit"?"Action log":t[0].toUpperCase()+t.slice(1)}</button>)}
         </nav>
@@ -207,6 +208,8 @@ export default function AdminDashboard(){
             </div>
           </div>}
       </section>}
+
+      {tab==="community"&&<CommunityReportsAdmin/>}
 
       {tab==="members"&&<section className="ogcl-admin-section">
         <h2>Member accounts</h2>
