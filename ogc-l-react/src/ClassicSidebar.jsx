@@ -21,7 +21,7 @@ export function SidebarPromos({side}) {
   return <div className="ogcl-editorial-stack" aria-label={side==="right"?"More OG Cupid":"Explore OG Cupid"}>
     {tiles.map(tile=>{
       const url=kind==="member"?promotionDestination(tile.destination,profile?.slug):null;
-      const external=url?.startsWith("/ogtrends/")||url?.startsWith("/account/");
+      const external=false;
       return <Tile key={tile.title} title={tile.title} body={tile.body}
         destination={url} external={external}/>;
     })}
