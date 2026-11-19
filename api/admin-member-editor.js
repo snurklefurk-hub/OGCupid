@@ -47,8 +47,8 @@ async function jsonInput(request,keys,maxBytes=8200){
 function validReason(reason){return typeof reason==="string" &&
   reason.trim().length>=8 && reason.trim().length<=500;}
 async function photoInput(request){
-  const type=(request.headers.get("content-type")||"").toLowerCase();
-  if(!type.startsWith("multipart/form-data;"))throw error("Upload a JPEG and a reason",415);
+  const type=request.headers.get("content-type")||"";
+  if(!type.toLowerCase().startsWith("multipart/form-data;"))throw error("Upload a JPEG and a reason",415);
   if(Number(request.headers.get("content-length")||0)>3_000_000)
     throw error("Photo is too large",413);
   const raw=new Uint8Array(await request.arrayBuffer());
