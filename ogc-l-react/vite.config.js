@@ -46,7 +46,7 @@ export default defineConfig({
       // member auth and iframe origin checks stay first-party.
       const publicSource=fileURLToPath(new URL("../public/",import.meta.url));
       const stagingTarget=fileURLToPath(new URL("../public/ogc-l/",import.meta.url));
-      for(const directory of ["ogtrends","privacy","terms","contact","persona-assets","brand"]){
+      for(const directory of ["ogtrends","privacy","terms","contact","persona-assets","profile-assets","brand"]){
         cpSync(publicSource+directory,stagingTarget+directory,{recursive:true});
       }
       mkdirSync(stagingTarget+"account/assets/",{recursive:true});
