@@ -55,7 +55,7 @@ for(const [path,mark] of [
   ["/ogtrends/references/","ENTERED THE CHAT"],
   ["/contact/","Contact"],
   ["/privacy/","Privacy Policy"],
-  ["/terms/","Terms &"],
+  ["/terms/","Terms &amp; Conditions"],
   ["/account/persona.html","persona-form"]
 ]){
   const doc=await read(path);
