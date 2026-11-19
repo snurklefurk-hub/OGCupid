@@ -5,8 +5,10 @@ on:
     paths:
       - 'api/member-community.js'
       - 'api/member-community.test.js'
+      - 'api/member-admin.test.js'
       - 'api/member-profile.ts'
       - '.github/workflows/package-ogcl-community.yml'
+  workflow_dispatch:
 permissions:
   contents: write
 jobs:
