@@ -178,6 +178,11 @@ export function MemberSessionProvider({children}) {
     return gateway.reportMessage(peerId,messageId,reason);
   },[]);
 
+  const communityRequest=useCallback(async(path,method="GET",body=null)=>{
+    if(!gateway)throw new MemberAccessError("unavailable","Chatroom is not configured.");
+    return gateway.communityRequest(path,method,body);
+  },[]);
+
   const loadMatchAnswers = useCallback(async () => {
     if(!gateway)throw new MemberAccessError("unavailable","Member API is not configured.");
     return gateway.loadMatchAnswers();
@@ -227,6 +232,7 @@ export function MemberSessionProvider({children}) {
     loadOwnEssays, saveOwnEssay, loadOwnSettings, saveOwnSetting, saveOwnLookingFor, getPublicProfile,
     loadMatchAnswers, saveMatchAnswer, loadQuickmatchDecisions, saveQuickmatchDecision,
     loadInbox, loadConversation, sendMessage, setMessageBlock, reportMessage, adminRequest,
+    communityRequest,
     accountRequest, signUp, requestRecovery, resetPassword, requestEmailVerification, deleteMyAccount
   }), [session, refresh, signIn, signOut, getMemberAvatar, getMemberGallery, loadOwnEssays, saveOwnEssay,
     getPublicProfile, loadMatchAnswers, saveMatchAnswer]);
