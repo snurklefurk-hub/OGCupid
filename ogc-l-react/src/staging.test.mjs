@@ -42,7 +42,8 @@ test("Vite has an explicit isolated Render root build path and copies only the l
 });
 
 test("native account and member navigation does not escape to the old member app",()=>{
-  assert.match(app,/import \{legacyHref\}/);
+  assert.match(app,/import PublishedPage/);
+  assert.match(app,/import PersonaPage/);
   assert.ok(app.includes('const profileHref = slug => "#/profiles/"'));
   for(const path of ['<Route path="join"','<Route path="onboarding"','<Route path="recover"',
     '<Route path="photos"','<Route path="account"']){
