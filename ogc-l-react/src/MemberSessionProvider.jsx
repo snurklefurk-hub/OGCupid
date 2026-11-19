@@ -1,6 +1,7 @@
 import React, {createContext, useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
 import {createAuthClient} from "@neon/auth";
 import {configuredMemberEndpoints, createMemberGateway, MemberAccessError} from "./member-gateway.mjs";
+import {syntheticProfilePortrait} from "./test-profile-portraits.mjs";
 
 // Only Vite's deliberately configured public endpoint URLs are used.
 // Account data, JWTs, passwords and database credentials are not persisted by this app.
@@ -112,12 +113,19 @@ export function MemberSessionProvider({children}) {
 
   const getMemberGallery = useCallback(async id => {
     if (!gateway) throw new MemberAccessError("unavailable","Member API is not configured.");
-    return gateway.getMemberGallery(id);
+    // Only substitute the clearly labeled, known synthetic accounts AFTER
+    // the normal JWT-protected gallery read succeeds. Genuine members retain
+    // their uploaded photos; no test portrait is publicly exposed by this path.
+    const gallery = await gateway.getMemberGallery(id);
+    const portrait = syntheticProfilePortrait(id);
+    return portrait ? gallery.map(photo => photo.isPrimary
+      ? {...photo,image:portrait} : photo) : gallery;
   }, []);
 
-  const getMemberAvatar = useCallback(async (id) => {
+  const getMemberAvatar = useCallback(async id => {
     if (!gateway) return null;
-    return gateway.getMemberAvatar(id);
+    const image = await gateway.getMemberAvatar(id);
+    return image ? syntheticProfilePortrait(id) || image : null;
   }, []);
 
   const loadOwnEssays = useCallback(async () => {
