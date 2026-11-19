@@ -5,7 +5,11 @@ import { fileURLToPath } from "node:url";
 // The same React app has two isolated targets:
 // - /ogc-l/ when previewed beneath an existing static site's public folder.
 // - / when deployed as its OWN Render static site.
-const base = process.env.OGCL_DEPLOY_BASE || "/ogc-l/";
+// Production publish keeps all legacy /account, /quiz, /ogtrends and legal
+// resources available during the React cutover. Never empty public/.
+const productionRoot = process.env.OGCL_PRODUCTION_ROOT === "true";
+const previewBase = process.env.OGCL_DEPLOY_BASE || "/ogc-l/";
+const base = productionRoot ? "/" : previewBase;
 if (!/^(\/|\/[a-z0-9-]+\/)$/i.test(base)) {
   throw new Error("Invalid OGC-L deploy base; use / or a single named subpath.");
 }
@@ -16,6 +20,9 @@ export default defineConfig({
     name: "ogcl-brand-asset",
     apply: "build",
     closeBundle() {
+      // In production these shared files already exist under public/.
+      // Copying to the same path is unnecessary; never touch other legacy assets.
+      if (productionRoot) return;
       // Copy only the approved logo; don't expose the entire legacy public
       // directory (including unrelated legacy pages) on staging.
       const source = fileURLToPath(new URL("../public/brand/ogcupid-logo-white.png", import.meta.url));
@@ -33,8 +40,9 @@ export default defineConfig({
   build: {
     // Render staging publish path: public/ogc-l
     // This never overwrites legacy main/index, member-app or public/account.
-    outDir: "../public/ogc-l",
-    emptyOutDir: true,
+    ...(productionRoot
+      ? {outDir: "../public", emptyOutDir: false}
+      : {outDir: "../public/ogc-l", emptyOutDir: true}),
     sourcemap: false
   }
 });
