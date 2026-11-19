@@ -1,0 +1,39 @@
+.ogcl-account .ogcl-content-panel,.ogcl-onboard .ogcl-content-panel{padding:24px 28px}
+.ogcl-account-form{display:flex;flex-direction:column;gap:13px;margin:16px 0;max-width:670px}
+.ogcl-account-form>label:not(.ogcl-account-check),.ogcl-account-form fieldset{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:12px;color:#1c4568}
+.ogcl-account-form input:not([type=checkbox]),.ogcl-account-form select,.ogcl-account-form textarea{box-sizing:border-box;width:100%;min-height:37px;border:1px solid #b9cbd9;border-radius:2px;background:#fff;padding:8px 9px;font:12px/1.5 Verdana,Arial,sans-serif;color:#26384a}
+.ogcl-account-form textarea{min-height:130px;resize:vertical}
+.ogcl-account-form label small,.ogcl-account-form .ogcl-note{font-weight:400}
+.ogcl-account-form button[type=submit],.ogcl-account-step>.ogcl-button{align-self:flex-start;border:1px solid #244d7e;border-radius:2px;background:#2963a4;color:#fff;padding:10px 15px;font:700 12px Verdana,Arial,sans-serif;cursor:pointer}
+.ogcl-account-form button:disabled,.ogcl-photo-picker input:disabled{opacity:.6;cursor:wait}
+.ogcl-account-form fieldset{padding:14px 12px;border:1px solid #cddbe7}
+.ogcl-account-form fieldset legend{padding:0 5px;font-weight:700}
+.ogcl-account-check{display:flex!important;align-items:flex-start;gap:9px;max-width:520px;font-weight:400!important;color:#304b60!important;font-size:12px}
+.ogcl-account-check input{margin-top:3px}
+.ogcl-account-links{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:22px}
+.ogcl-account-links a{color:#2963a4;font-weight:700}
+.ogcl-account-danger{background:#a12d36!important;border-color:#851c24!important}
+.ogcl-account-inline{display:flex;flex-wrap:wrap;gap:12px}
+.ogcl-account-inline>label{flex:1 1 140px}
+.ogcl-choice-grid{display:flex;gap:8px 16px;flex-wrap:wrap}
+.ogcl-choice-grid label{min-width:120px}
+.ogcl-onboard-progress{height:8px;border:1px solid #a6bbcc;background:#e4eaf0;margin:16px 0 0}
+.ogcl-onboard-progress>span{display:block;background:#63a62f;height:100%;transition:width .2s}
+.ogcl-onboard-steps{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;color:#6b7d8c;font-size:11px}
+.ogcl-onboard-steps>span{border:1px solid #cedbe4;padding:6px;background:#f4f6f8}
+.ogcl-onboard-steps>span.done{border-color:#90b17a;background:#edf7e7;color:#365925}
+.ogcl-onboard h2,.ogcl-account h2,.ogcl-photo-manager h2{font-size:17px;color:#183b62}
+.ogcl-onboard-footer{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px;padding-top:14px;border-top:1px solid #d4dfe9;font-size:12px}
+.ogcl-onboard-footer button{border:0;padding:0;color:#2963a4;background:transparent;cursor:pointer;font:inherit;text-decoration:underline}
+.ogcl-city-options{max-height:200px;overflow:auto;border:1px solid #a8bed1;display:flex;flex-direction:column}
+.ogcl-city-options button{text-align:left;padding:8px;border:0;border-bottom:1px solid #dbe6f0;color:#1c4568;background:white;cursor:pointer}
+.ogcl-city-options button:hover,.ogcl-city-options button:focus{background:#e9f2f9}
+.ogcl-account-step{padding:14px 0 26px}
+.ogcl-photo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:18px 0}
+.ogcl-photo-card{border:1px solid #d2dfe8;padding:8px;background:#fff}
+.ogcl-photo-card img{display:block;width:100%;height:180px;object-fit:contain;background:#eee}
+.ogcl-photo-card strong{display:block;font-size:11px;color:#183b62;margin:6px 0}
+.ogcl-photo-actions{display:flex;gap:6px;flex-wrap:wrap}
+.ogcl-photo-actions button{font:11px Verdana,Arial,sans-serif;color:#2963a4;border:1px solid #b8cede;background:#f4f7fb;cursor:pointer;padding:6px}
+.ogcl-photo-picker{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-weight:bold;color:#183b62}
+@media(max-width:600px){.ogcl-account .ogcl-content-panel,.ogcl-onboard .ogcl-content-panel{padding:16px 12px}.ogcl-onboard-steps{gap:4px}.ogcl-onboard-steps span{padding:5px}.ogcl-account-inline{display:block}}

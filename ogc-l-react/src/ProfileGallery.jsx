@@ -1,6 +1,6 @@
 import React,{useEffect,useRef,useState} from "react";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
-import {legacyHref} from "./legacy-links.mjs";
+import {NavLink} from "react-router-dom";
 
 function EnlargedPhoto({photo,onClose}) {
   const dialog=useRef(null);
@@ -58,9 +58,9 @@ export default function ProfileGallery({userId,isOwner}) {
   return <section className="ogcl-gallery" aria-label="Member photos">
     <div className="ogcl-gallery-heading">
       <h2>Photos</h2>
-      {isOwner&&<a className="ogcl-profile-pencil"
+      {isOwner&&<NavLink className="ogcl-profile-pencil"
         aria-label="Manage your photos" title="Manage your photos"
-        href={legacyHref("/account/#photos-title")}>✎</a>}
+        to="/photos">✎</NavLink>}
     </div>
     {loading&&<p role="status">Loading photos…</p>}
     {error&&<p className="ogcl-error" role="alert">{error}</p>}

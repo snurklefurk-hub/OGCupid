@@ -187,6 +187,36 @@ export function MemberSessionProvider({children}) {
     return gateway.saveMatchAnswer(answer);
   }, []);
 
+  // Native account and onboarding actions; identity still comes only from Neon.
+  const accountRequest=useCallback(async(path,method="GET",body=null)=>{
+    if(!gateway)throw new MemberAccessError("unavailable","Account service unavailable.");
+    return gateway.accountRequest(path,method,body);
+  },[]);
+  const signUp=useCallback(async(name,email,password)=>{
+    if(!gateway)throw new MemberAccessError("unavailable","Registration is unavailable.");
+    await gateway.signUp(name,email,password,window.location.origin+"/#/onboarding");
+    return refresh();
+  },[refresh]);
+  const requestRecovery=useCallback(async(email)=>{
+    if(!gateway)throw new MemberAccessError("unavailable","Recovery is unavailable.");
+    return gateway.requestRecovery(email);
+  },[]);
+  const resetPassword=useCallback(async(email,otp,password)=>{
+    if(!gateway)throw new MemberAccessError("unavailable","Recovery is unavailable.");
+    return gateway.resetPassword(email,otp,password);
+  },[]);
+  const requestEmailVerification=useCallback(async(email)=>{
+    if(!gateway)throw new MemberAccessError("unavailable","Verification is unavailable.");
+    return gateway.requestEmailVerification(email,window.location.origin+"/#/onboarding");
+  },[]);
+  const deleteMyAccount=useCallback(async(password,confirm)=>{
+    if(!gateway)throw new MemberAccessError("unavailable","Account deletion is unavailable.");
+    await gateway.deleteMyAccount(password,confirm);
+    ++version.current;
+    setSession({...blank,kind:"guest"});
+    return true;
+  },[]);
+
   const adminRequest=useCallback(async(path,method="GET",body=null)=>{
     if(!gateway)throw new MemberAccessError("unavailable","Admin service not configured.");
     return gateway.adminRequest(path,method,body);
@@ -196,7 +226,8 @@ export function MemberSessionProvider({children}) {
     ...session, refresh, signIn, signOut, getMemberAvatar, getMemberGallery,
     loadOwnEssays, saveOwnEssay, loadOwnSettings, saveOwnSetting, saveOwnLookingFor, getPublicProfile,
     loadMatchAnswers, saveMatchAnswer, loadQuickmatchDecisions, saveQuickmatchDecision,
-    loadInbox, loadConversation, sendMessage, setMessageBlock, reportMessage, adminRequest
+    loadInbox, loadConversation, sendMessage, setMessageBlock, reportMessage, adminRequest,
+    accountRequest, signUp, requestRecovery, resetPassword, requestEmailVerification, deleteMyAccount
   }), [session, refresh, signIn, signOut, getMemberAvatar, getMemberGallery, loadOwnEssays, saveOwnEssay,
     getPublicProfile, loadMatchAnswers, saveMatchAnswer]);
 

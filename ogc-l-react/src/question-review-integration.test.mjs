@@ -12,7 +12,7 @@ const app=source("./App.jsx");
 test("the canonical Questions route has ONE member-gated component, not competing editors",()=>{
   const routes=app.match(/path="questions"/g)||[];
   assert.equal(routes.length,1);
-  assert.match(app, /<MemberGate><MatchQuestions \/><\/MemberGate>/);
+  assert.match(app, /<MemberGate allowOnboarding><MatchQuestions \/><\/MemberGate>/);
   assert.doesNotMatch(app,/QuestionEditor/);
 });
 
@@ -32,7 +32,7 @@ test("answered profile tab uses an owner-only inline editor",()=>{
   assert.match(view, /profile\.isOwner&&myAnswer&&<button/);
   assert.match(view, /saveMatchAnswer\(answer\)/);
   assert.match(about, /to="\/questions"/);
-  assert.match(app, /path="questions" element=\{<MemberGate><MatchQuestions/);
+  assert.match(app, /path="questions" element=\{<MemberGate allowOnboarding><MatchQuestions/);
 });
 
 test("member-facing Questions progress is one unsegmented pool",()=>{

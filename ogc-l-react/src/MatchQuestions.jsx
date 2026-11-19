@@ -5,7 +5,7 @@ import {loadPublishedBank} from "./published-question-bank.mjs";
 import {checkedSavedAnswers,nextQuestion,buildAnswer,QUESTION_IMPORTANCE} from "./question-serving.mjs";
 
 export default function MatchQuestions() {
-  const {loadMatchAnswers,saveMatchAnswer} = useMemberSession();
+  const {kind,loadMatchAnswers,saveMatchAnswer} = useMemberSession();
   const [bank,setBank] = useState(null);
   const [answers,setAnswers] = useState(new Map());
   const [loading,setLoading] = useState(true);
@@ -78,6 +78,7 @@ export default function MatchQuestions() {
     <header className="ogcl-view-head">
       <h1>Match Questions</h1>
       <p>Learn what matters to each other, one answer at a time.</p>
+      {kind==="onboarding"&&<p><NavLink to="/onboarding">← Back to onboarding</NavLink> · Your first 25 saved answers complete the question step.</p>}
     </header>
     <div className="ogcl-content-panel">
       {loading && <p role="status">Loading the original question collection and your saved answers…</p>}

@@ -27,7 +27,7 @@ test("first tier is mandatory, and 10 percent spillover only starts after ten",(
 });
 test("staging serves the authentic question bank and React PUT stores answers with auth",()=>{
   assert.match(vite,/question-bank\.js/);
-  assert.match(app,/<MemberGate><MatchQuestions \/><\/MemberGate>/);
+  assert.match(app,/<MemberGate allowOnboarding><MatchQuestions \/><\/MemberGate>/);
   assert.match(gateway,/method:"PUT",credentials:"omit",cache:"no-store"/);
   assert.match(gateway,/memberApiBaseUrl\+"\/answers"/);
   assert.match(gateway,/result\?\.saved!==true/);

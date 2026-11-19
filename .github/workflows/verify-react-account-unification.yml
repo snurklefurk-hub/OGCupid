@@ -1,0 +1,53 @@
+name: Verify React-native accounts and onboarding
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'ogc-l-react/**'
+      - '.github/workflows/verify-react-account-unification.yml'
+  push:
+    branches: [feature/react-native-account-unification-20261119]
+    paths:
+      - 'ogc-l-react/**'
+      - '.github/workflows/verify-react-account-unification.yml'
+permissions:
+  contents: read
+jobs:
+  react-account:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: ogc-l-react/package-lock.json
+      - name: Install pinned React dependencies
+        run: npm ci --prefix ogc-l-react
+      - name: Test native React account, onboarding and regression contracts
+        run: npm test --prefix ogc-l-react
+      - name: Compile production React with active Neon account and member APIs
+        env:
+          OGCL_PRODUCTION_ROOT: 'true'
+          VITE_OGC_AUTH_URL: https://ep-hidden-breeze-bbdn5nsb.neonauth.c-15.us-east-1.aws.neon.tech/neondb/auth
+          VITE_OGC_MEMBER_API_URL: https://br-plain-unit-bbcbxpqq-members.compute.c-15.us-east-1.aws.neon.tech/profile
+          VITE_OGC_REGISTRATION_ENABLED: 'true'
+        run: |
+          npm run build --prefix ogc-l-react
+          test -s public/index.html
+          grep -q '/assets/' public/index.html
+          test -s public/account/index.html
+          test -s public/quiz/index.html
+          test -s public/questions/question-bank.js
+          test -s public/privacy/index.html
+          test -s public/terms/index.html
+      - name: Build isolated staging variant
+        env:
+          OGCL_DEPLOY_BASE: /
+          VITE_OGC_AUTH_URL: https://ep-hidden-breeze-bbdn5nsb.neonauth.c-15.us-east-1.aws.neon.tech/neondb/auth
+          VITE_OGC_MEMBER_API_URL: https://br-plain-unit-bbcbxpqq-members.compute.c-15.us-east-1.aws.neon.tech/profile
+          VITE_OGC_REGISTRATION_ENABLED: 'true'
+        run: |
+          npm run build --prefix ogc-l-react
+          test -s public/ogc-l/index.html
+          grep -q '/assets/' public/ogc-l/index.html

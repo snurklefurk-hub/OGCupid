@@ -81,7 +81,7 @@ test("Photos tab keeps the official main photo, compact thumbnails and native la
   assert.match(gallery,/URL\.revokeObjectURL\(url\)/);
   assert.match(gallery,/node\.showModal\(\)/);
   assert.match(gallery,/className="ogcl-profile-pencil"/);
-  assert.match(gallery,/legacyHref\("\/account\/#photos-title"\)/);
+  assert.match(gallery,/to="\/photos"/);
   assert.match(provider,/getMemberGallery/);
   assert.match(css,/\.ogcl-photo-lightbox::backdrop/);
   assert.doesNotMatch(gallery,/localStorage|sessionStorage|imgur|placehold|demo\.png/i);

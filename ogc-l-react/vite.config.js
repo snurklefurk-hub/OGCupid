@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import { copyFileSync, mkdirSync } from "node:fs";
+import { copyFileSync, cpSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 // The same React app has two isolated targets:
@@ -35,6 +35,12 @@ export default defineConfig({
       const questionDirectory = fileURLToPath(new URL("../public/ogc-l/questions/", import.meta.url));
       mkdirSync(questionDirectory, {recursive:true});
       copyFileSync(questionSource, fileURLToPath(new URL("../public/ogc-l/questions/question-bank.js", import.meta.url)));
+      // The native React onboarding city picker queries the existing verified
+      // GeoNames shard files. Stage only the public reference data; never ship
+      // private member coordinates or database credentials.
+      const locationsSource=fileURLToPath(new URL("../public/locations/",import.meta.url));
+      const locationsTarget=fileURLToPath(new URL("../public/ogc-l/locations/",import.meta.url));
+      cpSync(locationsSource,locationsTarget,{recursive:true});
     }
   }],
   build: {

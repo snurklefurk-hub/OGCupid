@@ -13,6 +13,9 @@ import QuickmatchView from "./QuickmatchView.jsx";
 import MessagesView from "./MessagesView.jsx";
 import AdminDashboard from "./AdminDashboard.jsx";
 import MatchQuestions from "./MatchQuestions.jsx";
+import Onboarding from "./Onboarding.jsx";
+import PhotoManager from "./PhotoManager.jsx";
+import {JoinForm,RecoveryForm,VerifyForm,AccountManagement} from "./AccountPages.jsx";
 
 const profileHref = slug => "#/profiles/" + encodeURIComponent(slug);
 const questionScore = member => member.matchPercent === null
@@ -100,7 +103,7 @@ function RightRail() {
           aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent}>
           <span style={{width:percent+"%"}}/>
         </div>
-        <a href={legacyHref("/account/#welcome-title")}>Continue your setup</a>
+        <NavLink to="/onboarding">Continue your setup</NavLink>
       </section>}
       <ProfileRefinement/>
       <SidebarPromos side="right"/>
@@ -128,6 +131,7 @@ function TopMemberNav() {
         <NavLink to={session.profile?.slug?"/profiles/"+session.profile.slug:"/profile"}>Profile</NavLink>
         <NavLink to="/settings">Settings</NavLink>
       </>}
+      <NavLink to="/account">Account</NavLink>
       <AdminLink />
       <button type="button" onClick={session.signOut}>Sign out</button>
     </>}
@@ -150,7 +154,7 @@ function AppShell() {
 }
 
 function SignInForm() {
-  const {signIn, error: sessionError} = useMemberSession();
+  const {kind,signIn, error: sessionError} = useMemberSession();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   async function submit(event) {
@@ -169,6 +173,8 @@ function SignInForm() {
         : "Unable to sign in right now. Please retry.");
     } finally { setBusy(false); }
   }
+  if(kind==="member")return <Navigate to="/matches" replace/>;
+  if(kind==="onboarding")return <Navigate to="/onboarding" replace/>;
   return (
     <section className="ogcl-view" aria-labelledby="ogcl-signin-heading">
       <header className="ogcl-view-head">
@@ -182,7 +188,7 @@ function SignInForm() {
           <button type="submit" disabled={busy}>{busy ? "Checking account…" : "Sign in"}</button>
           {(error || sessionError) && <p className="ogcl-error" role="alert">{error || sessionError}</p>}
         </form>
-        <p><a href={legacyHref("/account/?join=1")}>Make your profile</a> · <a href={legacyHref("/account/")}>Forgot your password?</a></p>
+        <p><NavLink to="/join">Make your profile</NavLink> · <NavLink to="/recover">Forgot your password?</NavLink> · <NavLink to="/verify">Verify email</NavLink></p>
         <p className="ogcl-note">New here? Create a free account to share more than a photo and a swipe.</p>
         <p className="ogcl-note"><a href={legacyHref("/ogtrends/")}>Read OgTrends</a> · <a href={legacyHref("/privacy/")}>Privacy policy</a> · <a href={legacyHref("/terms/")}>Terms</a></p>
       </div>
@@ -190,29 +196,21 @@ function SignInForm() {
   );
 }
 
-function MemberGate({children}) {
+function MemberGate({children,allowOnboarding=false}) {
   const {kind, error, refresh} = useMemberSession();
-  if (kind === "member") return children;
+  if (kind === "member" || (allowOnboarding && kind==="onboarding")) return children;
   if (kind === "guest") return <SignInForm />;
   if (kind === "checking") return (
     <section className="ogcl-view"><p role="status">Checking your account…</p></section>
   );
-  if (kind === "onboarding") return (
-    <section className="ogcl-view">
-      <header className="ogcl-view-head"><h1>Finish getting started</h1></header>
-      <div className="ogcl-content-panel">
-        <p>Your account is signed in. Complete onboarding before using member discovery.</p>
-        <p><a href={legacyHref("/account/#welcome-title")}>Continue onboarding</a></p>
-      </div>
-    </section>
-  );
+  if (kind === "onboarding") return <Onboarding/>;
   return (
     <section className="ogcl-view" role="alert">
       <header className="ogcl-view-head"><h1>Account unavailable</h1></header>
       <div className="ogcl-content-panel">
         <p>{error || "We couldn't confirm your account status."}</p>
         <button type="button" className="ogcl-button" onClick={refresh}>Retry account check</button>
-        <p><a href={legacyHref("/account/")}>Open existing member site</a></p>
+        <p><NavLink to="/signin">Try signing in again</NavLink></p>
       </div>
     </section>
   );
@@ -289,11 +287,18 @@ export default function App() {
     <Routes>
       <Route element={<AppShell />}>
         <Route index element={<Navigate to={defaultRoute} replace />} />
+        <Route path="signin" element={<SignInForm />} />
+        <Route path="join" element={<JoinForm/>} />
+        <Route path="recover" element={<RecoveryForm/>} />
+        <Route path="verify" element={<VerifyForm/>} />
+        <Route path="onboarding" element={<Onboarding/>} />
+        <Route path="account" element={<AccountManagement/>} />
+        <Route path="photos" element={<MemberGate><PhotoManager/></MemberGate>} />
         <Route path="matches" element={<MemberGate><MemberDirectory /></MemberGate>} />
         <Route path="profile" element={<MemberGate><ProfileEditor /></MemberGate>} />
         <Route path="settings" element={<MemberGate><ProfileSettings /></MemberGate>} />
         <Route path="profiles/:slug" element={<MemberGate><PublicMemberProfile Photo={MemberPhoto} /></MemberGate>} />
-        <Route path="questions" element={<MemberGate><MatchQuestions /></MemberGate>} />
+        <Route path="questions" element={<MemberGate allowOnboarding><MatchQuestions /></MemberGate>} />
         <Route path="quickmatch" element={<MemberGate><QuickmatchView Photo={MemberPhoto} /></MemberGate>} />
         <Route path="messages" element={<MemberGate><MessagesView /></MemberGate>} />
         <Route path="admin" element={<AdminGate><AdminDashboard /></AdminGate>} />
