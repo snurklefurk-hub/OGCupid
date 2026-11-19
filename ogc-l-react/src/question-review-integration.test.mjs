@@ -32,7 +32,7 @@ test("answered profile tab uses an owner-only inline editor",()=>{
   assert.match(view, /profile\.isOwner&&myAnswer&&<button/);
   assert.match(view, /saveMatchAnswer\(answer\)/);
   assert.match(about, /to="\/questions"/);
-  assert.match(app, /path="questions" element=\{<MemberGate><MatchQuestions/);
+  assert.match(app, /path="questions" element=\{<MemberGate allowOnboarding><MatchQuestions/);
 });
 
 test("member-facing Questions progress is one unsegmented pool",()=>{
