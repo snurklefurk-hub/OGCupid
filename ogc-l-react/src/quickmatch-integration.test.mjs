@@ -96,7 +96,7 @@ test("Quickmatch UI preserves original hearts and restricts full-profile links t
   assert.match(photos,/getMemberGallery\(memberId\)/);
   assert.match(photos,/URL\.revokeObjectURL\(url\)/);
   assert.match(css,/object-fit:contain/);
-  assert.match(css,/quickmatch-hearts\\.webp/);
+  assert.match(css,/quickmatch-hearts\.webp/);
   assert.match(css,/ogcl-heart-like/);
   assert.match(css,/ogcl-heart-dislike/);
   assert.match(read("./QuickmatchHearts.jsx"),/ogcl-heart-like/);
