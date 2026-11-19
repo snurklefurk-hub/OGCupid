@@ -65,7 +65,7 @@ test("Quickmatch renders original two heart icons, not CRUD buttons",()=>{
   assert.match(quick,/HeartDecision kind="dislike"/);
   assert.match(hearts,/ogcl-heart-like/);
   assert.match(hearts,/ogcl-heart-dislike/);
-  assert.match(css,/quickmatch-hearts\\.webp/);
+  assert.match(css,/quickmatch-hearts\.webp/);
   assert.match(quick,/queueOrder\.length>=5/);
   assert.doesNotMatch(quick,/>See another<|>Revisit skipped members<|>Undo</);
   assert.match(quick,/await saveQuickmatchDecision\(targetUserId,decision\)/);
