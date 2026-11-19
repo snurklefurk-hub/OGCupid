@@ -69,7 +69,7 @@ async function savePersona(result) {
     document.getElementById("ogc-persona-save-retry")?.remove();
     if(new URLSearchParams(location.search).get("onboarding")==="1") {
       if(new URLSearchParams(location.search).get("embedded")==="1"&&window.parent!==window){
-        window.parent.postMessage({type:"ogc-persona-saved"} ,location.origin);
+        window.parent.postMessage({type:"ogc-persona-saved"},"*");
       }else location.replace("/account/#welcome-title");
     }
   } catch(e) {
