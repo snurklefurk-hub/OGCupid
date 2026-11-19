@@ -77,6 +77,27 @@ jobs:
           grep -q '/assets/' index.html
           ! grep -q 'noindex,nofollow' index.html
           grep -q 'VITE_OGCL_LIVE_CUTOVER' member-app/main.js
+      - name: Build same-origin staging and verify canonical Persona/editorial dependencies
+        env:
+          OGCL_DEPLOY_BASE: /
+          VITE_OGC_AUTH_URL: https://ep-hidden-breeze-bbdn5nsb.neonauth.c-15.us-east-1.aws.neon.tech/neondb/auth
+          VITE_OGC_MEMBER_API_URL: https://br-plain-unit-bbcbxpqq-members.compute.c-15.us-east-1.aws.neon.tech/profile
+          VITE_OGC_REGISTRATION_ENABLED: 'true'
+        run: |
+          npm run build --prefix ogc-l-react
+          test -s public/ogc-l/index.html
+          test -s public/ogc-l/ogcl-embedded.css
+          test -s public/ogc-l/account/persona.html
+          test -s public/ogc-l/ogtrends/zero/index.html
+          test -s public/ogc-l/ogtrends/perfect-profile/index.html
+          test -s public/ogc-l/ogtrends/references/index.html
+          test -s public/ogc-l/privacy/index.html
+          test -s public/ogc-l/terms/index.html
+          test -s public/ogc-l/contact/index.html
+          test -s public/ogc-l/persona-assets/DBLMf.gif
+          test -s public/ogc-l/locations/sa.json
+          test -s public/ogc-l/account/assets/persona-D_H1RH6T.js || ls -al public/ogc-l/account/assets/
+          grep -q 'ogcl-embed' public/ogc-l/ogcl-embedded.css
       - name: Commit verified static candidate to feature branch, not live main
         run: |
           git config user.name "github-actions[bot]"
