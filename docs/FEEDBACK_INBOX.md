@@ -1,3 +1,9 @@
+# Retired November 19, 2026 — historical record only
+
+The sitewide feedback drawer and `POST /feedback` endpoint were retired on the owner's request. **Use the signed-in [Community chat](https://ogcupid.onrender.com/#/community) for site suggestions and discussion.** The instructions below document the former system and are **not** instructions to re-enable it. The one preexisting private feedback note was intentionally preserved; do not delete historical notes without authorization.
+
+---
+
 # OG Cupid private beta feedback inbox
 
 ## For testers

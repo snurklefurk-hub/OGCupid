@@ -645,8 +645,6 @@ async function requestPrivate(path, method, body, options = {}) {
   }
   return response;
 }
-// The global feedback drawer gets a narrow submit-only capability, never a JWT.
-window.ogcSubmitFeedback = (payload) => requestPrivate("/feedback", "POST", payload);
 const requestProfile = (method, body) => requestPrivate("/profile", method, body);
 
 async function loadAnswers() {

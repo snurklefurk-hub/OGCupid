@@ -27,6 +27,7 @@ for(let attempt=1;attempt<=24;attempt++){
   }
 }
 if(!html)throw new Error("React root never became live: "+String(lastError));
+if(html.includes("feedback-widget")||html.includes("ogc-feedback-widget"))throw new Error("Retired feedback widget is still in production HTML");
 const assets=[...html.matchAll(/(?:src|href)="\/(assets\/[^"?#]+)"/g)].map(match=>match[1]);
 if(assets.length<2)throw new Error("Missing compiled React assets in root HTML");
 for(const path of assets){
@@ -46,6 +47,7 @@ for(const path of ["/account/","/account/persona.html","/quiz/",
   const content=await read(path);
   if(!content.includes("OG Cupid")&&!content.includes("OGCupid"))
     throw new Error(path+" returned unexpected content");
+  if(content.includes("/feedback-widget.js"))throw new Error("Retired feedback widget remains on "+path);
 }
 // Canonical public content remains indexable, complete, and reachable
 // independently of the React session shell and from old bookmarks.
@@ -85,6 +87,11 @@ for(const path of ["/brand/ogcupid-logo-white.png","/favicon.png"]){
   const r=await fetch(origin+path,{signal:AbortSignal.timeout(15000)});
   if(r.status!==200)throw new Error("Missing "+path+": "+r.status);
 }
+const feedback=await fetch("https://br-plain-unit-bbcbxpqq-members.compute.c-15.us-east-1.aws.neon.tech/feedback",{
+  method:"POST",headers:{Origin:origin,"Content-Type":"application/json"},
+  body:JSON.stringify({message:"this must not be stored",pagePath:"/"}),signal:AbortSignal.timeout(15000)
+});
+if(feedback.status!==404)throw new Error("Retired feedback endpoint is still active: "+feedback.status);
 const room=await fetch("https://br-plain-unit-bbcbxpqq-members.compute.c-15.us-east-1.aws.neon.tech/community",{
   headers:{Origin:origin},signal:AbortSignal.timeout(15000)
 });

@@ -32,7 +32,7 @@ jobs:
           npm install --no-save esbuild@0.25.12
       - name: Verify exact staging CORS and existing member auth/discovery regressions
         run: |
-          node --test api/staging-cors-contract.test.js api/discovery-score.test.js api/discovery-route.test.js api/profile-route.test.js api/profile-query.test.js api/member-feedback.test.js api/job-moderation.test.js
+          node --test api/staging-cors-contract.test.js api/discovery-score.test.js api/discovery-route.test.js api/profile-route.test.js api/profile-query.test.js api/job-moderation.test.js
       - name: Bundle the production-compatible Neon member Function
         run: |
           npx esbuild api/member-profile.ts --bundle --platform=node --target=node24 --format=esm --banner:js="import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);" --outfile="$RUNNER_TEMP/index.mjs"

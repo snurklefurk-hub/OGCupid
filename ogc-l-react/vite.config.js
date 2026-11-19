@@ -57,7 +57,7 @@ export default defineConfig({
         "member-home-theme.css","okc-2011.css","okc-period-site.css",
         "okc-period.css","desktop-2011-shell.css","desktop-2011-shell.js",
         "legal-pages.css","legal-home-theme.css","profile-showcase.js",
-        "visit-counter.js","feedback-widget.js","feedback-widget.css"
+        "visit-counter.js"
       ])copyFileSync(publicSource+file,stagingTarget+file);
     }
   }],
