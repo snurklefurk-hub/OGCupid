@@ -31,7 +31,7 @@ test("admin routes use the same signed JWT, liveness and origin gates as member 
   assert.match(api,/import \{ isAdminPath, adminMethodAllowed, handleAdmin \}/);
   assert.match(api,/const adminPath = isAdminPath\(url.pathname\)/);
   assert.match(api,/if \(!userId\) return json\(request, \{ error: "Unauthorized" \}, 401\)/);
-  assert.match(api,/messagePath \|\| adminPath \|\| answersPath/);
+  assert.match(api,/messagePath \|\| adminPath \|\| communityPath \|\| answersPath/);
   assert.match(api,/current_member_is_active\(\)/);
   assert.match(api,/allowedOrigins\.has\(origin\)/);
   assert.match(api,/return await handleAdmin\(request,userId,url,withMember,json\)/);
