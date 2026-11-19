@@ -265,7 +265,9 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
       "/account/delete":new Set(["POST"]),
       "/email-preferences":new Set(["GET","PUT"])
     };
-    if(!allowed[path]?.has(method))
+    const photoPrimary=/^\\/photos\\/[0-9a-f-]{36}\\/primary$/i.test(path)&&method==="POST";
+    const photoDelete=/^\\/photos\\/[0-9a-f-]{36}$/i.test(path)&&method==="DELETE";
+    if(!allowed[path]?.has(method) && !photoPrimary && !photoDelete)
       throw new MemberAccessError("invalid","Unsupported account request.");
     const session=await bounded(authClient.getSession());
     if(session?.error)throw new MemberAccessError("unauthorized","Session is unavailable.");
@@ -275,8 +277,8 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
     if(isPhoto && (!(body instanceof Blob)||body.type!=="image/jpeg"||
          body.size<=80||body.size>2_500_000))
       throw new MemberAccessError("invalid","Upload a cropped JPEG (2.5 MB maximum).");
-    if(!isPhoto && method!=="GET" && (!body||typeof body!=="object"||
-      Array.isArray(body)||JSON.stringify(body).length>12000))
+    if(!isPhoto && method!=="GET" && !photoPrimary && !photoDelete &&
+       (!body||typeof body!=="object"||Array.isArray(body)||JSON.stringify(body).length>12000))
       throw new MemberAccessError("invalid","Invalid account update.");
     const controller=new AbortController();
     const timer=setTimeout(()=>controller.abort(),MAX_WAIT_MS);
@@ -285,9 +287,9 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
         method,credentials:"omit",cache:"no-store",
         headers:{
           Authorization:"Bearer "+jwt,Accept:"application/json",
-          ...(method!=="GET"?{"Content-Type":isPhoto?"image/jpeg":"application/json"}:{})
+          ...(method!=="GET"&&!photoPrimary&&!photoDelete?{"Content-Type":isPhoto?"image/jpeg":"application/json"}:{})
         },
-        ...(method!=="GET"?{body:isPhoto?body:JSON.stringify(body)}:{}),
+        ...(method!=="GET"&&!photoPrimary&&!photoDelete?{body:isPhoto?body:JSON.stringify(body)}:{}),
         signal:controller.signal
       });
       if(response.status===400||response.status===409||response.status===413)
