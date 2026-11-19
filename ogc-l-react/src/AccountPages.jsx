@@ -1,6 +1,7 @@
 import React,{useEffect,useState} from "react";
 import {NavLink,useNavigate} from "react-router-dom";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
+import {legacyHref} from "./legacy-links.mjs";
 import "./account.css";
 
 function Frame({title,intro,children}){
@@ -48,7 +49,7 @@ export function JoinForm(){
     </form><ErrorNote error={error} notice={notice}/>
     <p>Already a member? <NavLink to="/signin">Sign in</NavLink>.</p>
     <p className="ogcl-note">You'll be able to verify your email after signup. You must be 18 or older to use OG Cupid.</p>
-    <p className="ogcl-note"><a href="/privacy/">Privacy Policy</a> · <a href="/terms/">Terms</a></p>
+    <p className="ogcl-note"><a href={legacyHref("/privacy/")}>Privacy Policy</a> · <a href={legacyHref("/terms/")}>Terms</a></p>
   </Frame>;
 }
 export function RecoveryForm(){
