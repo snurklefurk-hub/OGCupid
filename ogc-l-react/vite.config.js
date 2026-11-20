@@ -54,7 +54,6 @@ export default defineConfig({
       }
       mkdirSync(stagingTarget+"account/assets/",{recursive:true});
       copyFileSync(publicSource+"account/persona.html",stagingTarget+"account/persona.html");
-      cpSync(publicSource+"account/assets",stagingTarget+"account/assets",{recursive:true});
       for(const file of [
         "ogcl-embedded.css","favicon.png","lovable-home.css",
         "member-home-theme.css","okc-2011.css","okc-period-site.css",

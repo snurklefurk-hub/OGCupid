@@ -3,7 +3,6 @@ import {NavLink,useParams,useSearchParams} from "react-router-dom";
 import {PUBLIC_DETAILS,PUBLIC_ESSAYS} from "./member-public-profile.mjs";
 import {essayDefinition} from "./member-essays.mjs";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
-import {legacyHref} from "./legacy-links.mjs";
 import ProfileGallery from "./ProfileGallery.jsx";
 import ProfileQuestions from "./ProfileQuestions.jsx";
 import {formatLookingFor} from "./member-looking-for.mjs";
@@ -134,7 +133,7 @@ export default function PublicMemberProfile({Photo}) {
           <h2>Personality</h2>
           {profile.personaCode?<p>Dating Persona: <strong>{profile.personaCode}</strong></p>:
             <p>No saved Dating Persona result is available for this profile yet.</p>}
-          {profile.isOwner&&<p><a href={legacyHref("/account/persona.html")}>Take the Dating Persona Test</a></p>}
+          {profile.isOwner&&<p><NavLink to="/persona">Take the Dating Persona Test</NavLink></p>}
         </div>}
       </div>
     </>}

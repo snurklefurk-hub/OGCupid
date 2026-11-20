@@ -31,6 +31,6 @@ test("new builds cannot reintroduce the drawer or retired endpoint",()=>{
 test("Community remains active; historical privacy notice is accurate",()=>{
   assert.match(read("ogc-l-react/src/App.jsx"),/CommunityChat/);
   assert.match(read("api/member-profile.ts"),/handleCommunity/);
-  assert.match(read("public/privacy/index.html"),/Previous beta feedback/);
-  assert.match(read("public/contact/index.html"),/Community chatroom/);
+  assert.match(read("ogc-l-react/src/EditorialContent.jsx"),/Previous beta feedback/);
+  assert.match(read("ogc-l-react/src/ContactPage.jsx"),/Community chatroom/);
 });

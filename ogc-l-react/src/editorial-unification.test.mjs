@@ -37,9 +37,9 @@ test("canonical legal, research, Contact and Persona source bodies are retained"
     assert.ok(existsSync(new URL(path,import.meta.url)),path);
     assert.ok(editorial.includes(key+":{") || editorial.includes('"'+key+'":{'),key);
     const html=read(path);
-    assert.match(html,/<main\b/i);
+    assert.match(html,/location\.replace\("\/#\//);
     assert.match(html,/<title>[^<]+<\/title>/i);
-    assert.match(html,/<(?:h1|h2)[\s>]/i);
+    assert.doesNotMatch(html,/<main\b|ogcl_embed/i);
   }
 });
 test("the original Persona scoring, results, author text and original artwork are not replaced",()=>{
@@ -55,17 +55,16 @@ test("Persona routes require authenticated member and onboarding photo prerequis
   assert.match(editorial,/kind==="onboarding"&&!onboarding\?\.photo/);
   assert.match(editorial,/kind!=="member"&&kind!=="onboarding"/);
   assert.match(onboarding,/to="\/persona"/);
-  assert.match(editorial,/onboarding=1/);
+  assert.match(editorial,/<PersonaQuiz onboarding=/);
   assert.match(gate,/ogc:persona-auth-required/);
   assert.match(saver,/ogc:persona-saved/);
-  assert.match(editorial,/event\.origin!==window\.location\.origin/);
+  assert.match(read("./PersonaQuiz.jsx"),/accountRequest\("\/onboarding","PUT",\{step:"persona",answers,code\}\)/);
   assert.doesNotMatch(editorial,/<iframe|contentDocument/);
   assert.match(saver,/step:"persona"/);
 });
-test("static content mounts into the React document without an iframe",()=>{
-  assert.match(editorial,/DOMParser/);
-  assert.match(editorial,/host\.current\.replaceChildren/);
-  assert.match(editorial,/inSiteRoute\(new URL/);
+test("editorial and Persona render without runtime HTML loading",()=>{
+  assert.match(editorial,/editorialContent\[pageKey\]/);
+  assert.doesNotMatch(editorial,/DOMParser|replaceChildren|fetch\(/);
   assert.doesNotMatch(editorial,/<iframe|contentDocument|ResizeObserver/);
   assert.match(contentCss,/html\.ogcl-embed/);
   for(const name of ["ogtrends","privacy","terms","contact","persona-assets","brand"])

@@ -1,5 +1,7 @@
-import React,{useEffect,useRef,useState} from "react";
-import {NavLink,useNavigate} from "react-router-dom";
+import React,{useEffect} from "react";
+import {NavLink,useLocation} from "react-router-dom";
+import PersonaQuiz from "./PersonaQuiz.jsx";
+import {editorialContent} from "./EditorialContent.jsx";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import "./editorial.css";
 
@@ -45,64 +47,18 @@ export function inSiteRoute(url){
   return null;
 }
 
-export function EmbeddedEditorial({pageKey,onboarding=false}){
+export function EmbeddedEditorial({pageKey}){
   const page=EDITORIAL_PAGES[pageKey];
-  const host=useRef(null);
-  const navigate=useNavigate();
-  const {refresh}=useMemberSession();
-  const [ready,setReady]=useState(false),[error,setError]=useState("");
+  const {hash}=useLocation();
   useEffect(()=>{
-    let disposed=false;
-    const click=event=>{
-      const anchor=event.target?.closest?.("a[href]");
-      if(!anchor||event.defaultPrevented||event.metaKey||event.ctrlKey||event.shiftKey)return;
-      try{const route=inSiteRoute(new URL(anchor.href,window.location.href));if(route){event.preventDefault();navigate(route);}}catch{}
-    };
-    const load=async()=>{
-      try{
-        const response=await fetch(page.path+(page.path.includes("?")?"&":"?")+"ogcl_embed=1"+(onboarding?"&onboarding=1":""),{credentials:"same-origin"});
-        if(!response.ok)throw new Error();
-        const parsed=new DOMParser().parseFromString(await response.text(),"text/html");
-        if(disposed||!host.current)return;
-        host.current.replaceChildren(...Array.from(parsed.body.childNodes).map(node=>document.importNode(node,true)));
-        host.current.addEventListener("click",click);
-        for(const source of parsed.querySelectorAll("script")){
-          const script=document.createElement("script");
-          if(source.src)script.src=source.src;else script.textContent=source.textContent;
-          host.current.appendChild(script);
-        }
-        setReady(true);
-      }catch{if(!disposed)setError("This page could not load.");}
-    };
-    void load();
-    return()=>{disposed=true;host.current?.removeEventListener("click",click);};
-  },[page.path,onboarding,navigate]);
-  useEffect(()=>{
-    const handler=event=>{
-      if(event.origin!==window.location.origin)return;
-      if(event.data?.type==="ogc:persona-saved"){
-        void refresh().then(()=>navigate("/onboarding"));
-      }
-      if(event.data?.type==="ogc:persona-auth-required"){
-        navigate(event.data.reason==="onboarding"?"/onboarding":"/signin");
-      }
-    };
-    window.addEventListener("message",handler);
-    return()=>window.removeEventListener("message",handler);
-  },[navigate,refresh]);
-  if(!page)return null;
-  const breadcrumb=pageKey==="persona"?"/onboarding":pageKey==="zero"||pageKey==="perfect-profile"||pageKey==="references"?"/ogtrends":"/matches";
+    if(!hash)return;
+    try{document.getElementById(decodeURIComponent(hash.slice(1)))?.scrollIntoView();}catch{}
+  },[pageKey,hash]);
   return <section className="ogcl-view ogcl-editorial" aria-label={page.title}>
-    <div className="ogcl-editorial-bar">
-      <NavLink to={breadcrumb}>← {breadcrumb==="/ogtrends"?"Back to OgTrends":pageKey==="persona"?"Back to profile setup":"Back to OG Cupid"}</NavLink>
-      <span>{page.section} · {page.title}</span>
-      <a href={page.path} title="Open the canonical page outside the member shell">Open full page</a>
-    </div>
-    {error&&<p className="ogcl-error" role="alert">{error} <a href={page.path}>Open full page</a></p>}
-    {!ready&&!error&&<p role="status" className="ogcl-editorial-status">Loading {page.title}…</p>}
-    <div ref={host} className="ogcl-editorial-native" aria-label={page.title}/>
+    <div className="ogcl-content-panel">{editorialContent[pageKey]}</div>
   </section>;
 }
+
 
 export function PersonaRoute(){
   const {kind,onboarding}=useMemberSession();
@@ -118,5 +74,5 @@ export function PersonaRoute(){
       <NavLink to="/onboarding">Continue onboarding</NavLink></div>
   </section>;
   if(kind!=="member"&&kind!=="onboarding")return <section className="ogcl-view"><p>Member status couldn't be confirmed. <NavLink to="/signin">Sign in again</NavLink>.</p></section>;
-  return <EmbeddedEditorial pageKey="persona" onboarding={kind==="onboarding"}/>;
+  return <PersonaQuiz onboarding={kind==="onboarding"}/>;
 }

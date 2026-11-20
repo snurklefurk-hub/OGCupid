@@ -5,6 +5,7 @@ import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {SidebarPromos, ProfileFloater, ProfileRefinement} from "./ClassicSidebar.jsx";
 import {filterAndSortMembers, pageMembers} from "./member-directory.mjs";
 import {EmbeddedEditorial,PersonaRoute} from "./EditorialPages.jsx";
+import ContactPage from "./ContactPage.jsx";
 import {recommendedPhotoMembers} from "./classic-editorial.mjs";
 import ProfileEditor from "./ProfileEditor.jsx";
 import ProfileSettings from "./ProfileSettings.jsx";
@@ -314,7 +315,7 @@ export default function App() {
         <Route path="ogtrends/references" element={<EmbeddedEditorial pageKey="references"/>} />
         <Route path="privacy" element={<EmbeddedEditorial pageKey="privacy"/>} />
         <Route path="terms" element={<EmbeddedEditorial pageKey="terms"/>} />
-        <Route path="contact" element={<EmbeddedEditorial pageKey="contact"/>} />
+        <Route path="contact" element={<ContactPage/>} />
         <Route path="photos" element={<MemberGate><PhotoManager/></MemberGate>} />
         <Route path="matches" element={<MemberGate><MemberDirectory /></MemberGate>} />
         <Route path="profile" element={<MemberGate><ProfileEditor /></MemberGate>} />
