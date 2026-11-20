@@ -59,13 +59,9 @@ test("both pages use the same left, center, and right grid positions without sep
   assert.match(right, /height:auto!important/);
 });
 
-test("CSS is last in both published pages, and Vite rebuild preserves that order", () => {
+test("historical member documents route into the React shell", () => {
   for (const html of [account,profile]) {
-    assert.match(html, /desktop-2011-shell\.css\?v=2/);
-    const desktop = html.indexOf("/desktop-2011-shell.css");
-    assert.ok(desktop > html.indexOf("/okc-2011.css"));
-    assert.ok(desktop > html.indexOf("/okc-period-site.css"));
+    assert.match(html, /location\.replace\("\/#/);
+    assert.doesNotMatch(html, /<script\s+[^>]*src=|legacy|<main\b/);
   }
-  assert.match(memberJs, /document\.body\.classList\.toggle\("is-authenticated", authenticated\)/);
-  assert.match(viteConfig, /const desktop = '<link rel="stylesheet" href="\/desktop-2011-shell\.css\?v=2">';/);
 });
