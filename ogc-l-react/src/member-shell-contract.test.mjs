@@ -15,7 +15,7 @@ test("one persistent session provider wraps all routed member views",()=>{
 
 test("member routes and sidebar navigation are both gated on verified membership",()=>{
   assert.match(app, /kind === "member"/);
-  assert.match(app, /<MemberGate><MemberDirectory/);
+  assert.match(app, /<MemberGate><MatchesView Photo=\{MemberPhoto\}/);
   assert.match(app, /<MemberGate><PreviewView/);
   assert.match(app, /ogcl-locked/);
 });
