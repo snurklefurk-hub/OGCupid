@@ -1,4 +1,4 @@
-import React,{useCallback,useEffect,useMemo,useState} from "react";
+import React,{useCallback,useEffect,useMemo,useRef,useState} from "react";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import "./admin.css";
 import CommunityReportsAdmin from "./CommunityReportsAdmin.jsx";
@@ -38,33 +38,67 @@ export default function AdminDashboard(){
   const [notice,setNotice]=useState("");
   const [loading,setLoading]=useState(true);
 
-  const loadAll=useCallback(async(q="")=>{
-    const counts=await adminRequest("/admin");
-    const [users,flags]=await Promise.all([
-      adminRequest("/admin/members"+(q?"?q="+encodeURIComponent(q):"")),
-      adminRequest("/admin/reports")
-    ]);
-    setSummary(counts);
-    setMembers(Array.isArray(users)?users:[]);
-    setReports(Array.isArray(flags)?flags:[]);
+  const [sectionLoading,setSectionLoading]=useState("");
+  const loadedTabs=useRef(new Set());
+  const pendingTabs=useRef(new Set());
+
+  // Fetch only what the opened tab displays. The overview count also
+  // authorizes the dashboard, without preloading reports/member data.
+  const loadSection=useCallback(async(section,q="")=>{
+    if(section==="members"){
+      const users=await adminRequest("/admin/members"+(q?"?q="+encodeURIComponent(q):""));
+      setMembers(Array.isArray(users)?users:[]);
+    }else if(section==="reports"){
+      const flags=await adminRequest("/admin/reports");
+      setReports(Array.isArray(flags)?flags:[]);
+    }else if(section==="overview"||section==="audit"){
+      setSummary(await adminRequest("/admin"));
+    }
   },[adminRequest]);
 
   useEffect(()=>{
     let live=true;
     setLoading(true);setError("");setDenied(false);
-    void loadAll().catch(e=>{
+    void adminRequest("/admin").then(counts=>{
+      if(live)setSummary(counts);
+    }).catch(e=>{
       if(!live)return;
       if(e?.code==="forbidden")setDenied(true);
       else setError("The administration service could not be reached.");
     }).finally(()=>{if(live)setLoading(false);});
     return ()=>{live=false;};
-  },[loadAll]);
+  },[adminRequest]);
 
-  async function reload(q=query){
+  useEffect(()=>{
+    if(!summary||!["members","reports"].includes(tab)||
+       loadedTabs.current.has(tab)||pendingTabs.current.has(tab))return;
+    const section=tab;
+    let live=true;
+    pendingTabs.current.add(section);
+    setSectionLoading(section);
+    void loadSection(section,section==="members"?query:"").then(()=>{
+      loadedTabs.current.add(section);
+    }).catch(e=>{
+      if(live){
+        if(e?.code==="forbidden")setDenied(true);
+        else setError("Could not load "+section+".");
+      }
+    }).finally(()=>{
+      pendingTabs.current.delete(section);
+      if(live)setSectionLoading("");
+    });
+    return ()=>{live=false;};
+  },[tab,summary,query,loadSection]);
+
+  async function reload(q=query,section=tab){
     setBusy(true);setError("");setNotice("");
-    try{await loadAll(q);}
-    catch(e){setError(e?.code==="forbidden"?"Your administrator access has changed.":"Could not refresh the dashboard.");}
-    finally{setBusy(false);}
+    try{
+      await loadSection(section,q);
+      loadedTabs.current.add(section);
+    }catch(e){
+      if(e?.code==="forbidden")setDenied(true);
+      else setError("Could not refresh the "+section+" section.");
+    }finally{setBusy(false);}
   }
 
   async function openReport(id){
@@ -85,7 +119,7 @@ export default function AdminDashboard(){
       await adminRequest("/admin/reports/"+evidence.id+"/action","POST",
         {action,reason:reason.trim()});
       setNotice("Action recorded. Member access and report status updated.");
-      await loadAll(query);
+      await Promise.all([loadSection("overview"),loadSection("reports")]);
       setEvidence(null);setActiveReport(null);setReason("");
     }catch(e){setError(e?.code==="invalid"?"This report has changed; refresh and try again.":"Couldn't save the action.");}
     finally{setBusy(false);}
@@ -103,7 +137,7 @@ export default function AdminDashboard(){
         {reason:explanation.trim()});
       if(!done)throw Error("Account not eligible");
       setNotice("Permanent ban lifted and administrator action recorded.");
-      await loadAll(query);
+      await Promise.all([loadSection("overview"),loadSection("members",query)]);
     }catch{setError("Reinstatement failed or the member is no longer eligible.");}
     finally{setBusy(false);}
   }
@@ -170,7 +204,8 @@ export default function AdminDashboard(){
             <option value="all">All reports</option></select></label>
         </div>
         <p className="ogcl-admin-muted">Only flagged private-message evidence is accessible here. Reporters are not disclosed to reported members.</p>
-        {visibleReports.length===0?<p>No reports in this category.</p>:
+        {sectionLoading==="reports"?<p role="status">Loading reports…</p>:
+        visibleReports.length===0?<p>No reports in this category.</p>:
           <div className="ogcl-admin-grid">
             <div className="ogcl-admin-list" aria-label="Moderation reports">
               {visibleReports.map(r=><button type="button" key={r.id}
@@ -226,6 +261,7 @@ export default function AdminDashboard(){
             setSearch("");setQuery("");void reload("");
           }}>Clear</button>
         </form>
+        {sectionLoading==="members"&&<p role="status">Loading accounts…</p>}
         <div className="ogcl-admin-table-scroll"><table className="ogcl-admin-table">
           <thead><tr><th>Account</th><th>Profile</th><th>Joined</th><th>Status</th><th>Action</th></tr></thead>
           <tbody>{members.map(m=><tr key={m.id}>

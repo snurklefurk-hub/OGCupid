@@ -446,6 +446,19 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
         throw new MemberAccessError("unavailable","Admin request failed.");
       }finally{clearTimeout(timer);}
     },
+    // A focus/visibility check must not fetch profile, matches or photos.
+    // The authenticated /onboarding call still verifies JWT liveness server-side.
+    async revalidate() {
+      let sessionResult;
+      try { sessionResult=await bounded(authClient.getSession()); }
+      catch { throw new MemberAccessError("unavailable","Could not verify your session."); }
+      if(sessionResult?.error || !sessionResult?.data?.user)
+        throw new MemberAccessError("unauthorized","Session expired.");
+      const user=checkedMember(sessionResult.data.user);
+      const jwt=await getJwt(sessionResult.data.session);
+      const onboarding=sanitizeOnboarding(await readApi("/onboarding",jwt));
+      return {kind:onboarding.explored?"member":"onboarding",user,onboarding};
+    },
     async load() {
       let sessionResult;
       try { sessionResult = await bounded(authClient.getSession()); }

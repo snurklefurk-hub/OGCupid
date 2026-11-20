@@ -90,6 +90,26 @@ test("unfinished onboarding stops before loading profile or discovery",async()=>
   assert.equal(status.profile,undefined);
 });
 
+test("quiet revalidation requests only liveness/onboarding, never profile or discovery",async()=>{
+  const {service,calls}=mockGateway();
+  const result=await service.revalidate();
+  assert.equal(result.kind,"member");
+  assert.equal(result.user.id,YOU);
+  assert.deepEqual(calls.map(([path])=>path),["/onboarding"]);
+  assert.equal(result.profile,undefined);
+  assert.equal(result.discovery,undefined);
+});
+
+test("quiet revalidation denies expired sessions and JWT rejection",async()=>{
+  const guest=mockGateway({authSession:{user:null,session:null}});
+  await assert.rejects(guest.service.revalidate(),error=>error.code==="unauthorized");
+  assert.equal(guest.calls.length,0);
+  const revoked=mockGateway({responseFor:async url=>
+    new URL(url).pathname==="/onboarding" ? bad(401) : good({})});
+  await assert.rejects(revoked.service.revalidate(),error=>error.code==="unauthorized");
+  assert.deepEqual(revoked.calls.map(([path])=>path),["/onboarding"]);
+});
+
 test("opaque Auth cookie is exchanged for a short-lived JWT with credentials and no cache",async()=>{
   const {service,calls}=mockGateway({authSession:{...session,session:{token:"opaque-id"}}});
   assert.equal((await service.load()).kind,"member");
