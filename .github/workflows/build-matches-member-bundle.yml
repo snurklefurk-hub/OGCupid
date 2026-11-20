@@ -31,17 +31,18 @@ jobs:
         run: |
           node --check api/member-connections.js
           node --check api/member-messages.js
-          node --test api/member-connections.test.js api/member-messages.test.js
+          node --test api/member-connections.test.js api/member-messages.test.js > dev/matches-member-tests.log 2>&1 || { cat dev/matches-member-tests.log; exit 1; }
           npx esbuild api/member-profile.ts --bundle --platform=node --target=node24 --format=esm --banner:js="import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);" --outfile="$RUNNER_TEMP/index.mjs"
           node --check "$RUNNER_TEMP/index.mjs"
           cd "$RUNNER_TEMP"
           zip -9 members.zip index.mjs
           base64 -w0 members.zip > "$GITHUB_WORKSPACE/dev/matches-member-bundle.b64"
-      - name: Commit build bundle only to isolated feature branch
+      - name: Commit build diagnostic and bundle only to isolated feature branch
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add dev/matches-member-bundle.b64
+          git add dev/matches-member-bundle.b64 dev/matches-member-tests.log 2>/dev/null || git add dev/matches-member-tests.log
           if ! git diff --cached --quiet; then
             git commit -m "build: stage Matches Neon member Function ZIP on feature branch"
             for attempt in 1 2 3 4 5 6; do
