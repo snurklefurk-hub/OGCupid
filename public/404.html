@@ -1,26 +1,13 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer">
+<html lang="en">
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
 <title>OG Cupid</title>
-<style>body{margin:0;background:#2e619c;color:#fff;font:15px/1.6 Verdana,Arial,sans-serif}
-main{max-width:500px;margin:80px auto;padding:24px}a{color:#fff}</style>
 <script>
-/* Render's static-site rewrite is configured separately. This 404 fallback
-   still boots authenticated client routing for direct /profiles/{slug} links
-   until the rewrite rule is active. No member data exists in this HTML. */
-(function () {
-  var route=/^\/profiles\/[a-z0-9]+(?:-[a-z0-9]+)*(?:\/)?$/;
-  if (!route.test(location.pathname)) return;
-  fetch("/profiles/index.html", {cache:"no-store"}).then(function (response) {
-    if (!response.ok) throw new Error("Profile route unavailable");
-    return response.text();
-  }).then(function (html) {
-    document.open(); document.write(html); document.close();
-  }).catch(function () { location.replace("/"); });
-})();
+  const profile = location.pathname.match(/^\/profiles\/([a-z0-9]+(?:-[a-z0-9]+)*)\/?$/);
+  const tab = location.hash.slice(1).toLowerCase();
+  const suffix = ["photos", "questions", "personality"].includes(tab) ? "?tab=" + tab : "";
+  location.replace(profile ? "/#/profiles/" + profile[1] + suffix : "/#/not-found");
 </script>
-  <link rel="stylesheet" href="/okc-2011.css?v=1">
-<meta name="theme-color" content="#2963a4">
-  <link rel="icon" type="image/png" href="/favicon.png?v=3">
-  <link rel="stylesheet" href="/okc-period-site.css?v=2">
-</head><body><main><h1>Page not found</h1><p>That address doesn't exist on OG Cupid.</p><p><a href="/">Go to the home page</a></p></main></body></html>
+<a href="/#/not-found">Continue to OG Cupid</a>
+</html>
