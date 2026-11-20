@@ -150,10 +150,11 @@ export function sanitizeConversations(data,me) {
     throw new MemberAccessError("unavailable","Invalid inbox response.");
   return Object.freeze(data.conversations.map(item=>{
     if(!UUID.test(String(item?.peerId||"")) || item.peerId.toLowerCase()===me ||
-       !SLUG.test(String(item.slug||"")) || typeof item.displayName!=="string")
+       (item.pairBlocked?item.slug!==null:!SLUG.test(String(item.slug||""))) ||
+       typeof item.pairBlocked!=="boolean" || typeof item.displayName!=="string")
       throw new MemberAccessError("unavailable","Invalid conversation peer.");
     const peerId=item.peerId.toLowerCase();
-    return Object.freeze({peerId,slug:item.slug,
+    return Object.freeze({peerId,slug:item.slug,pairBlocked:item.pairBlocked,
       displayName:item.displayName.slice(0,60),
       lastMessage:checkedPrivateMessage(item.lastMessage,me,peerId)});
   }));
@@ -161,14 +162,34 @@ export function sanitizeConversations(data,me) {
 export function sanitizeConversation(data,me,peerId) {
   if(!UUID.test(me) || !UUID.test(peerId) || !data?.peer ||
      data.peer.userId?.toLowerCase()!==peerId ||
-     !SLUG.test(String(data.peer.slug||"")) || typeof data.peer.displayName!=="string" ||
+     (data.pairBlocked?data.peer.slug!==null:!SLUG.test(String(data.peer.slug||""))) ||
+     typeof data.pairBlocked!=="boolean" || typeof data.peer.displayName!=="string" ||
      !Array.isArray(data.messages) || data.messages.length>100 ||
      typeof data.blocked!=="boolean" || typeof data.canSend!=="boolean")
     throw new MemberAccessError("unavailable","Invalid private conversation response.");
   return Object.freeze({peer:Object.freeze({userId:peerId,slug:data.peer.slug,
     displayName:data.peer.displayName.slice(0,60)}),
-    blocked:data.blocked,canSend:data.canSend,
+    blocked:data.blocked,pairBlocked:data.pairBlocked,canSend:data.canSend,
     messages:Object.freeze(data.messages.map(m=>checkedPrivateMessage(m,me,peerId)))});
+}
+
+export function sanitizeConnections(data) {
+  if(!data||!Array.isArray(data.favorites)||!Array.isArray(data.blocks)||
+     !Number.isSafeInteger(data.favoritedByCount)||data.favoritedByCount<0||
+     !Number.isSafeInteger(data.blockedByCount)||data.blockedByCount<0||
+     data.favorites.length>5000||data.blocks.length>5000)
+    throw new MemberAccessError("unavailable","Invalid Favorites/Blocks response.");
+  if(!data.favorites.every(x=>typeof x==="string"&&UUID.test(x))||
+     !data.blocks.every(x=>x && UUID.test(String(x.userId||"")) &&
+       typeof x.displayName==="string"&&typeof x.permanent==="boolean"))
+    throw new MemberAccessError("unavailable","Invalid Favorites/Blocks records.");
+  return Object.freeze({
+    favorites:new Set(data.favorites.map(x=>x.toLowerCase())),
+    favoritedByCount:data.favoritedByCount,blockedByCount:data.blockedByCount,
+    blocks:Object.freeze(data.blocks.map(b=>Object.freeze({
+      userId:b.userId.toLowerCase(),displayName:b.displayName.slice(0,60),permanent:b.permanent
+    })))
+  });
 }
 
 export function selectRecommendedMembers(profiles, rng = Math.random) {
@@ -252,6 +273,36 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
     }catch(error){
       if(error instanceof MemberAccessError)throw error;
       throw new MemberAccessError("unavailable","Unable to contact messaging service.");
+    }finally{clearTimeout(timer);}
+  }
+
+  async function connectionWrite(kind,targetUserId,method,body=null){
+    if(!["favorites","blocks","profile-reports"].includes(kind)||
+      !UUID.test(String(targetUserId||"")) ||
+      !["PUT","DELETE","POST"].includes(method))
+      throw new MemberAccessError("invalid","Invalid member action.");
+    const identity=await bounded(authClient.getSession());
+    const member=checkedMember(identity?.data?.user);
+    if(member.id===targetUserId.toLowerCase())
+      throw new MemberAccessError("invalid","Cannot select yourself.");
+    const jwt=await getJwt(identity?.data?.session);
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),MAX_WAIT_MS);
+    try {
+      const response=await fetcher(endpoints.memberApiBaseUrl+"/"+kind+"/"+targetUserId.toLowerCase(),{
+        method,credentials:"omit",cache:"no-store",
+        headers:{Authorization:"Bearer "+jwt,Accept:"application/json",
+          ...(body?{"Content-Type":"application/json"}:{})},
+        ...(body?{body:JSON.stringify(body)}:{}),
+        signal:controller.signal
+      });
+      if(response.status===409||response.status===404)
+        throw new MemberAccessError("blocked","Member action unavailable or block permanent.");
+      requireResponse(response);
+      return await bounded(response.json());
+    }catch(error){
+      if(error instanceof MemberAccessError)throw error;
+      throw new MemberAccessError("unavailable","Member action could not be saved.");
     }finally{clearTimeout(timer);}
   }
 
@@ -612,6 +663,30 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
         if(error instanceof MemberAccessError)throw error;
         throw new MemberAccessError("unavailable","Could not save Quickmatch decision.");
       }finally{clearTimeout(timer);}
+    },
+    async loadConnections(){
+      const identity=await bounded(authClient.getSession());
+      checkedMember(identity?.data?.user);
+      const jwt=await getJwt(identity?.data?.session);
+      return sanitizeConnections(await readApi("/connections",jwt));
+    },
+    async setFavorite(targetId,favorite){
+      const result=await connectionWrite("favorites",targetId,favorite?"PUT":"DELETE");
+      if(result?.favorite!==favorite)throw new MemberAccessError("unavailable","Favorite not confirmed.");
+      return favorite;
+    },
+    async setSiteBlock(targetId,blocked){
+      const result=await connectionWrite("blocks",targetId,blocked?"PUT":"DELETE");
+      if(result?.blocked!==blocked || typeof result.permanent!=="boolean")
+        throw new MemberAccessError("unavailable","Block change not confirmed.");
+      return result;
+    },
+    async reportProfile(targetId,reason){
+      if(!["spam","harassment","other"].includes(reason))
+        throw new MemberAccessError("invalid","Invalid report reason.");
+      const result=await connectionWrite("profile-reports",targetId,"POST",{reason});
+      if(result?.reported!==true)throw new MemberAccessError("unavailable","Profile report not confirmed.");
+      return true;
     },
     async loadInbox() {
       const identity=await bounded(authClient.getSession());
