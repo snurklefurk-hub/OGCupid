@@ -9,6 +9,7 @@ const USER="00000000-0000-4000-8000-000000000002";
 const PHOTO="00000000-0000-4000-8000-000000000003";
 const BASE="/admin/members/"+USER;
 const migration=readFileSync(new URL("../db/migrations/030_admin_member_content_editor.sql",import.meta.url),"utf8");
+const noReasonMigration=readFileSync(new URL("../db/migrations/031_optional_admin_content_reason.sql",import.meta.url),"utf8");
 function harness(value=true,code=null){
   const calls=[];
   return {calls,withMember:async(actor,cb)=>cb({
@@ -63,39 +64,38 @@ test("admins read protected member content through restricted RPCs",async()=>{
   const missing=await run(BASE+"/content","GET",undefined,harness(null));
   assert.equal(missing.status,404);
 });
-test("profile field edits reject arbitrary account fields and require a reason",async()=>{
-  for(const payload of [
-    {field:"role",value:"admin",reason:"Testing allowed edit"},
-    {field:"about_me",value:"bio",reason:"short"},
-    {field:"about_me",value:"bio",reason:"Testing allowed edit",userId:USER}
-  ]){
-    // Role is rejected by the SQL RPC rather than by trusting a UI allowlist.
-    const r=await run(BASE+"/field","PUT",payload,
-      harness(true,payload.field==="role"?"22023":null));
-    if(payload.field==="role")assert.equal(r.status,409);
-    else assert.equal(r.status,400);
+test("profile and age edits work without any reason field while rejecting account writes",async()=>{
+  const bad=[
+    [{field:"role",value:"admin"},"22023",409],
+    [{field:"about_me",value:"bio",userId:USER},null,400],
+    [{field:"about_me",value:"bio",reason:"Unexpected legacy reason"},null,400]
+  ];
+  for(const [payload,code,status] of bad){
+    const r=await run(BASE+"/field","PUT",payload,harness(true,code));
+    assert.equal(r.status,status);
   }
   const updated=await run(BASE+"/field","PUT",{
-    field:"about_me",value:"new biography",reason:"Correcting the account biography."
+    field:"about_me",value:"new biography"
   });
   assert.equal(updated.status,200);
   assert.match(updated.calls[0].sql,/admin_edit_member_field/);
-  assert.deepEqual(updated.calls[0].args,
-    [USER,"about_me","new biography","Correcting the account biography."]);
-  assert.equal((await run(BASE+"/age-range","PUT",
-    {min:18,max:99,reason:"Adjusting match preferences."})).status,200);
-  assert.equal((await run(BASE+"/age-range","PUT",
-    {min:99,max:18,reason:"Adjusting match preferences."})).status,400);
+  assert.deepEqual(updated.calls[0].args,[USER,"about_me","new biography",null]);
+  const range=await run(BASE+"/age-range","PUT",{min:18,max:99});
+  assert.equal(range.status,200);
+  assert.deepEqual(range.calls[0].args,[USER,18,99,null]);
+  assert.equal((await run(BASE+"/age-range","PUT",{min:99,max:18})).status,400);
+  assert.equal((await run(BASE+"/age-range","PUT",{min:18,max:99,reason:"Old"})).status,400);
 });
 test("question answers use published IDs and preserve private preferences",async()=>{
   const payload={questionId:"vault-1",optionId:"option-1",
     acceptableOptions:["option-1","option-2"],importance:250,
-    isPrivate:true,note:"Test explanation",reason:"Removing an incorrect question response."};
+    isPrivate:true,note:"Test explanation"};
   const accepted=await run(BASE+"/answers","PUT",payload);
   assert.equal(accepted.status,200);
   assert.match(accepted.calls[0].sql,/admin_save_member_answer/);
   assert.equal(accepted.calls[0].args[0],USER);
   assert.equal(accepted.calls[0].args[5],true);
+  assert.equal(accepted.calls[0].args[7],null);
   for(const change of [
     {...payload,questionId:"../../secrets"},
     {...payload,importance:200},
@@ -106,10 +106,10 @@ test("question answers use published IDs and preserve private preferences",async
     assert.equal(result.status,400);
     assert.equal(result.calls.length,0);
   }
-  const deleted=await run(BASE+"/answers/vault-1","DELETE",
-    {reason:"Member requested correction to old answer."});
+  const deleted=await run(BASE+"/answers/vault-1","DELETE");
   assert.equal(deleted.status,200);
   assert.match(deleted.calls[0].sql,/admin_delete_member_answer/);
+  assert.deepEqual(deleted.calls[0].args,[USER,"vault-1",null]);
 });
 test("admin-only photo operations fail closed without touching storage",async()=>{
   const forbidden=await run(BASE+"/content","GET",undefined,harness(null,"42501"));
@@ -124,8 +124,9 @@ test("admin-only photo operations fail closed without touching storage",async()=
   const wrong=await run(BASE+"/photos","POST",undefined,harness(false));
   assert.equal(wrong.status,409);
   assert.match(wrong.calls[0].sql,/admin_member_photo_preflight/);
-  assert.equal((await run(BASE+"/photos/"+PHOTO+"/primary","POST",
-    {reason:"Set the member's corrected picture as primary."})).status,200);
+  const primary=await run(BASE+"/photos/"+PHOTO+"/primary","POST");
+  assert.equal(primary.status,200);
+  assert.deepEqual(primary.calls[0].args,[USER,PHOTO,null]);
 });
 test("database uses definer RPCs with live admin role and write audit; member role has no table access",()=>{
   assert.match(migration,/CREATE TABLE IF NOT EXISTS app_private\.member_admin_content_edits/);
@@ -134,6 +135,9 @@ test("database uses definer RPCs with live admin role and write audit; member ro
   assert.match(migration,/admin_is_authorized\(\)/);
   assert.match(migration,/app\.current_user_id/);
   assert.match(migration,/admin_record_content_edit/);
+  assert.match(noReasonMigration,/ALTER COLUMN reason DROP NOT NULL/);
+  assert.match(noReasonMigration,/admin_is_authorized\(\)/);
+  assert.match(noReasonMigration,/moderator_id,subject_id,action,detail,reason/);
   assert.match(migration,/app_private\.published_match_questions/);
   assert.doesNotMatch(migration,/GRANT (SELECT|UPDATE|INSERT|DELETE) ON app_private\.member_(profiles|photos|match_answers)/);
   assert.doesNotMatch(migration,/DROP TABLE|DROP SCHEMA/);

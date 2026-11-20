@@ -27,7 +27,6 @@ export default function AdminMemberEditor({member,onClose}){
   const [bank,setBank]=useState([]);
   const [questionId,setQuestionId]=useState("");
   const [answer,setAnswer]=useState(initialAnswer);
-  const [reason,setReason]=useState("");
   const [minAge,setMinAge]=useState("");
   const [maxAge,setMaxAge]=useState("");
   const [tab,setTab]=useState("profile");
@@ -72,7 +71,7 @@ export default function AdminMemberEditor({member,onClose}){
   const answerById=useMemo(()=>new Map(answerRows.map(x=>[x.questionId,x])),[answerRows]);
   const questionLookup=useMemo(()=>new Map(bank.map(x=>[x.id,x])),[bank]);
   const supported=!!content?.profile;
-  const canSave=reason.trim().length>=8&&!busy;
+  const canSave=!busy;
 
   function chooseQuestion(id){
     setQuestionId(id);setError("");setNotice("");
@@ -100,7 +99,7 @@ export default function AdminMemberEditor({member,onClose}){
   function saveField(field){
     const value=drafts[field.column]??"";
     void perform(()=>adminRequest(path("field"),"PUT",{
-      field:field.column,value,reason:reason.trim()
+      field:field.column,value
     }),field.label+" updated.");
   }
   function saveAgeRange(e){
@@ -112,7 +111,7 @@ export default function AdminMemberEditor({member,onClose}){
       setError("Choose an age range from 18–99, minimum first.");return;
     }
     void perform(()=>adminRequest(path("age-range"),"PUT",{
-      min,max,reason:reason.trim()
+      min,max
     }),"Age preferences updated.");
   }
   function saveAnswer(e){
@@ -126,15 +125,14 @@ export default function AdminMemberEditor({member,onClose}){
     void perform(()=>adminRequest(path("answers"),"PUT",{
       questionId,optionId:answer.optionId,
       acceptableOptions:answer.acceptableOptions,
-      importance:answer.importance,isPrivate:answer.isPrivate,note:answer.note,
-      reason:reason.trim()
+      importance:answer.importance,isPrivate:answer.isPrivate,note:answer.note
     }),"Question answer saved.");
   }
   function deleteAnswer(){
     if(!answerById.has(questionId)||!window.confirm(
       "Delete this member's saved answer? This changes compatibility results."))return;
     void perform(async()=>{
-      await adminRequest(path("answers/"+questionId),"DELETE",{reason:reason.trim()});
+      await adminRequest(path("answers/"+questionId),"DELETE");
       setQuestionId("");setAnswer(initialAnswer());
     },"Question answer deleted.");
   }
@@ -144,7 +142,6 @@ export default function AdminMemberEditor({member,onClose}){
       const jpeg=await preparePhoto(file);
       const form=new FormData();
       form.append("photo",jpeg,"profile.jpg");
-      form.append("reason",reason.trim());
       const endpoint=replaceId?"photos/"+replaceId+"/replace":"photos";
       await adminRequest(path(endpoint),replaceId?"PUT":"POST",form);
     },replaceId?"Photo replaced.":"Photo uploaded.");
@@ -152,9 +149,8 @@ export default function AdminMemberEditor({member,onClose}){
   function photoAction(photo,operation){
     if(operation==="delete"&&!window.confirm("Delete this member's photo?"))return;
     const endpoint="photos/"+photo.id+(operation==="primary"?"/primary":"");
-    void perform(()=>adminRequest(path(endpoint),operation==="primary"?"POST":"DELETE",{
-      reason:reason.trim()
-    }),operation==="primary"?"Primary photo updated.":"Photo deleted.");
+    void perform(()=>adminRequest(path(endpoint),operation==="primary"?"POST":"DELETE"),
+      operation==="primary"?"Primary photo updated.":"Photo deleted.");
   }
 
   return <section className="ogcl-admin-section ogcl-admin-member-editor" aria-label={"Edit member "+member.name}>
@@ -165,11 +161,6 @@ export default function AdminMemberEditor({member,onClose}){
     </div>
     <p>These are saved changes to another member's account, not a preview. Every change is logged.
       Signup name, birth date, account role, and credentials remain outside this editor.</p>
-    <label className="ogcl-admin-edit-reason">Reason for changes (required, 8–500 characters)
-      <textarea maxLength={500} rows={2} value={reason}
-        onChange={e=>setReason(e.target.value)}
-        placeholder="Document why these member records are being changed."/>
-    </label>
     <div className="ogcl-admin-toolbar"><nav aria-label="Member editing sections">
       {["profile","photos","questions"].map(id=><button type="button" key={id}
         className={tab===id?"selected":""} onClick={()=>{setTab(id);setError("");}}>

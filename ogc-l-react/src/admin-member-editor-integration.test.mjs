@@ -17,7 +17,8 @@ test("admin editing preserves identity, account role and secrets",()=>{
   assert.match(editor,/Signup name, birth date, account role, and credentials remain outside this editor/);
   assert.doesNotMatch(editor,/localStorage|sessionStorage/);
   assert.doesNotMatch(editor,/adminPassword|secretToken/);
-  assert.match(editor,/reason\.trim\(\)\.length>=8/);
+  assert.match(editor,/const canSave=!busy/);
+  assert.doesNotMatch(editor,/Reason for changes|setReason|reason\.trim/);
   assert.match(handler,/admin_member_photo_preflight/);
   assert.match(handler,/admin_member_photo_key/);
   assert.match(handler,/admin_edit_member_field/);
@@ -28,7 +29,8 @@ test("photo writes use existing JPEG sanitizer and user-scoped storage keys",()=
   assert.match(handler,/photoId=crypto\.randomUUID\(\)/);
   assert.match(handler,/await removePhoto\(key\)/);
   assert.match(editor,/preparePhoto\(file\)/);
-  assert.match(editor,/form\.append\("reason",reason\.trim\(\)\)/);
+  assert.doesNotMatch(editor,/form\.append\("reason"/);
+  assert.match(editor,/form\.append\("photo"/);
   assert.match(editor,/URL\.revokeObjectURL/);
   assert.match(gateway,/blob\.type!=="image\/jpeg"/);
 });
