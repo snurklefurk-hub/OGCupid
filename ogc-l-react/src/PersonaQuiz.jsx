@@ -1,7 +1,26 @@
 import React,{useState,useRef} from "react";
 import {useSearchParams,NavLink} from "react-router-dom";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
-import {questions,PAGE_SIZE,PAGE_COUNT,archetypes,order,sides,originalWriteups,revivalSummaries,partialHistoricWriteups,historicalGuidance,historicalArtwork,scoreAnswers} from "./persona-content.mjs";
+import {questions,PAGE_SIZE,PAGE_COUNT,archetypes,order,sides,originalWriteups,revivalSummaries,partialHistoricWriteups,historicalGuidance,historicalArtwork,historicCrops,scoreAnswers} from "./persona-content.mjs";
+
+function PersonaArtwork({code,style}){
+  const key=code+style;
+  const label=archetypes[code][style][0];
+  const art=historicalArtwork[key];
+  const frame={display:"block",maxWidth:"100%",maxHeight:320};
+  if(Number.isInteger(art?.spriteIndex)){
+    return <span role="img" aria-label={label} style={{display:"block",width:145,aspectRatio:"100 / 220",
+      backgroundImage:"url("+art.url+")",backgroundSize:"300% 100%",backgroundPosition:(art.spriteIndex*50)+"% 0"}}/>;
+  }
+  if(art)return <img src={art.url} alt={label} style={frame}/>;
+  const crop=historicCrops[key];
+  if(!crop)return null;
+  const [file,width,height,x,y,cropWidth,cropHeight]=crop;
+  return <svg role="img" aria-label={label} width={cropWidth} height={cropHeight}
+    style={frame} viewBox={[x,y,cropWidth,cropHeight].join(" ")}>
+    <image href={"/persona-assets/"+file} width={width} height={height} preserveAspectRatio="none"/>
+  </svg>;
+}
 
 export default function PersonaQuiz({onboarding}){
   const [params,setParams]=useSearchParams();
@@ -84,8 +103,8 @@ export default function PersonaQuiz({onboarding}){
       {screen==="result"&&result&&<>
         <h2>{archetypes[result][style][0]}</h2>
         <p>{key} · {result.split("").map((letter,i)=>sides[i].labels[sides[i].code.indexOf(letter)]).join(" · ")}</p>
-        {art&&<figure><img src={art.url} alt={archetypes[result][style][0]} style={{maxWidth:"100%",maxHeight:320}}/>
-          {art.source&&<figcaption><a href={art.source}>Original illustration source</a></figcaption>}</figure>}
+        {(art||historicCrops[key])&&<figure><PersonaArtwork code={result} style={style}/>
+          {art?.source&&<figcaption><a href={art.source}>Original illustration source</a></figcaption>}</figure>}
         {(originalWriteups[key]||partialHistoricWriteups[key]||[]).map((paragraph,i)=><p key={i}>{paragraph}</p>)}
         {(revivalSummaries[key]||[archetypes[result].story]).map((paragraph,i)=><p key={i}>{paragraph}</p>)}
         <p>{archetypes[result][style][1]}</p>
