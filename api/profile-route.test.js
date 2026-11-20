@@ -49,6 +49,6 @@ test("canonical React profile protects owner edits and delegates guest routing t
   assert.match(view,/getPublicProfile\(slug\)/);
   assert.match(view,/!profile\?\.isOwner/);
   assert.match(view,/saveOwnEssay\(key,draft\)/);
-  assert.match(provider,/getPublicProfile,saveOwnEssay/);
+  assert.match(provider,/saveOwnEssay,\s*getPublicProfile/);
   assert.doesNotMatch(view,/EngineerKen|Kennedy|Oakland/);
 });
