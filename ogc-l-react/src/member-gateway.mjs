@@ -95,6 +95,8 @@ export function sanitizeDiscovery(data, memberId) {
     .map(p => Object.freeze({
       userId: String(p.userId).toLowerCase(), slug: p.slug,
       displayName: p.displayName.slice(0, 60),
+      age: Number.isInteger(p.age)&&p.age>=18&&p.age<=120?p.age:null,
+      cityRegion:typeof p.cityRegion==="string"?p.cityRegion.slice(0,120):null,
       matchPercent: p.matchPercent, confidence: String(p.confidence || "insufficient"),
       commonQuestions: Number.isInteger(p.commonQuestions) && p.commonQuestions >= 0
         ? p.commonQuestions : 0
@@ -174,17 +176,25 @@ export function sanitizeConversation(data,me,peerId) {
 }
 
 export function sanitizeConnections(data) {
-  if(!data||!Array.isArray(data.favorites)||!Array.isArray(data.blocks)||
+  if(!data||!Array.isArray(data.favorites)||!Array.isArray(data.blocks)||!Array.isArray(data.quiver)||
      !Number.isSafeInteger(data.favoritedByCount)||data.favoritedByCount<0||
      !Number.isSafeInteger(data.blockedByCount)||data.blockedByCount<0||
-     data.favorites.length>5000||data.blocks.length>5000)
+     data.favorites.length>5000||data.blocks.length>5000||data.quiver.length>5000)
     throw new MemberAccessError("unavailable","Invalid Favorites/Blocks response.");
   if(!data.favorites.every(x=>typeof x==="string"&&UUID.test(x))||
+     !data.quiver.every(x=>x && UUID.test(String(x.userId||"")) &&
+       SLUG.test(String(x.slug||"")) && typeof x.displayName==="string")||
      !data.blocks.every(x=>x && UUID.test(String(x.userId||"")) &&
        typeof x.displayName==="string"&&typeof x.permanent==="boolean"))
     throw new MemberAccessError("unavailable","Invalid Favorites/Blocks records.");
   return Object.freeze({
     favorites:new Set(data.favorites.map(x=>x.toLowerCase())),
+    quiver:Object.freeze(data.quiver.map(x=>Object.freeze({
+      userId:x.userId.toLowerCase(),slug:x.slug,displayName:x.displayName.slice(0,60),
+      age:Number.isInteger(x.age)&&x.age>=18&&x.age<=120?x.age:null,
+      cityRegion:typeof x.cityRegion==="string"?x.cityRegion.slice(0,120):null,
+      matchPercent:null,commonQuestions:0
+    }))),
     favoritedByCount:data.favoritedByCount,blockedByCount:data.blockedByCount,
     blocks:Object.freeze(data.blocks.map(b=>Object.freeze({
       userId:b.userId.toLowerCase(),displayName:b.displayName.slice(0,60),permanent:b.permanent
