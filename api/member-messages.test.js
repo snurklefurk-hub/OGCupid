@@ -24,7 +24,7 @@ function harness({allowed=true,tooSoon=false,daily=0,peerExists=true,evidence=tr
     if(sql.includes("AS ok"))return{rows:[{ok:true}]};
     if(sql.includes("pg_advisory_xact_lock"))return{rows:[]};
     if(sql.includes("AS allowed"))return{rows:[{allowed}]};
-    if(sql.includes("member_pair_blocked"))return{rows:[{blocked:false}]};
+    if(sql.includes("SELECT app_private.member_pair_blocked"))return{rows:[{blocked:false}]};
     if(sql.includes("set_site_block"))return{rows:[{result:{blocked:args[1],permanent:false}}]};
     if(sql.includes("AS daily"))return{rows:[{daily,too_soon:tooSoon}]};
     if(sql.includes("INSERT INTO app_private.member_messages"))return{rows:[row]};
