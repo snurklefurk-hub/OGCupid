@@ -95,8 +95,8 @@ export function sanitizeDiscovery(data, memberId) {
     .map(p => Object.freeze({
       userId: String(p.userId).toLowerCase(), slug: p.slug,
       displayName: p.displayName.slice(0, 60),
-      age: Number.isInteger(p.age)&&p.age>=18&&p.age<=120?p.age:null,
-      cityRegion:typeof p.cityRegion==="string"?p.cityRegion.slice(0,120):null,
+      ...(Number.isInteger(p.age)&&p.age>=18&&p.age<=120?{age:p.age}:{}),
+      ...(typeof p.cityRegion==="string"?{cityRegion:p.cityRegion.slice(0,120)}:{}),
       matchPercent: p.matchPercent, confidence: String(p.confidence || "insufficient"),
       commonQuestions: Number.isInteger(p.commonQuestions) && p.commonQuestions >= 0
         ? p.commonQuestions : 0
@@ -152,11 +152,11 @@ export function sanitizeConversations(data,me) {
     throw new MemberAccessError("unavailable","Invalid inbox response.");
   return Object.freeze(data.conversations.map(item=>{
     if(!UUID.test(String(item?.peerId||"")) || item.peerId.toLowerCase()===me ||
-       (item.pairBlocked?item.slug!==null:!SLUG.test(String(item.slug||""))) ||
-       typeof item.pairBlocked!=="boolean" || typeof item.displayName!=="string")
+       (item.pairBlocked===true?item.slug!==null:!SLUG.test(String(item.slug||""))) ||
+       (item.pairBlocked!==undefined&&typeof item.pairBlocked!=="boolean") || typeof item.displayName!=="string")
       throw new MemberAccessError("unavailable","Invalid conversation peer.");
     const peerId=item.peerId.toLowerCase();
-    return Object.freeze({peerId,slug:item.slug,pairBlocked:item.pairBlocked,
+    return Object.freeze({peerId,slug:item.slug,pairBlocked:item.pairBlocked===true,
       displayName:item.displayName.slice(0,60),
       lastMessage:checkedPrivateMessage(item.lastMessage,me,peerId)});
   }));
@@ -164,14 +164,14 @@ export function sanitizeConversations(data,me) {
 export function sanitizeConversation(data,me,peerId) {
   if(!UUID.test(me) || !UUID.test(peerId) || !data?.peer ||
      data.peer.userId?.toLowerCase()!==peerId ||
-     (data.pairBlocked?data.peer.slug!==null:!SLUG.test(String(data.peer.slug||""))) ||
-     typeof data.pairBlocked!=="boolean" || typeof data.peer.displayName!=="string" ||
+     (data.pairBlocked===true?data.peer.slug!==null:!SLUG.test(String(data.peer.slug||""))) ||
+     (data.pairBlocked!==undefined&&typeof data.pairBlocked!=="boolean")" || typeof data.peer.displayName!=="string" ||
      !Array.isArray(data.messages) || data.messages.length>100 ||
      typeof data.blocked!=="boolean" || typeof data.canSend!=="boolean")
     throw new MemberAccessError("unavailable","Invalid private conversation response.");
   return Object.freeze({peer:Object.freeze({userId:peerId,slug:data.peer.slug,
     displayName:data.peer.displayName.slice(0,60)}),
-    blocked:data.blocked,pairBlocked:data.pairBlocked,canSend:data.canSend,
+    blocked:data.blocked,pairBlocked:data.pairBlocked===true,canSend:data.canSend,
     messages:Object.freeze(data.messages.map(m=>checkedPrivateMessage(m,me,peerId)))});
 }
 
