@@ -7,7 +7,9 @@ const migration = readFileSync(new URL("../db/migrations/017_member_only_profile
 const photos = readFileSync(new URL("../db/migrations/018_member_profile_photo_read.sql",import.meta.url),"utf8");
 const answerProjection = readFileSync(new URL("../db/migrations/025_member_visible_question_answers.sql",import.meta.url),"utf8");
 const page = readFileSync(new URL("../public/profiles/index.html",import.meta.url),"utf8");
-const view = readFileSync(new URL("../public/profiles/view.js",import.meta.url),"utf8");
+const view = readFileSync(new URL("../ogc-l-react/src/PublicMemberProfile.jsx",import.meta.url),"utf8");
+const app = readFileSync(new URL("../ogc-l-react/src/App.jsx",import.meta.url),"utf8");
+const provider = readFileSync(new URL("../ogc-l-react/src/MemberSessionProvider.jsx",import.meta.url),"utf8");
 
 test("profile slugs are stable and uniquely allocated by the database", () => {
   assert.match(migration,/user_id uuid PRIMARY KEY REFERENCES app_private\.member_profiles/);
@@ -41,13 +43,12 @@ test("public profile response explicitly excludes email, private answers and sto
   assert.match(migration,/is_private = false AND app_private\.current_member_is_active\(\)/);
   assert.match(photos,/FOR SELECT TO ogcupid_member_api/);
 });
-test("same live profile offers inline owner edits but guests see the welcome page", () => {
-  assert.match(view,/if \(!await verifyMember\(\)\) \{ noAccess\(\); return; \}/);
-  assert.match(view,/window\.location\.replace\("\/"\)/);
-  assert.match(view,/let profile = null;/); // no baked-in member data
-  assert.match(view,/if \(!isOwner\) return/);
-  assert.match(view,/request\("\/profile","PUT",payload\)/);
-  assert.match(view,/request\("\/photos","POST",blob\)/);
-  assert.match(page,/name="robots" content="noindex,nofollow,noarchive"/);
-  assert.doesNotMatch(page,/EngineerKen|Kennedy|@|Oakland/);
+test("canonical React profile protects owner edits and delegates guest routing to member gate", () => {
+  assert.match(page,/location\.replace\("\/#\/profiles\/" \+/);
+  assert.match(app,/<MemberGate><PublicMemberProfile Photo=\{MemberPhoto\}/);
+  assert.match(view,/getPublicProfile\(slug\)/);
+  assert.match(view,/!profile\?\.isOwner/);
+  assert.match(view,/saveOwnEssay\(key,draft\)/);
+  assert.match(provider,/getPublicProfile,saveOwnEssay/);
+  assert.doesNotMatch(view,/EngineerKen|Kennedy|Oakland/);
 });
