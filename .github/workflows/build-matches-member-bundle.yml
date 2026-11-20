@@ -48,7 +48,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add dev/matches-member-bundle.b64 dev/matches-member-tests.log 2>/dev/null || git add dev/matches-member-tests.log
+          git add -f dev/matches-member-tests.log
+          if test -s dev/matches-member-bundle.b64; then git add -f dev/matches-member-bundle.b64; fi
           if ! git diff --cached --quiet; then
             git commit -m "build: stage Matches Neon member Function ZIP on feature branch"
             for attempt in 1 2 3 4 5 6; do
