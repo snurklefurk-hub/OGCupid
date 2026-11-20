@@ -36,7 +36,7 @@ for(const path of assets){
   if(path===expectedJs){
     const js=await response.text();
     for(const marker of ["Create your OG Cupid account","Recover your account","Welcome to OG Cupid","Permanently delete my account",
-      "The Dating Persona Test","OgTrends #0: The Big Idea","Privacy Policy","Terms & Conditions","ogcl-embedded.css",
+      "The Dating Persona Test","OgTrends #0: The Big Idea","Privacy Policy","Terms & Conditions",
       "Community Chat","OG Cupid · The Lounge"]){
       if(!js.includes(marker))throw Error("Native React member workflow missing from release bundle: "+marker);
     }
@@ -49,23 +49,16 @@ for(const path of ["/account/","/account/persona.html","/quiz/",
     throw new Error(path+" returned unexpected content");
   if(content.includes("/feedback-widget.js"))throw new Error("Retired feedback widget remains on "+path);
 }
-// Canonical public content remains indexable, complete, and reachable
-// independently of the React session shell and from old bookmarks.
-for(const [path,mark] of [
-  ["/ogtrends/","WE BROUGHT BACK"],
-  ["/ogtrends/zero/","OGTRENDS"],
-  ["/ogtrends/perfect-profile/","The Perfect Dating Profile"],
-  ["/ogtrends/references/","ENTERED THE CHAT"],
-  ["/contact/","Contact"],
-  ["/privacy/","Privacy Policy"],
-  ["/terms/","Terms &amp; Conditions"],
-  ["/account/persona.html","persona-form"]
+for(const [path,route] of [
+  ["/ogtrends/","/ogtrends"],["/ogtrends/zero/","/ogtrends/zero"],
+  ["/ogtrends/perfect-profile/","/ogtrends/perfect-profile"],
+  ["/ogtrends/references/","/ogtrends/references"],["/contact/","/contact"],
+  ["/privacy/","/privacy"],["/terms/","/terms"],["/account/persona.html","/persona"]
 ]){
   const doc=await read(path);
-  if(!doc.includes(mark))throw Error("Canonical page changed or missing: "+path);
+  if(!doc.includes('location.replace("/#'+route+'"')||doc.includes("<main"))
+    throw Error("Expected a React route redirect at "+path);
 }
-const embedded=await read("/ogcl-embedded.css","text/css");
-if(!embedded.includes("html.ogcl-embed"))throw Error("React editorial embedded styles absent");
 for(const path of ["/persona-assets/DBLMf.gif","/profile-assets/porchlight.webp"]){
   const asset=await fetch(origin+path,{signal:AbortSignal.timeout(15000)});
   if(asset.status!==200)throw Error("Missing original art/editorial asset: "+path);
