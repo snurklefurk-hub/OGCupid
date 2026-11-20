@@ -46,16 +46,25 @@ export async function handlePhotoRequest(request,userId,url,withMember,jsonRespo
     if((ownList && request.method==="GET") || otherList){
       const owner=otherList?otherList[1]:userId;
       if(!idOk(owner)) return jsonResponse(request,{error:"Invalid member"},400);
-      const result=await withMember(userId,client=>client.query(
-        SELECT+" WHERE user_id=$1::uuid ORDER BY sort_order,created_at,id",
-        [owner]));
+      const result=await withMember(userId,async client=>{
+        const denied=await client.query(
+          "SELECT app_private.member_pair_blocked($1::uuid,$2::uuid) AS blocked",
+          [userId,owner]);
+        if(denied.rows[0]?.blocked===true)return null;
+        return client.query(SELECT+" WHERE user_id=$1::uuid ORDER BY sort_order,created_at,id",[owner]);
+      });
+      if(!result)return jsonResponse(request,{error:"Member unavailable"},404);
       return jsonResponse(request,{photos:result.rows.map(publicPhoto)});
     }
     const img=path.match(/^\/photos\/([0-9a-f-]{36})\/bytes\/?$/i);
     if(img){
       const row=await withMember(userId,async client=>{
         const found=await client.query(SELECT+" WHERE id=$1::uuid",[img[1]]);
-        return found.rows[0] ?? null;
+        if(!found.rows[0])return null;
+        const denied=await client.query(
+          "SELECT app_private.member_pair_blocked($1::uuid,$2::uuid) AS blocked",
+          [userId,found.rows[0].user_id]);
+        return denied.rows[0]?.blocked===true?null:found.rows[0];
       });
       if(!row)return jsonResponse(request,{error:"Photo not found"},404);
       const jpeg=await fetchPhoto(row.object_key);
