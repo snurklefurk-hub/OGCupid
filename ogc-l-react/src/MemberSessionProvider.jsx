@@ -31,34 +31,60 @@ export function MemberSessionProvider({children}) {
   const [session, setSession] = useState(blank);
   const version = useRef(0);
   const lastChecked = useRef(0);
+  const sessionRef = useRef(blank);
+  const quietCheckInFlight = useRef(false);
+  useEffect(()=>{sessionRef.current=session;},[session]);
 
-  const refresh = useCallback(async () => {
-    const current = ++version.current;
-    setSession(blank); // Purge old member data before every new identity check.
+  // Initial sign-in and explicit full reloads replace identity-scoped data.
+  // Background checks preserve the mounted page, forms and photos while
+  // asking the member API to revalidate the same signed-in identity.
+  const refresh = useCallback(async (options={}) => {
+    const previous=sessionRef.current;
+    const quiet=options?.quiet===true &&
+      (previous.kind==="member" || previous.kind==="onboarding");
+    if(quiet && quietCheckInFlight.current)return false;
+    const current=++version.current;
+    if(quiet)quietCheckInFlight.current=true;
+    else setSession(blank); // Never retain another identity across sign-in.
     if (!gateway) {
-      setSession({...blank, kind:"unconfigured",
+      if(!quiet)setSession({...blank, kind:"unconfigured",
         error:"Member sign-in is not configured for this preview build."});
+      quietCheckInFlight.current=false;
       return false;
     }
     try {
-      const result = await gateway.load();
+      const result = quiet ? await gateway.revalidate() : await gateway.load();
       if (current !== version.current) return false;
       lastChecked.current = Date.now();
+      if(quiet){
+        if(result.user?.id!==previous.user?.id)
+          throw new MemberAccessError("unauthorized","Identity changed.");
+        if(result.kind!==previous.kind){
+          // A completed onboarding transition needs fresh profile/discovery.
+          void refresh();
+          return false;
+        }
+        // No state change: page and data remain mounted without a flash.
+        return result.kind==="member";
+      }
       setSession({...blank, ...result});
       return result.kind === "member";
     } catch (error) {
       if (current !== version.current) return false;
       if (error instanceof MemberAccessError && error.code === "unauthorized") {
-        // The Function can reject a stale Auth cookie or deleted member.
-        // Auth sign-out is a best-effort cleanup, not the access check.
+        // Expired, deleted or switched accounts must immediately lose access.
         setSession({...blank, kind:"guest", error:"Your previous session expired. Please sign in again."});
         void gateway.signOut().catch(() => {});
-      } else {
+      } else if(!quiet) {
         setSession({...blank, kind:"error",
           error:"We couldn't verify your account. Please try again."});
       }
+      // A temporary network error during quiet validation keeps the existing
+      // page; every protected API operation still checks auth on the server.
       lastChecked.current = Date.now();
       return false;
+    } finally {
+      if(quiet)quietCheckInFlight.current=false;
     }
   }, []);
 
@@ -99,7 +125,8 @@ export function MemberSessionProvider({children}) {
     void refresh();
     const checkOnReturn = () => {
       if (document.visibilityState !== "visible" || Date.now() - lastChecked.current < 60000) return;
-      void refresh();
+      if(sessionRef.current.kind!=="member" && sessionRef.current.kind!=="onboarding")return;
+      void refresh({quiet:true});
     };
     document.addEventListener("visibilitychange", checkOnReturn);
     window.addEventListener("focus", checkOnReturn);
