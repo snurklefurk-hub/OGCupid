@@ -165,7 +165,7 @@ export function sanitizeConversation(data,me,peerId) {
   if(!UUID.test(me) || !UUID.test(peerId) || !data?.peer ||
      data.peer.userId?.toLowerCase()!==peerId ||
      (data.pairBlocked===true?data.peer.slug!==null:!SLUG.test(String(data.peer.slug||""))) ||
-     (data.pairBlocked!==undefined&&typeof data.pairBlocked!=="boolean")" || typeof data.peer.displayName!=="string" ||
+     (data.pairBlocked!==undefined&&typeof data.pairBlocked!=="boolean") || typeof data.peer.displayName!=="string" ||
      !Array.isArray(data.messages) || data.messages.length>100 ||
      typeof data.blocked!=="boolean" || typeof data.canSend!=="boolean")
     throw new MemberAccessError("unavailable","Invalid private conversation response.");
