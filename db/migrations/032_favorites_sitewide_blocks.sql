@@ -100,13 +100,22 @@ CREATE OR REPLACE FUNCTION app_private.member_connections()
 RETURNS jsonb LANGUAGE plpgsql STABLE SECURITY DEFINER
 SET search_path=pg_catalog,app_private AS $$
 DECLARE actor uuid:=nullif(current_setting('app.current_user_id',true),'')::uuid;
-  favorite_ids jsonb; quiver_members jsonb; my_blocks jsonb;
+  favorite_ids jsonb; favorite_members jsonb; quiver_members jsonb; my_blocks jsonb;
   inbound_favorites integer; inbound_blocks integer;
 BEGIN
   IF actor IS NULL OR NOT app_private.current_member_is_active()
   THEN RAISE EXCEPTION 'Account unavailable' USING ERRCODE='42501'; END IF;
   SELECT coalesce(jsonb_agg(f.target_id ORDER BY f.created_at DESC),'[]'::jsonb)
     INTO favorite_ids FROM app_private.member_favorites f
+    WHERE f.owner_id=actor AND app_private.is_discoverable_member(f.target_id)
+      AND NOT app_private.member_pair_blocked(actor,f.target_id);
+  SELECT coalesce(jsonb_agg(jsonb_build_object(
+      'userId',p.user_id,'slug',r.slug,'displayName',left(p.display_name,60),
+      'age',p.age,'cityRegion',p.city_region) ORDER BY f.created_at DESC),'[]'::jsonb)
+    INTO favorite_members
+    FROM app_private.member_favorites f
+    JOIN app_private.member_profiles p ON p.user_id=f.target_id
+    JOIN app_private.member_profile_routes r ON r.user_id=p.user_id
     WHERE f.owner_id=actor AND app_private.is_discoverable_member(f.target_id)
       AND NOT app_private.member_pair_blocked(actor,f.target_id);
   SELECT coalesce(jsonb_agg(jsonb_build_object(
@@ -134,7 +143,7 @@ BEGIN
     FROM app_private.member_message_blocks b
     LEFT JOIN app_private.member_profiles p ON p.user_id=b.blocked_id
     WHERE b.blocker_id=actor AND b.active;
-  RETURN jsonb_build_object('favorites',favorite_ids,'quiver',quiver_members,
+  RETURN jsonb_build_object('favorites',favorite_ids,'quiver',quiver_members,'favoriteMembers',favorite_members,
     'favoritedByCount',inbound_favorites,'blockedByCount',inbound_blocks,
     'blocks',my_blocks);
 END; $$;
