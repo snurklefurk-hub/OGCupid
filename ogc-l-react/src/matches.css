@@ -1,0 +1,38 @@
+/* OG Cupid classic Matches — compact white results and flat blue controls. */
+.ogcl-matches-page {color:#444;}
+.ogcl-matches-head {border-bottom:0;background:linear-gradient(#f7f7f7,#eaeaea);}
+.ogcl-matches-head h1 {color:#f83265;font-size:22px;}
+.ogcl-matches-tabs {display:flex;align-items:end;gap:0;padding:0 10px;background:#e9e9e9;border:1px solid #d5d5d5;border-bottom:0;}
+.ogcl-matches-tabs button {font: bold 11px Verdana,sans-serif;color:#666;background:transparent;border:0;border-radius:4px 4px 0 0;padding:9px 15px;cursor:pointer;}
+.ogcl-matches-tabs button[aria-current="page"] {color:#555;background:#fff;border:1px solid #ddd;border-bottom:1px solid #fff;margin-bottom:-1px;}
+.ogcl-matches-body {background:#fff;border:1px solid #ddd;padding:14px 10px 24px;}
+.ogcl-matches-search {padding:10px 11px 16px;border:1px solid #ededed;background:#fff;margin-bottom:12px;}
+.ogcl-matches-prompt {color:#777;font:bold 10px Verdana,sans-serif;margin:0 0 7px;}
+.ogcl-match-controls {display:flex;gap:12px;flex-wrap:wrap;align-items:end;}
+.ogcl-match-controls label {display:grid;gap:6px;font:bold 10px Verdana,sans-serif;color:#777;}
+.ogcl-match-controls input,.ogcl-match-controls select {box-sizing:border-box;height:29px;border-radius:14px;border:1px solid #c6d3de;padding:5px 11px;background:linear-gradient(#fff,#e7f0f7);color:#275486;font:bold 11px Verdana,sans-serif;max-width:100%;}
+.ogcl-match-controls input {width:220px;}
+.ogcl-matches-reset {border:1px solid #ccc;background:linear-gradient(#fff,#f0f0f0);padding:7px 16px;color:#555;font:11px Verdana,sans-serif;cursor:pointer;}
+.ogcl-matches-description {margin:9px 7px 13px;color:#555;font-size:11px;}
+.ogcl-matches-inbound-count {margin:4px 7px 11px;color:#666;font-size:11px;}
+.ogcl-matches-result-count {color:#888;font-size:10px;margin:9px 6px;}
+.ogcl-matches-results {border:1px solid #e0e0e0;}
+.ogcl-match-result {display:grid;grid-template-columns:85px minmax(0,1fr) 100px;gap:12px;padding:12px 13px;border-bottom:1px solid #e2e2e2;min-height:110px;background:#fff;}
+.ogcl-match-result:last-child {border-bottom:0;}
+.ogcl-match-result-photo {display:block;align-self:start;width:79px;height:79px;border:1px solid #ccc;background:#f4f4f4;overflow:hidden;}
+.ogcl-match-result-photo .ogcl-member-photo {display:block;width:100%;height:100%;object-fit:cover;border:0;}
+.ogcl-match-result-name {color:#2963a4;font-weight:bold;text-decoration:none;font-size:13px;}
+.ogcl-match-result-name:hover {text-decoration:underline;}
+.ogcl-match-result-meta {margin:3px 0;font-size:10px;color:#666;}
+.ogcl-match-result-blurb {font-size:11px;color:#777;line-height:1.5;margin:9px 0;}
+.ogcl-match-favorite {border:0;background:transparent;padding:2px 0;color:#2963a4;text-decoration:underline;cursor:pointer;font:11px Verdana,sans-serif;}
+.ogcl-match-favorite:disabled {opacity:.6;cursor:wait;}
+.ogcl-match-result-score {color:#f83265;font-size:11px;font-weight:bold;text-align:right;white-space:normal;}
+.ogcl-matches-empty {padding:20px 10px;color:#666;}
+@media(max-width:520px) {
+  .ogcl-matches-tabs button {padding:9px 11px;}
+  .ogcl-match-result {grid-template-columns:67px minmax(0,1fr);gap:9px;padding:9px;}
+  .ogcl-match-result-photo {width:65px;height:65px;}
+  .ogcl-match-result-score {grid-column:2;text-align:left;margin-top:-5px;}
+  .ogcl-match-controls input {width:100%;}
+}
