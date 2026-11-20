@@ -88,7 +88,7 @@ export default function AdminMemberEditor({member,onClose}){
       }).catch(()=>{/* A missing private image gets a placeholder. */});
     }
     return()=>{alive=false;};
-  },[tab,memberId,photoIds,adminRequest]);
+  },[tab,memberId,photoIds,revision,adminRequest]);
 
   function updatePreview(id,blob){
     const old=photoUrls.current.get(id);
@@ -243,7 +243,12 @@ export default function AdminMemberEditor({member,onClose}){
         className={tab===id?"selected":""} onClick={()=>{setTab(id);setError("");}}>
         {id[0].toUpperCase()+id.slice(1)}</button>)}
     </nav><button type="button" className="ogcl-button ogcl-secondary"
-      onClick={()=>setRevision(x=>x+1)} disabled={busy}>Reload saved data</button></div>
+      onClick={()=>{
+        for(const url of photoUrls.current.values())URL.revokeObjectURL(url);
+        photoUrls.current.clear();
+        setImages({});
+        setRevision(x=>x+1);
+      }} disabled={busy}>Reload saved data</button></div>
     {error&&<p role="alert" className="ogcl-error">{error}</p>}
     {notice&&<p role="status" className="ogcl-save-confirmation">{notice}</p>}
     {loading&&<p role="status">Loading protected member records…</p>}
