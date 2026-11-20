@@ -5,9 +5,9 @@ import {editorialContent} from "./EditorialContent.jsx";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import "./editorial.css";
 
-// Published HTML remains authoritative, indexed at its canonical URL.
-// The React member shell hosts that existing content without duplicating it,
-// losing legal wording, rewriting research, or replacing recovered Persona art.
+// Public legacy HTML paths are now redirect-only compatibility entrypoints.
+// React owns these editorial and legal pages, with the recovered research,
+// legal wording and Persona artwork preserved in the React content modules.
 export const EDITORIAL_PAGES=Object.freeze({
   ogtrends:{title:"OgTrends",path:"/ogtrends/",section:"Research and writing"},
   zero:{title:"OgTrends #0: The Big Idea",path:"/ogtrends/zero/",section:"OgTrends"},

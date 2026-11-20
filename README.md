@@ -4,7 +4,7 @@
 
 OG Cupid is a web-first community and dating platform inspired by the personality-rich internet of the 2000s: expressive profiles, compatibility questions, user-created quizzes, personal journals, and genuine discovery instead of endless swiping.
 
-> **Project status:** Early planning. No production application exists yet. Product decisions below are preliminary unless marked as core commitments.
+> **Project status (November 2026):** OG Cupid has a live React + Vite frontend at [ogcupid.onrender.com](https://ogcupid.onrender.com), built from `ogc-l-react/` and deployed at `/`. All public-facing page views are React routes. Existing `public/*/index.html` and `public/404.html` files are redirect-only compatibility entrypoints for older URLs and direct links; `member-app/` is retained as a rollback-only source, not a second live site. Features described below are product goals, not all implemented.
 
 ## What we're bringing back
 
