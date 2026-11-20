@@ -1,4 +1,4 @@
-import React,{useEffect,useMemo,useState} from "react";
+import React,{useEffect,useMemo,useRef,useState} from "react";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {LIVE_ESSAYS} from "./member-essays.mjs";
 import {PROFILE_SETTINGS_FIELDS} from "./member-settings.mjs";
@@ -21,6 +21,7 @@ const initialAnswer=()=>({optionId:"",acceptableOptions:[],importance:1,isPrivat
 export default function AdminMemberEditor({member,onClose}){
   const {adminRequest}=useMemberSession();
   const [revision,setRevision]=useState(0);
+  const photoUrls=useRef(new Map());
   const [content,setContent]=useState(null);
   const [drafts,setDrafts]=useState({});
   const [images,setImages]=useState({});
@@ -37,34 +38,73 @@ export default function AdminMemberEditor({member,onClose}){
   const memberId=member.id;
   const path=part=>urlFor(memberId,part);
 
+  // One content fetch on opening a member. An explicit Reload is the only
+  // action that re-fetches all saved profile/answer metadata.
   useEffect(()=>{
-    let alive=true;const urls=[];
-    setLoading(true);setError("");setContent(null);setImages({});
-    void Promise.all([
-      adminRequest(urlFor(memberId,"content")),
-      loadPublishedBank()
-    ]).then(async([data,questions])=>{
+    let alive=true;
+    setLoading(true);setError("");
+    void adminRequest(urlFor(memberId,"content")).then(data=>{
       if(!alive)return;
-      setContent(data);setBank(questions);
+      setContent(data);
       setDrafts(data.profile||{});
       setMinAge(data.profile?.preferred_age_min??"");
       setMaxAge(data.profile?.preferred_age_max??"");
-      const photoUrls={};
-      await Promise.all((data.photos||[]).map(async photo=>{
-        try{
-          const blob=await adminRequest(urlFor(memberId,"photos/"+photo.id+"/bytes"));
-          if(!alive)return;
-          const objectUrl=URL.createObjectURL(blob);
-          urls.push(objectUrl);photoUrls[photo.id]=objectUrl;
-        }catch{/* A missing photo is represented without leaking storage keys. */}
-      }));
-      if(alive)setImages(photoUrls);
     }).catch(e=>{
       if(alive)setError(e?.code==="forbidden"?"Administrator access was revoked.":
         "Could not load this member's saved content.");
     }).finally(()=>{if(alive)setLoading(false);});
-    return()=>{alive=false;urls.forEach(x=>URL.revokeObjectURL(x));};
+    return()=>{alive=false;};
   },[memberId,adminRequest,revision]);
+
+  // Sensitive photo blobs live only for this editor's lifetime. Text and
+  // answer edits never clear or re-download them.
+  useEffect(()=>()=>{
+    for(const url of photoUrls.current.values())URL.revokeObjectURL(url);
+    photoUrls.current.clear();
+  },[memberId]);
+
+  // The published question definitions are public static data. Load them
+  // only when the administrator actually opens Questions.
+  useEffect(()=>{
+    if(tab!=="questions"||bank.length)return;
+    let alive=true;
+    void loadPublishedBank().then(questions=>{
+      if(alive)setBank(questions);
+    }).catch(()=>{if(alive)setError("Could not load published questions.");});
+    return()=>{alive=false;};
+  },[tab,bank.length]);
+
+  const photoIds=(content?.photos||[]).map(photo=>photo.id).join("|");
+  useEffect(()=>{
+    if(tab!=="photos"||!content)return;
+    let alive=true;
+    for(const photo of content.photos){
+      if(photoUrls.current.has(photo.id))continue;
+      void adminRequest(urlFor(memberId,"photos/"+photo.id+"/bytes")).then(blob=>{
+        if(!alive||photoUrls.current.has(photo.id))return;
+        const objectUrl=URL.createObjectURL(blob);
+        photoUrls.current.set(photo.id,objectUrl);
+        setImages(old=>({...old,[photo.id]:objectUrl}));
+      }).catch(()=>{/* A missing private image gets a placeholder. */});
+    }
+    return()=>{alive=false;};
+  },[tab,memberId,photoIds,adminRequest]);
+
+  function updatePreview(id,blob){
+    const old=photoUrls.current.get(id);
+    if(old)URL.revokeObjectURL(old);
+    const url=URL.createObjectURL(blob);
+    photoUrls.current.set(id,url);
+    setImages(state=>({...state,[id]:url}));
+  }
+  function removePreview(id){
+    const old=photoUrls.current.get(id);
+    if(old)URL.revokeObjectURL(old);
+    photoUrls.current.delete(id);
+    setImages(state=>{
+      const next={...state};delete next[id];return next;
+    });
+  }
 
   const selected=useMemo(()=>bank.find(x=>x.id===questionId),[bank,questionId]);
   const answerRows=useMemo(()=>content?.answers||[],[content]);
@@ -84,23 +124,28 @@ export default function AdminMemberEditor({member,onClose}){
       note:saved.note||""
     }:initialAnswer());
   }
-  async function perform(work,success){
+  async function perform(work,success,applyResult=()=>{}){
     if(!canSave)return;
     setBusy(true);setError("");setNotice("");
     try{
-      await work();
+      const result=await work();
+      // Update only the confirmed record; don't invalidate this member's
+      // entire profile, answers, question bank and protected photo previews.
+      applyResult(result);
       setNotice(success);
-      setRevision(n=>n+1);
     }catch(e){
       setError(e?.code==="forbidden"?"Administrator access was revoked.":
         e?.message||"The edit wasn't saved.");
     }finally{setBusy(false);}
   }
   function saveField(field){
-    const value=drafts[field.column]??"";
+    const value=String(drafts[field.column]??"").trim();
     void perform(()=>adminRequest(path("field"),"PUT",{
       field:field.column,value
-    }),field.label+" updated.");
+    }),field.label+" updated.",()=>{
+      setContent(old=>({...old,profile:{...old.profile,[field.column]:value}}));
+      setDrafts(old=>({...old,[field.column]:value}));
+    });
   }
   function saveAgeRange(e){
     e.preventDefault();
@@ -110,9 +155,11 @@ export default function AdminMemberEditor({member,onClose}){
        min<18||max>99||min>max)){
       setError("Choose an age range from 18–99, minimum first.");return;
     }
-    void perform(()=>adminRequest(path("age-range"),"PUT",{
-      min,max
-    }),"Age preferences updated.");
+    void perform(()=>adminRequest(path("age-range"),"PUT",{min,max}),
+      "Age preferences updated.",()=>{
+        setContent(old=>({...old,profile:{...old.profile,
+          preferred_age_min:min,preferred_age_max:max}}));
+      });
   }
   function saveAnswer(e){
     e.preventDefault();
@@ -122,19 +169,26 @@ export default function AdminMemberEditor({member,onClose}){
     if(answer.acceptableOptions.some(x=>!selected.optionIds.includes(x))){
       setError("An acceptable answer is no longer available.");return;
     }
-    void perform(()=>adminRequest(path("answers"),"PUT",{
-      questionId,optionId:answer.optionId,
-      acceptableOptions:answer.acceptableOptions,
-      importance:answer.importance,isPrivate:answer.isPrivate,note:answer.note
-    }),"Question answer saved.");
+    const saved={questionId,optionId:answer.optionId,
+      acceptableOptions:[...answer.acceptableOptions],
+      importance:answer.importance,isPrivate:answer.isPrivate,note:answer.note};
+    void perform(()=>adminRequest(path("answers"),"PUT",saved),
+      "Question answer saved.",()=>{
+        setContent(old=>({...old,answers:[
+          ...old.answers.filter(x=>x.questionId!==saved.questionId),
+          {...saved,updatedAt:new Date().toISOString()}
+        ].sort((a,b)=>a.questionId.localeCompare(b.questionId))}));
+      });
   }
   function deleteAnswer(){
     if(!answerById.has(questionId)||!window.confirm(
       "Delete this member's saved answer? This changes compatibility results."))return;
-    void perform(async()=>{
-      await adminRequest(path("answers/"+questionId),"DELETE");
-      setQuestionId("");setAnswer(initialAnswer());
-    },"Question answer deleted.");
+    const deletedQuestion=questionId;
+    void perform(()=>adminRequest(path("answers/"+deletedQuestion),"DELETE"),
+      "Question answer deleted.",()=>{
+        setContent(old=>({...old,answers:old.answers.filter(x=>x.questionId!==deletedQuestion)}));
+        setQuestionId("");setAnswer(initialAnswer());
+      });
   }
   async function savePhoto(file,replaceId=null){
     if(!file||!canSave)return;
@@ -143,14 +197,37 @@ export default function AdminMemberEditor({member,onClose}){
       const form=new FormData();
       form.append("photo",jpeg,"profile.jpg");
       const endpoint=replaceId?"photos/"+replaceId+"/replace":"photos";
-      await adminRequest(path(endpoint),replaceId?"PUT":"POST",form);
-    },replaceId?"Photo replaced.":"Photo uploaded.");
+      const saved=await adminRequest(path(endpoint),replaceId?"PUT":"POST",form);
+      if(replaceId ? saved!==true : !saved?.id)
+        throw Error("The photo update was not confirmed.");
+      return {jpeg,saved};
+    },replaceId?"Photo replaced.":"Photo uploaded.",({jpeg,saved})=>{
+      const id=replaceId||saved.id;
+      updatePreview(id,jpeg); // Use the exact uploaded JPEG, no second GET.
+      if(!replaceId)setContent(old=>({...old,photos:[...old.photos,{
+        id,sortOrder:saved.sortOrder,isPrimary:saved.isPrimary,
+        createdAt:new Date().toISOString()
+      }].sort((a,b)=>a.sortOrder-b.sortOrder)}));
+    });
   }
   function photoAction(photo,operation){
     if(operation==="delete"&&!window.confirm("Delete this member's photo?"))return;
     const endpoint="photos/"+photo.id+(operation==="primary"?"/primary":"");
-    void perform(()=>adminRequest(path(endpoint),operation==="primary"?"POST":"DELETE"),
-      operation==="primary"?"Primary photo updated.":"Photo deleted.");
+    void perform(async()=>{
+      const result=await adminRequest(path(endpoint),operation==="primary"?"POST":"DELETE");
+      if(operation==="primary" ? result!==true : result?.deleted!==true)
+        throw Error("The photo change was not confirmed.");
+      return result;
+    },operation==="primary"?"Primary photo updated.":"Photo deleted.",()=>{
+      if(operation==="primary"){
+        setContent(old=>({...old,photos:old.photos.map(item=>({
+          ...item,isPrimary:item.id===photo.id
+        }))}));
+      }else{
+        removePreview(photo.id);
+        setContent(old=>({...old,photos:old.photos.filter(item=>item.id!==photo.id)}));
+      }
+    });
   }
 
   return <section className="ogcl-admin-section ogcl-admin-member-editor" aria-label={"Edit member "+member.name}>
