@@ -86,7 +86,9 @@ test("member-only MESSAGES routes use real view, no placeholder or local storage
   assert.match(app,/<Route path="messages" element=\{<MemberGate><MessagesView \/><\/MemberGate>\}/);
   assert.match(app,/<Route path="messages\/:peerId" element=\{<MemberGate><MessagesView \/><\/MemberGate>\}/);
   assert.match(view,/await sendMessage\(peerId,body\)/);
-  assert.match(view,/await setMessageBlock\(peerId,blocked\)/);
+  assert.doesNotMatch(view,/await setMessageBlock\(peerId,blocked\)/);
+  assert.match(readFileSync(new URL("./ProfileSettings.jsx",import.meta.url),"utf8"),
+    /await setSiteBlock\(userId,false\)/);
   assert.match(view,/await reportMessage\(peerId,messageId,reason\)/);
   assert.match(publicProfile,/to=\{"\/messages\/"\+profile\.userId\}/);
   assert.doesNotMatch(view,/localStorage|sessionStorage|placeholder conversation/i);
