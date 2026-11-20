@@ -332,7 +332,13 @@ export default function App() {
             <MemberGate><PreviewView title={title} intro={intro} footnote={footnote} /></MemberGate>
           } />
         ))}
-        <Route path="*" element={<Navigate to={defaultRoute} replace />} />
+        <Route path="*" element={<section className="ogcl-view">
+          <header className="ogcl-view-head"><h1>Page not found</h1></header>
+          <div className="ogcl-content-panel">
+            <p>That address doesn't exist on OG Cupid.</p>
+            <NavLink to="/">Go to the home page</NavLink>
+          </div>
+        </section>} />
       </Route>
     </Routes>
   );
