@@ -30,6 +30,7 @@ export async function handleDiscovery(request, userId, withMember, json) {
              ON routes.user_id = p.user_id
            WHERE p.user_id <> $1::uuid
              AND app_private.is_discoverable_member(p.user_id)
+              AND NOT app_private.member_pair_blocked($1::uuid,p.user_id)
            ORDER BY p.created_at DESC, p.user_id
            LIMIT $2`,
         [userId, MAX_CANDIDATES]
