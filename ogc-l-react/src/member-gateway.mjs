@@ -176,19 +176,25 @@ export function sanitizeConversation(data,me,peerId) {
 }
 
 export function sanitizeConnections(data) {
-  if(!data||!Array.isArray(data.favorites)||!Array.isArray(data.blocks)||!Array.isArray(data.quiver)||
+  if(!data||!Array.isArray(data.favorites)||!Array.isArray(data.blocks)||!Array.isArray(data.quiver)||!Array.isArray(data.favoriteMembers)||
      !Number.isSafeInteger(data.favoritedByCount)||data.favoritedByCount<0||
      !Number.isSafeInteger(data.blockedByCount)||data.blockedByCount<0||
-     data.favorites.length>5000||data.blocks.length>5000||data.quiver.length>5000)
+     data.favorites.length>5000||data.blocks.length>5000||data.quiver.length>5000||data.favoriteMembers.length>5000)
     throw new MemberAccessError("unavailable","Invalid Favorites/Blocks response.");
   if(!data.favorites.every(x=>typeof x==="string"&&UUID.test(x))||
-     !data.quiver.every(x=>x && UUID.test(String(x.userId||"")) &&
+     ![...data.quiver,...data.favoriteMembers].every(x=>x && UUID.test(String(x.userId||"")) &&
        SLUG.test(String(x.slug||"")) && typeof x.displayName==="string")||
      !data.blocks.every(x=>x && UUID.test(String(x.userId||"")) &&
        typeof x.displayName==="string"&&typeof x.permanent==="boolean"))
     throw new MemberAccessError("unavailable","Invalid Favorites/Blocks records.");
   return Object.freeze({
     favorites:new Set(data.favorites.map(x=>x.toLowerCase())),
+    favoriteMembers:Object.freeze(data.favoriteMembers.map(x=>Object.freeze({
+      userId:x.userId.toLowerCase(),slug:x.slug,displayName:x.displayName.slice(0,60),
+      age:Number.isInteger(x.age)&&x.age>=18&&x.age<=120?x.age:null,
+      cityRegion:typeof x.cityRegion==="string"?x.cityRegion.slice(0,120):null,
+      matchPercent:null,commonQuestions:0
+    }))),
     quiver:Object.freeze(data.quiver.map(x=>Object.freeze({
       userId:x.userId.toLowerCase(),slug:x.slug,displayName:x.displayName.slice(0,60),
       age:Number.isInteger(x.age)&&x.age>=18&&x.age<=120?x.age:null,
