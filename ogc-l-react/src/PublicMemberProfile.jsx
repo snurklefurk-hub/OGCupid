@@ -1,5 +1,6 @@
 import React,{useEffect,useState} from "react";
-import {NavLink,useParams,useSearchParams} from "react-router-dom";
+import {NavLink,useNavigate,useParams,useSearchParams} from "react-router-dom";
+import "./profile-actions.css";
 import {PUBLIC_DETAILS,PUBLIC_ESSAYS} from "./member-public-profile.mjs";
 import {essayDefinition} from "./member-essays.mjs";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
@@ -22,9 +23,10 @@ function EditPencil({to,label}){
 // protected fields only. Owner editing stays authenticated and one-field scoped.
 export default function PublicMemberProfile({Photo}) {
   const {slug}=useParams();
+  const navigate=useNavigate();
   const [params]=useSearchParams();
   const tab=TABS.some(t=>t.id===params.get("tab"))?params.get("tab"):"about";
-  const {getPublicProfile,saveOwnEssay}=useMemberSession();
+  const {getPublicProfile,saveOwnEssay,loadConnections,setFavorite,setSiteBlock,reportProfile}=useMemberSession();
   const [profile,setProfile]=useState(null);
   const [loading,setLoading]=useState(true);
   const [error,setError]=useState("");
@@ -32,6 +34,12 @@ export default function PublicMemberProfile({Photo}) {
   const [draft,setDraft]=useState("");
   const [busy,setBusy]=useState(false);
   const [saved,setSaved]=useState("");
+  const [favoriteStatus,setFavoriteStatus]=useState(null);
+  const [actionBusy,setActionBusy]=useState(false);
+  const [actionError,setActionError]=useState("");
+  const [actionNotice,setActionNotice]=useState("");
+  const [reportOpen,setReportOpen]=useState(false);
+  const [reportReason,setReportReason]=useState("spam");
 
   useEffect(()=>{
     let alive=true;
@@ -44,6 +52,42 @@ export default function PublicMemberProfile({Photo}) {
     return()=>{alive=false;};
   },[slug,getPublicProfile]);
 
+  useEffect(()=>{
+    let active=true;
+    setFavoriteStatus(null);setActionError("");setActionNotice("");setReportOpen(false);
+    void loadConnections().then(data=>{if(active)setFavoriteStatus(data);})
+      .catch(()=>{if(active)setActionError("Favorites could not load. Other profile actions are still available.");});
+    return()=>{active=false;};
+  },[slug,loadConnections]);
+
+  async function toggleFavorite(){
+    if(!profile||profile.isOwner||actionBusy||!favoriteStatus)return;
+    const liked=favoriteStatus.favorites.has(profile.userId);
+    setActionBusy(true);setActionError("");setActionNotice("");
+    try{
+      await setFavorite(profile.userId,!liked);
+      setFavoriteStatus(await loadConnections());
+      setActionNotice(liked?"Removed from Favorites.":"Saved to Favorites.");
+    }catch{setActionError("Favorite wasn't saved. Please retry.");}
+    finally{setActionBusy(false);}
+  }
+  async function blockMember(){
+    if(!profile||profile.isOwner||actionBusy)return;
+    if(!window.confirm("Block this member across OG Cupid? You can undo a first block once. If you block them a second time, it is permanent."))return;
+    setActionBusy(true);setActionError("");
+    try{await setSiteBlock(profile.userId,true);navigate("/matches",{replace:true});}
+    catch{setActionError("Couldn't block this member. Please retry.");}
+    finally{setActionBusy(false);}
+  }
+  async function submitReport(event){
+    event.preventDefault();
+    if(!profile||profile.isOwner||actionBusy)return;
+    setActionBusy(true);setActionError("");setActionNotice("");
+    try{await reportProfile(profile.userId,reportReason);setReportOpen(false);
+      setActionNotice("Your report has been saved for review.");}
+    catch{setActionError("Report wasn't saved. Please retry.");}
+    finally{setActionBusy(false);}
+  }
   function editEssay(key){
     if(!profile?.isOwner||busy)return;
     setActive(key);setDraft(profile.essays[key]||"");setError("");setSaved("");
@@ -80,9 +124,30 @@ export default function PublicMemberProfile({Photo}) {
               profile.details.gender,profile.details.orientation].filter(Boolean).join(" · ")}
           </p>
           {profile.personaCode&&<p className="ogcl-classic-persona">Dating Persona: <strong>{profile.personaCode}</strong></p>}
-          {!profile.isOwner&&<p><NavLink to={"/messages/"+profile.userId}
-            className="ogcl-profile-message-link">Send a message</NavLink></p>}
         </div>
+        {!profile.isOwner&&<aside className="ogcl-profile-action-panel" aria-label="Profile actions">
+          <NavLink className="ogcl-profile-action-message" to={"/messages/"+profile.userId}>Message</NavLink>
+          <button type="button" disabled={actionBusy||!favoriteStatus}
+            onClick={()=>void toggleFavorite()}>
+            {favoriteStatus?.favorites.has(profile.userId)?"Remove from Favorites":"Save to Favorites"}
+          </button>
+          <div className="ogcl-profile-action-pair">
+            <button type="button" disabled={actionBusy} onClick={()=>void blockMember()}>Block</button>
+            <button type="button" disabled={actionBusy} onClick={()=>setReportOpen(v=>!v)}>Report</button>
+          </div>
+          {reportOpen&&<form className="ogcl-profile-action-report" onSubmit={submitReport}>
+            <label>Reason
+              <select value={reportReason} onChange={e=>setReportReason(e.target.value)}>
+                <option value="spam">Spam</option>
+                <option value="harassment">Harassment</option>
+                <option value="other">Other</option>
+              </select>
+            </label>
+            <button type="submit" disabled={actionBusy}>{actionBusy?"Sending…":"Submit report"}</button>
+          </form>}
+          {actionError&&<p role="alert" className="ogcl-error">{actionError}</p>}
+          {actionNotice&&<p role="status" className="ogcl-save-confirmation">{actionNotice}</p>}
+        </aside>}
       </header>
       <nav className="ogcl-profile-tabs" aria-label="Member profile sections">
         {TABS.map(t=><NavLink key={t.id}

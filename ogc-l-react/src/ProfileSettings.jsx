@@ -3,6 +3,7 @@ import {NavLink} from "react-router-dom";
 import {PROFILE_SETTINGS_FIELDS} from "./member-settings.mjs";
 import LookingForSettings from "./LookingForSettings.jsx";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
+import "./blocked-settings.css";
 
 const groups=[
   {id:"identity",title:"Your identity",intro:"Your signup name and age cannot be edited here."},
@@ -11,7 +12,7 @@ const groups=[
 ];
 
 export default function ProfileSettings(){
-  const {loadOwnSettings,saveOwnSetting,saveOwnLookingFor}=useMemberSession();
+  const {loadOwnSettings,saveOwnSetting,saveOwnLookingFor,loadConnections,setSiteBlock}=useMemberSession();
   const [saved,setSaved]=useState(null);
   const [loading,setLoading]=useState(true);
   const [active,setActive]=useState(null);
@@ -19,6 +20,9 @@ export default function ProfileSettings(){
   const [busy,setBusy]=useState(false);
   const [error,setError]=useState("");
   const [notice,setNotice]=useState("");
+  const [connections,setConnections]=useState(null);
+  const [connectionsError,setConnectionsError]=useState("");
+  const [unblocking,setUnblocking]=useState(null);
 
   useEffect(()=>{
     let live=true;
@@ -30,6 +34,24 @@ export default function ProfileSettings(){
     });
     return()=>{live=false;};
   },[loadOwnSettings]);
+
+  useEffect(()=>{
+    let active=true;
+    void loadConnections().then(data=>{if(active)setConnections(data);})
+      .catch(()=>{if(active)setConnectionsError("Blocked Users couldn't load. Retry after checking your connection.");});
+    return()=>{active=false;};
+  },[loadConnections]);
+  async function unblock(userId){
+    if(unblocking||!connections)return;
+    if(!window.confirm("Unblock this member? This is your only chance to reverse the first block. If you block them again, it becomes permanent."))return;
+    setUnblocking(userId);setConnectionsError("");setNotice("");
+    try{
+      await setSiteBlock(userId,false);
+      setConnections(await loadConnections());
+      setNotice("Member unblocked. Blocking this account again will be permanent.");
+    }catch{setConnectionsError("Unblock failed. A permanent block cannot be reversed.");}
+    finally{setUnblocking(null);}
+  }
 
   const edit=field=>{
     if(!saved||busy)return;
@@ -123,6 +145,26 @@ export default function ProfileSettings(){
         </section>)}
         <p className="ogcl-quiet">Your signup identity, birthday, photos, saved essays and match answers are never changed by saving these settings. Algorithmic recommendations will use these saved defaults when the matching filters are enabled.</p>
       </>}
+      <section className="ogcl-settings-group ogcl-blocked-users" aria-labelledby="ogcl-blocked-heading">
+        <h2 id="ogcl-blocked-heading">Blocked Users</h2>
+        {connections?<p className="ogcl-blocked-by-count">
+          You have been blocked by {connections.blockedByCount} {connections.blockedByCount===1?"person":"people"}.
+        </p>:<p role="status">Loading blocked member settings…</p>}
+        {connectionsError&&<p role="alert" className="ogcl-error">{connectionsError}</p>}
+        {connections&&<>
+          <p className="ogcl-quiet">These are people you've blocked. Members who blocked you are never identified.</p>
+          {connections.blocks.length?<ul className="ogcl-blocked-list">
+            {connections.blocks.map(member=><li key={member.userId}>
+              <span><strong>{member.displayName}</strong>
+                <small>{member.permanent?"Permanent block":"First block — one unblock available"}</small></span>
+              {member.permanent?<span className="ogcl-block-permanent">Cannot unblock</span>:
+                <button type="button" disabled={!!unblocking} onClick={()=>void unblock(member.userId)}>
+                  {unblocking===member.userId?"Unblocking…":"Unblock"}
+                </button>}
+            </li>)}
+          </ul>:<p>You haven't blocked any members.</p>}
+        </>}
+      </section>
     </div>
   </section>;
 }

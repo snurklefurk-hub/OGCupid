@@ -24,6 +24,8 @@ function harness({allowed=true,tooSoon=false,daily=0,peerExists=true,evidence=tr
     if(sql.includes("AS ok"))return{rows:[{ok:true}]};
     if(sql.includes("pg_advisory_xact_lock"))return{rows:[]};
     if(sql.includes("AS allowed"))return{rows:[{allowed}]};
+    if(sql.includes("SELECT app_private.member_pair_blocked"))return{rows:[{blocked:false}]};
+    if(sql.includes("set_site_block"))return{rows:[{result:{blocked:args[1],permanent:false}}]};
     if(sql.includes("AS daily"))return{rows:[{daily,too_soon:tooSoon}]};
     if(sql.includes("INSERT INTO app_private.member_messages"))return{rows:[row]};
     if(sql.includes("INSERT INTO app_private.member_message_reports"))return{rows:[]};
@@ -111,10 +113,10 @@ test("blocked/unavailable recipient, invalid bodies and self messaging never per
 test("block and unblock affect only caller and peer, and reports require received message",async()=>{
   const block=await execute("/messages/"+PEER+"/block","PUT");
   assert.equal(block.body.blocked,true);
-  assert.deepEqual(block.calls.at(-1).args,[SELF,PEER]);
+  assert.deepEqual(block.calls.at(-1).args,[PEER,true]);
   const unblock=await execute("/messages/"+PEER+"/block","DELETE");
   assert.equal(unblock.body.blocked,false);
-  assert.deepEqual(unblock.calls.at(-1).args,[SELF,PEER]);
+  assert.deepEqual(unblock.calls.at(-1).args,[PEER,false]);
   const report=await execute("/messages/"+PEER+"/report","POST",{messageId:MID,reason:"spam"});
   assert.equal(report.body.reported,true);
   assert.deepEqual(report.calls[0].args,[MID,PEER,SELF]);

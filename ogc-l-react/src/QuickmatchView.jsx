@@ -81,12 +81,7 @@ export default function QuickmatchView({Photo}) {
   const listIds=tab==="outgoing"?quickState?.outgoingLikes:quickState?.incomingLikes;
   const visible=useMemo(()=>{
     if(!listIds||!quickState)return [];
-    const ranked=listIds.map((id,index)=>({member:byId.get(id),index}))
-      .filter(item=>item.member);
-    return ranked.sort((a,b)=>
-      Number(quickState.mutualUserIds.has(b.member.userId))-
-      Number(quickState.mutualUserIds.has(a.member.userId))||a.index-b.index
-    ).map(item=>item.member);
+    return listIds.map(id=>byId.get(id)).filter(Boolean);
   },[listIds,quickState,byId]);
   const paged=pageMembers(visible,page,24);
   const selectedMember=selected?byId.get(selected):null;
@@ -141,15 +136,14 @@ export default function QuickmatchView({Photo}) {
           </div>:
           <>
             <p className="ogcl-quiet">{visible.length} currently visible member{visible.length===1?"":"s"}.
-              Mutual Likes appear first. Other members' Dislikes aren't disclosed.</p>
+              Mutual Likes are saved in MATCHES → Quiver. Other members' Dislikes aren't disclosed.</p>
             {paged.items.length?<div className="ogcl-directory ogcl-quickmatch-list">
               {paged.items.map(member=>{
                 const mutual=quickState.mutualUserIds.has(member.userId);
                 const tile=<>
                   <div className="ogcl-quickmatch-thumb">
                     <Photo member={member}/>
-                    {mutual&&<span className="ogcl-mutual-heart" aria-label="Mutual Quickmatch Like">
-                      <HeartIcon kind="like"/></span>}
+
                   </div>
                   <span className="ogcl-member-copy">
                     <strong>{member.displayName}</strong>

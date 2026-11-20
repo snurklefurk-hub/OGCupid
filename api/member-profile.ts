@@ -11,6 +11,7 @@ import { handleOnboarding } from "./onboarding.js";
 import { handleDiscovery } from "./member-discovery.js";
 import { handleQuickmatch } from "./member-quickmatch.js";
 import { handleMessages } from "./member-messages.js";
+import { handleConnections,isConnectionPath,connectionMethodAllowed } from "./member-connections.js";
 import {handleCommunity,isCommunityPath,communityMethodAllowed} from "./member-community.js";
 import { isAdminPath, adminMethodAllowed, handleAdmin } from "./member-admin.js";
 
@@ -330,6 +331,7 @@ export default {
     const answersPath = url.pathname === "/answers" || url.pathname === "/answers/";
     const discoveryPath = url.pathname === "/discovery" || url.pathname === "/discovery/";
     const quickmatchPath = url.pathname === "/quickmatch" || url.pathname === "/quickmatch/";
+    const connectionPath = isConnectionPath(url.pathname);
     const messagePath = /^\/messages(?:\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(?:\/(?:block|report))?)?\/?$/i.test(url.pathname);
     const adminPath = isAdminPath(url.pathname);
     const communityPath = isCommunityPath(url.pathname);
@@ -340,7 +342,7 @@ export default {
     // A credential check that can NEVER call the privileged eraser.
     // Only enabled for the one disposable development account.
     const verifyPath = url.pathname === "/account/reauth-check" || url.pathname === "/account/reauth-check/";
-    if (!profilePath && !memberProfileMatch && !discoveryPath && !quickmatchPath && !messagePath && !adminPath && !communityPath && !answersPath && !emailPreferencesPath && !deletePath && !verifyPath && !photoPath && !onboardingPath) {
+    if (!profilePath && !memberProfileMatch && !discoveryPath && !quickmatchPath && !messagePath && !connectionPath && !adminPath && !communityPath && !answersPath && !emailPreferencesPath && !deletePath && !verifyPath && !photoPath && !onboardingPath) {
       return json(request, { error: "Not found" }, 404);
     }
     // Self-service deletion is allowed only on the explicitly configured
@@ -362,7 +364,7 @@ export default {
            "5b03f41b-29b7-4a7a-9c72-71744dd8b2f2")) {
       return json(request, { error: "Not found" }, 404);
     }
-    const methodAllowed = memberProfileMatch ? request.method === "GET" : discoveryPath ? request.method === "GET" : quickmatchPath ? ["GET", "PUT"].includes(request.method) : messagePath ? ["GET", "POST", "PUT", "DELETE"].includes(request.method) : communityPath ? communityMethodAllowed(url.pathname,request.method) : photoPath
+    const methodAllowed = memberProfileMatch ? request.method === "GET" : discoveryPath ? request.method === "GET" : quickmatchPath ? ["GET", "PUT"].includes(request.method) : messagePath ? ["GET", "POST", "PUT", "DELETE"].includes(request.method) : connectionPath ? connectionMethodAllowed(url.pathname,request.method) : communityPath ? communityMethodAllowed(url.pathname,request.method) : photoPath
       ? photoMethodAllowed(url.pathname, request.method)
       : deletePath || verifyPath
         ? request.method === "POST"
@@ -376,7 +378,7 @@ export default {
     if (!userId) return json(request, { error: "Unauthorized" }, 401);
 
     try {
-      if (profilePath || memberProfileMatch || discoveryPath || quickmatchPath || messagePath || adminPath || communityPath || answersPath || emailPreferencesPath || photoPath || onboardingPath) {
+      if (profilePath || memberProfileMatch || discoveryPath || quickmatchPath || messagePath || connectionPath || adminPath || communityPath || answersPath || emailPreferencesPath || photoPath || onboardingPath) {
         // A signed JWT can outlive the account/session that issued it.
         // Do not allow a deleted identity to read an empty profile as if it
         // were still a member, or attempt to recreate a profile via PUT.
@@ -404,6 +406,9 @@ export default {
       }
       if (messagePath) {
         return await handleMessages(request,userId,url,withMember,json);
+      }
+      if (connectionPath) {
+        return await handleConnections(request,userId,url,withMember,json);
       }
       if (adminPath) {
         return await handleAdmin(request,userId,url,withMember,json);
@@ -436,6 +441,10 @@ export default {
              WHERE route.slug = $1`, [slug]);
           const row = result.rows[0];
           if (!row) return null;
+          const blocked=await client.query(
+            "SELECT app_private.member_pair_blocked($1::uuid,$2::uuid) AS blocked",
+            [userId,row.user_id]);
+          if(blocked.rows[0]?.blocked===true)return null;
           const isOwner=String(row.user_id).toLowerCase()===userId;
           // FORCE RLS keeps owner-private answers visible to the owner only.
           // For peers, this narrowly scoped SECURITY DEFINER projection exposes

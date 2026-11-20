@@ -12,6 +12,7 @@ import ProfileSettings from "./ProfileSettings.jsx";
 import PublicMemberProfile from "./PublicMemberProfile.jsx";
 import QuickmatchView from "./QuickmatchView.jsx";
 import MessagesView from "./MessagesView.jsx";
+import MatchesView from "./MatchesView.jsx";
 import CommunityChat from "./CommunityChat.jsx";
 import AdminDashboard from "./AdminDashboard.jsx";
 import MatchQuestions from "./MatchQuestions.jsx";
@@ -317,7 +318,7 @@ export default function App() {
         <Route path="terms" element={<EmbeddedEditorial pageKey="terms"/>} />
         <Route path="contact" element={<ContactPage/>} />
         <Route path="photos" element={<MemberGate><PhotoManager/></MemberGate>} />
-        <Route path="matches" element={<MemberGate><MemberDirectory /></MemberGate>} />
+        <Route path="matches" element={<MemberGate><MatchesView Photo={MemberPhoto}/></MemberGate>} />
         <Route path="profile" element={<MemberGate><ProfileEditor /></MemberGate>} />
         <Route path="settings" element={<MemberGate><ProfileSettings /></MemberGate>} />
         <Route path="profiles/:slug" element={<MemberGate><PublicMemberProfile Photo={MemberPhoto} /></MemberGate>} />

@@ -74,7 +74,11 @@ export function rankDiscoverableProfiles(profiles, viewerAnswers, answersByUser)
     );
     return {
       userId: String(profile.user_id), slug: String(profile.slug),
-      displayName: String(profile.display_name), ...score
+      displayName: String(profile.display_name),
+      ...(profile.age!=null && Number.isInteger(Number(profile.age)) && Number(profile.age)>=18
+        ? {age:Number(profile.age)} : {}),
+      ...(typeof profile.city_region==="string" ? {cityRegion:profile.city_region.slice(0,120)} : {}),
+      ...score
     };
   }).sort((left, right) => {
     if (left.matchPercent === null && right.matchPercent !== null) return 1;

@@ -8,7 +8,7 @@ const displayTime=value=>{
 };
 export default function MessagesView(){
   const {peerId}=useParams();
-  const {user,loadInbox,loadConversation,sendMessage,setMessageBlock,reportMessage}=useMemberSession();
+  const {user,loadInbox,loadConversation,sendMessage,reportMessage}=useMemberSession();
   const [inbox,setInbox]=useState(null);
   const [thread,setThread]=useState(null);
   const [loading,setLoading]=useState(true);
@@ -50,19 +50,6 @@ export default function MessagesView(){
     }finally{setBusy(false);}
   }
 
-  async function changeBlock(){
-    if(busy||!thread)return;
-    const blocked=!thread.blocked;
-    setBusy(true);setError("");setNotice("");
-    try{
-      await setMessageBlock(peerId,blocked);
-      const fresh=await loadConversation(peerId);
-      setThread(fresh);
-      setNotice(blocked?"You blocked this member. They cannot send new messages to you."
-        :"Member unblocked.");
-    }catch{setError("Couldn't change this block. Please retry.");}
-    finally{setBusy(false);}
-  }
   async function submitReport(messageId){
     if(busy||!thread)return;
     setBusy(true);setError("");setNotice("");
@@ -98,11 +85,8 @@ export default function MessagesView(){
       </>}
       {peerId&&!loading&&thread&&<>
         <div className="ogcl-thread-head">
-          <p>With <NavLink to={"/profiles/"+thread.peer.slug}><strong>{thread.peer.displayName}</strong></NavLink></p>
-          <button type="button" className="ogcl-button ogcl-secondary"
-            disabled={busy} onClick={()=>void changeBlock()}>
-            {thread.blocked?"Unblock member":"Block member"}
-          </button>
+          <p>With {thread.pairBlocked?<strong>{"<blocked user>"}</strong>:
+            <NavLink to={"/profiles/"+thread.peer.slug}><strong>{thread.peer.displayName}</strong></NavLink>}</p>
         </div>
         <div className="ogcl-message-history" role="log" aria-label="Conversation history">
           {thread.messages.length?thread.messages.map(item=>{
@@ -127,7 +111,7 @@ export default function MessagesView(){
             </article>;
           }):<p>No messages yet. Say hello to start the conversation.</p>}
         </div>
-        {thread.canSend&&!thread.blocked?<form className="ogcl-message-compose" onSubmit={send}>
+        {thread.canSend&&!thread.pairBlocked?<form className="ogcl-message-compose" onSubmit={send}>
           <label htmlFor="ogcl-message-text">Write a message</label>
           <textarea id="ogcl-message-text" rows={4} maxLength={2000} required value={draft}
             onChange={event=>setDraft(event.target.value)} placeholder="Say something thoughtful…" />
@@ -137,7 +121,8 @@ export default function MessagesView(){
             </button>
           </div>
         </form>:<p className="ogcl-note" role="status">
-          New messages aren't available in this conversation. You can still review earlier messages.
+          {thread.pairBlocked?"This conversation is blocked. No further messages can be sent.":
+            "New messages aren't available in this conversation. You can still review earlier messages."}
         </p>}
         <p className="ogcl-quiet">Messages are private between participants, but reports may be reviewed for safety.
           If you feel unsafe, block and report; do not share sensitive personal information.</p>

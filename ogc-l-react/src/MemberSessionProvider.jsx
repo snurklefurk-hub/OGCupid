@@ -184,6 +184,22 @@ export function MemberSessionProvider({children}) {
     return gateway.saveQuickmatchDecision(targetUserId,decision);
   }, []);
 
+  const loadConnections=useCallback(async()=>{
+    if(!gateway)throw new MemberAccessError("unavailable","Connections unavailable.");
+    return gateway.loadConnections();
+  },[]);
+  const setFavorite=useCallback(async(id,favorite)=>{
+    if(!gateway)throw new MemberAccessError("unavailable","Favorites unavailable.");
+    return gateway.setFavorite(id,favorite);
+  },[]);
+  const setSiteBlock=useCallback(async(id,blocked)=>{
+    if(!gateway)throw new MemberAccessError("unavailable","Blocks unavailable.");
+    return gateway.setSiteBlock(id,blocked);
+  },[]);
+  const reportProfile=useCallback(async(id,reason)=>{
+    if(!gateway)throw new MemberAccessError("unavailable","Reporting unavailable.");
+    return gateway.reportProfile(id,reason);
+  },[]);
   const loadInbox=useCallback(async()=>{
     if(!gateway)throw new MemberAccessError("unavailable","Messaging is not configured.");
     return gateway.loadInbox();
@@ -258,6 +274,7 @@ export function MemberSessionProvider({children}) {
     ...session, refresh, signIn, signOut, getMemberAvatar, getMemberGallery,
     loadOwnEssays, saveOwnEssay, loadOwnSettings, saveOwnSetting, saveOwnLookingFor, getPublicProfile,
     loadMatchAnswers, saveMatchAnswer, loadQuickmatchDecisions, saveQuickmatchDecision,
+    loadConnections,setFavorite,setSiteBlock,reportProfile,
     loadInbox, loadConversation, sendMessage, setMessageBlock, reportMessage, adminRequest,
     communityRequest,
     accountRequest, signUp, requestRecovery, resetPassword, requestEmailVerification, deleteMyAccount

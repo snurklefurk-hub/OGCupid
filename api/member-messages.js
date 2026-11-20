@@ -51,7 +51,8 @@ export async function handleMessages(request,userId,url,withMember,json){
            ORDER BY peer_id,created_at DESC,id DESC
          )
          SELECT latest.peer_id,latest.id,latest.sender_id,latest.recipient_id,
-           latest.body,latest.created_at,p.display_name,r.slug
+           latest.body,latest.created_at,p.display_name,r.slug,
+           app_private.member_pair_blocked($1::uuid,latest.peer_id) AS pair_blocked
          FROM latest
          JOIN app_private.member_profiles p ON p.user_id=latest.peer_id
          JOIN app_private.member_profile_routes r ON r.user_id=latest.peer_id
@@ -59,8 +60,10 @@ export async function handleMessages(request,userId,url,withMember,json){
     });
     if(!data)return json(request,{error:"Complete onboarding before messaging"},403);
     return json(request,{conversations:data.rows.map(row=>({
-      peerId:String(row.peer_id).toLowerCase(),displayName:String(row.display_name),
-      slug:String(row.slug),lastMessage:asMessage(row)
+      peerId:String(row.peer_id).toLowerCase(),
+      displayName:row.pair_blocked?"<blocked user>":String(row.display_name),
+      slug:row.pair_blocked?null:String(row.slug),
+      pairBlocked:row.pair_blocked===true,lastMessage:asMessage(row)
     }))});
   }
 
@@ -87,22 +90,15 @@ export async function handleMessages(request,userId,url,withMember,json){
   }
 
   if(action==="block"){
-    if(request.method==="DELETE"){
-      await withMember(userId,client=>client.query(
-        `DELETE FROM app_private.member_message_blocks
-         WHERE blocker_id=$1::uuid AND blocked_id=$2::uuid`,[userId,peerId]));
-      return json(request,{blocked:false});
+    try{
+      const result=await withMember(userId,client=>client.query(
+        "SELECT app_private.set_site_block($1::uuid,$2::boolean) AS result",
+        [peerId,request.method==="PUT"]));
+      return json(request,result.rows[0].result);
+    }catch(error){
+      if(error?.code==="22023")return json(request,{error:"Block unavailable or permanent"},409);
+      throw error;
     }
-    const result=await withMember(userId,async client=>{
-      const target=await client.query(
-        "SELECT 1 FROM app_private.member_profile_routes WHERE user_id=$1::uuid",[peerId]);
-      if(!target.rows.length)return false;
-      await client.query(
-        `INSERT INTO app_private.member_message_blocks(blocker_id,blocked_id)
-         VALUES($1::uuid,$2::uuid) ON CONFLICT DO NOTHING`,[userId,peerId]);
-      return true;
-    });
-    return result?json(request,{blocked:true}):json(request,{error:"Member unavailable"},404);
   }
 
   if(request.method==="GET"){
@@ -112,7 +108,7 @@ export async function handleMessages(request,userId,url,withMember,json){
          JOIN app_private.member_profile_routes r ON r.user_id=p.user_id
          WHERE p.user_id=$1::uuid`,[peerId]);
       if(!target.rows.length)return null;
-      const [messages,ownBlock,canSend]=await Promise.all([
+      const [messages,ownBlock,canSend,pair]=await Promise.all([
         client.query(
           `SELECT id,sender_id,recipient_id,body,created_at
            FROM app_private.member_messages
@@ -121,16 +117,19 @@ export async function handleMessages(request,userId,url,withMember,json){
            ORDER BY created_at DESC,id DESC LIMIT 100`,[userId,peerId]),
         client.query(
           `SELECT 1 FROM app_private.member_message_blocks
-           WHERE blocker_id=$1::uuid AND blocked_id=$2::uuid`,[userId,peerId]),
-        client.query("SELECT app_private.can_message_member($1::uuid) AS allowed",[peerId])
+           WHERE blocker_id=$1::uuid AND blocked_id=$2::uuid AND active`,[userId,peerId]),
+        client.query("SELECT app_private.can_message_member($1::uuid) AS allowed",[peerId]),
+        client.query("SELECT app_private.member_pair_blocked($1::uuid,$2::uuid) AS blocked",[userId,peerId])
       ]);
       return {target:target.rows[0],messages:messages.rows,blocked:ownBlock.rows.length>0,
-        canSend:canSend.rows[0]?.allowed===true};
+        pairBlocked:pair.rows[0]?.blocked===true,canSend:canSend.rows[0]?.allowed===true};
     });
     if(!result)return json(request,{error:"Conversation unavailable"},404);
-    return json(request,{peer:{userId:peerId,displayName:String(result.target.display_name),
-      slug:String(result.target.slug)},messages:result.messages.reverse().map(asMessage),
-      blocked:result.blocked,canSend:result.canSend});
+    return json(request,{peer:{userId:peerId,
+      displayName:result.pairBlocked?"<blocked user>":String(result.target.display_name),
+      slug:result.pairBlocked?null:String(result.target.slug)},
+      messages:result.messages.reverse().map(asMessage),
+      pairBlocked:result.pairBlocked,blocked:result.blocked,canSend:result.canSend});
   }
 
   const parsedBody=await parseBody(request,9000,["body"]);
