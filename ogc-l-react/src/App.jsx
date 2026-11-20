@@ -48,13 +48,25 @@ export function MemberPhoto({member}) {
 }
 
 function MemberCard({member}) {
-  return <a className="ogcl-member-link" href={profileHref(member.slug)}>
-    <MemberPhoto member={member} />
-    <span className="ogcl-member-copy">
-      <strong>{member.displayName}</strong>
-      <small>{questionScore(member)}</small>
-    </span>
-  </a>;
+  return (
+    <article className="ogcl-match-row" aria-label={"Match: " + member.displayName}>
+      <a href={profileHref(member.slug)} className="ogcl-match-photo-link" aria-label={"View " + member.displayName + "'s profile"}>
+        <MemberPhoto member={member} />
+      </a>
+      <div className="ogcl-match-main">
+        <a className="ogcl-match-username" href={profileHref(member.slug)}>{member.displayName}</a>
+        <p className="ogcl-match-context">Compatibility from shared question answers</p>
+      </div>
+      <div className="ogcl-match-scores" aria-label="Compatibility score">
+        {member.matchPercent !== null ? (
+          <div className="ogcl-score-badge ogcl-score-match">
+            <strong>{member.matchPercent}%</strong><span>Match</span>
+          </div>
+        ) : <div className="ogcl-score-unscored"><small>{questionScore(member)}</small></div>}
+        {member.matchPercent !== null && <small className="ogcl-shared-count">{member.commonQuestions} shared questions</small>}
+      </div>
+    </article>
+  );
 }
 
 function LeftRail() {
@@ -262,34 +274,74 @@ function MemberDirectory() {
   const ordered = useMemo(() => filterAndSortMembers(discovery, {search, sort}), [discovery, search, sort]);
   const directoryPage = useMemo(() => pageMembers(ordered, page), [ordered, page]);
   useEffect(() => { setPage(1); }, [search, sort]);
-  return <PreviewView title="Matches" intro="Browse members who've completed their profiles.">
-    <p className="ogcl-note">Compatibility is a provisional question-only calculation. A missing score means there aren't enough shared answers.</p>
-    {discoveryUnavailable ? <div role="alert"><p>Member discovery couldn't load.</p>
-      <button type="button" className="ogcl-button" onClick={refresh}>Try again</button></div> :
-      <>
-        <div className="ogcl-directory-tools">
-          <label>Find by username
-            <input type="search" maxLength={80} value={search} placeholder="Search members"
-              onChange={event => setSearch(event.target.value)} />
-          </label>
-          <label>Sort results
-            <select value={sort} onChange={event => setSort(event.target.value)}>
-              <option value="match">Highest match %</option>
-              <option value="name">Username A–Z</option>
-            </select>
-          </label>
-          <span className="ogcl-directory-count">{ordered.length} matching {ordered.length === 1 ? "member" : "members"}</span>
+
+  return (
+    <section className="ogcl-matches-view" aria-labelledby="ogcl-matches-heading">
+      <div className="ogcl-feature-banner">Match scores are based on shared question answers.</div>
+      <div className="ogcl-matches-heading-row">
+        <h1 id="ogcl-matches-heading">Matches</h1>
+        <label className="ogcl-search-control">
+          <span className="ogcl-visually-hidden">Search by username</span>
+          <input type="search" maxLength={80} value={search} placeholder="Search"
+            onChange={event => setSearch(event.target.value)} />
+        </label>
+      </div>
+      <nav className="ogcl-matches-tabs" aria-label="Matches">
+        <span className="ogcl-match-tab is-active" aria-current="page">Search</span>
+      </nav>
+      <section className="ogcl-filter-panel" aria-label="Match filters">
+        <div className="ogcl-filter-intro">Show me</div>
+        <div className="ogcl-filter-rows">
+          <div className="ogcl-filter-row">
+            <button type="button" className="ogcl-filter-pill" disabled>Who they like <span>▾</span></button>
+            <button type="button" className="ogcl-filter-pill" disabled>Age range <span>▾</span></button>
+            <button type="button" className="ogcl-filter-pill" disabled>Distance <span>▾</span></button>
+          </div>
+          <div className="ogcl-filter-row">
+            <button type="button" className="ogcl-filter-pill" disabled>Last online <span>▾</span></button>
+            <button type="button" className="ogcl-filter-pill" disabled>Photo <span>▾</span></button>
+            <button type="button" className="ogcl-filter-pill" disabled>Relationship status <span>▾</span></button>
+          </div>
+          <div className="ogcl-filter-row">
+            <button type="button" className="ogcl-filter-pill" disabled>Height <span>+</span></button>
+            <button type="button" className="ogcl-filter-pill" disabled>Smoking <span>▾</span></button>
+            <button type="button" className="ogcl-filter-pill" disabled>Religion <span>▾</span></button>
+          </div>
+          <div className="ogcl-filter-row ogcl-filter-row-last">
+            <button type="button" className="ogcl-filter-pill" disabled>Education <span>+</span></button>
+            <button type="button" className="ogcl-filter-pill" disabled>Advanced <span>▾</span></button>
+            <button type="button" className="ogcl-filter-reset" onClick={() => {setSearch("");setSort("match");}}>Reset</button>
+          </div>
         </div>
-        {directoryPage.items.length ? <div className="ogcl-directory">{directoryPage.items.map(p =>
-          <MemberCard key={p.userId} member={p} />)}</div> :
-          <p>{search ? "No members match that username." : "No discoverable members are available yet."}</p>}
-        {directoryPage.totalPages > 1 && <nav className="ogcl-pages" aria-label="Matches pages">
-          {Array.from({length:directoryPage.totalPages},(_,index) => index + 1).map(n =>
-            <button key={n} type="button" aria-current={n===directoryPage.page ? "page" : undefined}
-              onClick={() => setPage(n)}>{n}</button>)}
-        </nav>}
-      </>}
-  </PreviewView>;
+        <p className="ogcl-filter-note">Profile filters aren't connected to member data yet.</p>
+      </section>
+      <div className="ogcl-matches-toolbar">
+        <label htmlFor="ogcl-match-sort">Order by</label>
+        <select id="ogcl-match-sort" value={sort} onChange={event => setSort(event.target.value)}>
+          <option value="match">Highest match %</option>
+          <option value="name">Username A–Z</option>
+        </select>
+        <span className="ogcl-directory-count">{ordered.length} matching {ordered.length === 1 ? "member" : "members"}</span>
+      </div>
+      {discoveryUnavailable ? (
+        <div role="alert" className="ogcl-match-empty">
+          <p>Member discovery couldn't load.</p>
+          <button type="button" className="ogcl-button" onClick={refresh}>Try again</button>
+        </div>
+      ) : directoryPage.items.length ? (
+        <div className="ogcl-matches-list" aria-label="Matching members">
+          {directoryPage.items.map(p => <MemberCard key={p.userId} member={p} />)}
+        </div>
+      ) : (
+        <div className="ogcl-match-empty"><p>{search ? "No members match that username." : "No discoverable members are available yet."}</p></div>
+      )}
+      {directoryPage.totalPages > 1 && <nav className="ogcl-pages" aria-label="Matches pages">
+        {Array.from({length:directoryPage.totalPages},(_,index) => index + 1).map(n =>
+          <button key={n} type="button" aria-current={n===directoryPage.page ? "page" : undefined}
+            onClick={() => setPage(n)}>{n}</button>)}
+      </nav>}
+    </section>
+  );
 }
 
 const views = {
