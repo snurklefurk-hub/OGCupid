@@ -6,8 +6,9 @@ ALTER TABLE app_private.member_message_blocks ADD COLUMN IF NOT EXISTS active bo
 ALTER TABLE app_private.member_message_blocks ADD COLUMN IF NOT EXISTS block_count smallint NOT NULL DEFAULT 1;
 ALTER TABLE app_private.member_message_blocks ADD CONSTRAINT member_block_count_limit CHECK (block_count BETWEEN 1 AND 2);
 REVOKE INSERT, DELETE ON app_private.member_message_blocks FROM ogcupid_member_api;
-DROP POLICY IF EXISTS message_block_owner_insert ON app_private.member_message_blocks;
-DROP POLICY IF EXISTS message_block_owner_delete ON app_private.member_message_blocks;
+-- Existing owner-write policies remain in the catalog, but the restricted
+-- role has no INSERT/DELETE grants; writes are exclusively through the
+-- authenticated SECURITY DEFINER transition, preserving block history.
 
 CREATE OR REPLACE FUNCTION app_private.member_pair_blocked(a uuid,b uuid)
 RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER
