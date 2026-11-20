@@ -24,7 +24,7 @@ export async function handleDiscovery(request, userId, withMember, json) {
       // onboarding. It is not a general-purpose read into another member's
       // private onboarding record.
       const selected = await client.query(
-        `SELECT p.user_id, p.display_name, routes.slug
+        `SELECT p.user_id, p.display_name, p.age, p.city_region, routes.slug
            FROM app_private.member_profiles AS p
            INNER JOIN app_private.member_profile_routes AS routes
              ON routes.user_id = p.user_id
