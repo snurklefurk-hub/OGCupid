@@ -1,0 +1,29 @@
+/* Classic profile action stack, replacing online-status light with a blue Message header. */
+.ogcl-classic-profile-head {display:grid;grid-template-columns:138px minmax(0,1fr) 168px;gap:15px;align-items:start;}
+.ogcl-profile-action-panel {box-sizing:border-box;width:168px;display:grid;gap:3px;align-content:start;}
+.ogcl-profile-action-panel>a,.ogcl-profile-action-panel>button,.ogcl-profile-action-pair>button {
+  min-height:30px;box-sizing:border-box;text-align:center;display:block;width:100%;
+  border:1px solid #d4d4d4;border-radius:1px;background:linear-gradient(#fff,#f5f5f5);
+  color:#4b4b4b;text-decoration:none;font:bold 11px/18px Verdana,sans-serif;padding:5px 4px;cursor:pointer;
+}
+.ogcl-profile-action-panel .ogcl-profile-action-message {
+  color:#fff;background:linear-gradient(#3d7bb9,#2963a4);border:1px solid #183b62;
+  text-align:center;font-weight:bold;
+}
+.ogcl-profile-action-pair {display:grid;grid-template-columns:1fr 1fr;gap:3px;}
+.ogcl-profile-action-panel button:disabled {opacity:.55;cursor:wait;}
+.ogcl-profile-action-report {border:1px solid #ddd;padding:7px;background:#f7f7f7;}
+.ogcl-profile-action-report label {display:grid;gap:4px;font-size:10px;color:#666;}
+.ogcl-profile-action-report select {width:100%;padding:5px;border:1px solid #c0c0c0;}
+.ogcl-profile-action-report button {width:100%;margin-top:5px;padding:6px;color:#fff;background:#2963a4;border:1px solid #183b62;font-size:11px;}
+.ogcl-profile-action-panel .ogcl-error,.ogcl-profile-action-panel .ogcl-save-confirmation {font-size:10px;line-height:1.5;overflow-wrap:anywhere;}
+@media(max-width:1100px) {
+  .ogcl-classic-profile-head {grid-template-columns:110px minmax(0,1fr) 160px;}
+  .ogcl-profile-action-panel {width:160px;}
+}
+@media(max-width:800px) {
+  .ogcl-classic-profile-head {display:flex;flex-wrap:wrap;gap:12px;}
+  .ogcl-classic-profile-person {flex:1 1 150px;}
+  .ogcl-profile-action-panel {flex:1 0 150px;max-width:210px;width:auto;}
+}
+@media(max-width:480px){.ogcl-profile-action-panel {flex:1 0 100%;max-width:none;}}
