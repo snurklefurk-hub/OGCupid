@@ -1,0 +1,88 @@
+TAP version 13
+# Subtest: exact routed paths and allowed methods only
+ok 1 - exact routed paths and allowed methods only
+  ---
+  duration_ms: 1.176898
+  type: 'test'
+  ...
+# Subtest: own connection summary includes only counts for inbound interest
+ok 2 - own connection summary includes only counts for inbound interest
+  ---
+  duration_ms: 31.656512
+  type: 'test'
+  ...
+# Subtest: favorites save/remove are JWT-owner-scoped and block-aware
+ok 3 - favorites save/remove are JWT-owner-scoped and block-aware
+  ---
+  duration_ms: 1.589167
+  type: 'test'
+  ...
+# Subtest: blocks delegate one-time-unblock and permanent history to database
+ok 4 - blocks delegate one-time-unblock and permanent history to database
+  ---
+  duration_ms: 1.125732
+  type: 'test'
+  ...
+# Subtest: profile reports require approved reason without target leaks
+ok 5 - profile reports require approved reason without target leaks
+  ---
+  duration_ms: 2.482405
+  type: 'test'
+  ...
+# Subtest: messages routes retain JWT, account-liveness and exact-origin authorization
+ok 6 - messages routes retain JWT, account-liveness and exact-origin authorization
+  ---
+  duration_ms: 1.045673
+  type: 'test'
+  ...
+# Subtest: migration enforces forced RLS, owner-only blocks, participant-only reads and reporting privacy
+ok 7 - migration enforces forced RLS, owner-only blocks, participant-only reads and reporting privacy
+  ---
+  duration_ms: 0.254916
+  type: 'test'
+  ...
+# Subtest: inbox lists only real member conversation records
+ok 8 - inbox lists only real member conversation records
+  ---
+  duration_ms: 28.959176
+  type: 'test'
+  ...
+# Subtest: conversation reads only participant pair and returns private block state
+ok 9 - conversation reads only participant pair and returns private block state
+  ---
+  duration_ms: 0.936498
+  type: 'test'
+  ...
+# Subtest: sending serializes by sender and enforces server-side capacity before INSERT
+ok 10 - sending serializes by sender and enforces server-side capacity before INSERT
+  ---
+  duration_ms: 2.628568
+  type: 'test'
+  ...
+# Subtest: blocked/unavailable recipient, invalid bodies and self messaging never persist
+ok 11 - blocked/unavailable recipient, invalid bodies and self messaging never persist
+  ---
+  duration_ms: 3.553335
+  type: 'test'
+  ...
+# Subtest: block and unblock affect only caller and peer, and reports require received message
+ok 12 - block and unblock affect only caller and peer, and reports require received message
+  ---
+  duration_ms: 2.920953
+  type: 'test'
+  ...
+# Subtest: unsupported methods, report reasons and forged route do not write to database
+ok 13 - unsupported methods, report reasons and forged route do not write to database
+  ---
+  duration_ms: 1.413639
+  type: 'test'
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 121.358999
