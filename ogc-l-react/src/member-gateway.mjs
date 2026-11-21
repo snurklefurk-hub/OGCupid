@@ -1,4 +1,8 @@
 import {safeEssayProfile, composeEssayUpdate} from "./member-essays.mjs";
+import {
+  photoCacheKey,readProtectedPhoto,storeProtectedPhoto,
+  invalidateMemberPhotos,coalescePhoto,makePhotoThumbnail
+} from "./member-photo-cache.mjs";
 import {sanitizeOwnProfileSettings,composeSettingUpdate} from "./member-settings.mjs";
 import {lookingForUpdate} from "./member-looking-for.mjs";
 import {sanitizePublicProfile} from "./member-public-profile.mjs";
@@ -354,7 +358,7 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
       throw new MemberAccessError("invalid","Unsupported account request.");
     const session=await bounded(authClient.getSession());
     if(session?.error)throw new MemberAccessError("unauthorized","Session is unavailable.");
-    checkedMember(session?.data?.user);
+    const actor=checkedMember(session?.data?.user);
     const jwt=await getJwt(session?.data?.session);
     const isPhoto=path==="/photos"&&method==="POST";
     if(isPhoto && (!(body instanceof Blob)||body.type!=="image/jpeg"||
@@ -381,6 +385,8 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
       requireResponse(response);
       const result=await bounded(response.json());
       if(!result || typeof result!=="object")throw new MemberAccessError("unavailable","Invalid account response.");
+      if(isPhoto||photoPrimary||photoDelete)
+        await invalidateMemberPhotos(actor.id,actor.id);
       return result;
     }catch(error){
       if(error instanceof MemberAccessError)throw error;
@@ -579,51 +585,67 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
     },
     // Loads only a primary JPEG authorized by the existing member Function.
     // No URLs, credentials or image bytes are stored in browser storage.
-    async getMemberAvatar(targetId) {
-      if (!UUID.test(String(targetId || ""))) return null;
-      const identity = await bounded(authClient.getSession());
-      checkedMember(identity?.data?.user);
-      const jwt = await getJwt(identity?.data?.session);
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), MAX_WAIT_MS);
-      const get = async (path, binary = false) => {
-        try {
-          const response = await fetcher(endpoints.memberApiBaseUrl + path, {
-            method: "GET", credentials: "omit", cache: "no-store",
-            headers: {Authorization: "Bearer " + jwt, Accept: binary ? "image/jpeg" : "application/json"},
-            signal: controller.signal
-          });
-          requireResponse(response);
-          return await bounded(binary ? response.blob() : response.json());
-        } catch (error) {
-          if (error instanceof MemberAccessError) throw error;
-          throw new MemberAccessError("unavailable", "Unable to load member photo.");
+    async getMemberAvatar(targetId,knownPhotoId) {
+      if(!UUID.test(String(targetId||""))||knownPhotoId===null||
+         (knownPhotoId!==undefined&&!UUID.test(String(knownPhotoId||""))))return null;
+      const identity=await bounded(authClient.getSession());
+      if(identity?.error)throw new MemberAccessError("unauthorized","Session unavailable.");
+      const viewer=checkedMember(identity?.data?.user);
+      const target=targetId.toLowerCase();
+      const known=knownPhotoId?.toLowerCase();
+      const key=photoCacheKey(viewer.id,target,known?"thumb":"avatar",known||"");
+      return coalescePhoto(key,async()=>{
+        const cached=await readProtectedPhoto(key);
+        if(cached)return cached;
+        const fullKey=known?photoCacheKey(viewer.id,target,"full",known):null;
+        let image=fullKey?await readProtectedPhoto(fullKey):null;
+        let photoId=known||null;
+        if(!image){
+          const jwt=await getJwt(identity?.data?.session);
+          const path=known?"/photos/"+known+"/bytes":"/photos/member/"+target+"/avatar";
+          const controller=new AbortController();
+          const timer=setTimeout(()=>controller.abort(),MAX_WAIT_MS);
+          try{
+            const response=await fetcher(endpoints.memberApiBaseUrl+path,{
+              method:"GET",credentials:"omit",cache:"no-store",
+              headers:{Authorization:"Bearer "+jwt,Accept:"image/jpeg"},signal:controller.signal
+            });
+            if(response.status===404&&!known)return null;
+            requireResponse(response);
+            if(!known){
+              const reported=response.headers?.get?.("X-Photo-Id");
+              photoId=UUID.test(String(reported||""))?reported.toLowerCase():null;
+            }
+            image=await bounded(response.blob());
+            if(!(image instanceof Blob)||image.type!=="image/jpeg"||
+               image.size<=0||image.size>2_500_000)return null;
+            if(photoId)await storeProtectedPhoto(
+              photoCacheKey(viewer.id,target,"full",photoId),viewer.id,target,image);
+          }catch(error){
+            if(error instanceof MemberAccessError)throw error;
+            throw new MemberAccessError("unavailable","Unable to load member photo.");
+          }finally{clearTimeout(timer);}
         }
-      };
-      try {
-        const album = await get("/photos/member/" + targetId.toLowerCase());
-        if (!Array.isArray(album?.photos)) return null;
-        const selected = album.photos.find(p => p?.isPrimary && UUID.test(p?.id || "")) ||
-          album.photos.find(p => UUID.test(p?.id || ""));
-        if (!selected) return null;
-        const image = await get("/photos/" + selected.id + "/bytes", true);
-        if (!(image instanceof Blob) || image.type !== "image/jpeg" || image.size > 2_500_000) {
-          return null;
-        }
-        return image;
-      } finally { clearTimeout(timer); }
+        const thumb=await makePhotoThumbnail(image);
+        await storeProtectedPhoto(key,viewer.id,target,thumb);
+        if(photoId&&known!==photoId)await storeProtectedPhoto(
+          photoCacheKey(viewer.id,target,"thumb",photoId),viewer.id,target,thumb);
+        return thumb;
+      });
     },
     async getMemberGallery(targetId) {
-      // Exactly the existing member-scoped list and JPEG byte endpoints.
-      // No raw storage keys, public URLs, cookies, or browser-persisted data.
-      if (!UUID.test(String(targetId || ""))) return [];
+      // Revalidate album visibility/IDs with the protected API on each gallery
+      // visit. JPEG bytes themselves are reused from the account's IndexedDB.
+      if(!UUID.test(String(targetId||"")))return [];
       const identity=await bounded(authClient.getSession());
-      checkedMember(identity?.data?.user);
+      if(identity?.error)throw new MemberAccessError("unauthorized","Session unavailable.");
+      const viewer=checkedMember(identity?.data?.user);
+      const target=targetId.toLowerCase();
       const jwt=await getJwt(identity?.data?.session);
       const controller=new AbortController();
       const timer=setTimeout(()=>controller.abort(),MAX_WAIT_MS);
       const fetchProtected=async(path,binary=false)=>{
-        try {
+        try{
           const response=await fetcher(endpoints.memberApiBaseUrl+path,{
             method:"GET",credentials:"omit",cache:"no-store",
             headers:{Authorization:"Bearer "+jwt,Accept:binary?"image/jpeg":"application/json"},
@@ -636,25 +658,31 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
           throw new MemberAccessError("unavailable","Unable to load member photos.");
         }
       };
-      try {
-        const album=await fetchProtected("/photos/member/"+targetId.toLowerCase());
+      try{
+        const album=await fetchProtected("/photos/member/"+target);
         if(!Array.isArray(album?.photos)||album.photos.length>5)
           throw new MemberAccessError("unavailable","Invalid member photo list.");
         const ids=new Set();
         const records=album.photos.map(photo=>{
-          if(!UUID.test(String(photo?.id||"")) || ids.has(photo.id.toLowerCase()) ||
-            typeof photo.isPrimary!=="boolean" ||
-            !Number.isInteger(photo.sortOrder) || photo.sortOrder<0 ||
-            photo.sortOrder>5)
+          if(!UUID.test(String(photo?.id||""))||ids.has(photo.id.toLowerCase())||
+             typeof photo.isPrimary!=="boolean"||
+             !Number.isInteger(photo.sortOrder)||photo.sortOrder<0||photo.sortOrder>5)
             throw new MemberAccessError("unavailable","Invalid member photo metadata.");
           ids.add(photo.id.toLowerCase());
           return {id:photo.id.toLowerCase(),isPrimary:photo.isPrimary,sortOrder:photo.sortOrder};
         });
         const images=await Promise.all(records.map(async record=>{
-          const image=await fetchProtected("/photos/"+record.id+"/bytes",true);
-          if(!(image instanceof Blob)||image.type!=="image/jpeg"||
-             image.size<=0||image.size>2_500_000)
-            throw new MemberAccessError("unavailable","Invalid member photo data.");
+          const key=photoCacheKey(viewer.id,target,"full",record.id);
+          const image=await coalescePhoto(key,async()=>{
+            const cached=await readProtectedPhoto(key);
+            if(cached)return cached;
+            const fresh=await fetchProtected("/photos/"+record.id+"/bytes",true);
+            if(!(fresh instanceof Blob)||fresh.type!=="image/jpeg"||
+               fresh.size<=0||fresh.size>2_500_000)
+              throw new MemberAccessError("unavailable","Invalid member photo data.");
+            await storeProtectedPhoto(key,viewer.id,target,fresh);
+            return fresh;
+          });
           return Object.freeze({...record,image});
         }));
         return Object.freeze(images);
