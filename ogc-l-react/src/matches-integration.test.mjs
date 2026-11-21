@@ -50,7 +50,7 @@ test("signed-in connection CRUD never sends a user-supplied actor identity",asyn
 test("Matches Search renders before connections finish and Favorite actions require loaded state",()=>{
   const matches=source("./MatchesView.jsx");
   assert.match(matches,/const \[connectionsLoading,setConnectionsLoading\]=useState\(true\)/);
-  assert.match(matches,/const \[connectionsError,setConnectionsError\]=useState\(" "\.trim\(\)\)/);
+  assert.match(matches,/const \[connectionsError,setConnectionsError\]=useState\(""/);
   assert.match(matches,/tab==="search"\?!discoveryUnavailable:!connectionsLoading&&!connectionsError&&!!connections/);
   assert.match(matches,/disabled=\{busy\|\|!canFavorite\}/);
   assert.match(matches,/canFavorite=\{!!connections\}/);
