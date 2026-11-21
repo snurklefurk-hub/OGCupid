@@ -215,7 +215,8 @@ export function MemberSessionProvider({children}) {
 
   const saveOwnLookingFor=useCallback(async draft=>{
     if(!gateway)throw new MemberAccessError("unavailable","Member API is not configured.");
-    return gateway.saveOwnLookingFor(draft);
+    const result=await gateway.saveOwnLookingFor(draft);
+    clearSearchCache();return result;
   },[]);
 
   const loadOwnSettings=useCallback(async()=>{
@@ -224,7 +225,8 @@ export function MemberSessionProvider({children}) {
   },[]);
   const saveOwnSetting=useCallback(async(key,value)=>{
     if(!gateway)throw new MemberAccessError("unavailable","Member API is not configured.");
-    return gateway.saveOwnSetting(key,value);
+    const result=await gateway.saveOwnSetting(key,value);
+    clearSearchCache();return result;
   },[]);
 
   const getPublicProfile = useCallback(async slug => {
@@ -238,7 +240,8 @@ export function MemberSessionProvider({children}) {
   }, []);
   const saveQuickmatchDecision = useCallback(async (targetUserId,decision) => {
     if(!gateway)throw new MemberAccessError("unavailable","Member API is not configured.");
-    return gateway.saveQuickmatchDecision(targetUserId,decision);
+    const result=await gateway.saveQuickmatchDecision(targetUserId,decision);
+    clearSearchCache();return result;
   }, []);
 
   const searchMembers=useCallback(async(criteria,page)=>{
