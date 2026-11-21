@@ -23,6 +23,7 @@ export const PUBLIC_DETAILS = Object.freeze([
   Object.freeze({key:"relationshipType",label:"Relationship type"}),
   Object.freeze({key:"height",label:"Height"}),
   Object.freeze({key:"bodyType",label:"Body type"}),
+  Object.freeze({key:"ethnicity",label:"Race / ethnicity"}),
   Object.freeze({key:"diet",label:"Diet"}),
   Object.freeze({key:"smoking",label:"Smoking"}),
   Object.freeze({key:"vaping",label:"Vaping"}),
