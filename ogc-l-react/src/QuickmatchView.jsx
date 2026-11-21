@@ -13,7 +13,7 @@ function score(member){
     member.matchPercent+"% question match · "+member.commonQuestions+" shared";
 }
 export default function QuickmatchView({Photo}) {
-  const {discovery,discoveryUnavailable,loadQuickmatchDecisions,saveQuickmatchDecision}=useMemberSession();
+  const {discovery,discoveryLoading,discoveryUnavailable,loadQuickmatchDecisions,saveQuickmatchDecision}=useMemberSession();
   const [quickState,setQuickState]=useState(null);
   const [queueOrder,setQueueOrder]=useState([]);
   // URL-backed tabs ensure browser Back returns to the same Like list.
@@ -102,10 +102,11 @@ export default function QuickmatchView({Photo}) {
       <p className="ogcl-note">Match percentages are based on real saved question answers.
         Friend and Enemy percentages aren't calculated yet.</p>
       {loading&&<p role="status">Loading your saved Quickmatch decisions…</p>}
+      {discoveryLoading&&<p role="status">Loading Quickmatch profiles…</p>}
       {discoveryUnavailable&&<p role="alert" className="ogcl-error">Member discovery is unavailable.</p>}
       {error&&<p role="alert" className="ogcl-error">{error}</p>}
       {notice&&<p role="status" className="ogcl-save-confirmation">{notice}</p>}
-      {!loading&&quickState&&!discoveryUnavailable&&tab==="matches"&&
+      {!loading&&quickState&&!discoveryLoading&&!discoveryUnavailable&&tab==="matches"&&
         (candidate?<article className="ogcl-quickmatch-view" aria-label="Quickmatch candidate">
           <QuickmatchRestrictedProfile member={candidate}>
             <div className="ogcl-quickmatch-actions" aria-label="Choose Like or Dislike">
@@ -119,7 +120,7 @@ export default function QuickmatchView({Photo}) {
             </button>}
           </QuickmatchRestrictedProfile>
         </article>:<p>No new eligible Quickmatch profiles right now.</p>)}
-      {!loading&&quickState&&!discoveryUnavailable&&tab!=="matches"&&<>
+      {!loading&&quickState&&!discoveryLoading&&!discoveryUnavailable&&tab!=="matches"&&<>
         <p className="ogcl-quiet">{visible.length} currently visible member{visible.length===1?"":"s"}.
           Mutual Likes are saved in MATCHES → Quiver. Other members' Dislikes aren't disclosed.</p>
         {paged.items.length?<div className="ogcl-directory ogcl-quickmatch-list">
