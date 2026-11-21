@@ -245,7 +245,7 @@ export default function MatchesView({Photo}){
       {tab==="search"&&!connections&&<p className="ogcl-matches-warning" role="status">
         Favorites controls will be available after your saved Favorites load.
       </p>}
-      {favoriteError&&<p role="alert" className="ogcl-error">{favoriteError}</p> 
+      {favoriteError&&<p role="alert" className="ogcl-error">{favoriteError}</p>}
       {tab==="search"&&discoveryUnavailable&&<div role="alert">
         <p>Member search is unavailable right now.</p>
         <button type="button" onClick={refresh}>Try again</button>
