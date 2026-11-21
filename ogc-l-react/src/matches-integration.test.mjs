@@ -47,6 +47,17 @@ test("signed-in connection CRUD never sends a user-supplied actor identity",asyn
   assert.ok(!calls.some(x=>JSON.stringify(x.body||"").includes(ME)));
   await assert.rejects(api.setFavorite(ME,true),e=>e.code==="invalid");
 });
+test("Matches Search renders before connections finish and Favorite actions require loaded state",()=>{
+  const matches=source("./MatchesView.jsx");
+  assert.match(matches,/const \[connectionsLoading,setConnectionsLoading\]=useState\(true\)/);
+  assert.match(matches,/const \[connectionsError,setConnectionsError\]=useState\(" "\.trim\(\)\)/);
+  assert.match(matches,/tab==="search"\?!discoveryUnavailable:!connectionsLoading&&!connectionsError&&!!connections/);
+  assert.match(matches,/disabled=\{busy\|\|!canFavorite\}/);
+  assert.match(matches,/canFavorite=\{!!connections\}/);
+  assert.match(matches,/tab!=="search"&&connectionsError/);
+  assert.doesNotMatch(matches,/\{!loading&&!error&&/);
+  assert.doesNotMatch(matches,/pageMembers\(results,page,24\)/);
+});
 test("Matches uses Search, Quiver and Favorites without special mutual overlays",()=>{
   const app=source("./App.jsx"),matches=source("./MatchesView.jsx");
   const quick=source("./QuickmatchView.jsx"),settings=source("./ProfileSettings.jsx");
