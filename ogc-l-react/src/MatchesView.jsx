@@ -54,14 +54,37 @@ function MemberResult({member,Photo,favorited,onFavorite,busy,now}){
     </div>
   </article>;
 }
-function SearchControls({filters,update,toggleChoice,reset,apply,hasLocation}){
+function SearchControls({filters,update,toggleChoice,reset,apply,hasLocation,members}){
   const [open,setOpen]=useState("");
   const form=useRef(null);
+  React.useLayoutEffect(()=>{
+    const position=()=>{
+      const trigger=document.getElementById("chip-"+open);
+      const menu=trigger?.parentElement.querySelector(".chip-editor");
+      if(!menu)return;
+      const left=trigger.parentElement.getBoundingClientRect().left;
+      menu.style.left=Math.min(0,window.innerWidth-left-menu.offsetWidth-8)+"px";
+    };
+    position();
+    window.addEventListener("resize",position);
+    return ()=>window.removeEventListener("resize",position);
+  },[open]);
   useEffect(()=>{
-    const dismiss=e=>{if(!form.current?.contains(e.target))setOpen("");};
+    const dismiss=e=>{if(!e.target.closest?.(".filter-chip"))setOpen("");};
     document.addEventListener("pointerdown",dismiss);
     return ()=>document.removeEventListener("pointerdown",dismiss);
   },[]);
+  function closeMenu(){
+    document.getElementById("chip-"+open)?.focus();
+    setOpen("");
+  }
+  function menuRow(label,selected,choose){
+    return <button key={label} type="button" className="chip-option" aria-pressed={selected}
+      onClick={choose}><span>{label}</span><i aria-hidden="true">{selected?"✓":""}</i></button>;
+  }
+  function pick(key,value){update(key,value);closeMenu();}
+  const memberChoices=key=>[...new Set((members||[]).map(member=>member[key]).filter(x=>typeof x==="string"&&x.trim()))]
+    .sort((a,b)=>a.localeCompare(b));
   function chip(id,label,editor,remove){
     return <div key={id} className={"filter-chip "+(id==="advanced"?"green":"")}>
       <button type="button" id={"chip-"+id} aria-expanded={open===id}
@@ -73,9 +96,7 @@ function SearchControls({filters,update,toggleChoice,reset,apply,hasLocation}){
   function choices(key,label,options){
     const selected=filters[key];
     const names=options.filter(x=>selected.includes(x.value)).map(x=>x.label);
-    return chip(key,names.join(", ")||label,options.map(x=><label key={x.value}>
-      <input type="checkbox" checked={selected.includes(x.value)} onChange={e=>toggleChoice(key)(x.value,e.target.checked)}/> {x.label}
-    </label>),selected.length?()=>update(key,[]):null);
+    return chip(key,names.join(", ")||label,options.map(x=>menuRow(x.label,selected.includes(x.value),()=>toggleChoice(key)(x.value,!selected.includes(x.value)))),selected.length?()=>update(key,[]):null);
   }
   const fields=SEARCH_ADVANCED_GROUPS.flatMap(g=>g.fields);
   const [extra,setExtra]=useState([]);
@@ -83,32 +104,34 @@ function SearchControls({filters,update,toggleChoice,reset,apply,hasLocation}){
   const advanced=(key,value)=>update("advanced",{...filters.advanced,[key]:value});
   function fieldChip(field){
     const value=filters.advanced[field.key]||"";
-    const editor=field.options?<select aria-label={field.label} value={value} onChange={e=>advanced(field.key,e.target.value)}>
-      <option value="">Any</option>{field.options.map(x=><option key={x}>{x}</option>)}</select>:
-      <input aria-label={field.label} maxLength={80} value={value} onChange={e=>advanced(field.key,e.target.value)}/>;
+    const options=field.options||memberChoices(field.key);
+    const choose=x=>{advanced(field.key,x);closeMenu();};
+    const editor=<>{menuRow("Any",!value,()=>choose(""))}
+      {options.map(x=>menuRow(x,value===x,()=>choose(x)))}
+      {!options.length&&<small>No values in available profiles.</small>}</>;
     return chip(field.key,field.label+(value?": "+value:""),editor,value?()=>advanced(field.key,""):null);
   }
   return <form ref={form} className="classic-search" onSubmit={e=>{e.preventDefault();apply();setOpen("");}}
     onKeyDown={e=>{if(e.key==="Escape"&&open){document.getElementById("chip-"+open)?.focus();setOpen("");}}}>
     <p>Show me</p><div className="chip-flow">
       {choices("genders","Interested in",LOOKING_GENDERS)}
-      {chip("age",`Ages ${filters.ageMin} to ${filters.ageMax}`,["ageMin","ageMax"].map(key=><label key={key}>
-        {key==="ageMin"?"From":"To"} <select value={filters[key]} onChange={e=>update(key,Number(e.target.value))}>
-        {AGE_CHOICES.filter(n=>key==="ageMin"?n<=filters.ageMax:n>=filters.ageMin).map(n=><option key={n}>{n}</option>)}</select></label>))}
+      {chip("age",`Ages ${filters.ageMin} to ${filters.ageMax}`,<div className="age-menu">{["ageMin","ageMax"].map(key=><div key={key}>
+        <strong>{key==="ageMin"?"From":"To"}</strong><div className="age-options" aria-label={key==="ageMin"?"Minimum age":"Maximum age"}>
+        {AGE_CHOICES.filter(n=>key==="ageMin"?n<=filters.ageMax:n>=filters.ageMin).map(n=>menuRow(n,filters[key]===n,()=>update(key,n)))}</div></div>)}</div>)}
       {chip("radius",filters.radius?`Within ${filters.radius} miles of me`:"Anywhere",<>
-        <select aria-label="Distance" disabled={!hasLocation} value={filters.radius} onChange={e=>update("radius",Number(e.target.value))}>
-        {LOOKING_RADII.map(r=><option key={r.value} value={r.value}>{r.label}</option>)}</select>
+        {hasLocation&&LOOKING_RADII.map(r=>menuRow(r.value?r.value+" miles":"Anywhere",r.value===filters.radius,()=>pick("radius",r.value)))}
         {!hasLocation&&<small>Save a verified location to filter by miles.</small>}</>)}
       {choices("intentions","Looking for",LOOKING_INTENTIONS)}
-      {chip("username",filters.search||"Search by username",<input aria-label="Username" type="search" maxLength={80} value={filters.search} onChange={e=>update("search",e.target.value)}/>,filters.search?()=>update("search",""):null)}
+      {chip("username",filters.search||"Search by username",<>{menuRow("Any username",!filters.search,()=>pick("search",""))}{memberChoices("displayName").map(name=>menuRow(name,filters.search===name,()=>pick("search",name)))}</>,filters.search?()=>update("search",""):null)}
       {fields.filter(f=>visible.has(f.key)).map(fieldChip)}
-      {chip("advanced","Advanced",<select aria-label="Choose a filter" value="" onChange={e=>{const key=e.target.value;setExtra(prev=>[...new Set([...prev,key])]);setOpen(key);}}>
-        <option value="" disabled>Choose a filter</option>{SEARCH_ADVANCED_GROUPS.map(g=><optgroup key={g.name} label={g.name}>
-        {g.fields.map(f=><option key={f.key} value={f.key}>{f.label}</option>)}</optgroup>)}</select>)}
+      {chip("advanced","Advanced",SEARCH_ADVANCED_GROUPS.map(g=><div key={g.name}><strong>{g.name}</strong>
+        {g.fields.map(f=><button key={f.key} className="chip-option" type="button" onClick={()=>{
+          setExtra(prev=>[...new Set([...prev,f.key])]);setOpen(f.key);
+          requestAnimationFrame(()=>document.getElementById("chip-"+f.key)?.focus());
+        }}>{f.label} ›</button>)}</div>))}
     </div><div className="chip-order"><p>Order by</p>
       {chip("sort",filters.sort==="match"?"Special Blend":SEARCH_SORTS.find(s=>s.value===filters.sort)?.label,
-        <select aria-label="Order by" value={filters.sort} onChange={e=>{update("sort",e.target.value);setOpen("");}}>
-        {SEARCH_SORTS.map(s=><option key={s.value} value={s.value}>{s.value==="match"?"Special Blend (Match %)":s.label}</option>)}</select>)}
+        SEARCH_SORTS.map(s=>menuRow(s.value==="match"?"Special Blend (Match %)":s.label,filters.sort===s.value,()=>pick("sort",s.value))))}
     </div><footer><button type="submit">Search</button><button type="button" onClick={()=>{reset();setExtra([]);setOpen("");}}>Reset</button></footer>
   </form>;
 }
@@ -195,6 +218,7 @@ export default function MatchesView({Photo}){
     <div className="ogcl-matches-body">
       {tab==="search"&&<SearchControls filters={filters} update={update}
         toggleChoice={toggleChoice} reset={reset} apply={()=>setApplied(filters)}
+        members={discovery}
         hasLocation={savedSettings?.lookingFor?.hasValidatedLocality===true}/>}
       {tab==="search"&&settingsError&&<p className="ogcl-matches-warning" role="status">{settingsError}</p>}
       {tab==="favorites"&&<p className="ogcl-matches-inbound-count">
