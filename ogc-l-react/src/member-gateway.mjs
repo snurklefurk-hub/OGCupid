@@ -92,15 +92,31 @@ export function sanitizeDiscovery(data, memberId) {
       (typeof p.matchPercent === "number" && Number.isFinite(p.matchPercent) &&
         p.matchPercent >= 0 && p.matchPercent <= 100)))
     .slice(0, 250)
-    .map(p => Object.freeze({
-      userId: String(p.userId).toLowerCase(), slug: p.slug,
-      displayName: p.displayName.slice(0, 60),
-      ...(Number.isInteger(p.age)&&p.age>=18&&p.age<=120?{age:p.age}:{}),
-      ...(typeof p.cityRegion==="string"?{cityRegion:p.cityRegion.slice(0,120)}:{}),
-      matchPercent: p.matchPercent, confidence: String(p.confidence || "insufficient"),
-      commonQuestions: Number.isInteger(p.commonQuestions) && p.commonQuestions >= 0
-        ? p.commonQuestions : 0
-    }));
+    .map(p => {
+      const permitted=["gender","relationshipGoal","bodyType","status",
+        "relationshipType","height","drinking","smoking","vaping","drugs",
+        "diet","religion","ethnicity","education","kids","pets","income",
+        "languages","orientation"];
+      const safeDate=value=>typeof value==="string"&&Number.isFinite(Date.parse(value))
+        ?new Date(value).toISOString():null;
+      const details=Object.fromEntries(permitted.map(key=>[
+        key,typeof p[key]==="string"?p[key].slice(0,200):""
+      ]));
+      return Object.freeze({
+        userId: String(p.userId).toLowerCase(), slug: p.slug,
+        displayName: p.displayName.slice(0, 60),
+        ...(Number.isInteger(p.age)&&p.age>=18&&p.age<=120?{age:p.age}:{}),
+        ...(typeof p.cityRegion==="string"?{cityRegion:p.cityRegion.slice(0,120)}:{}),
+        ...details,
+        aboutMe:typeof p.aboutMe==="string"?p.aboutMe.slice(0,250):"",
+        distanceMiles:Number.isInteger(p.distanceMiles)&&p.distanceMiles>=0&&p.distanceMiles<=13000
+          ?p.distanceMiles:null,
+        createdAt:safeDate(p.createdAt),lastSeenAt:safeDate(p.lastSeenAt),
+        matchPercent: p.matchPercent, confidence: String(p.confidence || "insufficient"),
+        commonQuestions: Number.isInteger(p.commonQuestions) && p.commonQuestions >= 0
+          ? p.commonQuestions : 0
+      });
+    });
 }
 
 export function sanitizeQuickmatchDecisions(data) {
@@ -678,6 +694,29 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
       }catch(error){
         if(error instanceof MemberAccessError)throw error;
         throw new MemberAccessError("unavailable","Could not save Quickmatch decision.");
+      }finally{clearTimeout(timer);}
+    },
+    async recordPresence(){
+      const identity=await bounded(authClient.getSession());
+      checkedMember(identity?.data?.user);
+      const jwt=await getJwt(identity?.data?.session);
+      const controller=new AbortController();
+      const timer=setTimeout(()=>controller.abort(),MAX_WAIT_MS);
+      try {
+        const response=await fetcher(endpoints.memberApiBaseUrl+"/presence",{
+          method:"PUT",credentials:"omit",cache:"no-store",
+          headers:{Authorization:"Bearer "+jwt,Accept:"application/json"},
+          signal:controller.signal
+        });
+        requireResponse(response);
+        const payload=await bounded(response.json());
+        if(typeof payload?.lastSeenAt!=="string" ||
+          !Number.isFinite(Date.parse(payload.lastSeenAt)))
+          throw new MemberAccessError("unavailable","Invalid activity receipt.");
+        return payload.lastSeenAt;
+      }catch(error){
+        if(error instanceof MemberAccessError)throw error;
+        throw new MemberAccessError("unavailable","Could not record activity.");
       }finally{clearTimeout(timer);}
     },
     async loadConnections(){
