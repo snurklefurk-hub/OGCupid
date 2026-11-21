@@ -37,11 +37,11 @@ test("username search ignores case; saved preferences and advanced filters combi
 });
 test("Race filter recognizes each saved category and never substring-matches another",()=>{
   const available=[
-    {userId:"a",displayName:"A",ethnicity:"Black, White"},
-    {userId:"b",displayName:"B",ethnicity:"Asian"},
-    {userId:"c",displayName:"C",ethnicity:"Black"},
-    {userId:"d",displayName:"D",ethnicity:""},
-    {userId:"e",displayName:"E",ethnicity:"Blackish"}
+    {userId:"a",displayName:"A",age:29,ethnicity:"Black, White"},
+    {userId:"b",displayName:"B",age:29,ethnicity:"Asian"},
+    {userId:"c",displayName:"C",age:29,ethnicity:"Black"},
+    {userId:"d",displayName:"D",age:29,ethnicity:""},
+    {userId:"e",displayName:"E",age:29,ethnicity:"Blackish"}
   ];
   const race=SEARCH_ADVANCED_GROUPS.flatMap(group=>group.fields)
     .find(field=>field.key==="ethnicity");
