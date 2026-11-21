@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 import {
-  PROFILE_SETTINGS_FIELDS,sanitizeOwnProfileSettings,composeSettingUpdate
+  PROFILE_SETTINGS_FIELDS,ETHNICITY_CHOICES,sanitizeOwnProfileSettings,composeSettingUpdate
 } from "./member-settings.mjs";
 import {createMemberGateway} from "./member-gateway.mjs";
 
@@ -14,7 +14,7 @@ function profile(){
     ...Object.fromEntries(PROFILE_SETTINGS_FIELDS.map(f=>[f.key,""])),
     gender:"Woman",orientation:"Bi",interestedIn:"Woman, Man",
     relationshipGoal:"long-term dating",work:"Scientist",
-    bodyType:"Average",drugs:"Never",
+    bodyType:"Average",drugs:"Never",ethnicity:"Black, White",
     email:"private@invalid.example",birthDate:"1997-04-02"};
 }
 function mock(){
@@ -55,6 +55,7 @@ test("saved settings whitelist drops PII and enforces authenticated ownership",(
   assert.equal(result.displayName,"Original Signup Name");
   assert.equal(result.age,29);
   assert.equal(result.fields.work,"Scientist");
+  assert.equal(result.fields.ethnicity,"Black, White");
   assert.equal(JSON.stringify(result).includes("private@invalid.example"),false);
   assert.equal(JSON.stringify(result).includes("birthDate"),false);
   assert.throws(()=>sanitizeOwnProfileSettings({profile:{...profile(),userId:OTHER}},ME));
@@ -75,6 +76,35 @@ test("controlled fields and multi-choices validate with old values preserved",()
   assert.throws(()=>composeSettingUpdate(prior,"work","a".repeat(161)));
   assert.equal(composeSettingUpdate(prior,"drugs","Just weed · Sometimes").drugs,
     "Just weed · Sometimes");
+});
+test("race/ethnicity restores the original multi-select choices without changing storage keys",()=>{
+  assert.deepEqual(ETHNICITY_CHOICES,[
+    "Asian","Black","Hispanic / Latin","Indigenous",
+    "Middle Eastern","Pacific Islander","White","Other"
+  ]);
+  const field=PROFILE_SETTINGS_FIELDS.find(item=>item.key==="ethnicity");
+  assert.equal(field.label,"Race / ethnicity");
+  assert.deepEqual(field.multi,ETHNICITY_CHOICES);
+  const current=sanitizeOwnProfileSettings({profile:profile()},ME);
+  assert.deepEqual(composeSettingUpdate(current,"ethnicity","Black, White"),{
+    aboutMe:"Keep my essay",age:29,ethnicity:"Black, White"
+  });
+  assert.deepEqual(composeSettingUpdate(current,"ethnicity","Asian, Indigenous"),{
+    aboutMe:"Keep my essay",age:29,ethnicity:"Asian, Indigenous"
+  });
+  assert.throws(()=>composeSettingUpdate(current,"ethnicity","Invented category"));
+});
+test("gateway saves a race edit without changing other saved profile fields",async()=>{
+  const {service,read,calls}=mock();
+  const updated=await service.saveOwnSetting("ethnicity","Asian, Indigenous");
+  assert.equal(updated.fields.ethnicity,"Asian, Indigenous");
+  assert.equal(updated.fields.work,"Scientist");
+  assert.equal(read().ethnicity,"Asian, Indigenous");
+  assert.equal(read().orientation,"Bi");
+  assert.deepEqual(calls.map(x=>x.options.method),["GET","PUT"]);
+  assert.deepEqual(JSON.parse(calls[1].options.body),{
+    aboutMe:"Keep my essay",age:29,ethnicity:"Asian, Indigenous"
+  });
 });
 test("gateway reads latest server row and confirms one-field save with JWT",async()=>{
   const {service,calls,read}=mock();

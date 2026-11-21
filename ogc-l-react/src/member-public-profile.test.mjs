@@ -4,6 +4,7 @@ import {sanitizePublicProfile,PUBLIC_ESSAYS,PUBLIC_DETAILS} from "./member-publi
 const userId="00000000-0000-4000-8000-000000000002";
 const p={profile:{userId,slug:"hello-member",displayName:"Hello Member",age:31,cityRegion:"Savannah, Georgia",
   aboutMe:"Test essay", messageMeIf:"Send me a book recommendation.",gender:"Woman",work:"Writer",
+  ethnicity:"Black, White",
   email:"dont-show@invalid.test", birthDate:"1999-01-01",
   acceptableOptions:["private"]},publicAnswers:[{questionId:"vault-5",optionId:"option-1",note:"private"}],
   isOwner:false,personaCode:"DBSDf"};
@@ -13,6 +14,8 @@ test("public view only keeps explicit safe text and public answer identity",()=>
   assert.equal(result.essays.aboutMe,"Test essay");
   assert.equal(result.essays.messageMeIf,"Send me a book recommendation.");
   assert.equal(result.details.work,"Writer");
+  assert.equal(result.details.ethnicity,"Black, White");
+  assert.equal(PUBLIC_DETAILS.find(field=>field.key==="ethnicity")?.label,"Race / ethnicity");
   assert.equal(result.age,31);
   assert.deepEqual(result.publicAnswers,[{questionId:"vault-5",optionId:"option-1",note:"private",isPrivate:false}]);
   assert.equal(JSON.stringify(result).includes("dont-show"),false);

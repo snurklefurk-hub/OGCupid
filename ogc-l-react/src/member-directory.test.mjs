@@ -35,6 +35,25 @@ test("username search ignores case; saved preferences and advanced filters combi
   }).map(x=>x.userId),["a"]);
   assert.equal(filterAndSortMembers(members,{advanced:{smoking:"Never"}}).length,1);
 });
+test("Race filter recognizes each saved category and never substring-matches another",()=>{
+  const available=[
+    {userId:"a",displayName:"A",age:29,ethnicity:"Black, White"},
+    {userId:"b",displayName:"B",age:29,ethnicity:"Asian"},
+    {userId:"c",displayName:"C",age:29,ethnicity:"Black"},
+    {userId:"d",displayName:"D",age:29,ethnicity:""},
+    {userId:"e",displayName:"E",age:29,ethnicity:"Blackish"}
+  ];
+  const race=SEARCH_ADVANCED_GROUPS.flatMap(group=>group.fields)
+    .find(field=>field.key==="ethnicity");
+  assert.equal(race.label,"Race");
+  assert.ok(race.options.includes("Hispanic / Latin"));
+  assert.deepEqual(filterAndSortMembers(available,{advanced:{ethnicity:"Black"}})
+    .map(member=>member.userId),["a","c"]);
+  assert.deepEqual(filterAndSortMembers(available,{advanced:{ethnicity:"White"}})
+    .map(member=>member.userId),["a"]);
+  assert.deepEqual(filterAndSortMembers(available,{advanced:{ethnicity:"Asian"}})
+    .map(member=>member.userId),["b"]);
+});
 test("distance filters exclude unknown locations and unavailable ages; Anywhere is unlimited",()=>{
   assert.deepEqual(filterAndSortMembers(members,{radius:50}).map(x=>x.userId),["b","a"]);
   assert.equal(filterAndSortMembers(members,{radius:0}).length,4);

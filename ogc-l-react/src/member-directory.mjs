@@ -1,4 +1,5 @@
 import {PET_CHOICES,selectedPets} from "./member-pets.mjs";
+import {ETHNICITY_CHOICES} from "./member-settings.mjs";
 // Directory operations on *real, already authenticated* discovery results.
 // The backend alone decides who is eligible. No inferred location, offline
 // activity, profile preference, or score is manufactured in this module.
@@ -19,7 +20,7 @@ export const SEARCH_ADVANCED_GROUPS = Object.freeze([
   Object.freeze({name:"Background",fields:Object.freeze([
     {key:"education",label:"Education",type:"text"},
     {key:"religion",label:"Religion",type:"text"},
-    {key:"ethnicity",label:"Ethnicity",type:"text"},
+    {key:"ethnicity",label:"Race",options:ETHNICITY_CHOICES},
     {key:"languages",label:"Languages",type:"text"}
   ])}),
   Object.freeze({name:"Personal Life",fields:Object.freeze([
@@ -73,6 +74,10 @@ function matchesAdvanced(member,advanced) {
     if(!actual)return false;
     if(field.key==="pets"){
       if(!selectedPets(member.pets).includes(advanced.pets))return false;
+      continue;
+    }
+    if(field.key==="ethnicity"){
+      if(!splitChoices(member.ethnicity).includes(filter))return false;
       continue;
     }
     if(field.type==="text"?!actual.includes(filter):actual!==filter)return false;
