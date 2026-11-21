@@ -1,7 +1,7 @@
 name: Bundle Neon member API (no credentials)
 on:
   push:
-    branches: [main]
+    branches: [main, perf/persistent-protected-photo-cache-20261121]
     paths:
       - 'api/**'
       - '.github/workflows/bundle-member-function.yml'
