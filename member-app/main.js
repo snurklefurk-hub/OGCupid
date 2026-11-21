@@ -808,7 +808,6 @@ function readProfileDraft(form = $("profile-form")) {
     orientation: form.elements.orientation.value,
     interestedIn: [...form.querySelectorAll('input[name="interestedIn"]:checked')].map(input => input.value).join(", "),
     relationshipGoal: [...form.querySelectorAll('input[name="openTo"]:checked')].map(input => input.value).join(", "),
-    pronouns: cachedProfile?.pronouns ?? "",
   };
   for (const field of longProfileFields) draft[field] = form.elements[field].value.trim();
   draft.ethnicity = selectedValues(form.elements.ethnicity);
