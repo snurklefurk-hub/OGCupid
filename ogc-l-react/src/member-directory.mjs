@@ -25,7 +25,7 @@ export const SEARCH_ADVANCED_GROUPS = Object.freeze([
     {key:"status",label:"Relationship status",options:["Single","Seeing someone","Married"]},
     {key:"relationshipType",label:"Relationship style",options:["Monogamous","Polyamorous"]},
     {key:"kids",label:"Children",type:"text"},
-    {key:"pets",label:"Pets",type:"text"},
+    {key:"pets",label:"Pets",options:["Doesn’t have pets","Has cats","Has dogs","Has exotics"]},
     {key:"income",label:"Income",options:["Broke","Pocket money","Fuck you money"]}
   ])})
 ]);
@@ -63,6 +63,25 @@ export function savedSearchDefaults(profile) {
     radius,advanced:{}
   };
 }
+function matchesPets(description,filter){
+  const text=description.replaceAll("’","'").replace(/[.!]+$/,"").trim();
+  if(filter==="doesn’t have pets"){
+    return /^(?:none|no pets|no animals|pet[- ]free|(?:i )?(?:don't|dont|do not|doesn't|doesnt|does not) have (?:any )?pets)$/.test(text);
+  }
+  const species={
+    "has cats":/^(?:cats?|kittens?|kitties)$/,
+    "has dogs":/^(?:dogs?|puppy|puppies)$/,
+    "has exotics":/^(?:exotics?|exotic pets?|reptiles?|snakes?|lizards?|geckos?|iguanas?|tarantulas?|bearded dragons?)$/
+  }[filter];
+  if(!species)return false;
+  // Interpret short ownership statements. Leave names and ambiguous prose unclassified.
+  return text.split(/[,;·]/).filter(clause=>!/(?:\bno\b|\bnot\b|n't\b|\bwithout\b|\ballergic\b)/.test(clause))
+    .flatMap(clause=>clause.split(/[/&+]|\band\b/)).some(part=>{
+    const animal=part.trim().replace(/^(?:i (?:have|own)|has|owns|have) /,"")
+      .replace(/^(?:a|an|one|two|three|four|\d+) /,"").split(/ (?:named|called) /)[0];
+    return species.test(animal);
+  });
+}
 function matchesAdvanced(member,advanced) {
   if(!advanced || typeof advanced!=="object")return true;
   for(const field of SEARCH_ADVANCED_GROUPS.flatMap(group=>group.fields)){
@@ -70,6 +89,10 @@ function matchesAdvanced(member,advanced) {
     if(!filter)continue;
     const actual=keyText(member?.[field.key]);
     if(!actual)return false;
+    if(field.key==="pets"){
+      if(!matchesPets(actual,filter))return false;
+      continue;
+    }
     if(field.type==="text"?!actual.includes(filter):actual!==filter)return false;
   }
   return true;

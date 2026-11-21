@@ -126,7 +126,6 @@ function SearchControls({filters,update,toggleChoice,reset,apply,hasLocation,mem
       {(expanded||filters.kidPlans)&&chip("kidPlans",filters.kidPlans||"Desire for kids",
         ["","Wants children","Doesn’t want children","Undecided"].map(x=>menuRow(x||"Any",filters.kidPlans===x,()=>pick("kidPlans",x))),
         filters.kidPlans?()=>update("kidPlans",""):null)}
-      {(expanded||filters.search)&&chip("username",filters.search||"Search by username",<>{menuRow("Any username",!filters.search,()=>pick("search",""))}{memberChoices("displayName").map(name=>menuRow(name,filters.search===name,()=>pick("search",name)))}</>,filters.search?()=>update("search",""):null)}
     </div><div className="chip-order"><p>Order by</p>
       {chip("sort",filters.sort==="match"?"Special Blend":SEARCH_SORTS.find(s=>s.value===filters.sort)?.label,
         SEARCH_SORTS.map(s=>menuRow(s.value==="match"?"Special Blend (Match %)":s.label,filters.sort===s.value,()=>pick("sort",s.value))))}
@@ -248,7 +247,7 @@ export default function MatchesView({Photo}){
         </div>:<p className="ogcl-matches-empty">
           {tab==="quiver"?"No mutual Quickmatch Likes yet.":
             tab==="favorites"?"You haven't saved anyone to Favorites yet.":
-              applied.search?"No members match those search filters.":"No available members match your filters."}
+              "No available members match your filters."}
         </p>}
         {paged.totalPages>1&&<nav className="ogcl-pages" aria-label="Matches pages">
           {Array.from({length:paged.totalPages},(_,i)=><button key={i} type="button"
