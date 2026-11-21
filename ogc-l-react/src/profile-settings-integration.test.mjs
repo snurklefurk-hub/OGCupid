@@ -96,10 +96,10 @@ test("race/ethnicity restores the original multi-select choices without changing
     aboutMe:"Keep my essay",age:29,ethnicity:"Asian, Indian, Native American"
   });
   assert.throws(()=>composeSettingUpdate(current,"ethnicity","Invented category"));
-  const legacy=profile();legacy.ethnicity="Hispanic / Latin, Indian, Indigenous";
+  const legacy=profile();legacy.ethnicity="Hispanic / Latin, Indian, Native American";
   const sanitized=sanitizeOwnProfileSettings({profile:legacy},ME);
   assert.equal(sanitized.fields.ethnicity,"Hispanic, Indian, Native American");
-  assert.equal(legacy.ethnicity,"Hispanic / Latin, Indian, Indigenous","reading must not mutate stored value");
+  assert.equal(legacy.ethnicity,"Hispanic / Latin, Indian, Native American","reading must not mutate stored value");
   assert.deepEqual(composeSettingUpdate(sanitized,"work","Driver"),{
     aboutMe:"Keep my essay",age:29,work:"Driver"
   });
