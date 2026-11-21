@@ -1,6 +1,7 @@
 import React, {createContext, useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
 import {createAuthClient} from "@neon/auth";
 import {configuredMemberEndpoints, createMemberGateway, MemberAccessError} from "./member-gateway.mjs";
+import {clearSearchCache} from "./member-search-cache.mjs";
 
 // Only Vite's deliberately configured public endpoint URLs are used.
 // Account data, JWTs, passwords and database credentials are not persisted by this app.
@@ -47,7 +48,7 @@ export function MemberSessionProvider({children}) {
     if(quiet && quietCheckInFlight.current)return false;
     const current=++version.current;
     if(quiet)quietCheckInFlight.current=true;
-    else setSession(blank); // Never retain another identity across sign-in.
+    else {clearSearchCache();setSession(blank);} // Never retain another identity across sign-in.
     if (!gateway) {
       if(!quiet)setSession({...blank, kind:"unconfigured",
         error:"Member sign-in is not configured for this preview build."});
@@ -96,7 +97,7 @@ export function MemberSessionProvider({children}) {
     if (!gateway) throw new MemberAccessError("unavailable", "Sign-in is not configured.");
     // Clear any previous member's data before accepting a new identity.
     const current = ++version.current;
-    setSession(blank);
+    clearSearchCache();setSession(blank);
     try {
       await gateway.signIn(email, password);
       if (current !== version.current) return false;
@@ -111,7 +112,7 @@ export function MemberSessionProvider({children}) {
 
   const signOut = useCallback(async () => {
     const current = ++version.current;
-    setSession(blank); // Conceal member information before contacting the server.
+    clearSearchCache();setSession(blank); // Conceal member information before contacting the server.
     lastChecked.current = 0;
     try {
       if (gateway) await gateway.signOut();
@@ -240,6 +241,10 @@ export function MemberSessionProvider({children}) {
     return gateway.saveQuickmatchDecision(targetUserId,decision);
   }, []);
 
+  const searchMembers=useCallback(async(criteria,page)=>{
+    if(!gateway)throw new MemberAccessError("unavailable","MATCHES search unavailable.");
+    return gateway.searchMembers(criteria,page);
+  },[]);
   const loadConnections=useCallback(async()=>{
     if(!gateway)throw new MemberAccessError("unavailable","Connections unavailable.");
     return gateway.loadConnections();
@@ -250,7 +255,9 @@ export function MemberSessionProvider({children}) {
   },[]);
   const setSiteBlock=useCallback(async(id,blocked)=>{
     if(!gateway)throw new MemberAccessError("unavailable","Blocks unavailable.");
-    return gateway.setSiteBlock(id,blocked);
+    const result=await gateway.setSiteBlock(id,blocked);
+    clearSearchCache();
+    return result;
   },[]);
   const reportProfile=useCallback(async(id,reason)=>{
     if(!gateway)throw new MemberAccessError("unavailable","Reporting unavailable.");
@@ -316,6 +323,7 @@ export function MemberSessionProvider({children}) {
   const deleteMyAccount=useCallback(async(password,confirm)=>{
     if(!gateway)throw new MemberAccessError("unavailable","Account deletion is unavailable.");
     await gateway.deleteMyAccount(password,confirm);
+    clearSearchCache();
     ++version.current;
     setSession({...blank,kind:"guest"});
     return true;
@@ -330,12 +338,12 @@ export function MemberSessionProvider({children}) {
     ...session, refresh, signIn, signOut, getMemberAvatar, getMemberGallery,
     loadOwnEssays, saveOwnEssay, loadOwnSettings, saveOwnSetting, saveOwnLookingFor, getPublicProfile,
     loadMatchAnswers, saveMatchAnswer, loadQuickmatchDecisions, saveQuickmatchDecision,
-    loadConnections,setFavorite,setSiteBlock,reportProfile,
+    loadConnections,setFavorite,setSiteBlock,reportProfile,searchMembers,
     loadInbox, loadConversation, sendMessage, setMessageBlock, reportMessage, adminRequest,
     communityRequest,
     accountRequest, signUp, requestRecovery, resetPassword, requestEmailVerification, deleteMyAccount
   }), [session, refresh, signIn, signOut, getMemberAvatar, getMemberGallery, loadOwnEssays, saveOwnEssay,
-    getPublicProfile, loadMatchAnswers, saveMatchAnswer]);
+    getPublicProfile, loadMatchAnswers, saveMatchAnswer, searchMembers]);
 
   return <MemberSessionContext.Provider value={value}>{children}</MemberSessionContext.Provider>;
 }
