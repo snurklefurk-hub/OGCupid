@@ -62,6 +62,11 @@ export default function ProfileSettings(){
     const chosen=new Set(draft.split(", ").filter(Boolean));
     if(checked)chosen.add(option);else chosen.delete(option);
     const field=PROFILE_SETTINGS_FIELDS.find(f=>f.key===active);
+    if(active==="pets"&&checked){
+      const none=field.multi[0];
+      if(option===none){setDraft(none);return;}
+      chosen.delete(none);
+    }
     setDraft((field?.multi||[]).filter(v=>chosen.has(v)).join(", "));
   };
   async function save(event){
