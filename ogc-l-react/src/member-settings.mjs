@@ -1,4 +1,5 @@
 import {validAgeRange} from "./member-looking-for.mjs";
+import {PET_CHOICES,selectedPets} from "./member-pets.mjs";
 // Staging Profile Settings: only fields stored by the established Neon /profile API.
 // Signup display name, DOB, and derived age are deliberately NOT writable here.
 const genders=["Man","Woman","Transman","Transwoman","Something else"];
@@ -18,7 +19,7 @@ const fields=[
     options:["Thin","Athletic","Average","Jacked","Chubby","Overweight"]},
   {key:"ethnicity",label:"Ethnicity",max:200,group:"details"},
   {key:"kids",label:"Children",max:80,group:"details"},
-  {key:"pets",label:"Pets",max:80,group:"details"},
+  {key:"pets",label:"Pets",max:80,group:"details",multi:PET_CHOICES},
   {key:"smoking",label:"Smoking",max:60,group:"details",options:["Never","Sometimes","Often"]},
   {key:"vaping",label:"Vaping",max:30,group:"details",options:habits},
   {key:"drinking",label:"Drinking",max:60,group:"details",options:["Never","Sometimes","Often"]},
@@ -88,6 +89,8 @@ export function composeSettingUpdate(profile,key,value) {
     value.trim()!==profile.fields?.[key])
     throw Error("Choose valid profile preferences");
   // Partial profile PUT: only this field + required aboutMe/age. All other
+  if(key==="pets"&&value&&value!==profile.fields?.pets&&!selectedPets(value).length)
+    throw Error("Choose pet types or Doesn’t have pets");
   // essays, locality, identity, and preferences are untouched server-side.
   return {aboutMe:profile.aboutMe,age:profile.age,[key]:value.trim()};
 }
