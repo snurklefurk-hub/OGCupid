@@ -3,7 +3,7 @@ import {NavLink} from "react-router-dom";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {
   SEARCH_ADVANCED_GROUPS,SEARCH_SORTS,savedSearchDefaults,
-  filterAndSortMembers,isOnlineNow,pageMembers
+  filterAndSortMembers,isOnlineNow,pageMembers,activityBucket,ACTIVITY_WINDOWS
 } from "./member-directory.mjs";
 import {LOOKING_GENDERS,LOOKING_INTENTIONS,LOOKING_RADII,AGE_CHOICES} from "./member-looking-for.mjs";
 import "./matches.css";
@@ -15,19 +15,8 @@ function score(member){
     ?member.matchPercent+"% Match (provisional)"
     :"Match score not yet available";
 }
-function lastOnline(date,now){
-  if(typeof date!=="string")return null;
-  const time=Date.parse(date);
-  if(!Number.isFinite(time)||time>now)return null;
-  if(isOnlineNow(date,now))return "Online now";
-  const minutes=Math.floor((now-time)/60_000);
-  if(minutes<60)return "Last online "+Math.max(minutes,3)+" min ago";
-  const hours=Math.floor(minutes/60);
-  if(hours<24)return "Last online "+hours+" hr ago";
-  return "Last online "+Math.floor(hours/24)+" days ago";
-}
 function MemberResult({member,Photo,favorited,onFavorite,busy,now}){
-  const status=lastOnline(member.lastSeenAt,now);
+  const status=activityBucket(member.lastSeenAt,now);
   return <article className="ogcl-match-result">
     <NavLink to={"/profiles/"+encodeURIComponent(member.slug)} className="ogcl-match-result-photo"
       aria-label={"View "+member.displayName+"'s profile"}><Photo member={member}/></NavLink>
@@ -41,7 +30,7 @@ function MemberResult({member,Photo,favorited,onFavorite,busy,now}){
         ].filter(Boolean).join(" · ")||"Member profile"}
       </p>
       {status&&<p className={"ogcl-match-result-presence"+(isOnlineNow(member.lastSeenAt,now)?" is-online":"")}>
-        {status}</p>}
+        {status==="Online now"?status:"Last online: "+status.toLowerCase()}</p>}
       {member.aboutMe&&<p className="ogcl-match-result-blurb">{member.aboutMe}</p>}
       <button type="button" className="ogcl-match-favorite" disabled={busy}
         onClick={()=>onFavorite(member.userId,!favorited)}>
@@ -96,25 +85,27 @@ function SearchControls({filters,update,toggleChoice,reset,apply,hasLocation,mem
   function choices(key,label,options){
     const selected=filters[key];
     const names=options.filter(x=>selected.includes(x.value)).map(x=>x.label);
-    return chip(key,names.join(", ")||label,options.map(x=>menuRow(x.label,selected.includes(x.value),()=>toggleChoice(key)(x.value,!selected.includes(x.value)))),selected.length?()=>update(key,[]):null);
+    return chip(key,names.length?label+": "+names.join(", "):label,options.map(x=>menuRow(x.label,selected.includes(x.value),()=>toggleChoice(key)(x.value,!selected.includes(x.value)))),selected.length?()=>update(key,[]):null);
   }
   const fields=SEARCH_ADVANCED_GROUPS.flatMap(g=>g.fields);
   const [extra,setExtra]=useState([]);
-  const visible=new Set(["status","height","smoking","education",...extra,...Object.keys(filters.advanced)]);
+  const primary=new Set(["status","relationshipType","ethnicity"]);
+  const visible=new Set([...extra,...Object.keys(filters.advanced).filter(key=>filters.advanced[key])]);
   const advanced=(key,value)=>update("advanced",{...filters.advanced,[key]:value});
-  function fieldChip(field){
+  function fieldChip(field,title=field.label){
     const value=filters.advanced[field.key]||"";
     const options=field.options||memberChoices(field.key);
     const choose=x=>{advanced(field.key,x);closeMenu();};
     const editor=<>{menuRow("Any",!value,()=>choose(""))}
       {options.map(x=>menuRow(x,value===x,()=>choose(x)))}
       {!options.length&&<small>No values in available profiles.</small>}</>;
-    return chip(field.key,field.label+(value?": "+value:""),editor,value?()=>advanced(field.key,""):null);
+    return chip(field.key,title+(value?": "+value:""),editor,value?()=>advanced(field.key,""):null);
   }
   return <form ref={form} className="classic-search" onSubmit={e=>{e.preventDefault();apply();setOpen("");}}
     onKeyDown={e=>{if(e.key==="Escape"&&open){document.getElementById("chip-"+open)?.focus();setOpen("");}}}>
     <p>Show me</p><div className="chip-flow">
-      {choices("genders","Interested in",LOOKING_GENDERS)}
+      {choices("genders","Gender",LOOKING_GENDERS)}
+      {choices("whoLike","Who like",LOOKING_GENDERS)}
       {chip("age",`Ages ${filters.ageMin} to ${filters.ageMax}`,<div className="age-menu">{["ageMin","ageMax"].map(key=><div key={key}>
         <strong>{key==="ageMin"?"From":"To"}</strong><div className="age-options" aria-label={key==="ageMin"?"Minimum age":"Maximum age"}>
         {AGE_CHOICES.filter(n=>key==="ageMin"?n<=filters.ageMax:n>=filters.ageMin).map(n=>menuRow(n,filters[key]===n,()=>update(key,n)))}</div></div>)}</div>)}
@@ -122,10 +113,19 @@ function SearchControls({filters,update,toggleChoice,reset,apply,hasLocation,mem
         {hasLocation&&LOOKING_RADII.map(r=>menuRow(r.value?r.value+" miles":"Anywhere",r.value===filters.radius,()=>pick("radius",r.value)))}
         {!hasLocation&&<small>Save a verified location to filter by miles.</small>}</>)}
       {choices("intentions","Looking for",LOOKING_INTENTIONS)}
-      {chip("username",filters.search||"Search by username",<>{menuRow("Any username",!filters.search,()=>pick("search",""))}{memberChoices("displayName").map(name=>menuRow(name,filters.search===name,()=>pick("search",name)))}</>,filters.search?()=>update("search",""):null)}
-      {fields.filter(f=>visible.has(f.key)).map(fieldChip)}
-      {chip("advanced","Advanced",SEARCH_ADVANCED_GROUPS.map(g=><div key={g.name}><strong>{g.name}</strong>
-        {g.fields.map(f=><button key={f.key} className="chip-option" type="button" onClick={()=>{
+      {fieldChip(fields.find(f=>f.key==="status"),"Who are")}
+      {fieldChip(fields.find(f=>f.key==="relationshipType"),"That are")}
+      {chip("activity",filters.activity||"Last online",["",...ACTIVITY_WINDOWS.map(([label])=>label)].map(label=>
+        menuRow(label||"Any time",filters.activity===label,()=>pick("activity",label))))}
+      {fieldChip(fields.find(f=>f.key==="ethnicity"),"Race")}
+    </div><div className="chip-extras">
+      {fields.filter(f=>visible.has(f.key)&&!primary.has(f.key)).map(f=>fieldChip(f))}
+      {visible.has("kidPlans")&&chip("kidPlans",filters.kidPlans||"Desire for kids",
+        ["","Wants children","Doesn’t want children","Undecided"].map(x=>menuRow(x||"Any",filters.kidPlans===x,()=>pick("kidPlans",x))),
+        filters.kidPlans?()=>update("kidPlans",""):null)}
+      {visible.has("username")&&chip("username",filters.search||"Search by username",<>{menuRow("Any username",!filters.search,()=>pick("search",""))}{memberChoices("displayName").map(name=>menuRow(name,filters.search===name,()=>pick("search",name)))}</>,filters.search?()=>update("search",""):null)}
+      {chip("advanced","Advanced",[...SEARCH_ADVANCED_GROUPS,{name:"Other",fields:[{key:"kidPlans",label:"Desire for kids"},{key:"username",label:"Username"}]}].map(g=><div key={g.name}><strong>{g.name}</strong>
+        {g.fields.filter(f=>!primary.has(f.key)).map(f=><button key={f.key} className="chip-option" type="button" onClick={()=>{
           setExtra(prev=>[...new Set([...prev,f.key])]);setOpen(f.key);
           requestAnimationFrame(()=>document.getElementById("chip-"+f.key)?.focus());
         }}>{f.label} ›</button>)}</div>))}
@@ -191,7 +191,7 @@ export default function MatchesView({Photo}){
     const defaults=savedSearchDefaults(savedSettings);setFilters(defaults);setApplied(defaults);
   }
   useEffect(()=>setPage(1),[tab,applied]);
-  const searchResults=useMemo(()=>filterAndSortMembers(discovery,applied),[discovery,applied]);
+  const searchResults=useMemo(()=>filterAndSortMembers(discovery,applied,now),[discovery,applied,now]);
   const active=connections||emptyConnections;
   const results=tab==="search"?searchResults:tab==="quiver"?active.quiver:active.favoriteMembers;
   const paged=pageMembers(results,page,24);

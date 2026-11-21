@@ -1,11 +1,12 @@
 /* OG Cupid classic Matches — compact white results and flat blue controls. */
 .classic-search{background:white;color:#344f74;margin-bottom:12px;font:11px Verdana,sans-serif}
 .classic-search p{font:bold 10px Verdana,sans-serif;color:#737373;margin:0 0 9px}
-.chip-flow{display:flex;flex-wrap:wrap;gap:5px 7px;max-width:535px}
+.chip-flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px 8px;max-width:640px}
+.chip-extras{display:flex;flex-wrap:wrap;gap:6px 8px;margin-top:7px;max-width:640px}
 .filter-chip{position:relative;display:inline-flex;align-items:center;min-width:0;max-width:100%;box-sizing:border-box;border:1px solid #c3d2df;border-radius:14px;background:linear-gradient(#edf3f8,#e2ebf4);box-shadow:0 1px 1px #0002}
 .classic-search .filter-chip>button{display:flex;align-items:center;justify-content:space-between;gap:14px;max-width:100%;min-width:0;border:0;background:transparent;color:#305580;padding:3px 10px;font:bold 11px/15px Verdana,sans-serif;text-align:left;cursor:pointer;overflow-wrap:anywhere}
-.chip-flow>.filter-chip{min-width:min(112px,100%)}
-.chip-flow>.filter-chip:first-child,.chip-flow>.green{min-width:min(148px,100%)}
+.chip-extras>.green{min-width:min(148px,100%)}
+@media(max-width:520px){.classic-search .chip-flow .filter-chip>button{gap:3px;padding:3px 6px}.chip-flow{gap:5px}}
 .classic-search .filter-chip>button:first-child{flex:1}
 .classic-search .filter-chip>button+button{padding:0 6px;color:#526d88}
 .filter-chip.green{background:linear-gradient(#e0edce,#cedfb8);border-color:#bbcfaa}
