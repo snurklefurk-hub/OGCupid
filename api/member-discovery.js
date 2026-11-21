@@ -21,7 +21,7 @@ export function adjustedViewerMatchPercent(rawPercent,penaltyPoints=0) {
 
 export async function handleDiscovery(request, userId, withMember, json) {
   if (request.method !== "GET") return json(request, {error:"Method not allowed"}, 405);
-  const isSearch=new URL(request.url).pathname.replace(/\\/$/,"")==="/discovery-search";
+  const isSearch=new URL(request.url).pathname.replace(/\/$/,"")==="/discovery-search";
   let criteria=null,page=1;
   if(isSearch){
     const params=new URL(request.url).searchParams;
