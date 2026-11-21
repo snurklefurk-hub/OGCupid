@@ -26,14 +26,15 @@ const questionScore = member => member.matchPercent === null
   : member.matchPercent + "% question match · " + member.commonQuestions + " shared";
 
 export function MemberPhoto({member}) {
-  const {kind, getMemberAvatar} = useMemberSession();
+  const {kind, user, getMemberAvatar} = useMemberSession();
   const [url, setUrl] = useState(null);
   useEffect(() => {
     if (!["member","onboarding"].includes(kind) || !member?.userId) return;
     let closed = false;
     let created = null;
     setUrl(null);
-    void getMemberAvatar(member.userId).then(image => {
+    if(member.avatarPhotoId===null)return;
+    void getMemberAvatar(member.userId,member.avatarPhotoId).then(image => {
       if (closed || !image) return;
       created = URL.createObjectURL(image);
       setUrl(created);
@@ -42,7 +43,7 @@ export function MemberPhoto({member}) {
       closed = true;
       if (created) URL.revokeObjectURL(created);
     };
-  }, [kind, getMemberAvatar, member?.userId]);
+  }, [kind, user?.id, getMemberAvatar, member?.userId, member?.avatarPhotoId]);
   return url
     ? <img className="ogcl-member-photo" src={url} alt="" loading="lazy" />
     : <span className="ogcl-member-photo ogcl-photo-placeholder" aria-hidden="true">♥</span>;
