@@ -80,20 +80,28 @@ test("controlled fields and multi-choices validate with old values preserved",()
 });
 test("race/ethnicity restores the original multi-select choices without changing storage keys",()=>{
   assert.deepEqual(ETHNICITY_CHOICES,[
-    "Asian","Black","Hispanic / Latin","Indigenous",
+    "Asian","Black","Hispanic","Indian","Indigenous",
     "Middle Eastern","Pacific Islander","White","Other"
   ]);
   const field=PROFILE_SETTINGS_FIELDS.find(item=>item.key==="ethnicity");
+  assert.ok(!ETHNICITY_CHOICES.includes("Hispanic / Latin"));
   assert.equal(field.label,"Race / ethnicity");
   assert.deepEqual(field.multi,ETHNICITY_CHOICES);
   const current=sanitizeOwnProfileSettings({profile:profile()},ME);
   assert.deepEqual(composeSettingUpdate(current,"ethnicity","Black, White"),{
     aboutMe:"Keep my essay",age:29,ethnicity:"Black, White"
   });
-  assert.deepEqual(composeSettingUpdate(current,"ethnicity","Asian, Indigenous"),{
-    aboutMe:"Keep my essay",age:29,ethnicity:"Asian, Indigenous"
+  assert.deepEqual(composeSettingUpdate(current,"ethnicity","Asian, Indian, Indigenous"),{
+    aboutMe:"Keep my essay",age:29,ethnicity:"Asian, Indian, Indigenous"
   });
   assert.throws(()=>composeSettingUpdate(current,"ethnicity","Invented category"));
+  const legacy=profile();legacy.ethnicity="Hispanic / Latin, Indian";
+  const sanitized=sanitizeOwnProfileSettings({profile:legacy},ME);
+  assert.equal(sanitized.fields.ethnicity,"Hispanic, Indian");
+  assert.equal(legacy.ethnicity,"Hispanic / Latin, Indian","reading must not mutate stored value");
+  assert.deepEqual(composeSettingUpdate(sanitized,"work","Driver"),{
+    aboutMe:"Keep my essay",age:29,work:"Driver"
+  });
 });
 test("gateway saves a race edit without changing other saved profile fields",async()=>{
   const {service,read,calls}=mock();

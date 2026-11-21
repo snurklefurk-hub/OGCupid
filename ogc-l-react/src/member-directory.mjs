@@ -1,5 +1,5 @@
 import {PET_CHOICES,selectedPets} from "./member-pets.mjs";
-import {ETHNICITY_CHOICES} from "./member-settings.mjs";
+import {ETHNICITY_CHOICES,presentEthnicity} from "./member-settings.mjs";
 // Directory operations on *real, already authenticated* discovery results.
 // The backend alone decides who is eligible. No inferred location, offline
 // activity, profile preference, or score is manufactured in this module.
@@ -77,7 +77,7 @@ function matchesAdvanced(member,advanced) {
       continue;
     }
     if(field.key==="ethnicity"){
-      if(!splitChoices(member.ethnicity).includes(filter))return false;
+      if(!splitChoices(presentEthnicity(member.ethnicity)).includes(filter))return false;
       continue;
     }
     if(field.type==="text"?!actual.includes(filter):actual!==filter)return false;

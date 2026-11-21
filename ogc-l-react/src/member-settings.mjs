@@ -6,9 +6,16 @@ const genders=["Man","Woman","Transman","Transwoman","Something else"];
 // Original profile categories from the November 13 structured details editor.
 // Keep the established ethnicity API/storage key; no database migration needed.
 export const ETHNICITY_CHOICES=Object.freeze([
-  "Asian","Black","Hispanic / Latin","Indigenous",
+  "Asian","Black","Hispanic","Indian","Indigenous",
   "Middle Eastern","Pacific Islander","White","Other"
 ]);
+// Keep legacy saved values intact; present the approved label in current UI.
+// This only normalizes displayed strings and never writes or migrates stored data.
+export function presentEthnicity(value) {
+  return typeof value==="string" ? value.split(",")
+    .map(choice=>choice.trim()==="Hispanic / Latin"?"Hispanic":choice.trim())
+    .filter(Boolean).join(", ") : "";
+}
 const habits=["Never","Sometimes","Often","Just weed",
   "Just weed · Sometimes","Just weed · Often","Just weed · Never"];
 const fields=[
@@ -64,7 +71,7 @@ export function sanitizeOwnProfileSettings(payload,memberId) {
   for(const def of PROFILE_SETTINGS_FIELDS){
     if(typeof p[def.key]!=="string" || p[def.key].length>def.max)
       throw Error("Saved profile settings contain invalid data");
-    values[def.key]=p[def.key];
+    values[def.key]=def.key==="ethnicity"?presentEthnicity(p[def.key]):p[def.key];
   }
   return Object.freeze({
     userId:memberId.toLowerCase(),displayName:p.displayName.slice(0,60),
