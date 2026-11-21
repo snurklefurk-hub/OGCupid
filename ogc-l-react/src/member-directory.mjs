@@ -3,7 +3,7 @@ import {ETHNICITY_CHOICES,presentEthnicity} from "./member-settings.mjs";
 // Directory operations on *real, already authenticated* discovery results.
 // The backend alone decides who is eligible. No inferred location, offline
 // activity, profile preference, or score is manufactured in this module.
-export const DIRECTORY_PAGE_SIZE = 24;
+export const DIRECTORY_PAGE_SIZE = 20;
 
 export const SEARCH_ADVANCED_GROUPS = Object.freeze([
   Object.freeze({name:"Appearance",fields:Object.freeze([
