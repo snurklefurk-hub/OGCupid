@@ -44,7 +44,7 @@ test("Race filter recognizes each saved category and never substring-matches ano
     {userId:"e",displayName:"E",age:29,ethnicity:"Blackish"},
     {userId:"f",displayName:"F",age:29,ethnicity:"Hispanic / Latin, Indian"},
     {userId:"g",displayName:"G",age:29,ethnicity:"Hispanic"},
-    {userId:"h",displayName:"H",age:29,ethnicity:"Indigenous"},
+    {userId:"h",displayName:"H",age:29,ethnicity:"Native American"},
     {userId:"i",displayName:"I",age:29,ethnicity:"Native American"}
   ];
   const race=SEARCH_ADVANCED_GROUPS.flatMap(group=>group.fields)
