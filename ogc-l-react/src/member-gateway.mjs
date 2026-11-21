@@ -109,6 +109,9 @@ export function sanitizeDiscovery(data, memberId) {
       return Object.freeze({
         userId: String(p.userId).toLowerCase(), slug: p.slug,
         displayName: p.displayName.slice(0, 60),
+        ...(p.avatarPhotoId===null?{avatarPhotoId:null}:
+          UUID.test(String(p.avatarPhotoId||""))?
+            {avatarPhotoId:p.avatarPhotoId.toLowerCase()}:{}),
         ...(Number.isInteger(p.age)&&p.age>=18&&p.age<=120?{age:p.age}:{}),
         ...(typeof p.cityRegion==="string"?{cityRegion:p.cityRegion.slice(0,120)}:{}),
         ...details,
