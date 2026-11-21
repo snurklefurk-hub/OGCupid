@@ -10,6 +10,13 @@ const page = readFileSync(new URL("../public/profiles/index.html",import.meta.ur
 const view = readFileSync(new URL("../ogc-l-react/src/PublicMemberProfile.jsx",import.meta.url),"utf8");
 const app = readFileSync(new URL("../ogc-l-react/src/App.jsx",import.meta.url),"utf8");
 const provider = readFileSync(new URL("../ogc-l-react/src/MemberSessionProvider.jsx",import.meta.url),"utf8");
+const legacyEditor = readFileSync(new URL("../member-app/main.js",import.meta.url),"utf8");
+const profileSettings = readFileSync(new URL("../ogc-l-react/src/member-settings.mjs",import.meta.url),"utf8");
+test("pronouns are absent from all active and legacy profile code paths", () => {
+  assert.doesNotMatch(api,/\bpronouns\b/i);
+  assert.doesNotMatch(profileSettings,/\bpronouns\b/i);
+  assert.doesNotMatch(legacyEditor,/\bpronouns\b/i);
+});
 
 test("profile slugs are stable and uniquely allocated by the database", () => {
   assert.match(migration,/user_id uuid PRIMARY KEY REFERENCES app_private\.member_profiles/);
