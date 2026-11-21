@@ -239,8 +239,8 @@ button:disabled{opacity:.55;cursor:not-allowed}
  .og-preview-hero{gap:10px}
 }
 
-/* Early-OkCupid-style personal basics: readable selections, no free-text
-   pronouns, orientation or generic gender form fields. */
+/* Early-OkCupid-style personal basics: readable selections instead of
+   generic free-text identity form fields. */
 .profile-edit-section .classic-choice-group{
   border:0;border-top:1px solid #d8d1df;margin:5px 0 1px;padding:15px 0 7px;
   min-width:0;
