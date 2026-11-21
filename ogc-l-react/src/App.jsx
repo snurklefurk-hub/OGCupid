@@ -1,24 +1,32 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {lazy, Suspense, useEffect, useMemo, useState} from "react";
 import {Navigate, NavLink, Outlet, Route, Routes} from "react-router-dom";
 import {defaultRoute, primaryNavigation} from "./navigation.mjs";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {SidebarPromos, ProfileFloater, ProfileRefinement} from "./ClassicSidebar.jsx";
 import {filterAndSortMembers, pageMembers} from "./member-directory.mjs";
-import {EmbeddedEditorial,PersonaRoute} from "./EditorialPages.jsx";
-import ContactPage from "./ContactPage.jsx";
 import {recommendedPhotoMembers} from "./classic-editorial.mjs";
-import ProfileEditor from "./ProfileEditor.jsx";
-import ProfileSettings from "./ProfileSettings.jsx";
-import PublicMemberProfile from "./PublicMemberProfile.jsx";
-import QuickmatchView from "./QuickmatchView.jsx";
-import MessagesView from "./MessagesView.jsx";
-import MatchesView from "./MatchesView.jsx";
-import CommunityChat from "./CommunityChat.jsx";
-import AdminDashboard from "./AdminDashboard.jsx";
-import MatchQuestions from "./MatchQuestions.jsx";
-import Onboarding from "./Onboarding.jsx";
-import PhotoManager from "./PhotoManager.jsx";
-import {JoinForm,RecoveryForm,VerifyForm,AccountManagement} from "./AccountPages.jsx";
+
+// Route components load only when visited. No visual redesign or new animation.
+const loadEditorial=()=>import("./EditorialPages.jsx");
+const EmbeddedEditorial=lazy(()=>loadEditorial().then(m=>({default:m.EmbeddedEditorial})));
+const PersonaRoute=lazy(()=>loadEditorial().then(m=>({default:m.PersonaRoute})));
+const ContactPage=lazy(()=>import("./ContactPage.jsx"));
+const ProfileEditor=lazy(()=>import("./ProfileEditor.jsx"));
+const ProfileSettings=lazy(()=>import("./ProfileSettings.jsx"));
+const PublicMemberProfile=lazy(()=>import("./PublicMemberProfile.jsx"));
+const QuickmatchView=lazy(()=>import("./QuickmatchView.jsx"));
+const MessagesView=lazy(()=>import("./MessagesView.jsx"));
+const MatchesView=lazy(()=>import("./MatchesView.jsx"));
+const CommunityChat=lazy(()=>import("./CommunityChat.jsx"));
+const AdminDashboard=lazy(()=>import("./AdminDashboard.jsx"));
+const MatchQuestions=lazy(()=>import("./MatchQuestions.jsx"));
+const Onboarding=lazy(()=>import("./Onboarding.jsx"));
+const PhotoManager=lazy(()=>import("./PhotoManager.jsx"));
+const loadAccounts=()=>import("./AccountPages.jsx");
+const JoinForm=lazy(()=>loadAccounts().then(m=>({default:m.JoinForm})));
+const RecoveryForm=lazy(()=>loadAccounts().then(m=>({default:m.RecoveryForm})));
+const VerifyForm=lazy(()=>loadAccounts().then(m=>({default:m.VerifyForm})));
+const AccountManagement=lazy(()=>loadAccounts().then(m=>({default:m.AccountManagement})));
 
 const profileHref = slug => "#/profiles/" + encodeURIComponent(slug);
 const questionScore = member => member.matchPercent === null
@@ -147,6 +155,10 @@ function TopMemberNav() {
   </nav>;
 }
 
+function RouteLoading(){
+  return <section className="ogcl-view"><p role="status">Loading page…</p></section>;
+}
+
 function AppShell() {
   return (
     <div className="ogcl-app">
@@ -154,7 +166,7 @@ function AppShell() {
       <LeftRail />
       <main id="ogcl-content" className="ogcl-center" tabIndex={-1}>
         <div className="ogcl-banner"><span className="ogcl-banner-accent" aria-hidden="true" /><TopMemberNav/></div>
-        <Outlet />
+        <Suspense fallback={<RouteLoading/>}><Outlet /></Suspense>
         <footer className="ogcl-footer" aria-label="Site information">
           <span>OG Cupid · Independent, not affiliated with OkCupid or Match Group.</span>
           <nav aria-label="Site links">
