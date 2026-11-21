@@ -232,8 +232,8 @@ export default function MatchesView({Photo}){
       </div>}
       {!loading&&!error&&!(tab==="search"&&discoveryUnavailable)&&<>
         <p className="ogcl-matches-result-count">
-          {results.length} {results.length===1?"member":"members"} ·
-          Search currently checks the 250 most recent eligible profiles.
+          {results.length} {results.length===1?"member":"members"}
+          {tab==="search"&&" · Search currently checks the 250 most recent eligible profiles."}
         </p>
         {paged.items.length?<div className="ogcl-matches-results">
           {paged.items.map(member=><MemberResult key={member.userId} member={member}
