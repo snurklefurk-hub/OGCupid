@@ -69,10 +69,14 @@ test("valid signed-in member checks server onboarding FIRST and returns only whi
   assert.deepEqual(result.user,{id:YOU,name:"Test Person"});
   assert.equal(result.onboarding.explored,true);
   assert.deepEqual(result.profile,{userId:YOU,displayName:"Demo",slug:"demo"});
-  assert.deepEqual(result.discovery,[{
-    userId:THEM,slug:"test-member",displayName:"Test Member",matchPercent:58,
-    confidence:"low",commonQuestions:1
-  }]);
+  assert.equal(result.discovery.length,1);
+  assert.equal(result.discovery[0].userId,THEM);
+  assert.equal(result.discovery[0].slug,"test-member");
+  assert.equal(result.discovery[0].matchPercent,58);
+  assert.equal(result.discovery[0].createdAt,null);
+  assert.equal(result.discovery[0].lastSeenAt,null);
+  assert.equal(result.discovery[0].distanceMiles,null);
+  assert.equal(result.discovery[0].commonQuestions,1);
   assert.deepEqual(calls.map(([path])=>path),["/onboarding","/profile","/discovery"]);
   assert.equal(calls[0][1].headers.Authorization,"Bearer header.payload.signature");
   assert.equal(calls[0][1].credentials,"omit");
@@ -166,6 +170,41 @@ test("profile ownership is verified and only safe fields are retained",()=>{
     error=>error.code==="unavailable");
   assert.equal(sanitizeProfile({profile:null},YOU),null);
   assert.equal(sanitizeProfile(fakeProfile,YOU).slug,"demo");
+});
+
+test("public Search data is sanitized; private fields cannot leak",()=>{
+  const [member]=sanitizeDiscovery({profiles:[{
+    userId:THEM,slug:"ok",displayName:"Ok",matchPercent:74,
+    gender:"Woman",bodyType:"Athletic",relationshipGoal:"new friends",
+    aboutMe:"Real summary",distanceMiles:18,
+    createdAt:"2026-11-21T08:00:00Z",lastSeenAt:"2026-11-21T09:00:00Z",
+    email:"nope@example.invalid",searchOriginLat:33.0,rawAnswers:["private"]
+  }]},YOU);
+  assert.equal(member.gender,"Woman");
+  assert.equal(member.distanceMiles,18);
+  assert.equal(member.lastSeenAt,"2026-11-21T09:00:00.000Z");
+  assert.equal(member.aboutMe,"Real summary");
+  assert.equal(JSON.stringify(member).includes("nope@example.invalid"),false);
+  assert.equal(Object.hasOwn(member,"searchOriginLat"),false);
+  assert.equal(Object.hasOwn(member,"rawAnswers"),false);
+  const [bad]=sanitizeDiscovery({profiles:[{
+    userId:THEM,slug:"ok",displayName:"Ok",matchPercent:null,
+    distanceMiles:5.5,lastSeenAt:"not-a-date"
+  }]},YOU);
+  assert.equal(bad.distanceMiles,null);
+  assert.equal(bad.lastSeenAt,null);
+});
+
+test("presence heartbeat uses authenticated PUT without user-controlled identity",async()=>{
+  const {service,calls}=mockGateway({responseFor:async(url,opts)=>{
+    assert.equal(new URL(url).pathname,"/presence");
+    assert.equal(opts.method,"PUT");
+    assert.equal(opts.headers.Authorization,"Bearer header.payload.signature");
+    assert.equal(opts.body,undefined);
+    return good({lastSeenAt:"2026-11-21T11:00:00Z"});
+  }});
+  assert.equal(await service.recordPresence(),"2026-11-21T11:00:00Z");
+  assert.equal(calls.length,1);
 });
 
 test("unscored profiles remain eligible; malformed records and self are excluded",()=>{
