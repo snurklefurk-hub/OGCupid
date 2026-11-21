@@ -31,4 +31,4 @@ jobs:
           node --check public/desktop-2011-shell.js
       - name: Verify question scoring and member-only discovery privacy
         run: |
-          node --test api/discovery-score.test.js api/discovery-route.test.js api/profile-route.test.js
+          node --test api/discovery-score.test.js api/discovery-route.test.js api/member-search.test.js api/profile-route.test.js
