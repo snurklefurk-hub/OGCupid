@@ -137,6 +137,23 @@ export function MemberSessionProvider({children}) {
     };
   }, [refresh]);
 
+  // Only a visible, authenticated member tab reports activity. A recent
+  // heartbeat is proof of recent browser activity, not a permanent online bit.
+  useEffect(()=>{
+    if(!gateway || !["member","onboarding"].includes(session.kind))return;
+    let mostRecentAttempt=0;
+    const pulse=()=>{
+      if(document.visibilityState!=="visible" ||
+        Date.now()-mostRecentAttempt<75_000)return;
+      mostRecentAttempt=Date.now();
+      void gateway.recordPresence().catch(()=>{ /* Never invent activity on failure. */ });
+    };
+    pulse();
+    const timer=window.setInterval(pulse,90_000);
+    document.addEventListener("visibilitychange",pulse);
+    return()=>{window.clearInterval(timer);document.removeEventListener("visibilitychange",pulse);};
+  },[session.kind,session.user?.id]);
+
   const getMemberGallery = useCallback(async id => {
     if (!gateway) throw new MemberAccessError("unavailable","Member API is not configured.");
     return gateway.getMemberGallery(id);
