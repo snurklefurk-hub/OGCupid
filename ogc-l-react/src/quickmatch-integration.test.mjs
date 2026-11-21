@@ -74,7 +74,7 @@ test("guest, self, invalid UUID and invalid vote never hit database",async()=>{
   assert.equal(calls.length,0);
   assert.equal(guest.calls.length,0);
 });
-test("Quickmatch UI preserves original hearts and restricts full-profile links to mutuals",()=>{
+test("Quickmatch browsing stays a mini profile but both Like lists open full profiles",()=>{
   const read=name=>readFileSync(new URL(name,import.meta.url),"utf8");
   const app=read("./App.jsx"),view=read("./QuickmatchView.jsx");
   const photos=read("./QuickmatchPhotos.jsx"),restricted=read("./QuickmatchRestrictedProfile.jsx");
@@ -86,7 +86,15 @@ test("Quickmatch UI preserves original hearts and restricts full-profile links t
   assert.match(view,/queueOrder\.length>=5/);
   assert.match(view,/setQueueOrder\(current=>/);
   assert.match(view,/tab==="incoming"/);
-  assert.match(view,/mutual\?/);
+  assert.match(view,/useSearchParams/);
+  assert.match(view,/setSearchParams\(key==="matches"\?\{\}:\{tab:key\}\)/);
+  assert.match(view,/return <article key=\{member.userId\} className="ogcl-quickmatch-list-entry">/);
+  assert.match(view,/to=\{"\/profiles\/"\+encodeURIComponent\(member.slug\)\}/);
+  assert.match(view,/aria-label=\{"View "\+member.displayName\+"'s full profile"\}/);
+  assert.match(view,/const canLikeBack=tab==="incoming"&&!quickState.mutualUserIds.has\(member.userId\)/);
+  assert.match(view,/quickState.eligibleUserIds.has\(member.userId\)/);
+  assert.match(view,/\{canLikeBack&&<button type="button" className="ogcl-like-back"/);
+  assert.doesNotMatch(view,/setSelected\(|selectedMember|ogcl-quickmatch-selected|ogcl-quickmatch-restricted-button|return mutual\?/);
   assert.match(view,/<QuickmatchRestrictedProfile member=\{candidate\}>/);
   assert.match(view,/<HeartIcon kind="like"/);
   assert.match(restricted,/<QuickmatchPhotos memberId=\{member.userId\}/);
@@ -99,6 +107,7 @@ test("Quickmatch UI preserves original hearts and restricts full-profile links t
   assert.match(css,/quickmatch-hearts\.webp/);
   assert.match(css,/ogcl-heart-like/);
   assert.match(css,/ogcl-heart-dislike/);
+  assert.match(css,/ogcl-quickmatch-list-entry/);
   assert.match(read("./QuickmatchHearts.jsx"),/ogcl-heart-like/);
   assert.match(read("./QuickmatchHearts.jsx"),/ogcl-heart-dislike/);
   const image=readFileSync(new URL("../../public/quickmatch-hearts.webp",import.meta.url));
