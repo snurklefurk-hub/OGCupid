@@ -44,7 +44,7 @@ export function MemberPhoto({member}) {
       if (created) URL.revokeObjectURL(created);
     };
   }, [kind, user?.id, getMemberAvatar, member?.userId, member?.avatarPhotoId]);
-  return url
+  return (["member","onboarding"].includes(kind)&&url)
     ? <img className="ogcl-member-photo" src={url} alt="" loading="lazy" />
     : <span className="ogcl-member-photo ogcl-photo-placeholder" aria-hidden="true">♥</span>;
 }
