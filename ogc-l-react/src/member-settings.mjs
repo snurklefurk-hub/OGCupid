@@ -6,14 +6,18 @@ const genders=["Man","Woman","Transman","Transwoman","Something else"];
 // Original profile categories from the November 13 structured details editor.
 // Keep the established ethnicity API/storage key; no database migration needed.
 export const ETHNICITY_CHOICES=Object.freeze([
-  "Asian","Black","Hispanic","Indian","Indigenous",
+  "Asian","Black","Hispanic","Indian","Native American",
   "Middle Eastern","Pacific Islander","White","Other"
 ]);
 // Keep legacy saved values intact; present the approved label in current UI.
 // This only normalizes displayed strings and never writes or migrates stored data.
 export function presentEthnicity(value) {
   return typeof value==="string" ? value.split(",")
-    .map(choice=>choice.trim()==="Hispanic / Latin"?"Hispanic":choice.trim())
+    .map(choice=>{
+      const saved=choice.trim();
+      return saved==="Hispanic / Latin"?"Hispanic":
+        saved==="Indigenous"?"Native American":saved;
+    })
     .filter(Boolean).join(", ") : "";
 }
 const habits=["Never","Sometimes","Often","Just weed",
