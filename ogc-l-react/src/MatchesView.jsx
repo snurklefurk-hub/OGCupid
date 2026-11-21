@@ -3,9 +3,11 @@ import {NavLink} from "react-router-dom";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {
   SEARCH_ADVANCED_GROUPS,SEARCH_SORTS,savedSearchDefaults,
-  filterAndSortMembers,isOnlineNow,pageMembers,activityBucket,ACTIVITY_WINDOWS
+  isOnlineNow,pageMembers,activityBucket,ACTIVITY_WINDOWS
 } from "./member-directory.mjs";
 import {LOOKING_GENDERS,LOOKING_INTENTIONS,LOOKING_RADII,AGE_CHOICES} from "./member-looking-for.mjs";
+import {searchCacheKey} from "./search-contract.mjs";
+import {readSearchCache,storeSearchCache} from "./member-search-cache.mjs";
 import "./matches.css";
 
 const TABS=[["search","Search"],["quiver","Quiver"],["favorites","Favorites"]];
@@ -133,13 +135,17 @@ function SearchControls({filters,update,toggleChoice,reset,apply,hasLocation,mem
   </form>;
 }
 export default function MatchesView({Photo}){
-  const {discovery,discoveryLoading,discoveryUnavailable,refresh,loadConnections,setFavorite,loadOwnSettings}=useMemberSession();
+  const {user,discovery,searchMembers,loadConnections,setFavorite,loadOwnSettings}=useMemberSession();
   const [tab,setTab]=useState("search");
   const [filters,setFilters]=useState(()=>savedSearchDefaults(null));
   const [savedSettings,setSavedSettings]=useState(null);
   const [settingsError,setSettingsError]=useState("");
   const [applied,setApplied]=useState(filters);
   const [page,setPage]=useState(1);
+  const [searchRevision,setSearchRevision]=useState(0);
+  const [searchPage,setSearchPage]=useState(null);
+  const [searchLoading,setSearchLoading]=useState(true);
+  const [searchError,setSearchError]=useState("");
   const [connections,setConnections]=useState(null);
   const [connectionsLoading,setConnectionsLoading]=useState(true);
   const [connectionsError,setConnectionsError]=useState("");
@@ -195,10 +201,38 @@ export default function MatchesView({Photo}){
     const defaults=savedSearchDefaults(savedSettings);setFilters(defaults);setApplied(defaults);
   }
   useEffect(()=>setPage(1),[tab,applied]);
-  const searchResults=useMemo(()=>filterAndSortMembers(discovery,applied,now),[discovery,applied,now]);
+  const currentSearchKey=user?.id?searchCacheKey(user.id,applied,page):null;
+  useEffect(()=>{
+    if(!user?.id||tab!=="search")return;
+    let active=true;
+    const key=searchCacheKey(user.id,applied,page);
+    const cached=readSearchCache(user.id,applied,page);
+    setSearchPage(cached?{key,...cached}:null);
+    setSearchLoading(!cached);
+    setSearchError("");
+    // Even a cache hit is asynchronously refreshed by the authenticated
+    // server, which rechecks current discoverability and bilateral blocking.
+    void searchMembers(applied,page).then(result=>{
+      if(!active)return;
+      storeSearchCache(user.id,applied,page,result);
+      setSearchPage({key,...result});
+      setSearchLoading(false);
+      if(result.page!==page)setPage(result.page);
+    }).catch(()=>{
+      if(!active)return;
+      setSearchLoading(false);
+      setSearchError(cached?"Results couldn't be refreshed. Retry for current matches.":
+        "Member search is unavailable right now.");
+    });
+    return()=>{active=false;};
+  },[user?.id,tab,applied,page,searchRevision,searchMembers]);
+  const visibleSearch=searchPage?.key===currentSearchKey?searchPage:null;
   const active=connections||emptyConnections;
-  const results=tab==="search"?searchResults:tab==="quiver"?active.quiver:active.favoriteMembers;
-  const paged=pageMembers(results,page);
+  const results=tab==="search"?(visibleSearch?.profiles||[]):tab==="quiver"?active.quiver:active.favoriteMembers;
+  const paged=tab==="search"?{
+    items:results,page:visibleSearch?.page||page,
+    total:visibleSearch?.total||0,totalPages:visibleSearch?.totalPages||1
+  }:pageMembers(results,page);
   async function favorite(userId,value){
     if(busyId)return;
     if(!connections)return;
@@ -225,7 +259,7 @@ export default function MatchesView({Photo}){
     </nav>
     <div className="ogcl-matches-body">
       {tab==="search"&&<SearchControls filters={filters} update={update}
-        toggleChoice={toggleChoice} reset={reset} apply={()=>setApplied(filters)}
+        toggleChoice={toggleChoice} reset={reset} apply={()=>{setApplied(filters);setPage(1);setSearchRevision(x=>x+1);}}
         members={discovery}
         hasLocation={savedSettings?.lookingFor?.hasValidatedLocality===true}/>}
       {tab==="search"&&settingsError&&<p className="ogcl-matches-warning" role="status">{settingsError}</p>}
@@ -246,15 +280,15 @@ export default function MatchesView({Photo}){
         Favorites controls will be available after your saved Favorites load.
       </p>}
       {favoriteError&&<p role="alert" className="ogcl-error">{favoriteError}</p>}
-      {tab==="search"&&discoveryLoading&&<p role="status">Loading matches…</p>}
-      {tab==="search"&&discoveryUnavailable&&<div role="alert">
-        <p>Member search is unavailable right now.</p>
-        <button type="button" onClick={refresh}>Try again</button>
+      {tab==="search"&&searchLoading&&!visibleSearch&&<p role="status">Loading matches…</p>}
+      {tab==="search"&&searchError&&<div role="alert" className="ogcl-error">
+        <p>{searchError}</p>
+        <button type="button" onClick={()=>setSearchRevision(x=>x+1)}>Retry search</button>
       </div>}
-      {(tab==="search"?!discoveryLoading&&!discoveryUnavailable:!connectionsLoading&&!connectionsError&&!!connections)&&<>
+      {(tab==="search"?!!visibleSearch:!connectionsLoading&&!connectionsError&&!!connections)&&<>
         <p className="ogcl-matches-result-count">
-          {results.length} {results.length===1?"member":"members"}
-          {tab==="search"&&" · Search currently checks the 250 most recent eligible profiles."}
+          {paged.total} {paged.total===1?"member":"members"}
+          {tab==="search"&&visibleSearch?.truncated&&" · More eligible profiles may exist beyond the current search limit."}
         </p>
         {paged.items.length?<div className="ogcl-matches-results">
           {paged.items.map(member=><MemberResult key={member.userId} member={member}
