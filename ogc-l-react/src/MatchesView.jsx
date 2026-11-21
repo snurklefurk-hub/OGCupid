@@ -133,7 +133,7 @@ function SearchControls({filters,update,toggleChoice,reset,apply,hasLocation,mem
   </form>;
 }
 export default function MatchesView({Photo}){
-  const {discovery,discoveryUnavailable,refresh,loadConnections,setFavorite,loadOwnSettings}=useMemberSession();
+  const {discovery,discoveryLoading,discoveryUnavailable,refresh,loadConnections,setFavorite,loadOwnSettings}=useMemberSession();
   const [tab,setTab]=useState("search");
   const [filters,setFilters]=useState(()=>savedSearchDefaults(null));
   const [savedSettings,setSavedSettings]=useState(null);
@@ -246,11 +246,12 @@ export default function MatchesView({Photo}){
         Favorites controls will be available after your saved Favorites load.
       </p>}
       {favoriteError&&<p role="alert" className="ogcl-error">{favoriteError}</p>}
+      {tab==="search"&&discoveryLoading&&<p role="status">Loading matches…</p>}
       {tab==="search"&&discoveryUnavailable&&<div role="alert">
         <p>Member search is unavailable right now.</p>
         <button type="button" onClick={refresh}>Try again</button>
       </div>}
-      {(tab==="search"?!discoveryUnavailable:!connectionsLoading&&!connectionsError&&!!connections)&&<>
+      {(tab==="search"?!discoveryLoading&&!discoveryUnavailable:!connectionsLoading&&!connectionsError&&!!connections)&&<>
         <p className="ogcl-matches-result-count">
           {results.length} {results.length===1?"member":"members"}
           {tab==="search"&&" · Search currently checks the 250 most recent eligible profiles."}
