@@ -24,11 +24,11 @@ test("public view only keeps explicit safe text and public answer identity",()=>
   assert.equal(PUBLIC_ESSAYS.length,10);
   assert.ok(PUBLIC_DETAILS.length>=15);
 });
-test("old Hispanic / Latin value displays as Hispanic without altering original profile data",()=>{
-  const legacy={...p,profile:{...p.profile,ethnicity:"Hispanic / Latin, Indian, Indigenous"}};
+test("Hispanic legacy values and canonical Native American display correctly",()=>{
+  const legacy={...p,profile:{...p.profile,ethnicity:"Hispanic / Latin, Indian, Native American"}};
   assert.equal(sanitizePublicProfile(legacy,"hello-member").details.ethnicity,
-    "Hispanic, Indian, Indigenous");
-  assert.equal(legacy.profile.ethnicity,"Hispanic / Latin, Indian, Indigenous");
+    "Hispanic, Indian, Native American");
+  assert.equal(legacy.profile.ethnicity,"Hispanic / Latin, Indian, Native American");
 });
 test("invalid slug, mismatched member identity or unverified answers cannot appear",()=>{
   assert.throws(()=>sanitizePublicProfile(p,"different-member"));
