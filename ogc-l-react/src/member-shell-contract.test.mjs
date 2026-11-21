@@ -43,7 +43,7 @@ test("three-column shell uses native document scrolling rather than per-column s
   assert.match(css, /\.ogcl-center \{height:auto;[^}]*overflow:visible/);
   assert.doesNotMatch(css, /height:100dvh|\.ogcl-center \{[^}]*overflow:auto/);
   assert.match(css, /position:absolute;z-index:25;right:10px;top:6px/);
-  assert.match(app, /<LeftRail\s*\/>\s*<main[^>]*>[^]*<Suspense[^>]*><Outlet\s*\/><\/Suspense>[^]*<RightRail\s*\/>/);
+  assert.match(app, /<LeftRail\s*\/>\s*<main[^>]*>[^]*<Suspense[^]*?<Outlet\s*\/><\/Suspense>[^]*<RightRail\s*\/>/);
 });
 
 test("React gateway does not persist bearer tokens or account data in browser storage",()=>{
