@@ -930,7 +930,8 @@ function showStoredProfile(profile) {
   setValue("orientation", profile?.orientation);
   setValue("ethnicity", "");
   for (const savedValue of String(profile?.ethnicity ?? "").split(", ")) {
-    const value = savedValue === "Hispanic / Latin" ? "Hispanic" : savedValue;
+    const value = savedValue === "Hispanic / Latin" ? "Hispanic" :
+      savedValue === "Indigenous" ? "Native American" : savedValue;
     const option = [...form.elements.ethnicity.options].find(item => item.value === value); if (option) option.selected = true;
   }
   setValue("bodyType", profile?.bodyType);
