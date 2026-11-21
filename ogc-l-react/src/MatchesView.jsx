@@ -202,6 +202,8 @@ export default function MatchesView({Photo}){
   }
   useEffect(()=>setPage(1),[tab,applied]);
   const currentSearchKey=user?.id?searchCacheKey(user.id,applied,page):null;
+  // Activity-window filters age with real time, not with cached timestamps.
+  const activityMinute=applied.activity?Math.floor(now/60_000):0;
   useEffect(()=>{
     if(!user?.id||tab!=="search")return;
     let active=true;
@@ -225,7 +227,7 @@ export default function MatchesView({Photo}){
         "Member search is unavailable right now.");
     });
     return()=>{active=false;};
-  },[user?.id,tab,applied,page,searchRevision,searchMembers]);
+  },[user?.id,tab,applied,page,searchRevision,searchMembers,activityMinute]);
   const visibleSearch=searchPage?.key===currentSearchKey?searchPage:null;
   const active=connections||emptyConnections;
   const results=tab==="search"?(visibleSearch?.profiles||[]):tab==="quiver"?active.quiver:active.favoriteMembers;
