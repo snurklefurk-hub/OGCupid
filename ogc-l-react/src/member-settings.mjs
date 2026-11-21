@@ -3,6 +3,12 @@ import {PET_CHOICES,selectedPets} from "./member-pets.mjs";
 // Staging Profile Settings: only fields stored by the established Neon /profile API.
 // Signup display name, DOB, and derived age are deliberately NOT writable here.
 const genders=["Man","Woman","Transman","Transwoman","Something else"];
+// Original profile categories from the November 13 structured details editor.
+// Keep the established ethnicity API/storage key; no database migration needed.
+export const ETHNICITY_CHOICES=Object.freeze([
+  "Asian","Black","Hispanic / Latin","Indigenous",
+  "Middle Eastern","Pacific Islander","White","Other"
+]);
 const habits=["Never","Sometimes","Often","Just weed",
   "Just weed · Sometimes","Just weed · Often","Just weed · Never"];
 const fields=[
@@ -17,7 +23,7 @@ const fields=[
   {key:"height",label:"Height",max:50,group:"details"},
   {key:"bodyType",label:"Body type",max:30,group:"details",
     options:["Thin","Athletic","Average","Jacked","Chubby","Overweight"]},
-  {key:"ethnicity",label:"Ethnicity",max:200,group:"details"},
+  {key:"ethnicity",label:"Race / ethnicity",max:200,group:"details",multi:ETHNICITY_CHOICES},
   {key:"kids",label:"Children",max:80,group:"details"},
   {key:"pets",label:"Pets",max:80,group:"details",multi:PET_CHOICES},
   {key:"smoking",label:"Smoking",max:60,group:"details",options:["Never","Sometimes","Often"]},
