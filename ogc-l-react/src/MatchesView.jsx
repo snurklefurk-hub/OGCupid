@@ -88,9 +88,8 @@ function SearchControls({filters,update,toggleChoice,reset,apply,hasLocation,mem
     return chip(key,names.length?label+": "+names.join(", "):label,options.map(x=>menuRow(x.label,selected.includes(x.value),()=>toggleChoice(key)(x.value,!selected.includes(x.value)))),selected.length?()=>update(key,[]):null);
   }
   const fields=SEARCH_ADVANCED_GROUPS.flatMap(g=>g.fields);
-  const [extra,setExtra]=useState([]);
+  const [expanded,setExpanded]=useState(false);
   const primary=new Set(["status","relationshipType","ethnicity"]);
-  const visible=new Set([...extra,...Object.keys(filters.advanced).filter(key=>filters.advanced[key])]);
   const advanced=(key,value)=>update("advanced",{...filters.advanced,[key]:value});
   function fieldChip(field,title=field.label){
     const value=filters.advanced[field.key]||"";
@@ -119,20 +118,19 @@ function SearchControls({filters,update,toggleChoice,reset,apply,hasLocation,mem
         menuRow(label||"Any time",filters.activity===label,()=>pick("activity",label))))}
       {fieldChip(fields.find(f=>f.key==="ethnicity"),"Race")}
     </div><div className="chip-extras">
-      {fields.filter(f=>visible.has(f.key)&&!primary.has(f.key)).map(f=>fieldChip(f))}
-      {visible.has("kidPlans")&&chip("kidPlans",filters.kidPlans||"Desire for kids",
+      <div className="filter-chip green"><button type="button" id="chip-advanced" aria-expanded={expanded}
+        aria-controls="advanced-filter-tray" onClick={()=>{setOpen("");setExpanded(!expanded);}}>
+        Advanced <span aria-hidden="true">{expanded?"▴":"▾"}</span></button></div>
+    </div><div id="advanced-filter-tray" className="advanced-filter-tray">
+      {fields.filter(f=>!primary.has(f.key)&&(expanded||filters.advanced[f.key])).map(f=>fieldChip(f))}
+      {(expanded||filters.kidPlans)&&chip("kidPlans",filters.kidPlans||"Desire for kids",
         ["","Wants children","Doesn’t want children","Undecided"].map(x=>menuRow(x||"Any",filters.kidPlans===x,()=>pick("kidPlans",x))),
         filters.kidPlans?()=>update("kidPlans",""):null)}
-      {visible.has("username")&&chip("username",filters.search||"Search by username",<>{menuRow("Any username",!filters.search,()=>pick("search",""))}{memberChoices("displayName").map(name=>menuRow(name,filters.search===name,()=>pick("search",name)))}</>,filters.search?()=>update("search",""):null)}
-      {chip("advanced","Advanced",[...SEARCH_ADVANCED_GROUPS,{name:"Other",fields:[{key:"kidPlans",label:"Desire for kids"},{key:"username",label:"Username"}]}].map(g=><div key={g.name}><strong>{g.name}</strong>
-        {g.fields.filter(f=>!primary.has(f.key)).map(f=><button key={f.key} className="chip-option" type="button" onClick={()=>{
-          setExtra(prev=>[...new Set([...prev,f.key])]);setOpen(f.key);
-          requestAnimationFrame(()=>document.getElementById("chip-"+f.key)?.focus());
-        }}>{f.label} ›</button>)}</div>))}
+      {(expanded||filters.search)&&chip("username",filters.search||"Search by username",<>{menuRow("Any username",!filters.search,()=>pick("search",""))}{memberChoices("displayName").map(name=>menuRow(name,filters.search===name,()=>pick("search",name)))}</>,filters.search?()=>update("search",""):null)}
     </div><div className="chip-order"><p>Order by</p>
       {chip("sort",filters.sort==="match"?"Special Blend":SEARCH_SORTS.find(s=>s.value===filters.sort)?.label,
         SEARCH_SORTS.map(s=>menuRow(s.value==="match"?"Special Blend (Match %)":s.label,filters.sort===s.value,()=>pick("sort",s.value))))}
-    </div><footer><button type="submit">Search</button><button type="button" onClick={()=>{reset();setExtra([]);setOpen("");}}>Reset</button></footer>
+    </div><footer><button type="submit">Search</button><button type="button" onClick={()=>{reset();setExpanded(false);setOpen("");}}>Reset</button></footer>
   </form>;
 }
 export default function MatchesView({Photo}){
