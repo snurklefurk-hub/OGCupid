@@ -1,62 +1,21 @@
-# OG Cupid personality-answer grading — active research
+# OG Cupid personality-answer grading — independent research
 
-**Current graders:** DeepSeek, Arya, and **Ablitseek** (user's name for their abliterated DeepSeek model).
+**Status (2026-11-21):** 410 canonical questions and **1,193** answer options. Two existing reference assessment sets remain intact and read-only in the comparison workstation. The previous third assessment pass was **discarded by owner instruction**; its scores and supporting explanations are no longer part of the active research data, not available as defaults or tie-breakers, and not approved for production. The new candidate column is completely blank. Historical Git commits may still contain removed files; this is not a Git-history purge.
 
-**Status (2026-11-20):** DeepSeek and Arya each assessed 1,193 answers across 410 questions. The third Ablitseek column now contains **all 1,193 canonical assessments** (840 with trait scores, 353 with empty score arrays; **0 pending**). A complete import-ready `ogc-ablitseek-grades.json` export is saved alongside the research worksheet and HTML workstation. The first batch's header says `model: "Astra 6.2"` because the owner reused the same prompt; the owner explicitly identified this as **Ablitseek** output, and it was imported without altering grades. Previous **Codex** and **Astra 6.2** grading are **excluded** from active comparison; their results must not be used as tie-breakers, fallback defaults, or production scoring. Old historical GitHub commits may still contain obsolete grading files, but these are not active source data.
+## Current working files
 
-## Working files
+- [Blind grading input](ogc-personality-blind-input.json) — question and answer text/IDs, taxonomy, output shape, no prior assessments or source identities.
+- [Independent grading handoff](ogc-independent-grading-handoff.md) — copy-paste task for the next independent reviewer; no names or identities.
+- [Comparison worksheet](ogc-grading-worksheet.json) — original question bank, unchanged two reference sets, blank candidate assessments.
+- [HTML comparison workstation](ogc-grading-review-workstation.html) — two reference columns plus blank editable candidate column; browser-local saved candidate state uses a **new storage key** so discarded grades are not restored.
+- Research provenance and output validation are documented in this README; the independent blind input must never contain previous scoring or reference identities.
 
-- `ogc-deepseek-arya-ablitseek-worksheet.json` — canonical joined dataset, with original question text, option text and IDs, unchanged DeepSeek/Arya scores/reasons/confidence, and editable `ablitseek` third-grader records.
-- `ogc-three-agent-grading-workstation.html` — self-contained offline side-by-side review, browser-local edits and JSON export/import. Only the above three graders are shown.
+## Trait-scoring semantics
 
-## Owner-confirmed taxonomy scoring semantics — 2026-11-21
+The taxonomy `ogc-20-v1` has nine bipolar dimensions (with two named poles each) plus eleven standalone (unipolar) dimensions. Every answer gets 0–3 distinct trait names, each scored with a signed integer from -3 through -1 or +1 through +3. **Standalone traits are signed too**: positive means more of that trait, negative means less; negative standalone points are not inherently errors. Bipolar scores identify directional evidence between opposing poles. An empty `scores` array means no reliable trait evidence, not negative trait expression. Every record still needs a reason and confidence from 0 to 1.
 
-- **Bipolar pairs** represent a continuum between opposing traits; the sign/direction distinguishes which pole an answer favors and the absolute magnitude indicates strength.
-- **Standalone (unipolar) traits** also accept **both positive and negative points**. Positive means *more* of that trait, negative means *less* of that same trait. A negative standalone grade is **valid by design**, not a scoring defect or an indication of a different, unnamed opposite trait.
-- Every individual assessment may assign 0–3 trait scores; each present score is a nonzero signed integer from −3 to +3. An empty scores array means no meaningful evidence for a trait, **not** evidence of low trait expression. Do not treat missing as zero or negative in trait averages.
-- The owner explicitly corrected an earlier interpretation that negative standalone values were suspicious. The 13 negative standalone score entries previously flagged on that basis require **no repair solely because of their sign**. Preserve them in exports and comparisons; assess individual answer semantics separately.
+## Independent intake and QA
 
-## Incoming Ablitseek grading import (pasted batches)
+Never renumber `optionId` or assume non-contiguous IDs follow a 0,1,2 sequence. Match both `questionId` and `optionId` to the canonical input bank and verify the explanation describes the actual question and answer. Expected totals: **410** unique questions and **1,193** unique question/option pairs, exactly once each, 0–3 distinct allowed trait scores per answer, nonzero integer signed scores, and a reason plus confidence for every answer including empty grades. Keep new independent pass separate from the reference scores until its entire submission has passed validation and owner review.
 
-Treat a batch as a *partial candidate*, not a complete export. For every incoming answer, use the original `questionId` + `optionId` composite key; never renumber or infer missing IDs. Preserve the model's `scores` (0–3 distinct allowed traits, integers -3..-1 or +1..+3), `reason`, and `confidence` (0..1) verbatim. Validate against the canonical question bank and compare duplicate entries with existing imports; do not silently overwrite conflicting assessments. Record successfully validated entries by setting `ablitseek.status="graded"`, leaving unseen records `ungraded`. Report imported, remaining, duplicate, and rejected counts after each batch.
-
-Source records are *proposals*, not owner-approved scoring. No changes to live site, production `main`, database or deployment are authorized by this research.
-
-## Batch 2 intake — 2026-11-20
-
-Received 231 unique proposed Ablitseek answers. Imported 228 valid, original question/option ID matches without changing scores, reasons, or confidence. Rejected three unknown option pairs: `vault-175 / option-3`, `vault-261 / option-2`, and `vault-272 / option-3`. There were zero repeated or conflicting previously imported keys. The 228 accepted entries consist of 155 with scores and 73 with empty score arrays. Do not assign or infer replacements for rejected pairs. Combined total: 374/1,193; remaining 819. None is owner-approved or published.
-
-## Batch 3 intake — 2026-11-20
-
-Received 254 unique proposed Ablitseek answers. Imported 250 valid original question/option ID matches without changing scores, reasons, or confidence. Rejected four unknown option pairs: `vault-336 / option-1`, `vault-354 / option-2`, `vault-366 / option-1`, and `vault-378 / option-3`. There were zero repeated or conflicting previously imported keys. The 250 accepted entries consist of 167 with scores and 83 with empty score arrays. Do not assign or infer replacements for rejected pairs. Combined total: 624/1,193; remaining 569. None is owner-approved or published.
-
-## Batch 4 intake — 2026-11-20
-
-Received 262 unique proposed Ablitseek answers. Imported 257 valid original question/option ID matches without altering scores, reasons, or confidence. Rejected five unknown option pairs: `vault-448 / option-2`, `vault-469 / option-1`, `vault-565 / option-3`, `vault-573 / option-1`, `vault-578 / option-1`. There were zero duplicates or conflicts with previously imported keys. The 257 accepted entries consist of 183 with scores and 74 with empty score arrays. Do not guess replacements for rejected pairs. Combined: 881/1,193 (618 scored, 263 empty), 312 pending. All assessments remain unapproved research proposals, not production data.
-
-## Batch 5 intake — 2026-11-20
-
-Received 302 unique proposed Ablitseek answers. Imported 301 valid original question/option ID matches without changing scores, reasons, or confidence. Rejected one unknown option pair: `vault-646 / option-2`. There were zero duplicates or conflicts with previously imported keys. The 301 accepted entries consist of 213 with scores and 88 with empty score arrays. Do not assign or infer replacement for the rejected pair. Combined: 1,182/1,193 (831 scored, 351 empty), 11 pending. The remaining answer pairs are:
-- `vault-272 / option-4`: Is it a requirement that you communicate every day with your significant other (via phone, text, in person, whatever)? — No, I’d prefer not to communicate daily
-- `vault-336 / option-2`: Should wealthier people pay higher taxes? — No
-- `vault-354 / option-3`: How do you take your coffee? — Put that coffee down! Coffee is for closers only.
-- `vault-366 / option-2`: What’s worse on a first date? — Nothing to talk about
-- `vault-378 / option-4`: How many books do you own? — 50+
-- `vault-448 / option-3`: Which is scarier to reveal to a new partner? — Both equally
-- `vault-469 / option-3`: Did you have a dysfunctional upbringing? — No, not at all.
-- `vault-565 / option-4`: When it comes to right and wrong, which of the following do you think has the greatest impact on your belief system? — Self interest.
-- `vault-573 / option-3`: Is global warming a serious problem? — I don’t know
-- `vault-578 / option-2`: Orgasms are clearly the most important part of sex. — I disagree.
-- `vault-646 / option-4`: Which is closest to your reaction to foul language? — It bothers me a lot.
-
-All assessments remain unapproved research proposals, not production data.
-
-## Final ID patch and full export — 2026-11-20
-
-Five original pasted batches re-opened: **146 + 231 + 254 + 262 + 302 = 1,195** raw answers. Two spurious records removed: `vault-175/option-3` and `vault-261/option-2`. Fourteen source IDs remapped to the canonical non-contiguous option IDs; eleven received the user's exact replacement assessments. Three other already imported valid IDs had the wrong answer's judgment attached and were also repaired: `vault-469/option-2`, `vault-573/option-2`, and `vault-646/option-3`. The other existing grade records were unchanged. Export: [ogc-ablitseek-grades.json](https://github.com/snurklefurk-hub/OGCupid/blob/research/astra-personality-grading-20261120/dev/personality-grading/ogc-ablitseek-grades.json).
-
-**Verified structural counts:** 410 canonical questions, 1,193 unique question/option pairs, every canonical option graded, no duplicate/missing IDs, all grades within the 0–3 traits / ±1–3 score rules, and explanation plus confidence for every record. Breakdown: 840 with trait scores, 353 unscored. The export `model` is correctly `Ablitseek`; the first batch inherited a misleading `Astra 6.2` header from a reused prompt. Research only: none of these grades are owner-approved or in production.
-
-**Semantic-content review flags (not repaired):** The source audit's assertion that only option-ID slips occurred was incorrect. At least three questions have explanations referring to different question content: `vault-202` asks about tipping but has body-fat-based explanations; `vault-376` asks about improvisational theatre but has karaoke explanations; `vault-460` asks how many romantic partners someone has lived with but has concert-attendance explanations. These may need independent rescoring based on the real question and answer text before owner approval. The pasted audit also listed `vault-460` among all-unscored questions; its `option-3` actually has Artistic +1 and Extroverted +1. **Confirmed all-options-unscored:** `vault-122`, `vault-302`, `vault-407`, `vault-764`, `vault-979`, `vault-2047`.
-
-**Additional low-confidence review queue from supplied audit:** `vault-75`, `vault-152`, `vault-236`, `vault-237`, `vault-286`, `vault-330`, `vault-342`, `vault-401`, `vault-407`, `vault-420`, `vault-453`, `vault-529`, `vault-561`, `vault-627`, `vault-646`, `vault-665`, `vault-764`, `vault-979`, `vault-1019`, `vault-1334`, `vault-1382`, `vault-1540`, `vault-2047`, `vault-2199`. Retain this as an audit queue, not a claim those trait judgments are correct.
+The earlier third pass is excluded; do not re-import it, reconstruct it from source messages, or use it as a comparison, fallback, or tie-breaker. The original reference scores remain unchanged. Nothing is owner-approved or used in live matching, and no changes to production, the live database or GitHub main are authorized.
