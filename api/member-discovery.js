@@ -56,9 +56,16 @@ export async function handleDiscovery(request, userId, withMember, json) {
            WHERE p.user_id <> $1::uuid
              AND app_private.is_discoverable_member(p.user_id)
               AND NOT app_private.member_pair_blocked($1::uuid,p.user_id)
+             ${isSearch ? `AND p.age BETWEEN $3::integer AND $4::integer
+             AND ($5::text[] IS NULL OR lower(p.gender)=ANY($5::text[]))
+             AND ($6::text IS NULL OR lower(p.display_name) LIKE '%' || lower($6::text) || '%')
+             AND ($7::integer IS NULL OR signals.distance_miles <= $7::integer)` : ""}
            ORDER BY p.created_at DESC, p.user_id
            LIMIT $2`,
-        [userId, isSearch?MAX_SERVER_SEARCH_CANDIDATES:MAX_CANDIDATES]
+        isSearch ? [userId,MAX_SERVER_SEARCH_CANDIDATES,criteria.ageMin,criteria.ageMax,
+          criteria.genders.length?criteria.genders.map(x=>x.toLowerCase()):null,
+          criteria.search||null,criteria.radius||null]
+          : [userId,MAX_CANDIDATES]
       );
       const members = selected.rows;
       if (members.length === 0) return {members, viewerAnswers:[], byUser:new Map(), penalties:new Map(), avatarIds:new Map()};
