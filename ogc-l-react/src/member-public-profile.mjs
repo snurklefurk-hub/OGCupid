@@ -1,3 +1,5 @@
+import {presentEthnicity} from "./member-settings.mjs";
+
 // Member-to-member profile reads from the authenticated Neon Function.
 // Only an explicit display whitelist enters React state. Raw email, DOB,
 // preferences, private match answers and object storage keys never enter it.
@@ -49,7 +51,9 @@ export function sanitizePublicProfile(payload,slug) {
   }
   const age = Number.isInteger(p.age)&&p.age>=18&&p.age<=120 ? p.age : null;
   const essays=Object.freeze(Object.fromEntries(PUBLIC_ESSAYS.map(({key})=>[key,textValue(p[key],5000)])));
-  const details=Object.freeze(Object.fromEntries(PUBLIC_DETAILS.map(({key})=>[key,textValue(p[key],200)])));
+  const details=Object.freeze(Object.fromEntries(PUBLIC_DETAILS.map(({key})=>[
+    key,key==="ethnicity"?presentEthnicity(textValue(p[key],200)):textValue(p[key],200)
+  ])));
   const owner=payload.isOwner===true;
   const answers=Array.isArray(payload.publicAnswers) ? payload.publicAnswers.filter(a=>
     a && typeof a.questionId==="string" && /^vault-[0-9]{1,25}$/.test(a.questionId) &&
