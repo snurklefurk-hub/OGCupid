@@ -9,6 +9,13 @@
 - `ogc-deepseek-arya-ablitseek-worksheet.json` — canonical joined dataset, with original question text, option text and IDs, unchanged DeepSeek/Arya scores/reasons/confidence, and editable `ablitseek` third-grader records.
 - `ogc-three-agent-grading-workstation.html` — self-contained offline side-by-side review, browser-local edits and JSON export/import. Only the above three graders are shown.
 
+## Owner-confirmed taxonomy scoring semantics — 2026-11-21
+
+- **Bipolar pairs** represent a continuum between opposing traits; the sign/direction distinguishes which pole an answer favors and the absolute magnitude indicates strength.
+- **Standalone (unipolar) traits** also accept **both positive and negative points**. Positive means *more* of that trait, negative means *less* of that same trait. A negative standalone grade is **valid by design**, not a scoring defect or an indication of a different, unnamed opposite trait.
+- Every individual assessment may assign 0–3 trait scores; each present score is a nonzero signed integer from −3 to +3. An empty scores array means no meaningful evidence for a trait, **not** evidence of low trait expression. Do not treat missing as zero or negative in trait averages.
+- The owner explicitly corrected an earlier interpretation that negative standalone values were suspicious. The 13 negative standalone score entries previously flagged on that basis require **no repair solely because of their sign**. Preserve them in exports and comparisons; assess individual answer semantics separately.
+
 ## Incoming Ablitseek grading import (pasted batches)
 
 Treat a batch as a *partial candidate*, not a complete export. For every incoming answer, use the original `questionId` + `optionId` composite key; never renumber or infer missing IDs. Preserve the model's `scores` (0–3 distinct allowed traits, integers -3..-1 or +1..+3), `reason`, and `confidence` (0..1) verbatim. Validate against the canonical question bank and compare duplicate entries with existing imports; do not silently overwrite conflicting assessments. Record successfully validated entries by setting `ablitseek.status="graded"`, leaving unseen records `ungraded`. Report imported, remaining, duplicate, and rejected counts after each batch.
