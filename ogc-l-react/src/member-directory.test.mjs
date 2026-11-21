@@ -41,18 +41,30 @@ test("Race filter recognizes each saved category and never substring-matches ano
     {userId:"b",displayName:"B",age:29,ethnicity:"Asian"},
     {userId:"c",displayName:"C",age:29,ethnicity:"Black"},
     {userId:"d",displayName:"D",age:29,ethnicity:""},
-    {userId:"e",displayName:"E",age:29,ethnicity:"Blackish"}
+    {userId:"e",displayName:"E",age:29,ethnicity:"Blackish"},
+    {userId:"f",displayName:"F",age:29,ethnicity:"Hispanic / Latin, Indian"},
+    {userId:"g",displayName:"G",age:29,ethnicity:"Hispanic"},
+    {userId:"h",displayName:"H",age:29,ethnicity:"Indigenous"}
   ];
   const race=SEARCH_ADVANCED_GROUPS.flatMap(group=>group.fields)
     .find(field=>field.key==="ethnicity");
   assert.equal(race.label,"Race");
-  assert.ok(race.options.includes("Hispanic / Latin"));
+  assert.ok(race.options.includes("Hispanic"));
+  assert.ok(race.options.includes("Indian"));
+  assert.ok(race.options.includes("Indigenous"));
+  assert.ok(!race.options.includes("Hispanic / Latin"));
   assert.deepEqual(filterAndSortMembers(available,{advanced:{ethnicity:"Black"}})
     .map(member=>member.userId),["a","c"]);
   assert.deepEqual(filterAndSortMembers(available,{advanced:{ethnicity:"White"}})
     .map(member=>member.userId),["a"]);
   assert.deepEqual(filterAndSortMembers(available,{advanced:{ethnicity:"Asian"}})
     .map(member=>member.userId),["b"]);
+  assert.deepEqual(filterAndSortMembers(available,{advanced:{ethnicity:"Hispanic"}})
+    .map(member=>member.userId),["f","g"]);
+  assert.deepEqual(filterAndSortMembers(available,{advanced:{ethnicity:"Indian"}})
+    .map(member=>member.userId),["f"]);
+  assert.deepEqual(filterAndSortMembers(available,{advanced:{ethnicity:"Indigenous"}})
+    .map(member=>member.userId),["h"]);
 });
 test("distance filters exclude unknown locations and unavailable ages; Anywhere is unlimited",()=>{
   assert.deepEqual(filterAndSortMembers(members,{radius:50}).map(x=>x.userId),["b","a"]);
