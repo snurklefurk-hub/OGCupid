@@ -15,7 +15,7 @@ function score(member){
     ?member.matchPercent+"% Match (provisional)"
     :"Match score not yet available";
 }
-function MemberResult({member,Photo,favorited,onFavorite,busy,now}){
+function MemberResult({member,Photo,favorited,onFavorite,busy,canFavorite,now}){
   const status=activityBucket(member.lastSeenAt,now);
   return <article className="ogcl-match-result">
     <NavLink to={"/profiles/"+encodeURIComponent(member.slug)} className="ogcl-match-result-photo"
@@ -32,7 +32,7 @@ function MemberResult({member,Photo,favorited,onFavorite,busy,now}){
       {status&&<p className={"ogcl-match-result-presence"+(isOnlineNow(member.lastSeenAt,now)?" is-online":"")}>
         {status==="Online now"?status:"Last online: "+status.toLowerCase()}</p>}
       {member.aboutMe&&<p className="ogcl-match-result-blurb">{member.aboutMe}</p>}
-      <button type="button" className="ogcl-match-favorite" disabled={busy}
+      <button type="button" className="ogcl-match-favorite" disabled={busy||!canFavorite}
         onClick={()=>onFavorite(member.userId,!favorited)}>
         {busy?"Saving…":favorited?"Remove from Favorites":"Save to Favorites"}
       </button>
@@ -141,9 +141,10 @@ export default function MatchesView({Photo}){
   const [applied,setApplied]=useState(filters);
   const [page,setPage]=useState(1);
   const [connections,setConnections]=useState(null);
-  const [loading,setLoading]=useState(true);
+  const [connectionsLoading,setConnectionsLoading]=useState(true);
+  const [connectionsError,setConnectionsError]=useState("");
   const [busyId,setBusyId]=useState(null);
-  const [error,setError]=useState("");
+  const [favoriteError,setFavoriteError]=useState("");
   const [now,setNow]=useState(Date.now());
   const edited=useRef(false);
   useEffect(()=>{
@@ -161,17 +162,23 @@ export default function MatchesView({Photo}){
     return()=>window.clearInterval(timer);
   },[tab]);
   async function load(){
-    setError("");setLoading(true);
+    setConnectionsError("");setConnectionsLoading(true);
     try{setConnections(await loadConnections());}
-    catch{setError("Your Quiver and Favorites couldn't load. Retry to view saved lists.");}
-    finally{setLoading(false);}
+    catch{
+      setConnections(null);
+      setConnectionsError("Your Quiver and Favorites couldn't load. Retry to view saved lists.");
+    }finally{setConnectionsLoading(false);}
   }
   useEffect(()=>{
     let active=true;
-    setLoading(true);
+    setConnectionsLoading(true);
     void loadConnections().then(data=>{if(active)setConnections(data);})
-      .catch(()=>{if(active)setError("Your Quiver and Favorites couldn't load. Retry to view saved lists.");})
-      .finally(()=>{if(active)setLoading(false);});
+      .catch(()=>{
+        if(active){
+          setConnections(null);
+          setConnectionsError("Your Quiver and Favorites couldn't load. Retry to view saved lists.");
+        }
+      }).finally(()=>{if(active)setConnectionsLoading(false);});
     return()=>{active=false;};
   },[loadConnections]);
   const update=(key,value)=>{edited.current=true;setFilters(prev=>({...prev,[key]:value}));};
@@ -191,15 +198,19 @@ export default function MatchesView({Photo}){
   const searchResults=useMemo(()=>filterAndSortMembers(discovery,applied,now),[discovery,applied,now]);
   const active=connections||emptyConnections;
   const results=tab==="search"?searchResults:tab==="quiver"?active.quiver:active.favoriteMembers;
-  const paged=pageMembers(results,page,24);
+  const paged=pageMembers(results,page);
   async function favorite(userId,value){
     if(busyId)return;
-    setBusyId(userId);setError("");
+    if(!connections)return;
+    setBusyId(userId);setFavoriteError("");
     try{
       await setFavorite(userId,value);
       setConnections(await loadConnections());
-    }catch{setError("That Favorite change wasn't saved. Please retry.");}
-    finally{setBusyId(null);}
+    }catch{
+      setConnections(null);
+      setConnectionsError("Your Quiver and Favorites couldn't load. Retry to view saved lists.");
+      setFavoriteError("That Favorite change couldn't be confirmed. Reload Favorites before trying again.");
+    }finally{setBusyId(null);}
   }
   return <section className="ogcl-view ogcl-matches-page" aria-labelledby="ogcl-matches-title">
     <header className="ogcl-view-head ogcl-matches-head">
@@ -218,7 +229,7 @@ export default function MatchesView({Photo}){
         members={discovery}
         hasLocation={savedSettings?.lookingFor?.hasValidatedLocality===true}/>}
       {tab==="search"&&settingsError&&<p className="ogcl-matches-warning" role="status">{settingsError}</p>}
-      {tab==="favorites"&&<p className="ogcl-matches-inbound-count">
+      {tab==="favorites"&&connections&&<p className="ogcl-matches-inbound-count">
         You have been favorited by {active.favoritedByCount} {active.favoritedByCount===1?"person":"people"}.
       </p>}
       {tab==="quiver"&&<p className="ogcl-matches-description">
@@ -227,14 +238,19 @@ export default function MatchesView({Photo}){
       {tab==="favorites"&&<p className="ogcl-matches-description">
         Members you've saved to Favorites. Only you can see this list.
       </p>}
-      {loading&&<p role="status">Loading Matches…</p>}
-      {error&&<div role="alert" className="ogcl-error"><p>{error}</p>
-        <button type="button" onClick={()=>void load()}>Retry</button></div>}
+      {tab!=="search"&&connectionsLoading&&<p role="status">Loading {tab==="quiver"?"Quiver":"Favorites"}…</p>}
+      {tab!=="search"&&connectionsError&&<div role="alert" className="ogcl-error">
+        <p>{connectionsError}</p><button type="button" onClick={()=>void load()}>Retry</button>
+      </div>}
+      {tab==="search"&&!connections&&<p className="ogcl-matches-warning" role="status">
+        Favorites controls will be available after your saved Favorites load.
+      </p>}
+      {favoriteError&&<p role="alert" className="ogcl-error">{favoriteError}</p>}
       {tab==="search"&&discoveryUnavailable&&<div role="alert">
         <p>Member search is unavailable right now.</p>
         <button type="button" onClick={refresh}>Try again</button>
       </div>}
-      {!loading&&!error&&!(tab==="search"&&discoveryUnavailable)&&<>
+      {(tab==="search"?!discoveryUnavailable:!connectionsLoading&&!connectionsError&&!!connections)&&<>
         <p className="ogcl-matches-result-count">
           {results.length} {results.length===1?"member":"members"}
           {tab==="search"&&" · Search currently checks the 250 most recent eligible profiles."}
@@ -243,7 +259,8 @@ export default function MatchesView({Photo}){
           {paged.items.map(member=><MemberResult key={member.userId} member={member}
             Photo={Photo} favorited={active.favorites.has(member.userId)}
             onFavorite={(id,value)=>void favorite(id,value)}
-            busy={busyId===member.userId} now={now}/>)}
+            busy={busyId===member.userId} canFavorite={!!connections}
+            now={now}/>)}
         </div>:<p className="ogcl-matches-empty">
           {tab==="quiver"?"No mutual Quickmatch Likes yet.":
             tab==="favorites"?"You haven't saved anyone to Favorites yet.":

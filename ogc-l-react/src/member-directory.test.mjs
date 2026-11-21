@@ -106,11 +106,11 @@ test("genuine heartbeat freshness determines online-now status",()=>{
   assert.equal(isOnlineNow("2026-11-21T12:01:00Z",time),false);
   assert.equal(isOnlineNow(null,time),false);
 });
-test("24 real profiles per page; numbered pages clamp without inventing records",()=>{
+test("20 real profiles per page; numbered pages clamp without inventing records",()=>{
   const all=Array.from({length:51},(_,i)=>({userId:String(i)}));
-  assert.equal(DIRECTORY_PAGE_SIZE,24);
-  assert.deepEqual(pageMembers(all,2),{page:2,totalPages:3,total:51,items:all.slice(24,48)});
-  assert.deepEqual(pageMembers(all,99).items,all.slice(48,51));
+  assert.equal(DIRECTORY_PAGE_SIZE,20);
+  assert.deepEqual(pageMembers(all,2),{page:2,totalPages:3,total:51,items:all.slice(20,40)});
+  assert.deepEqual(pageMembers(all,99).items,all.slice(40,51));
   assert.deepEqual(pageMembers([],42),{page:1,totalPages:1,total:0,items:[]});
 });
 test("quickmatch shuffling never mutates backend results or invents candidates",()=>{
