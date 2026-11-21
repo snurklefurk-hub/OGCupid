@@ -22,3 +22,17 @@ test("JPEG bytes still require a verified member, a valid photo and private no-s
   assert.match(source,/"Cache-Control":"private, no-store"/);
   assert.match(source,/"Content-Type":"image\/jpeg"/);
 });
+
+test("authenticated primary avatar is a single private JPEG request with bilateral block enforcement",async()=>{
+  const {isPhotoPath,photoMethodAllowed}=await import("./member-photos.js");
+  const member="00000000-0000-4000-8000-000000000001";
+  const path="/photos/member/"+member+"/avatar";
+  assert.equal(isPhotoPath(path),true);
+  assert.equal(photoMethodAllowed(path,"GET"),true);
+  assert.equal(photoMethodAllowed(path,"POST"),false);
+  assert.match(source,/const avatar=path\.match/);
+  assert.match(source,/member_pair_blocked\(\$1::uuid,\$2::uuid\)/);
+  assert.match(source,/ORDER BY is_primary DESC,sort_order,created_at,id LIMIT 1/);
+  assert.match(source,/Access-Control-Expose-Headers","X-Photo-Id"/);
+  assert.match(source,/"Cache-Control":"private, no-store"/);
+});
