@@ -1,4 +1,23 @@
 /* OG Cupid classic Matches — compact white results and flat blue controls. */
+.classic-search{background:white;color:#344f74;margin-bottom:12px;font:11px Verdana,sans-serif}
+.classic-search p{font:bold 10px Verdana,sans-serif;color:#737373;margin:0 0 9px}
+.chip-flow{display:flex;flex-wrap:wrap;gap:6px;max-width:578px}
+.filter-chip{position:relative;display:inline-flex;align-items:center;min-width:0;max-width:100%;box-sizing:border-box;border:1px solid #c3d2df;border-radius:14px;background:linear-gradient(#edf3f8,#e2ebf4);box-shadow:0 1px 1px #0002}
+.classic-search .filter-chip>button{display:flex;align-items:center;justify-content:space-between;gap:14px;max-width:100%;min-width:0;border:0;background:transparent;color:#305580;padding:3px 10px;font:bold 11px/15px Verdana,sans-serif;text-align:left;cursor:pointer;overflow-wrap:anywhere}
+.chip-flow>.filter-chip{min-width:min(148px,100%)}
+.classic-search .filter-chip>button:first-child{flex:1}
+.classic-search .filter-chip>button+button{padding:0 6px;color:#526d88}
+.filter-chip.green{background:linear-gradient(#e0edce,#cedfb8);border-color:#bbcfaa}
+.classic-search .green>button{color:#476e2b}
+.chip-editor{position:absolute;top:calc(100% + 3px);left:0;z-index:5;background:white;border:1px solid #b8c9d8;border-radius:4px;padding:9px;box-shadow:0 3px 9px #23384e33;display:grid;gap:5px;width:max-content;max-width:min(215px,100vw - 40px)}
+.chip-editor input,.chip-editor select{max-width:100%;box-sizing:border-box}
+.chip-editor label{display:block}
+.chip-order{border-top:1px solid #ececec;padding:12px 0;margin-top:13px}
+.classic-search .chip-order .filter-chip>button{min-width:193px}
+.classic-search footer{display:flex;justify-content:space-between;gap:10px;padding:8px 4px;background:#f5f5f5}
+.classic-search footer button{border:1px solid #ccc;border-radius:3px;font:bold 11px Verdana,sans-serif;background:linear-gradient(#fff,#ededed);color:#555;padding:5px;width:16%;min-width:66px;cursor:pointer}
+.classic-search footer button[type=submit]{width:34%;color:white;border-color:#286099;background:linear-gradient(#4284c4,#2967a8)}
+@media(max-width:600px){.chip-editor{position:static;width:auto}.filter-chip:has(.chip-editor){flex-wrap:wrap}.chip-editor{flex-basis:100%}}
 .ogcl-matches-page {color:#444;}
 .ogcl-matches-head {border-bottom:0;background:linear-gradient(#f7f7f7,#eaeaea);}
 .ogcl-matches-head h1 {color:#f83265;font-size:22px;}

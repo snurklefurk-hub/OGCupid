@@ -54,79 +54,63 @@ function MemberResult({member,Photo,favorited,onFavorite,busy,now}){
     </div>
   </article>;
 }
-function Checks({title,options,selected,toggle}){
-  return <fieldset className="ogcl-search-checks">
-    <legend>{title}</legend>
-    <div className="ogcl-search-check-options">
-      {options.map(({value,label})=><label key={value}>
-        <input type="checkbox" checked={selected.includes(value)}
-          onChange={event=>toggle(value,event.target.checked)}/> {label}
-      </label>)}
-    </div>
-  </fieldset>;
-}
-function SearchControls({filters,update,toggleChoice,reset,expanded,setExpanded,hasLocation}){
-  return <div className="ogcl-matches-search">
-    <p className="ogcl-matches-prompt">Show me</p>
-    <div className="ogcl-search-primary">
-      <Checks title="Interested In" options={LOOKING_GENDERS}
-        selected={filters.genders} toggle={toggleChoice("genders")}/>
-      <div className="ogcl-search-age">
-        <span className="ogcl-search-field-title">Age</span>
-        <label>From
-          <select value={filters.ageMin} onChange={event=>update("ageMin",Math.min(Number(event.target.value),filters.ageMax))}>
-            {AGE_CHOICES.map(age=><option key={age} value={age}>{age}</option>)}
-          </select>
-        </label>
-        <label>To
-          <select value={filters.ageMax} onChange={event=>update("ageMax",Math.max(Number(event.target.value),filters.ageMin))}>
-            {AGE_CHOICES.map(age=><option key={age} value={age}>{age}</option>)}
-          </select>
-        </label>
-      </div>
-      <label className="ogcl-search-distance">Distance
-        <select value={filters.radius} onChange={event=>update("radius",Number(event.target.value))}>
-          {LOOKING_RADII.map(r=><option key={r.value} value={r.value}>{r.label}</option>)}
-        </select>
-        {!hasLocation&&<small>Save a verified location to filter by miles.</small>}
-      </label>
-      <Checks title="Looking For" options={LOOKING_INTENTIONS}
-        selected={filters.intentions} toggle={toggleChoice("intentions")}/>
-    </div>
-    <div className="ogcl-match-controls">
-      <label>Search by username
-        <input type="search" placeholder="Search members" maxLength={80}
-          value={filters.search} onChange={event=>update("search",event.target.value)}/>
-      </label>
-      <label>Sort by
-        <select value={filters.sort} onChange={event=>update("sort",event.target.value)}>
-          {SEARCH_SORTS.map(s=><option key={s.value} value={s.value}>{s.label}</option>)}
-        </select>
-      </label>
-      <button className="ogcl-matches-more" type="button" aria-expanded={expanded}
-        aria-controls="ogcl-matches-advanced" onClick={()=>setExpanded(!expanded)}>
-        More Filters {expanded?"▴":"▾"}
-      </button>
-      <button type="button" className="ogcl-matches-reset" onClick={reset}>Reset</button>
-    </div>
-    {expanded&&<div id="ogcl-matches-advanced" className="ogcl-search-advanced">
-      {SEARCH_ADVANCED_GROUPS.map(group=><fieldset key={group.name}>
-        <legend>{group.name}</legend>
-        <div className="ogcl-search-advanced-fields">
-          {group.fields.map(field=><label key={field.key}>{field.label}
-            {field.options?<select value={filters.advanced[field.key]||""}
-              onChange={e=>update("advanced",{...filters.advanced,[field.key]:e.target.value})}>
-              <option value="">Any</option>
-              {field.options.map(option=><option key={option} value={option}>{option}</option>)}
-            </select>:<input type="text" maxLength={80} placeholder="Any"
-              value={filters.advanced[field.key]||""}
-              onChange={e=>update("advanced",{...filters.advanced,[field.key]:e.target.value})}/>}
-          </label>)}
-        </div>
-      </fieldset>)}
-    </div>}
-    <p className="ogcl-matches-filter-note">Search filters are temporary. Your saved Profile Settings stay unchanged.</p>
-  </div>;
+function SearchControls({filters,update,toggleChoice,reset,apply,hasLocation}){
+  const [open,setOpen]=useState("");
+  const form=useRef(null);
+  useEffect(()=>{
+    const dismiss=e=>{if(!form.current?.contains(e.target))setOpen("");};
+    document.addEventListener("pointerdown",dismiss);
+    return ()=>document.removeEventListener("pointerdown",dismiss);
+  },[]);
+  function chip(id,label,editor,remove){
+    return <div key={id} className={"filter-chip "+(id==="advanced"?"green":"")}>
+      <button type="button" id={"chip-"+id} aria-expanded={open===id}
+        onClick={()=>setOpen(open===id?"":id)}>{label} <span aria-hidden="true">▾</span></button>
+      {remove&&<button type="button" aria-label={"Clear "+label} onClick={remove}>×</button>}
+      {open===id&&<div className="chip-editor" role="group" aria-labelledby={"chip-"+id}>{editor}</div>}
+    </div>;
+  }
+  function choices(key,label,options){
+    const selected=filters[key];
+    const names=options.filter(x=>selected.includes(x.value)).map(x=>x.label);
+    return chip(key,names.join(", ")||label,options.map(x=><label key={x.value}>
+      <input type="checkbox" checked={selected.includes(x.value)} onChange={e=>toggleChoice(key)(x.value,e.target.checked)}/> {x.label}
+    </label>),selected.length?()=>update(key,[]):null);
+  }
+  const fields=SEARCH_ADVANCED_GROUPS.flatMap(g=>g.fields);
+  const [extra,setExtra]=useState([]);
+  const visible=new Set(["status","height","smoking","education",...extra,...Object.keys(filters.advanced)]);
+  const advanced=(key,value)=>update("advanced",{...filters.advanced,[key]:value});
+  function fieldChip(field){
+    const value=filters.advanced[field.key]||"";
+    const editor=field.options?<select aria-label={field.label} value={value} onChange={e=>advanced(field.key,e.target.value)}>
+      <option value="">Any</option>{field.options.map(x=><option key={x}>{x}</option>)}</select>:
+      <input aria-label={field.label} maxLength={80} value={value} onChange={e=>advanced(field.key,e.target.value)}/>;
+    return chip(field.key,field.label+(value?": "+value:""),editor,value?()=>advanced(field.key,""):null);
+  }
+  return <form ref={form} className="classic-search" onSubmit={e=>{e.preventDefault();apply();setOpen("");}}
+    onKeyDown={e=>{if(e.key==="Escape"&&open){document.getElementById("chip-"+open)?.focus();setOpen("");}}}>
+    <p>Show me</p><div className="chip-flow">
+      {choices("genders","Interested in",LOOKING_GENDERS)}
+      {chip("age",`Ages ${filters.ageMin} to ${filters.ageMax}`,["ageMin","ageMax"].map(key=><label key={key}>
+        {key==="ageMin"?"From":"To"} <select value={filters[key]} onChange={e=>update(key,Number(e.target.value))}>
+        {AGE_CHOICES.filter(n=>key==="ageMin"?n<=filters.ageMax:n>=filters.ageMin).map(n=><option key={n}>{n}</option>)}</select></label>))}
+      {chip("radius",filters.radius?`Within ${filters.radius} miles of me`:"Anywhere",<>
+        <select aria-label="Distance" disabled={!hasLocation} value={filters.radius} onChange={e=>update("radius",Number(e.target.value))}>
+        {LOOKING_RADII.map(r=><option key={r.value} value={r.value}>{r.label}</option>)}</select>
+        {!hasLocation&&<small>Save a verified location to filter by miles.</small>}</>)}
+      {choices("intentions","Looking for",LOOKING_INTENTIONS)}
+      {chip("username",filters.search||"Search by username",<input aria-label="Username" type="search" maxLength={80} value={filters.search} onChange={e=>update("search",e.target.value)}/>,filters.search?()=>update("search",""):null)}
+      {fields.filter(f=>visible.has(f.key)).map(fieldChip)}
+      {chip("advanced","Advanced",<select aria-label="Choose a filter" value="" onChange={e=>{const key=e.target.value;setExtra(prev=>[...new Set([...prev,key])]);setOpen(key);}}>
+        <option value="" disabled>Choose a filter</option>{SEARCH_ADVANCED_GROUPS.map(g=><optgroup key={g.name} label={g.name}>
+        {g.fields.map(f=><option key={f.key} value={f.key}>{f.label}</option>)}</optgroup>)}</select>)}
+    </div><div className="chip-order"><p>Order by</p>
+      {chip("sort",filters.sort==="match"?"Special Blend":SEARCH_SORTS.find(s=>s.value===filters.sort)?.label,
+        <select aria-label="Order by" value={filters.sort} onChange={e=>{update("sort",e.target.value);setOpen("");}}>
+        {SEARCH_SORTS.map(s=><option key={s.value} value={s.value}>{s.value==="match"?"Special Blend (Match %)":s.label}</option>)}</select>)}
+    </div><footer><button type="submit">Search</button><button type="button" onClick={()=>{reset();setExtra([]);setOpen("");}}>Reset</button></footer>
+  </form>;
 }
 export default function MatchesView({Photo}){
   const {discovery,discoveryUnavailable,refresh,loadConnections,setFavorite,loadOwnSettings}=useMemberSession();
@@ -134,7 +118,7 @@ export default function MatchesView({Photo}){
   const [filters,setFilters]=useState(()=>savedSearchDefaults(null));
   const [savedSettings,setSavedSettings]=useState(null);
   const [settingsError,setSettingsError]=useState("");
-  const [expanded,setExpanded]=useState(false);
+  const [applied,setApplied]=useState(filters);
   const [page,setPage]=useState(1);
   const [connections,setConnections]=useState(null);
   const [loading,setLoading]=useState(true);
@@ -147,7 +131,7 @@ export default function MatchesView({Photo}){
     void loadOwnSettings().then(profile=>{
       if(!active)return;
       setSavedSettings(profile);
-      if(!edited.current)setFilters(savedSearchDefaults(profile));
+      if(!edited.current){const defaults=savedSearchDefaults(profile);setFilters(defaults);setApplied(defaults);}
     }).catch(()=>{if(active)setSettingsError("Saved search defaults are unavailable. Using unrestricted choices.");});
     return()=>{active=false;};
   },[loadOwnSettings]);
@@ -181,10 +165,10 @@ export default function MatchesView({Photo}){
   };
   function reset(){
     edited.current=false;
-    setFilters(savedSearchDefaults(savedSettings));
+    const defaults=savedSearchDefaults(savedSettings);setFilters(defaults);setApplied(defaults);
   }
-  useEffect(()=>setPage(1),[tab,filters]);
-  const searchResults=useMemo(()=>filterAndSortMembers(discovery,filters),[discovery,filters]);
+  useEffect(()=>setPage(1),[tab,applied]);
+  const searchResults=useMemo(()=>filterAndSortMembers(discovery,applied),[discovery,applied]);
   const active=connections||emptyConnections;
   const results=tab==="search"?searchResults:tab==="quiver"?active.quiver:active.favoriteMembers;
   const paged=pageMembers(results,page,24);
@@ -210,8 +194,7 @@ export default function MatchesView({Photo}){
     </nav>
     <div className="ogcl-matches-body">
       {tab==="search"&&<SearchControls filters={filters} update={update}
-        toggleChoice={toggleChoice} reset={reset} expanded={expanded}
-        setExpanded={setExpanded}
+        toggleChoice={toggleChoice} reset={reset} apply={()=>setApplied(filters)}
         hasLocation={savedSettings?.lookingFor?.hasValidatedLocality===true}/>}
       {tab==="search"&&settingsError&&<p className="ogcl-matches-warning" role="status">{settingsError}</p>}
       {tab==="favorites"&&<p className="ogcl-matches-inbound-count">
@@ -243,7 +226,7 @@ export default function MatchesView({Photo}){
         </div>:<p className="ogcl-matches-empty">
           {tab==="quiver"?"No mutual Quickmatch Likes yet.":
             tab==="favorites"?"You haven't saved anyone to Favorites yet.":
-              filters.search?"No members match those search filters.":"No available members match your filters."}
+              applied.search?"No members match those search filters.":"No available members match your filters."}
         </p>}
         {paged.totalPages>1&&<nav className="ogcl-pages" aria-label="Matches pages">
           {Array.from({length:paged.totalPages},(_,i)=><button key={i} type="button"
