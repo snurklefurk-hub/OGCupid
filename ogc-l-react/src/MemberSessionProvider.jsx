@@ -246,8 +246,15 @@ export function MemberSessionProvider({children}) {
 
   const searchMembers=useCallback(async(criteria,page)=>{
     if(!gateway)throw new MemberAccessError("unavailable","MATCHES search unavailable.");
-    return gateway.searchMembers(criteria,page);
-  },[]);
+    try{return await gateway.searchMembers(criteria,page);}
+    catch(error){
+      // If the server rejects a previously valid JWT, immediately conceal
+      // cached Search results while the full membership gate is rechecked.
+      if(error instanceof MemberAccessError&&error.code==="unauthorized")
+        void refresh();
+      throw error;
+    }
+  },[refresh]);
   const loadConnections=useCallback(async()=>{
     if(!gateway)throw new MemberAccessError("unavailable","Connections unavailable.");
     return gateway.loadConnections();
