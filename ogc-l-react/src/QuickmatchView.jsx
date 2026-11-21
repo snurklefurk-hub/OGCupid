@@ -1,5 +1,5 @@
 import React,{useEffect,useMemo,useState} from "react";
-import {NavLink} from "react-router-dom";
+import {NavLink,useSearchParams} from "react-router-dom";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {shuffledMembers,pageMembers} from "./member-directory.mjs";
 import {HeartDecision,HeartIcon} from "./QuickmatchHearts.jsx";
@@ -16,8 +16,10 @@ export default function QuickmatchView({Photo}) {
   const {discovery,discoveryUnavailable,loadQuickmatchDecisions,saveQuickmatchDecision}=useMemberSession();
   const [quickState,setQuickState]=useState(null);
   const [queueOrder,setQueueOrder]=useState([]);
-  const [tab,setTab]=useState("matches");
-  const [selected,setSelected]=useState(null);
+  // URL-backed tabs ensure browser Back returns to the same Like list.
+  const [searchParams,setSearchParams]=useSearchParams();
+  const requestedTab=searchParams.get("tab");
+  const tab=VIEWS.some(([key])=>key===requestedTab)?requestedTab:"matches";
   const [page,setPage]=useState(1);
   const [loading,setLoading]=useState(true);
   const [busy,setBusy]=useState(false);
@@ -50,7 +52,7 @@ export default function QuickmatchView({Photo}) {
       return next.length===previous.length && next.every((id,i)=>id===previous[i])?previous:next;
     });
   },[eligible]);
-  useEffect(()=>{setPage(1);setSelected(null);},[tab]);
+  useEffect(()=>{setPage(1);},[tab]);
   const candidate=queueOrder.length?byId.get(queueOrder[0])||null:null;
 
   async function vote(targetUserId,decision) {
@@ -63,7 +65,6 @@ export default function QuickmatchView({Photo}) {
       const latest=await loadQuickmatchDecisions();
       setQuickState(latest);
       setQueueOrder(current=>current.filter(id=>id!==targetUserId));
-      setSelected(null);
       setNotice(decision==="like"?"Like saved.":"Dislike saved.");
     }catch{
       if(saved){
@@ -84,10 +85,6 @@ export default function QuickmatchView({Photo}) {
     return listIds.map(id=>byId.get(id)).filter(Boolean);
   },[listIds,quickState,byId]);
   const paged=pageMembers(visible,page,24);
-  const selectedMember=selected?byId.get(selected):null;
-  const selectedMutual=selectedMember&&quickState?.mutualUserIds.has(selectedMember.userId);
-  const showLikeBack=tab==="incoming"&&selectedMember&&!selectedMutual&&
-    quickState?.eligibleUserIds.has(selectedMember.userId);
 
   return <section className="ogcl-view" aria-labelledby="ogcl-quickmatch-heading">
     <header className="ogcl-view-head">
@@ -98,7 +95,7 @@ export default function QuickmatchView({Photo}) {
       <nav className="ogcl-quickmatch-tabs" aria-label="Quickmatch lists">
         {VIEWS.map(([key,label])=><button key={key} type="button"
           aria-current={tab===key?"page":undefined} disabled={busy}
-          onClick={()=>{setTab(key);setError("");setNotice("");}}>
+          onClick={()=>{setSearchParams(key==="matches"?{}:{tab:key});setError("");setNotice("");}}>
           {label}{key==="incoming"&&quickState?" ("+quickState.incomingLikes.length+")":""}
         </button>)}
       </nav>
@@ -122,51 +119,39 @@ export default function QuickmatchView({Photo}) {
             </button>}
           </QuickmatchRestrictedProfile>
         </article>:<p>No new eligible Quickmatch profiles right now.</p>)}
-      {!loading&&quickState&&!discoveryUnavailable&&tab!=="matches"&&
-        (selectedMember&&!selectedMutual?
-          <div className="ogcl-quickmatch-selected">
-            <button type="button" className="ogcl-quickmatch-back"
-              onClick={()=>setSelected(null)}>Back to {tab==="incoming"?"Who Likes You":"Who You Like"}</button>
-            <QuickmatchRestrictedProfile member={selectedMember}>
-              {showLikeBack&&<button type="button" className="ogcl-like-back"
-                disabled={busy} onClick={()=>void vote(selectedMember.userId,"like")}>
+      {!loading&&quickState&&!discoveryUnavailable&&tab!=="matches"&&<>
+        <p className="ogcl-quiet">{visible.length} currently visible member{visible.length===1?"":"s"}.
+          Mutual Likes are saved in MATCHES → Quiver. Other members' Dislikes aren't disclosed.</p>
+        {paged.items.length?<div className="ogcl-directory ogcl-quickmatch-list">
+          {paged.items.map(member=>{
+            const canLikeBack=tab==="incoming"&&!quickState.mutualUserIds.has(member.userId)&&
+              quickState.eligibleUserIds.has(member.userId);
+            return <article key={member.userId} className="ogcl-quickmatch-list-entry">
+              <NavLink className="ogcl-member-link"
+                aria-label={"View "+member.displayName+"'s full profile"}
+                to={"/profiles/"+encodeURIComponent(member.slug)}>
+                <div className="ogcl-quickmatch-thumb">
+                  <Photo member={member}/>
+                </div>
+                <span className="ogcl-member-copy">
+                  <strong>{member.displayName}</strong>
+                  <small>{member.age?member.age+" · ":""}{member.cityRegion||""}</small>
+                  <small>{score(member)}</small>
+                </span>
+              </NavLink>
+              {canLikeBack&&<button type="button" className="ogcl-like-back"
+                disabled={busy} onClick={()=>void vote(member.userId,"like")}>
                 <HeartIcon kind="like"/><span>Like Back</span>
               </button>}
-            </QuickmatchRestrictedProfile>
-          </div>:
-          <>
-            <p className="ogcl-quiet">{visible.length} currently visible member{visible.length===1?"":"s"}.
-              Mutual Likes are saved in MATCHES → Quiver. Other members' Dislikes aren't disclosed.</p>
-            {paged.items.length?<div className="ogcl-directory ogcl-quickmatch-list">
-              {paged.items.map(member=>{
-                const mutual=quickState.mutualUserIds.has(member.userId);
-                const tile=<>
-                  <div className="ogcl-quickmatch-thumb">
-                    <Photo member={member}/>
-
-                  </div>
-                  <span className="ogcl-member-copy">
-                    <strong>{member.displayName}</strong>
-                    <small>{member.age?member.age+" · ":""}{member.cityRegion||""}</small>
-                    <small>{score(member)}</small>
-                  </span>
-                </>;
-                return mutual?
-                  <NavLink key={member.userId} className="ogcl-member-link"
-                    aria-label={"Open mutual Like's full profile: "+member.displayName}
-                    to={"/profiles/"+encodeURIComponent(member.slug)}>{tile}</NavLink>:
-                  <button key={member.userId} type="button" className="ogcl-member-link ogcl-quickmatch-restricted-button"
-                    onClick={()=>setSelected(member.userId)} aria-label={"View restricted Quickmatch profile for "+member.displayName}>
-                    {tile}
-                  </button>;
-              })}
-            </div>:<p>No currently visible members in this list.</p>}
-            {paged.totalPages>1&&<nav className="ogcl-pages" aria-label="Quickmatch list pages">
-              {Array.from({length:paged.totalPages},(_,i)=><button key={i} type="button"
-                aria-current={paged.page===i+1?"page":undefined}
-                onClick={()=>setPage(i+1)}>{i+1}</button>)}
-            </nav>}
-          </>)}
+            </article>;
+          })}
+        </div>:<p>No currently visible members in this list.</p>}
+        {paged.totalPages>1&&<nav className="ogcl-pages" aria-label="Quickmatch list pages">
+          {Array.from({length:paged.totalPages},(_,i)=><button key={i} type="button"
+            aria-current={paged.page===i+1?"page":undefined}
+            onClick={()=>setPage(i+1)}>{i+1}</button>)}
+        </nav>}
+      </>}
     </div>
   </section>;
 }

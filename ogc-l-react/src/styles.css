@@ -744,6 +744,8 @@ button, input, textarea, select {font:inherit;}
 .ogcl-quickmatch-essays h3 {font:bold 12px/19px Verdana,sans-serif;color:#264e79;margin:0 0 6px;}
 .ogcl-quickmatch-essays p {font:11px/19px Verdana,sans-serif;white-space:pre-wrap;overflow-wrap:anywhere;margin:0;}
 .ogcl-quickmatch-list {grid-template-columns:repeat(3,minmax(0,1fr));}
+.ogcl-quickmatch-list-entry {display:flex;flex-direction:column;min-width:0;}
+.ogcl-quickmatch-list-entry>.ogcl-member-link {flex:1;}
 .ogcl-quickmatch-list .ogcl-member-link {display:block;min-width:0;
   appearance:none;width:100%;box-sizing:border-box;overflow:hidden;
   text-align:left;background:#fff;cursor:pointer;text-decoration:none;
@@ -751,24 +753,17 @@ button, input, textarea, select {font:inherit;}
 .ogcl-quickmatch-thumb {position:relative;overflow:hidden;}
 .ogcl-quickmatch-thumb .ogcl-member-photo {display:block;width:100%;
   height:auto;aspect-ratio:1;object-fit:cover;}
-.ogcl-mutual-heart {position:absolute;top:6px;right:6px;width:31px;height:28px;
-  display:grid;place-items:center;background:#183b62;border:1px solid #d5e1ed;}
-.ogcl-mutual-heart .ogcl-heart-icon {width:27px;height:27px;}
 .ogcl-quickmatch-list .ogcl-member-copy {display:block;padding:7px 4px;}
 .ogcl-quickmatch-list .ogcl-member-copy strong {font:bold 12px/18px Verdana,sans-serif;color:#2963a4;}
 .ogcl-quickmatch-list .ogcl-member-copy small {display:block;
   font:10px/16px Verdana,sans-serif;color:#888;}
-.ogcl-quickmatch-restricted-button:hover,.ogcl-quickmatch-restricted-button:focus-visible {
-  border-color:#2963a4;background:#f8fbfe;
-}
-.ogcl-quickmatch-back {border:0;background:none;padding:5px 0 10px;
-  color:#2963a4;text-decoration:underline;font:11px/18px Verdana,sans-serif;cursor:pointer;}
-.ogcl-quickmatch-selected {max-width:960px;margin:auto;}
-.ogcl-quickmatch-selected .ogcl-quickmatch-restricted {border:1px solid #ccd8e4;}
 .ogcl-like-back {display:flex;align-items:center;gap:9px;
   background:#edf2f7;border:1px solid #b7c6d2;color:#183b62;
   padding:5px 13px;margin:10px auto;cursor:pointer;font:bold 11px/19px Verdana,sans-serif;}
-.ogcl-like-back .ogcl-heart-icon {width:40px;height:40px;}
+.ogcl-quickmatch-list-entry>.ogcl-like-back {
+  margin:4px 0 0;padding:5px 8px;width:100%;justify-content:center;
+}
+.ogcl-like-back .ogcl-heart-icon {width:26px;height:26px;}
 .ogcl-like-back:disabled {opacity:.5;cursor:progress;}
 @media(max-width:800px){
   .ogcl-quickmatch-list {grid-template-columns:repeat(2,minmax(0,1fr));}
