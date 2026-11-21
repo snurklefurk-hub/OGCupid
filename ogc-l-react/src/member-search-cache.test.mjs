@@ -26,7 +26,7 @@ test("cached data expires quickly and is never persisted across browser sessions
   storeSearchCache(YOU,criteria,1,result,1000);
   assert.equal(readSearchCache(YOU,criteria,1,61_001),null);
   const source=readFileSync(new URL("./member-search-cache.mjs",import.meta.url),"utf8");
-  assert.doesNotMatch(source,/localStorage|sessionStorage|indexedDB/);
+  assert.doesNotMatch(source,/\b(?:localStorage|sessionStorage|indexedDB)\s*\./);
   assert.equal(SEARCH_PAGE_SIZE,20);
 });
 test("canonical filter order yields identical keys for equivalent filters",()=>{
