@@ -101,7 +101,8 @@ test("gateway saves a race edit without changing other saved profile fields",asy
   assert.equal(updated.fields.work,"Scientist");
   assert.equal(read().ethnicity,"Asian, Indigenous");
   assert.equal(read().orientation,"Bi");
-  assert.deepEqual(JSON.parse(calls[2].options.body),{
+  assert.deepEqual(calls.map(x=>x.options.method),["GET","PUT"]);
+  assert.deepEqual(JSON.parse(calls[1].options.body),{
     aboutMe:"Keep my essay",age:29,ethnicity:"Asian, Indigenous"
   });
 });
