@@ -15,7 +15,6 @@ const fields=[
   {key:"gender",label:"Gender",max:60,group:"identity",options:genders},
   {key:"orientation",label:"Orientation",max:60,group:"identity",
     options:["Gay","Straight","Bi","Something else"]},
-  {key:"pronouns",label:"Pronouns",max:40,group:"identity"},
   {key:"relationshipType",label:"Relationship style",max:50,group:"details",
     options:["Monogamous","Polyamorous"]},
   {key:"work",label:"Job",max:160,group:"details"},

@@ -46,7 +46,7 @@ test("only server-stored profile details and preferences are editable",()=>{
   const names=new Set(PROFILE_SETTINGS_FIELDS.map(x=>x.key));
   assert.equal(names.size,PROFILE_SETTINGS_FIELDS.length);
   for(const forbidden of ["displayName","userId","slug","age","dateOfBirth","birthDate","sign",
-    "aboutMe","searchRadiusMiles","locality","searchAgeMin","searchAgeMax"]){
+    "aboutMe","searchRadiusMiles","locality","searchAgeMin","searchAgeMax","pronouns"]){
     assert.equal(names.has(forbidden),false,forbidden);
   }
 });
@@ -73,6 +73,7 @@ test("controlled fields and multi-choices validate with old values preserved",()
   const prior=sanitizeOwnProfileSettings({profile:profile()},ME);
   assert.throws(()=>composeSettingUpdate(prior,"bodyType","Superman"));
   assert.throws(()=>composeSettingUpdate(prior,"aboutMe","new essay"));
+  assert.throws(()=>composeSettingUpdate(prior,"pronouns","they/them"));
   assert.throws(()=>composeSettingUpdate(prior,"work","a".repeat(161)));
   assert.equal(composeSettingUpdate(prior,"drugs","Just weed · Sometimes").drugs,
     "Just weed · Sometimes");

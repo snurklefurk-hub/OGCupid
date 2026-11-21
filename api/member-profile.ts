@@ -203,7 +203,6 @@ type MemberProfile = {
   preferredAgeMax: number | null;
   cityRegion: string;
   gender: string;
-  pronouns: string;
   orientation: string;
   interestedIn: string;
   relationshipGoal: string;
@@ -242,7 +241,6 @@ function present(row: Record<string, unknown>): MemberProfile {
     preferredAgeMax: row.preferred_age_max == null ? null : Number(row.preferred_age_max),
     cityRegion: String(row.city_region ?? ""),
     gender: String(row.gender ?? ""),
-    pronouns: String(row.pronouns ?? ""),
     orientation: String(row.orientation ?? ""),
     interestedIn: String(row.interested_in ?? ""),
     relationshipGoal: String(row.relationship_goal ?? ""),
@@ -281,7 +279,6 @@ function present(row: Record<string, unknown>): MemberProfile {
 const profileTextFields = [
   ["cityRegion", "city_region", 100],
   ["gender", "gender", 60],
-  ["pronouns", "pronouns", 40],
   ["orientation", "orientation", 60],
   ["interestedIn", "interested_in", 120],
   ["relationshipGoal", "relationship_goal", 100],
@@ -434,7 +431,7 @@ export default {
         const found = await withMember(userId, async client => {
           const result = await client.query(
             `SELECT p.user_id, p.display_name, p.about_me, p.age,
-               p.city_region, p.gender, p.pronouns, p.orientation,
+               p.city_region, p.gender, p.orientation,
                p.interested_in, p.relationship_goal, p.looking_for,
                p.work, p.education, p.height, p.kids, p.pets, p.smoking,
                p.drinking, p.diet, p.languages, p.ethnicity, p.body_type,
@@ -736,7 +733,7 @@ export default {
       if (request.method === "GET") {
         const result = await withMember(userId, async client => {
           const profile = await client.query(
-            `SELECT user_id, display_name, about_me, age, city_region, gender, pronouns, orientation, interested_in, relationship_goal, work, education, height, kids, pets, smoking, drinking, diet, languages, ethnicity, body_type, vaping, drugs, religion, sign, income, status, relationship_type, preferred_age_min, preferred_age_max, life_direction, good_at, first_things, favorites, six_things, thinking_about, friday_night, private_thing, message_me_if, created_at, updated_at FROM app_private.member_profiles WHERE user_id = $1::uuid`,
+            `SELECT user_id, display_name, about_me, age, city_region, gender, orientation, interested_in, relationship_goal, work, education, height, kids, pets, smoking, drinking, diet, languages, ethnicity, body_type, vaping, drugs, religion, sign, income, status, relationship_type, preferred_age_min, preferred_age_max, life_direction, good_at, first_things, favorites, six_things, thinking_about, friday_night, private_thing, message_me_if, created_at, updated_at FROM app_private.member_profiles WHERE user_id = $1::uuid`,
             [userId],
           );
           const geo = await client.query(
