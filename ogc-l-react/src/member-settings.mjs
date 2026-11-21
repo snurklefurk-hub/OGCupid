@@ -13,11 +13,7 @@ export const ETHNICITY_CHOICES=Object.freeze([
 // This only normalizes displayed strings and never writes or migrates stored data.
 export function presentEthnicity(value) {
   return typeof value==="string" ? value.split(",")
-    .map(choice=>{
-      const saved=choice.trim();
-      return saved==="Hispanic / Latin"?"Hispanic":
-        saved==="Indigenous"?"Native American":saved;
-    })
+    .map(choice=>choice.trim()==="Hispanic / Latin"?"Hispanic":choice.trim())
     .filter(Boolean).join(", ") : "";
 }
 const habits=["Never","Sometimes","Often","Just weed",
