@@ -586,6 +586,35 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
         discoveryUnavailable: discoverResult.status !== "fulfilled"
       };
     },
+    // Identity and mandatory onboarding gate only. Supplemental profile/search
+    // payloads are explicitly deferred so they cannot block the member shell.
+    // This method does not store bearer tokens or allow client-side membership claims.
+    async loadIdentity() {
+      let identity;
+      try{identity=await bounded(authClient.getSession());}
+      catch(error){
+        if(error instanceof MemberAccessError)throw error;
+        throw new MemberAccessError("unavailable","Could not verify your session.");
+      }
+      if(identity?.error)throw new MemberAccessError("unavailable","Could not verify your session.");
+      if(!identity?.data?.user)return {kind:"guest"};
+      const user=checkedMember(identity.data.user);
+      const jwt=await getJwt(identity.data.session);
+      const onboarding=sanitizeOnboarding(await readApi("/onboarding",jwt));
+      return {kind:onboarding.explored?"member":"onboarding",user,onboarding};
+    },
+    // Authorized data reads remain individually fallible and are not a
+    // prerequisite for rendering a verified member's navigation or account UI.
+    async loadSupplemental(section) {
+      if(section!=="profile"&&section!=="discovery")
+        throw new MemberAccessError("invalid","Unsupported member data section.");
+      const identity=await bounded(authClient.getSession());
+      if(identity?.error)throw new MemberAccessError("unauthorized","Session unavailable.");
+      const user=checkedMember(identity?.data?.user);
+      const jwt=await getJwt(identity?.data?.session);
+      const data=await readApi("/"+section,jwt);
+      return section==="profile"?sanitizeProfile(data,user.id):sanitizeDiscovery(data,user.id);
+    },
     // Loads only a primary JPEG authorized by the existing member Function.
     // No URLs, credentials or image bytes are stored in browser storage.
     async getMemberAvatar(targetId,knownPhotoId) {
