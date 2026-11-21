@@ -23,6 +23,8 @@ const blank = Object.freeze({
   discovery: [],
   discoveryUnavailable: false,
   profileUnavailable: false,
+  discoveryLoading: false,
+  profileLoading: false,
   error: null
 });
 const MemberSessionContext = createContext(null);
@@ -53,7 +55,7 @@ export function MemberSessionProvider({children}) {
       return false;
     }
     try {
-      const result = quiet ? await gateway.revalidate() : await gateway.load();
+      const result = quiet ? await gateway.revalidate() : await gateway.loadIdentity();
       if (current !== version.current) return false;
       lastChecked.current = Date.now();
       if(quiet){
@@ -67,7 +69,9 @@ export function MemberSessionProvider({children}) {
         // No state change: page and data remain mounted without a flash.
         return result.kind==="member";
       }
-      setSession({...blank, ...result});
+      setSession({...blank, ...result,
+        profileLoading:result.kind==="member",
+        discoveryLoading:result.kind==="member"});
       return result.kind === "member";
     } catch (error) {
       if (current !== version.current) return false;
@@ -137,6 +141,41 @@ export function MemberSessionProvider({children}) {
     };
   }, [refresh]);
 
+  // Fetch supplementary data after verified membership has rendered. Each
+  // request completes independently; a slow Search must not block Profile
+  // or the shared shell, and a failed section cannot hide the other.
+  useEffect(()=>{
+    if(!gateway||session.kind!=="member"||!session.user?.id)return;
+    const viewerId=session.user.id;
+    const requestVersion=version.current;
+    let cancelled=false;
+    const loaded=(section,result,error)=>{
+      if(cancelled||requestVersion!==version.current)return;
+      if(error instanceof MemberAccessError&&error.code==="unauthorized"){
+        ++version.current;
+        setSession({...blank,kind:"guest",
+          error:"Your previous session expired. Please sign in again."});
+        void gateway.signOut().catch(()=>{});
+        return;
+      }
+      setSession(previous=>{
+        if(requestVersion!==version.current||previous.kind!=="member"||
+           previous.user?.id!==viewerId)return previous;
+        if(section==="profile"){
+          return {...previous,profileLoading:false,
+            profile:error?null:result,profileUnavailable:!!error};
+        }
+        return {...previous,discoveryLoading:false,
+          discovery:error?[]:result,discoveryUnavailable:!!error};
+      });
+    };
+    for(const section of ["profile","discovery"]){
+      void gateway.loadSupplemental(section).then(result=>loaded(section,result,null))
+        .catch(error=>loaded(section,null,error));
+    }
+    return()=>{cancelled=true;};
+  },[session.kind,session.user?.id]);
+
   // Only a visible, authenticated member tab reports activity. A recent
   // heartbeat is proof of recent browser activity, not a permanent online bit.
   useEffect(()=>{
@@ -159,9 +198,9 @@ export function MemberSessionProvider({children}) {
     return gateway.getMemberGallery(id);
   }, []);
 
-  const getMemberAvatar = useCallback(async (id) => {
+  const getMemberAvatar = useCallback(async (id, knownPhotoId) => {
     if (!gateway) return null;
-    return gateway.getMemberAvatar(id);
+    return gateway.getMemberAvatar(id,knownPhotoId);
   }, []);
 
   const loadOwnEssays = useCallback(async () => {

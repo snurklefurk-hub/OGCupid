@@ -9,7 +9,7 @@ const editor=read("./AdminMemberEditor.jsx");
 
 test("focus/visibility uses quiet revalidation without clearing or reloading active member state",()=>{
   assert.match(provider,/refresh\(\{quiet:true\}\)/);
-  assert.match(provider,/quiet \? await gateway\.revalidate\(\) : await gateway\.load\(\)/);
+  assert.match(provider,/quiet \? await gateway\.revalidate\(\) : await gateway\.loadIdentity\(\)/);
   assert.match(provider,/if\(quiet\)quietCheckInFlight\.current=true/);
   assert.match(provider,/if\(result\.user\?\.id!==previous\.user\?\.id\)/);
   assert.match(provider,/kind:"guest", error:"Your previous session expired/);

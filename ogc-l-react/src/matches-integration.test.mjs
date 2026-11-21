@@ -51,7 +51,7 @@ test("Matches Search renders before connections finish and Favorite actions requ
   const matches=source("./MatchesView.jsx");
   assert.match(matches,/const \[connectionsLoading,setConnectionsLoading\]=useState\(true\)/);
   assert.match(matches,/const \[connectionsError,setConnectionsError\]=useState\(""/);
-  assert.match(matches,/tab==="search"\?!discoveryUnavailable:!connectionsLoading&&!connectionsError&&!!connections/);
+  assert.match(matches,/tab==="search"\?!discoveryLoading&&!discoveryUnavailable:!connectionsLoading&&!connectionsError&&!!connections/);
   assert.match(matches,/disabled=\{busy\|\|!canFavorite\}/);
   assert.match(matches,/canFavorite=\{!!connections\}/);
   assert.match(matches,/tab!=="search"&&connectionsError/);

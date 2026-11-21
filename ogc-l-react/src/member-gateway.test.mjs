@@ -56,6 +56,35 @@ test("missing or insecure URLs cannot silently connect the preview to any databa
     {authBaseUrl:authUrl, memberApiBaseUrl:"https://example.neonapi.dev"});
 });
 
+test("identity-only startup does not wait on profile or discovery",async()=>{
+  const {service,calls}=mockGateway();
+  const member=await service.loadIdentity();
+  assert.deepEqual(member,{kind:"member",
+    user:{id:YOU,name:"Test Person"},onboarding:sanitizeOnboarding(fakeOnboarding)});
+  assert.deepEqual(calls.map(([path])=>path),["/onboarding"]);
+  const profile=await service.loadSupplemental("profile");
+  assert.equal(profile.displayName,"Demo");
+  const directory=await service.loadSupplemental("discovery");
+  assert.equal(directory[0].userId,THEM);
+  assert.deepEqual(calls.map(([path])=>path),["/onboarding","/profile","/discovery"]);
+  await assert.rejects(service.loadSupplemental("messages"),e=>e.code==="invalid");
+});
+test("separate supplemental failures do not prevent identity-only authorization",async()=>{
+  const {service}=mockGateway({responseFor:async(url)=>{
+    const path=new URL(url).pathname;
+    return path==="/onboarding"?good(fakeOnboarding):
+      path==="/profile"?bad(503):good(fakeDiscovery);
+  }});
+  assert.equal((await service.loadIdentity()).kind,"member");
+  await assert.rejects(service.loadSupplemental("profile"),e=>e.code==="unavailable");
+  assert.equal((await service.loadSupplemental("discovery"))[0].userId,THEM);
+});
+test("identity-only startup respects incomplete onboarding without reading member data",async()=>{
+  const incomplete={...fakeOnboarding,explored:false};
+  const {service,calls}=mockGateway({onboarding:incomplete});
+  assert.equal((await service.loadIdentity()).kind,"onboarding");
+  assert.deepEqual(calls.map(([path])=>path),["/onboarding"]);
+});
 test("guest without Neon Auth user never reads private API",async()=>{
   const {service,calls}=mockGateway({authSession:{user:null,session:null}});
   assert.deepEqual(await service.load(),{kind:"guest"});
