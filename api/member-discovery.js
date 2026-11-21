@@ -24,10 +24,18 @@ export async function handleDiscovery(request, userId, withMember, json) {
       // onboarding. It is not a general-purpose read into another member's
       // private onboarding record.
       const selected = await client.query(
-        `SELECT p.user_id, p.display_name, p.age, p.city_region, routes.slug
+        `SELECT p.user_id, p.display_name, p.age, p.city_region, routes.slug,
+                  p.gender, p.relationship_goal, p.about_me, p.created_at,
+                  p.body_type, p.status, p.relationship_type, p.height,
+                  p.drinking, p.smoking, p.vaping, p.drugs, p.diet,
+                  p.religion, p.ethnicity, p.education, p.kids, p.pets,
+                  p.income, p.languages, p.orientation,
+                  signals.distance_miles, signals.last_seen_at
            FROM app_private.member_profiles AS p
            INNER JOIN app_private.member_profile_routes AS routes
              ON routes.user_id = p.user_id
+           LEFT JOIN LATERAL app_private.discovery_member_signals(p.user_id) AS signals
+             ON TRUE
            WHERE p.user_id <> $1::uuid
              AND app_private.is_discoverable_member(p.user_id)
               AND NOT app_private.member_pair_blocked($1::uuid,p.user_id)
@@ -68,9 +76,34 @@ export async function handleDiscovery(request, userId, withMember, json) {
     const ranked = rankDiscoverableProfiles(
       results.members, results.viewerAnswers, results.byUser
     );
+    // These are selected public profile fields only. Nearby distance is a
+    // rounded city-centroid measure from a SECURITY DEFINER function, never
+    // raw coordinates. lastSeenAt is written by real authenticated heartbeats.
+    const details=new Map(results.members.map(row=>[String(row.user_id),row]));
+    const publicText=(value,max=120)=>typeof value==="string"?value.slice(0,max):"";
     const profiles=ranked.map(member=>{
       const penalty=results.penalties.get(member.userId) || 0;
-      return {...member,matchPercent:adjustedViewerMatchPercent(member.matchPercent,penalty)};
+      const row=details.get(member.userId);
+      const attrs={};
+      for(const [key,column] of Object.entries({
+        gender:"gender",relationshipGoal:"relationship_goal",
+        bodyType:"body_type",status:"status",relationshipType:"relationship_type",
+        height:"height",drinking:"drinking",smoking:"smoking",vaping:"vaping",
+        drugs:"drugs",diet:"diet",religion:"religion",ethnicity:"ethnicity",
+        education:"education",kids:"kids",pets:"pets",income:"income",
+        languages:"languages",orientation:"orientation"
+      })) attrs[key]=publicText(row?.[column],200);
+      const miles=row?.distance_miles==null?null:Number(row.distance_miles);
+      const toDate=value=>{
+        if(value==null)return null;
+        const time=new Date(value);
+        return Number.isFinite(time.getTime())?time.toISOString():null;
+      };
+      return {...member,...attrs,aboutMe:publicText(row?.about_me,250),
+        createdAt:toDate(row?.created_at),
+        lastSeenAt:toDate(row?.last_seen_at),
+        distanceMiles:Number.isInteger(miles)&&miles>=0&&miles<=13000?miles:null,
+        matchPercent:adjustedViewerMatchPercent(member.matchPercent,penalty)};
     });
     return json(request, {
       profiles,
