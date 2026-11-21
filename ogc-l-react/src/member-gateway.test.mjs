@@ -247,37 +247,59 @@ test("timeout is bounded and does not grant access",async()=>{
 });
 
 
-test("member avatars are genuine protected JPEG bytes, never an unauthenticated image URL",async()=>{
+test("member avatars use one authenticated JPEG request and never a public image URL",async()=>{
   const PHOTO="00000000-0000-4000-8000-000000000009";
-  const image = new Blob(["jpeg-test"],{type:"image/jpeg"});
-  const {service,calls}=mockGateway({responseFor:async (url,options)=>{
-    const path = new URL(url).pathname;
-    if(path==="/photos/member/"+THEM) return good({photos:[
-      {id:PHOTO,isPrimary:true}
-    ]});
-    if(path==="/photos/"+PHOTO+"/bytes") return {ok:true,status:200,blob:async()=>image};
-    throw new Error("Unexpected path "+path);
+  const image=new Blob(["jpeg-test"],{type:"image/jpeg"});
+  const {service,calls}=mockGateway({responseFor:async(url)=>{
+    const path=new URL(url).pathname;
+    if(path==="/photos/member/"+THEM+"/avatar")return {
+      ok:true,status:200,headers:{get:()=>PHOTO},blob:async()=>image
+    };
+    throw Error("Unexpected image request "+path);
   }});
   const blob=await service.getMemberAvatar(THEM);
   assert.equal(blob,image);
-  assert.deepEqual(calls.map(([path])=>path),[
-    "/photos/member/"+THEM, "/photos/"+PHOTO+"/bytes"
-  ]);
+  assert.deepEqual(calls.map(([path])=>path),["/photos/member/"+THEM+"/avatar"]);
   assert.equal(calls[0][1].headers.Authorization,"Bearer header.payload.signature");
-  assert.equal(calls[1][1].credentials,"omit");
-  assert.equal(calls[1][1].cache,"no-store");
+  assert.equal(calls[0][1].credentials,"omit");
+  assert.equal(calls[0][1].cache,"no-store");
 });
-test("avatars reject invalid identities and unsupported media rather than using public image URLs",async()=>{
+test("discovery-known photo IDs skip album lookup and fetch bytes in one request",async()=>{
+  const PHOTO="00000000-0000-4000-8000-000000000009";
+  const image=new Blob(["jpeg-test"],{type:"image/jpeg"});
+  const {service,calls}=mockGateway({responseFor:async url=>{
+    if(new URL(url).pathname==="/photos/"+PHOTO+"/bytes")
+      return {ok:true,status:200,blob:async()=>image};
+    throw Error("Unexpected photo route");
+  }});
+  assert.equal(await service.getMemberAvatar(THEM,PHOTO),image);
+  assert.deepEqual(calls.map(([path])=>path),["/photos/"+PHOTO+"/bytes"]);
+});
+test("avatars reject invalid identities, explicit no-photo and HTML media",async()=>{
   const {service,calls}=mockGateway();
   assert.equal(await service.getMemberAvatar("javascript:evil"),null);
+  assert.equal(await service.getMemberAvatar(THEM,null),null);
+  assert.equal(await service.getMemberAvatar(THEM,"invalid-photo-id"),null);
   assert.equal(calls.length,0);
-  const PHOTO="00000000-0000-4000-8000-000000000009";
   const {service:badPhoto}=mockGateway({responseFor:async url=>{
-    const path=new URL(url).pathname;
-    if(path.startsWith("/photos/member/"))return good({photos:[{id:PHOTO,isPrimary:true}]});
-    return {ok:true,status:200,blob:async()=>new Blob(["not a jpeg"],{type:"text/html"})};
+    if(new URL(url).pathname==="/photos/member/"+THEM+"/avatar")
+      return {ok:true,status:200,headers:{get:()=>null},
+        blob:async()=>new Blob(["not a jpeg"],{type:"text/html"})};
+    throw Error("Unexpected route");
   }});
   assert.equal(await badPhoto.getMemberAvatar(THEM),null);
+});
+test("discovery passes through only valid photo IDs, including an explicit absent-photo marker",()=>{
+  const PHOTO="00000000-0000-4000-8000-000000000009";
+  const current=sanitizeDiscovery({profiles:[
+    {...fakeDiscovery.profiles[0],avatarPhotoId:PHOTO},
+    {...fakeDiscovery.profiles[0],userId:THIRD,slug:"other-person",avatarPhotoId:null}
+  ]},YOU);
+  assert.equal(current[0].avatarPhotoId,PHOTO);
+  assert.equal(current[1].avatarPhotoId,null);
+  assert.equal(Object.hasOwn(sanitizeDiscovery({profiles:[
+    {...fakeDiscovery.profiles[0],avatarPhotoId:"unexpected"}
+  ]},YOU)[0],"avatarPhotoId"),false);
 });
 
 

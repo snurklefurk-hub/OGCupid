@@ -26,6 +26,7 @@ async function jsonInput(request,max=1200){
 export function isPhotoPath(path){
   return path==="/photos" || path==="/photos/" ||
     /^\/photos\/member\/[0-9a-f-]{36}\/?$/i.test(path) ||
+    /^\/photos\/member\/[0-9a-f-]{36}\/avatar\/?$/i.test(path) ||
     /^\/photos\/[0-9a-f-]{36}\/bytes\/?$/i.test(path) ||
     /^\/photos\/[0-9a-f-]{36}\/primary\/?$/i.test(path) ||
     /^\/photos\/[0-9a-f-]{36}\/?$/i.test(path) ||
@@ -37,6 +38,25 @@ export function photoMethodAllowed(path,method){
   if(/^\/photos\/member\//.test(path)||/\/bytes\/?$/.test(path))return method==="GET";
   if(/\/primary\/?$/.test(path))return method==="POST";
   return method==="DELETE";
+}
+function photoResponse(request,jpeg,photoId){
+  const headers=new Headers({
+    "Content-Type":"image/jpeg",
+    "Cache-Control":"private, no-store",
+    "X-Content-Type-Options":"nosniff",
+    "Referrer-Policy":"no-referrer",
+    "Content-Length":String(jpeg.byteLength),
+    "X-Photo-Id":photoId,
+  });
+  const origin=request.headers.get("origin");
+  const allowed=new Set(["https://ogcupid.com","https://www.ogcupid.com","https://ogcupid.onrender.com","https://ogcupid-l-staging.onrender.com"]);
+  if(["dev/private-member-accounts","dev/canonical-onboarding-2026-11-13"].includes(process.env.NEON_BRANCH || ""))allowed.add("http://localhost:5173");
+  if(origin&&allowed.has(origin)){
+    headers.set("Access-Control-Allow-Origin",origin);
+    headers.set("Access-Control-Expose-Headers","X-Photo-Id");
+    headers.set("Vary","Origin");
+  }
+  return new Response(jpeg,{status:200,headers});
 }
 export async function handlePhotoRequest(request,userId,url,withMember,jsonResponse) {
   const path=url.pathname;
@@ -56,6 +76,23 @@ export async function handlePhotoRequest(request,userId,url,withMember,jsonRespo
       if(!result)return jsonResponse(request,{error:"Member unavailable"},404);
       return jsonResponse(request,{photos:result.rows.map(publicPhoto)});
     }
+    // One authenticated request returns the current primary avatar JPEG.
+    // Does not reveal object keys, email, or a public storage URL.
+    const avatar=path.match(/^\/photos\/member\/([0-9a-f-]{36})\/avatar\/?$/i);
+    if(avatar){
+      const row=await withMember(userId,async client=>{
+        const denied=await client.query(
+          "SELECT app_private.member_pair_blocked($1::uuid,$2::uuid) AS blocked",
+          [userId,avatar[1]]);
+        if(denied.rows[0]?.blocked===true)return null;
+        const photos=await client.query(SELECT+
+          " WHERE user_id=$1::uuid ORDER BY is_primary DESC,sort_order,created_at,id LIMIT 1",[avatar[1]]);
+        return photos.rows[0]||null;
+      });
+      if(!row)return jsonResponse(request,{error:"Photo not found"},404);
+      const jpeg=await fetchPhoto(row.object_key);
+      return photoResponse(request,jpeg,row.id);
+    }
     const img=path.match(/^\/photos\/([0-9a-f-]{36})\/bytes\/?$/i);
     if(img){
       const row=await withMember(userId,async client=>{
@@ -68,21 +105,7 @@ export async function handlePhotoRequest(request,userId,url,withMember,jsonRespo
       });
       if(!row)return jsonResponse(request,{error:"Photo not found"},404);
       const jpeg=await fetchPhoto(row.object_key);
-      const headers=new Headers({
-        "Content-Type":"image/jpeg",
-        "Cache-Control":"private, no-store",
-        "X-Content-Type-Options":"nosniff",
-        "Referrer-Policy":"no-referrer",
-        "Content-Length":String(jpeg.byteLength),
-      });
-      const origin=request.headers.get("origin");
-      const allowed=new Set(["https://ogcupid.com","https://www.ogcupid.com","https://ogcupid.onrender.com","https://ogcupid-l-staging.onrender.com"]);
-      if(["dev/private-member-accounts","dev/canonical-onboarding-2026-11-13"].includes(process.env.NEON_BRANCH || ""))allowed.add("http://localhost:5173");
-      if(origin&&allowed.has(origin)){
-        headers.set("Access-Control-Allow-Origin",origin);
-        headers.set("Vary","Origin");
-      }
-      return new Response(jpeg,{status:200,headers});
+      return photoResponse(request,jpeg,row.id);
     }
     if(ownList && request.method==="POST"){
       if(!(request.headers.get("content-type")||"").toLowerCase().startsWith("image/jpeg")){

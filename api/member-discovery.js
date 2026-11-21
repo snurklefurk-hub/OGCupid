@@ -44,8 +44,17 @@ export async function handleDiscovery(request, userId, withMember, json) {
         [userId, MAX_CANDIDATES]
       );
       const members = selected.rows;
-      if (members.length === 0) return {members, viewerAnswers:[], byUser:new Map(), penalties:new Map()};
+      if (members.length === 0) return {members, viewerAnswers:[], byUser:new Map(), penalties:new Map(), avatarIds:new Map()};
 
+      // One batched, RLS-filtered photo metadata lookup avoids per-card
+      // album requests and lets photo-ID changes replace old cached thumbnails.
+      const avatars=await client.query(
+        "SELECT DISTINCT ON (user_id) user_id,id FROM app_private.member_photos "+
+        "WHERE user_id=ANY($1::uuid[]) "+
+        "ORDER BY user_id,is_primary DESC,sort_order,created_at,id",
+        [members.map(member=>member.user_id)]
+      );
+      const avatarIds=new Map(avatars.rows.map(row=>[String(row.user_id),String(row.id)]));
       const ids = [userId, ...members.map(member => member.user_id)];
       const answers = await client.query(
         `SELECT ${PUBLIC_ANSWER_FIELDS}
@@ -70,7 +79,7 @@ export async function handleDiscovery(request, userId, withMember, json) {
       const penalties=new Map(penaltyRows.rows.map(row=>[
         String(row.target_user_id),Number(row.match_penalty_points)
       ]));
-      return {members, viewerAnswers:byUser.get(userId) || [], byUser,penalties};
+      return {members, viewerAnswers:byUser.get(userId) || [], byUser,penalties,avatarIds};
     });
 
     const ranked = rankDiscoverableProfiles(
@@ -99,7 +108,8 @@ export async function handleDiscovery(request, userId, withMember, json) {
         const time=new Date(value);
         return Number.isFinite(time.getTime())?time.toISOString():null;
       };
-      return {...member,...attrs,aboutMe:publicText(row?.about_me,250),
+      return {...member,...attrs,avatarPhotoId:results.avatarIds.get(member.userId)||null,
+        aboutMe:publicText(row?.about_me,250),
         createdAt:toDate(row?.created_at),
         lastSeenAt:toDate(row?.last_seen_at),
         distanceMiles:Number.isInteger(miles)&&miles>=0&&miles<=13000?miles:null,
