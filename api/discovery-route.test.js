@@ -9,7 +9,7 @@ const frontend = readFileSync(new URL("../public/desktop-2011-shell.js",import.m
 
 test("discovery is a GET-only authenticated member API route",()=>{
   assert.match(api,/url\.pathname === "\/discovery"/);
-  assert.match(api,/discoveryPath \? request\.method === "GET"/);
+  assert.match(api,/\(discoveryPath \|\| discoverySearchPath\) \? request\.method === "GET"/);
   assert.match(api,/profilePath \|\| memberProfileMatch \|\| discoveryPath/);
   assert.match(api,/if \(!userId\) return json\(request, \{ error: "Unauthorized" \}, 401\)/);
   assert.match(api,/current_member_is_active\(\)/);

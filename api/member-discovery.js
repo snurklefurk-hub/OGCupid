@@ -1,4 +1,7 @@
 import { rankDiscoverableProfiles, SCORING_VERSION } from "./discovery-score.js";
+import {filterAndSortMembers,pageMembers} from "../ogc-l-react/src/member-directory.mjs";
+import {normalizeSearchCriteria,validSearchPage,MAX_SERVER_SEARCH_CANDIDATES,SEARCH_PAGE_SIZE}
+  from "../ogc-l-react/src/search-contract.mjs";
 
 // Authenticated, member-only discovery. JWT validation, active account checks,
 // CORS and no-store response headers are enforced in member-profile.ts before
@@ -18,6 +21,20 @@ export function adjustedViewerMatchPercent(rawPercent,penaltyPoints=0) {
 
 export async function handleDiscovery(request, userId, withMember, json) {
   if (request.method !== "GET") return json(request, {error:"Method not allowed"}, 405);
+  const isSearch=new URL(request.url).pathname.replace(/\/$/,"")==="/discovery-search";
+  let criteria=null,page=1;
+  if(isSearch){
+    const params=new URL(request.url).searchParams;
+    const raw=params.get("criteria"),requested=params.get("page")??"1";
+    if(!raw||raw.length>3000||params.size>2||
+       !/^[1-9][0-9]{0,2}$/.test(requested))
+      return json(request,{error:"Invalid search request"},400);
+    try{
+      criteria=normalizeSearchCriteria(JSON.parse(raw));
+      page=Number(requested);
+      if(!validSearchPage(page))throw Error();
+    }catch{return json(request,{error:"Invalid search request"},400);}
+  }
   try {
     const results = await withMember(userId, async client => {
       // The SECURITY DEFINER predicate returns *only* a boolean for completed
@@ -39,9 +56,16 @@ export async function handleDiscovery(request, userId, withMember, json) {
            WHERE p.user_id <> $1::uuid
              AND app_private.is_discoverable_member(p.user_id)
               AND NOT app_private.member_pair_blocked($1::uuid,p.user_id)
+             ${isSearch ? `AND p.age BETWEEN $3::integer AND $4::integer
+             AND ($5::text[] IS NULL OR lower(p.gender)=ANY($5::text[]))
+             AND ($6::text IS NULL OR lower(p.display_name) LIKE '%' || lower($6::text) || '%')
+             AND ($7::integer IS NULL OR signals.distance_miles <= $7::integer)` : ""}
            ORDER BY p.created_at DESC, p.user_id
            LIMIT $2`,
-        [userId, MAX_CANDIDATES]
+        isSearch ? [userId,MAX_SERVER_SEARCH_CANDIDATES,criteria.ageMin,criteria.ageMax,
+          criteria.genders.length?criteria.genders.map(x=>x.toLowerCase()):null,
+          criteria.search||null,criteria.radius||null]
+          : [userId,MAX_CANDIDATES]
       );
       const members = selected.rows;
       if (members.length === 0) return {members, viewerAnswers:[], byUser:new Map(), penalties:new Map(), avatarIds:new Map()};
@@ -115,6 +139,17 @@ export async function handleDiscovery(request, userId, withMember, json) {
         distanceMiles:Number.isInteger(miles)&&miles>=0&&miles<=13000?miles:null,
         matchPercent:adjustedViewerMatchPercent(member.matchPercent,penalty)};
     });
+    if(isSearch){
+      const filtered=filterAndSortMembers(profiles,criteria,Date.now());
+      const paged=pageMembers(filtered,page,SEARCH_PAGE_SIZE);
+      return json(request,{
+        profiles:paged.items,page:paged.page,total:paged.total,
+        totalPages:paged.totalPages,pageSize:SEARCH_PAGE_SIZE,
+        candidateLimit:MAX_SERVER_SEARCH_CANDIDATES,
+        truncated:results.members.length===MAX_SERVER_SEARCH_CANDIDATES,
+        scoringVersion:SCORING_VERSION
+      });
+    }
     return json(request, {
       profiles,
       scoringVersion: SCORING_VERSION,

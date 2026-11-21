@@ -32,7 +32,7 @@ test("onboarding, registration, recovery and account actions live inside React",
 });
 
 test("sign-out clears private state before backend confirmation",()=>{
-  assert.match(provider, /const current = \+\+version\.current;\s*setSession\(blank\); \/\/ Conceal member information/);
+  assert.match(provider, /const current = \+\+version\.current;\s*clearSearchCache\(\);setSession\(blank\); \/\/ Conceal member information/);
   assert.match(provider, /Sign-out could not be confirmed/);
 });
 

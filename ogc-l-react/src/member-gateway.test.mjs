@@ -47,6 +47,37 @@ function mockGateway({authSession=session, onboarding=fakeOnboarding,
   };
 }
 
+test("MATCHES server page uses one JWT-scoped query and validates response metadata",async()=>{
+  const criteria={search:"",sort:"match",genders:[],intentions:[],
+    ageMin:18,ageMax:99,radius:0,advanced:{},whoLike:[],activity:"",kidPlans:""};
+  const {service,calls}=mockGateway({responseFor:async url=>{
+    const parsed=new URL(url);
+    assert.equal(parsed.pathname,"/discovery-search");
+    assert.equal(JSON.parse(parsed.searchParams.get("criteria")).sort,"match");
+    assert.equal(parsed.searchParams.get("page"),"1");
+    return good({profiles:[fakeDiscovery.profiles[0]],page:1,total:1,
+      totalPages:1,pageSize:20,truncated:false});
+  }});
+  const result=await service.searchMembers(criteria,1);
+  assert.equal(result.total,1);
+  assert.equal(result.profiles[0].userId,THEM);
+  assert.equal(calls.length,1);
+  assert.equal(calls[0][1].headers.Authorization,"Bearer header.payload.signature");
+  assert.equal(calls[0][1].cache,"no-store");
+  assert.equal(calls[0][1].credentials,"omit");
+  await assert.rejects(service.searchMembers({...criteria,sort:"unsafe"},1),
+    e=>e.code==="invalid");
+});
+test("MATCHES search rejects malformed page metadata and unauthorized JWT",async()=>{
+  const criteria={ageMin:18,ageMax:99,radius:0};
+  const {service}=mockGateway({responseFor:async()=>good({
+    profiles:[],page:1,total:25,totalPages:1,pageSize:20
+  })});
+  await assert.rejects(service.searchMembers(criteria,1),e=>e.code==="unavailable");
+  const {service:guest,calls}=mockGateway({authSession:{user:null,session:null}});
+  await assert.rejects(guest.searchMembers(criteria,1),e=>e.code==="unauthorized");
+  assert.equal(calls.length,0);
+});
 test("missing or insecure URLs cannot silently connect the preview to any database",()=>{
   assert.equal(configuredMemberEndpoints("",apiUrl),null);
   assert.equal(configuredMemberEndpoints("http://127.0.0.1:4000/auth",apiUrl),null);

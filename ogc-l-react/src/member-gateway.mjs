@@ -1,4 +1,5 @@
 import {safeEssayProfile, composeEssayUpdate} from "./member-essays.mjs";
+import {normalizeSearchCriteria,validSearchPage,SEARCH_PAGE_SIZE} from "./search-contract.mjs";
 import {
   photoCacheKey,readProtectedPhoto,storeProtectedPhoto,
   invalidateMemberPhotos,coalescePhoto,makePhotoThumbnail
@@ -614,6 +615,51 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
       const jwt=await getJwt(identity?.data?.session);
       const data=await readApi("/"+section,jwt);
       return section==="profile"?sanitizeProfile(data,user.id):sanitizeDiscovery(data,user.id);
+    },
+    // Authenticated search pages are sized/filtered/scored on the server.
+    // Do not cache bearer tokens or trust caller-supplied identities.
+    async searchMembers(rawCriteria,page=1) {
+      let criteria;
+      try{criteria=normalizeSearchCriteria(rawCriteria);}
+      catch{throw new MemberAccessError("invalid","Invalid MATCHES search criteria.");}
+      if(!validSearchPage(page))
+        throw new MemberAccessError("invalid","Invalid MATCHES page.");
+      const identity=await bounded(authClient.getSession());
+      if(identity?.error)throw new MemberAccessError("unauthorized","Session unavailable.");
+      const viewer=checkedMember(identity?.data?.user);
+      const jwt=await getJwt(identity?.data?.session);
+      const params=new URLSearchParams({
+        criteria:JSON.stringify(criteria),page:String(page)
+      });
+      const controller=new AbortController();
+      const timer=setTimeout(()=>controller.abort(),MAX_WAIT_MS);
+      try{
+        const response=await fetcher(endpoints.memberApiBaseUrl+
+          "/discovery-search?"+params.toString(),{
+          method:"GET",credentials:"omit",cache:"no-store",
+          headers:{Authorization:"Bearer "+jwt,Accept:"application/json"},
+          signal:controller.signal
+        });
+        requireResponse(response);
+        const data=await bounded(response.json());
+        if(!Number.isInteger(data?.page)||data.page<1||
+           !Number.isInteger(data?.total)||data.total<0||
+           !Number.isInteger(data?.totalPages)||data.totalPages<1||
+           data.totalPages!==Math.max(1,Math.ceil(data.total/SEARCH_PAGE_SIZE))||
+           data.page!==Math.min(page,data.totalPages)||
+           data.pageSize!==SEARCH_PAGE_SIZE||
+           !Array.isArray(data.profiles)||data.profiles.length>SEARCH_PAGE_SIZE)
+          throw new MemberAccessError("unavailable","Invalid MATCHES response.");
+        const profiles=sanitizeDiscovery(data,viewer.id);
+        if(profiles.length!==data.profiles.length)
+          throw new MemberAccessError("unavailable","Invalid MATCHES profiles.");
+        return Object.freeze({profiles:Object.freeze(profiles),page:data.page,
+          total:data.total,totalPages:data.totalPages,
+          truncated:data.truncated===true});
+      }catch(error){
+        if(error instanceof MemberAccessError)throw error;
+        throw new MemberAccessError("unavailable","Could not load MATCHES search.");
+      }finally{clearTimeout(timer);}
     },
     // Loads only a primary JPEG authorized by the existing member Function.
     // No URLs, credentials or image bytes are stored in browser storage.

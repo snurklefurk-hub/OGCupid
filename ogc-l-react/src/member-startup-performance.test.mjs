@@ -16,8 +16,8 @@ test("member shell becomes ready after server-verified identity without waiting 
   assert.match(gateway,/readApi\("\/onboarding",jwt\)/);
 });
 test("unrelated Search data doesn't show an empty result while network is loading",()=>{
-  assert.match(matches,/tab==="search"&&discoveryLoading&&<p role="status">Loading matches/);
-  assert.match(matches,/!discoveryLoading&&!discoveryUnavailable/);
+  assert.match(matches,/tab==="search"&&searchLoading&&!visibleSearch&&<p role="status">Loading matches/);
+  assert.match(matches,/tab==="search"\?!!visibleSearch/);
   assert.match(quick,/discoveryLoading&&<p role="status">Loading Quickmatch profiles/);
   assert.match(quick,/!loading&&quickState&&!discoveryLoading&&!discoveryUnavailable/);
 });
