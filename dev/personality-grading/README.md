@@ -2,7 +2,7 @@
 
 **Current graders:** DeepSeek, Arya, and **Ablitseek** (user's name for their abliterated DeepSeek model).
 
-**Status (2026-11-20):** DeepSeek and Arya each assessed 1,193 answers across 410 questions. The third Ablitseek column now contains **881 imported assessments** (618 with nonempty trait scores, 263 explicitly unscored; 312 awaiting later batches). The first batch's header says `model: "Astra 6.2"` because the owner reused the same prompt; the owner explicitly identified this as **Ablitseek** output, and it was imported without altering grades. Previous **Codex** and **Astra 6.2** grading are **excluded** from active comparison; their results must not be used as tie-breakers, fallback defaults, or production scoring. Old historical GitHub commits may still contain obsolete grading files, but these are not active source data.
+**Status (2026-11-20):** DeepSeek and Arya each assessed 1,193 answers across 410 questions. The third Ablitseek column now contains **1,182 imported assessments** (831 with nonempty trait scores, 351 explicitly unscored; 11 awaiting later batches). The first batch's header says `model: "Astra 6.2"` because the owner reused the same prompt; the owner explicitly identified this as **Ablitseek** output, and it was imported without altering grades. Previous **Codex** and **Astra 6.2** grading are **excluded** from active comparison; their results must not be used as tie-breakers, fallback defaults, or production scoring. Old historical GitHub commits may still contain obsolete grading files, but these are not active source data.
 
 ## Working files
 
@@ -26,3 +26,20 @@ Received 254 unique proposed Ablitseek answers. Imported 250 valid original ques
 ## Batch 4 intake — 2026-11-20
 
 Received 262 unique proposed Ablitseek answers. Imported 257 valid original question/option ID matches without altering scores, reasons, or confidence. Rejected five unknown option pairs: `vault-448 / option-2`, `vault-469 / option-1`, `vault-565 / option-3`, `vault-573 / option-1`, `vault-578 / option-1`. There were zero duplicates or conflicts with previously imported keys. The 257 accepted entries consist of 183 with scores and 74 with empty score arrays. Do not guess replacements for rejected pairs. Combined: 881/1,193 (618 scored, 263 empty), 312 pending. All assessments remain unapproved research proposals, not production data.
+
+## Batch 5 intake — 2026-11-20
+
+Received 302 unique proposed Ablitseek answers. Imported 301 valid original question/option ID matches without changing scores, reasons, or confidence. Rejected one unknown option pair: `vault-646 / option-2`. There were zero duplicates or conflicts with previously imported keys. The 301 accepted entries consist of 213 with scores and 88 with empty score arrays. Do not assign or infer replacement for the rejected pair. Combined: 1,182/1,193 (831 scored, 351 empty), 11 pending. The remaining answer pairs are:
+- `vault-272 / option-4`: Is it a requirement that you communicate every day with your significant other (via phone, text, in person, whatever)? — No, I’d prefer not to communicate daily
+- `vault-336 / option-2`: Should wealthier people pay higher taxes? — No
+- `vault-354 / option-3`: How do you take your coffee? — Put that coffee down! Coffee is for closers only.
+- `vault-366 / option-2`: What’s worse on a first date? — Nothing to talk about
+- `vault-378 / option-4`: How many books do you own? — 50+
+- `vault-448 / option-3`: Which is scarier to reveal to a new partner? — Both equally
+- `vault-469 / option-3`: Did you have a dysfunctional upbringing? — No, not at all.
+- `vault-565 / option-4`: When it comes to right and wrong, which of the following do you think has the greatest impact on your belief system? — Self interest.
+- `vault-573 / option-3`: Is global warming a serious problem? — I don’t know
+- `vault-578 / option-2`: Orgasms are clearly the most important part of sex. — I disagree.
+- `vault-646 / option-4`: Which is closest to your reaction to foul language? — It bothers me a lot.
+
+All assessments remain unapproved research proposals, not production data.
