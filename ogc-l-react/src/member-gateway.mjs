@@ -93,7 +93,7 @@ export function sanitizeDiscovery(data, memberId) {
         p.matchPercent >= 0 && p.matchPercent <= 100)))
     .slice(0, 250)
     .map(p => {
-      const permitted=["gender","relationshipGoal","bodyType","status",
+      const permitted=["gender","interestedIn","relationshipGoal","bodyType","status",
         "relationshipType","height","drinking","smoking","vaping","drugs",
         "diet","religion","ethnicity","education","kids","pets","income",
         "languages","orientation"];

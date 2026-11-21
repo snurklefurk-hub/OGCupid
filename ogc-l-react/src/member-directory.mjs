@@ -55,7 +55,7 @@ export function savedSearchDefaults(profile) {
   const radius=profile?.lookingFor?.hasValidatedLocality===true &&
     SEARCH_RADII.includes(saved.searchRadiusMiles)?saved.searchRadiusMiles:0;
   return {
-    search:"",sort:"match",
+    search:"",sort:"match",whoLike:[],activity:"",kidPlans:"",
     genders:SEARCH_GENDERS.filter(x=>gender.includes(keyText(x))),
     intentions:SEARCH_INTENTIONS.filter(x=>intent.includes(keyText(x))),
     ageMin:Number.isInteger(saved.preferredAgeMin)?saved.preferredAgeMin:18,
@@ -74,7 +74,27 @@ function matchesAdvanced(member,advanced) {
   }
   return true;
 }
-export function filterAndSortMembers(profiles, filters={}) {
+export const ACTIVITY_WINDOWS=[
+  ["Online now",180000],["Past hour",3600000],["Past day",86400000],
+  ["Past week",7*86400000],["Past month",30*86400000],["Past year",365*86400000],
+  ["Long ago",Infinity]
+];
+export function activityBucket(date,now=Date.now()){
+  const age=now-(typeof date==="string"?Date.parse(date):NaN);
+  if(!Number.isFinite(age)||age<0)return null;
+  return ACTIVITY_WINDOWS.find(([,limit])=>age<=limit)[0];
+}
+// Only recognize an explicitly stated plan in legacy Children details.
+export function childPlan(value){
+  const phrases=String(value||"").toLowerCase().split(/[,;·]/).map(x=>x.trim());
+  const plans=[
+    ["Wants children",/^(?:wants?|would like) (?:more )?(?:kids|children)$/],
+    ["Doesn’t want children",/^(?:doesn['’]t want|do not want|don't want) (?:more )?(?:kids|children)$/],
+    ["Undecided",/^(?:undecided about|unsure about) (?:having )?(?:more )?(?:kids|children)$/]
+  ];
+  return plans.find(([,pattern])=>phrases.some(x=>pattern.test(x)))?.[0]||"";
+}
+export function filterAndSortMembers(profiles, filters={},now=Date.now()) {
   const {search="",sort="match",genders=[],intentions=[],
     ageMin=18,ageMax=99,radius=0,advanced={}}=filters;
   const query=keyText(search).slice(0,80);
@@ -88,6 +108,14 @@ export function filterAndSortMembers(profiles, filters={}) {
       if(!member || typeof member.displayName!=="string" ||
         (query&&!keyText(member.displayName).includes(query)))return false;
       if(chosenGenders.size&&!chosenGenders.has(keyText(member.gender)))return false;
+      if(filters.whoLike?.length&&!filters.whoLike.some(x=>splitChoices(member.interestedIn).includes(keyText(x))))return false;
+      if(filters.kidPlans&&childPlan(member.kids)!==filters.kidPlans)return false;
+      if(filters.activity){
+        const bucket=activityBucket(member.lastSeenAt,now);
+        if(!bucket)return false;
+        const rank=label=>ACTIVITY_WINDOWS.findIndex(([name])=>name===label);
+        if(filters.activity==="Long ago"?bucket!=="Long ago":rank(bucket)>rank(filters.activity))return false;
+      }
       if(chosenIntentions.size&&
         !splitChoices(member.relationshipGoal).some(goal=>chosenIntentions.has(goal)))
         return false;

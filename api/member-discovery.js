@@ -25,7 +25,7 @@ export async function handleDiscovery(request, userId, withMember, json) {
       // private onboarding record.
       const selected = await client.query(
         `SELECT p.user_id, p.display_name, p.age, p.city_region, routes.slug,
-                  p.gender, p.relationship_goal, p.about_me, p.created_at,
+                  p.gender, p.interested_in, p.relationship_goal, p.about_me, p.created_at,
                   p.body_type, p.status, p.relationship_type, p.height,
                   p.drinking, p.smoking, p.vaping, p.drugs, p.diet,
                   p.religion, p.ethnicity, p.education, p.kids, p.pets,
@@ -86,7 +86,7 @@ export async function handleDiscovery(request, userId, withMember, json) {
       const row=details.get(member.userId);
       const attrs={};
       for(const [key,column] of Object.entries({
-        gender:"gender",relationshipGoal:"relationship_goal",
+        gender:"gender",interestedIn:"interested_in",relationshipGoal:"relationship_goal",
         bodyType:"body_type",status:"status",relationshipType:"relationship_type",
         height:"height",drinking:"drinking",smoking:"smoking",vaping:"vaping",
         drugs:"drugs",diet:"diet",religion:"religion",ethnicity:"ethnicity",
