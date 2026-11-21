@@ -2,7 +2,7 @@
 
 **Current graders:** DeepSeek, Arya, and **Ablitseek** (user's name for their abliterated DeepSeek model).
 
-**Status (2026-11-20):** DeepSeek and Arya each assessed 1,193 answers across 410 questions. The third Ablitseek column now contains **624 imported assessments** (435 with nonempty trait scores, 189 explicitly unscored; 569 awaiting later batches). The first batch's header says `model: "Astra 6.2"` because the owner reused the same prompt; the owner explicitly identified this as **Ablitseek** output, and it was imported without altering grades. Previous **Codex** and **Astra 6.2** grading are **excluded** from active comparison; their results must not be used as tie-breakers, fallback defaults, or production scoring. Old historical GitHub commits may still contain obsolete grading files, but these are not active source data.
+**Status (2026-11-20):** DeepSeek and Arya each assessed 1,193 answers across 410 questions. The third Ablitseek column now contains **881 imported assessments** (618 with nonempty trait scores, 263 explicitly unscored; 312 awaiting later batches). The first batch's header says `model: "Astra 6.2"` because the owner reused the same prompt; the owner explicitly identified this as **Ablitseek** output, and it was imported without altering grades. Previous **Codex** and **Astra 6.2** grading are **excluded** from active comparison; their results must not be used as tie-breakers, fallback defaults, or production scoring. Old historical GitHub commits may still contain obsolete grading files, but these are not active source data.
 
 ## Working files
 
@@ -22,3 +22,7 @@ Received 231 unique proposed Ablitseek answers. Imported 228 valid, original que
 ## Batch 3 intake — 2026-11-20
 
 Received 254 unique proposed Ablitseek answers. Imported 250 valid original question/option ID matches without changing scores, reasons, or confidence. Rejected four unknown option pairs: `vault-336 / option-1`, `vault-354 / option-2`, `vault-366 / option-1`, and `vault-378 / option-3`. There were zero repeated or conflicting previously imported keys. The 250 accepted entries consist of 167 with scores and 83 with empty score arrays. Do not assign or infer replacements for rejected pairs. Combined total: 624/1,193; remaining 569. None is owner-approved or published.
+
+## Batch 4 intake — 2026-11-20
+
+Received 262 unique proposed Ablitseek answers. Imported 257 valid original question/option ID matches without altering scores, reasons, or confidence. Rejected five unknown option pairs: `vault-448 / option-2`, `vault-469 / option-1`, `vault-565 / option-3`, `vault-573 / option-1`, `vault-578 / option-1`. There were zero duplicates or conflicts with previously imported keys. The 257 accepted entries consist of 183 with scores and 74 with empty score arrays. Do not guess replacements for rejected pairs. Combined: 881/1,193 (618 scored, 263 empty), 312 pending. All assessments remain unapproved research proposals, not production data.
