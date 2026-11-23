@@ -1,0 +1,28 @@
+.ogcl-admin-promos{min-width:0}
+.ogcl-admin-promos-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:0 0 13px;border-bottom:1px solid #cad7e2}
+.ogcl-admin-promos-head h2{margin:0 0 5px}
+.ogcl-admin-promos-head p{font-size:12px;color:#52677c;margin:0;max-width:600px}
+.ogcl-admin-promos-grid{display:grid;grid-template-columns:minmax(210px,33%) minmax(0,1fr);gap:16px;margin-top:16px}
+.ogcl-admin-promos-list{min-width:0;background:#f8fafc;border:1px solid #ccd8e4;max-height:750px;overflow:auto}
+.ogcl-admin-promos-list-header{padding:9px 10px;background:#e5edf5;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:7px}
+.ogcl-admin-promos-list-header label{font-size:11px;display:flex;align-items:center;gap:5px}
+.ogcl-admin-promos-list-item{display:block;width:100%;text-align:left;padding:10px 12px;border:0;border-bottom:1px solid #d4dde6;background:#fff;color:#294767;cursor:pointer}
+.ogcl-admin-promos-list-item:hover,.ogcl-admin-promos-list-item:focus-visible{background:#edf4fb}
+.ogcl-admin-promos-list-item.selected{background:#dcecf9;border-left:4px solid #2963a4;padding-left:8px}
+.ogcl-admin-promos-list-item strong,.ogcl-admin-promos-list-item span,.ogcl-admin-promos-list-item small{display:block;overflow-wrap:anywhere}
+.ogcl-admin-promos-list-item span{font-size:10px;color:#637c91;margin:5px 0}
+.ogcl-admin-promos-list-item small{font-size:11px;color:#3d4e5d;line-height:1.4}
+.ogcl-admin-promos-form-panel{min-width:0}
+.ogcl-admin-promos-form{display:flex;flex-direction:column;gap:12px}
+.ogcl-admin-promos-form label{display:flex;flex-direction:column;gap:5px;color:#264e79;font-size:12px;font-weight:bold}
+.ogcl-admin-promos-form input:not([type=checkbox]),.ogcl-admin-promos-form textarea{width:100%}
+.ogcl-admin-promos-form-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.ogcl-admin-promos-form .ogcl-admin-promos-checkbox{flex-direction:row;align-items:center;gap:8px}
+.ogcl-admin-promos-checkbox input{width:auto}
+.ogcl-admin-promos-preview{display:grid;gap:4px;max-width:330px;padding:11px 13px;background:#183b62;border:1px solid #2e547a;color:#dce9f6;font-size:11px;overflow-wrap:anywhere}
+.ogcl-admin-promos-preview strong{color:#fff;font-size:12px}
+.ogcl-admin-promos-preview small{color:#99cbea;overflow-wrap:anywhere}
+.ogcl-admin-promos-actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.ogcl-admin-promos-delete{padding:7px 12px;background:#fff;border:1px solid #b73b3b;color:#952424;border-radius:2px;cursor:pointer}
+.ogcl-admin-promos-delete:disabled{opacity:.5;cursor:wait}
+@media(max-width:1080px){.ogcl-admin-promos-grid{grid-template-columns:1fr}.ogcl-admin-promos-list{max-height:260px}}

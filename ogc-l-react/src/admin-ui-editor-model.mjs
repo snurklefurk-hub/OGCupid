@@ -98,12 +98,8 @@ const shellText=[
     .map(name=>({id:"shell.footer."+name,label:"Footer · "+name,scope:"shell",max:90})),
   {id:"shell.footer.disclaimer",label:"Footer disclaimer",scope:"shell",max:500},
   {id:"shell.suggestions",label:"Suggested members heading",scope:"shell",max:90},
-  ...["left","right"].flatMap(side=>[0,1,2].flatMap(n=>[
-    {id:"shell.promo."+side+"."+n+".title",label:side+" promotion "+(n+1)+" title",scope:"shell",max:120},
-    {id:"shell.promo."+side+"."+n+".body",label:side+" promotion "+(n+1)+" copy",scope:"shell",max:500}
-  ])),
-  {id:"shell.refinement.title",label:"Profile refinement title",scope:"shell",max:120},
-  {id:"shell.refinement.body",label:"Profile refinement copy",scope:"shell",max:500}
+  // Promo text and links are owned by Admin → Promos. The visual editor
+  // still styles the card regions but cannot override their saved copy.
 ].map(target=>({...target,selector:'[data-ogc-edit-text="'+target.id+'"]'}));
 export const EDITOR_PAGE_TEXT_ROUTES=new Set([
   "/matches","/quickmatch","/questions","/messages","/community","/persona","/ogtrends","/admin"

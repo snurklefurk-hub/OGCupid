@@ -499,8 +499,9 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
       const memberId="[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
       const editing=new RegExp("^/admin/members/"+memberId+"/(?:content|field|age-range|answers(?:/vault-[0-9]{1,25})?|photos(?:/"+memberId+"(?:/(?:bytes|primary|replace))?)?)$","i");
       const uiDesign=/^\/admin\/ui-design(?:\/(?:publish|rollback))?$/;
+      const promos=/^\/admin\/promos(?:\/[1-9][0-9]{0,14})?$/;
       if(!(/^\/admin(?:\/(?:members|reports)(?:\/[0-9a-f-]{36}(?:\/(?:action|reinstate))?)?)?$/.test(pathname)||
-          editing.test(pathname)||uiDesign.test(pathname)) ||
+          editing.test(pathname)||uiDesign.test(pathname)||promos.test(pathname)) ||
          (path.includes("?") && (!path.startsWith("/admin/members?q=") || method!=="GET")) ||
          !["GET","POST","PUT","DELETE"].includes(method))
         throw new MemberAccessError("invalid","Unsupported admin request.");
