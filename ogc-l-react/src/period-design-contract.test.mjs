@@ -30,12 +30,12 @@ test("no full-height rail lock survives in React or legacy desktop CSS",()=>{
   assert.match(desktop,/overflow-y:visible!important/);
 });
 
-test("the 2011 buttons, headings, active states and nav text are intentional",()=>{
-  assert.match(react,/--ogcl-blue:var\(--okc-blue\)/);
+test("the shell uses the reference palette for navigation, headings and controls",()=>{
+  assert.match(react,/--ogcl-blue:\s*var\(--okc-blue\)/);
   assert.match(react,/background:linear-gradient\(to bottom,var\(--okc-blue-light\),var\(--okc-blue\)\)/);
   assert.match(react,/min-height:30px/);
-  assert.match(react,/\.ogcl-nav-link\.active \{[^}]*var\(--okc-green-pale\)/);
+  assert.match(react,/\.ogcl-nav-link\.active \{[^}]*var\(--okc-navy-deep\)/);
   assert.match(react,/\.ogcl-question-form h2 \{font:bold 15px\/21px/);
-  assert.match(react,/\.ogcl-profile-name-line h1 \{font:normal 26px\/28px/);
-  assert.doesNotMatch(app,/ogcl-nav-glyph/);
+  assert.match(react,/\.ogcl-profile-name-line h1 \{\s*font:normal 26px\/28px[^}]*color:var\(--okc-pink\)/);
+  assert.match(app,/className="ogcl-nav-icon" aria-hidden="true"/);
 });

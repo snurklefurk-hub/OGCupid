@@ -4,7 +4,7 @@ import { primaryNavigation, defaultRoute, validRoutePaths } from "./navigation.m
 
 test("classic shell keeps exactly five primary destinations", () => {
   assert.deepEqual(primaryNavigation.map(item => item.label),
-    ["MATCHES", "MESSAGES", "VISITORS", "QUICKMATCH", "COMMUNITY"]);
+    ["Matches", "Messages", "Visitors", "Quickmatch", "Community"]);
 });
 test("primary destinations have unique route paths", () => {
   assert.equal(new Set(primaryNavigation.map(item => item.path)).size, 5);
