@@ -43,7 +43,8 @@ test("every route uses the same edge-locked three-column desktop shell and nativ
   assert.match(css, /\.ogcl-left, \.ogcl-right \{height:auto;overflow:visible/);
   assert.match(css, /\.ogcl-center \{height:auto;[^}]*overflow:visible/);
   assert.doesNotMatch(css, /height:100dvh|\.ogcl-center \{[^}]*overflow:auto/);
-  assert.match(app, /<LeftRail\s*\/>\s*<main[^>]*>[^]*<Suspense[^]*?<Outlet\s*\/><\/Suspense>[^]*?<\/main>\s*<RightRail\s*\/>\s*<\/div>/);
+  assert.match(app, /<LeftRail\s+promoSelection=\{promoSelection\}\s*\/>\s*<main[^>]*>[^]*<Suspense[^]*?<Outlet\s*\/><\/Suspense>[^]*?<\/main>\s*<RightRail\s+promoSelection=\{promoSelection\}\s*\/>\s*<\/div>/);
+  assert.match(app, /const promoSelection=useSitePromos\(\)/);
   assert.equal([...app.matchAll(/<RightRail\b/g)].length,1);
   assert.match(app, /<Routes>\s*<Route element=\{<AppShell\s*\/>\}>/);
 });
