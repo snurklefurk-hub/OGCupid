@@ -137,7 +137,7 @@ function SearchControls({filters,update,toggleChoice,reset,apply,hasLocation,mem
     </div><footer><button type="submit">Search</button><button type="button" onClick={()=>{reset();setExpanded(false);setOpen("");}}>Reset</button></footer>
   </form>;
 }
-export default function MatchesView({Photo,sidebar}){
+export default function MatchesView({Photo}){
   const {user,discovery,searchMembers,loadConnections,setFavorite,loadOwnSettings}=useMemberSession();
   const [tab,setTab]=useState("search");
   const [filters,setFilters]=useState(()=>savedSearchDefaults(null));
@@ -254,6 +254,7 @@ export default function MatchesView({Photo,sidebar}){
   return <section className="ogcl-view ogcl-matches-page" aria-labelledby="ogcl-matches-title">
     <header className="ogcl-view-head ogcl-matches-head">
       <h1 id="ogcl-matches-title">Matches</h1>
+      <NavLink to="/questions">Answer match questions</NavLink>
     </header>
     <nav className="ogcl-matches-tabs" aria-label="Matches sections">
       {TABS.map(([id,label])=><button type="button" key={id}
@@ -266,56 +267,51 @@ export default function MatchesView({Photo,sidebar}){
         toggleChoice={toggleChoice} reset={reset} apply={()=>{setApplied(filters);setPage(1);setSearchRevision(x=>x+1);}}
         members={discovery}
         hasLocation={savedSettings?.lookingFor?.hasValidatedLocality===true}/>}
-      <div className="ogcl-matches-columns">
-        <div className="ogcl-matches-main">
-          {tab==="search"&&settingsError&&<p className="ogcl-matches-warning" role="status">{settingsError}</p>}
-          {tab==="favorites"&&connections&&<p className="ogcl-matches-inbound-count">
-            You have been favorited by {active.favoritedByCount} {active.favoritedByCount===1?"person":"people"}.
-          </p>}
-          {tab==="quiver"&&<p className="ogcl-matches-description">
-            People you liked in Quickmatch who liked you back.
-          </p>}
-          {tab==="favorites"&&<p className="ogcl-matches-description">
-            Members you've saved to Favorites. Only you can see this list.
-          </p>}
-          {tab!=="search"&&connectionsLoading&&<p role="status">Loading {tab==="quiver"?"Quiver":"Favorites"}…</p>}
-          {tab!=="search"&&connectionsError&&<div role="alert" className="ogcl-error">
-            <p>{connectionsError}</p><button type="button" onClick={()=>void load()}>Retry</button>
-          </div>}
-          {tab==="search"&&!connections&&<p className="ogcl-matches-warning" role="status">
-            Favorites controls will be available after your saved Favorites load.
-          </p>}
-          {favoriteError&&<p role="alert" className="ogcl-error">{favoriteError}</p>}
-          {tab==="search"&&searchLoading&&!visibleSearch&&<p role="status">Loading matches…</p>}
-          {tab==="search"&&searchError&&<div role="alert" className="ogcl-error">
-            <p>{searchError}</p>
-            <button type="button" onClick={()=>setSearchRevision(x=>x+1)}>Retry search</button>
-          </div>}
-          {(tab==="search"?!!visibleSearch:!connectionsLoading&&!connectionsError&&!!connections)&&<>
-            <p className="ogcl-matches-result-count">
-              {paged.total} {paged.total===1?"member":"members"}
-              {tab==="search"&&visibleSearch?.truncated&&" · More eligible profiles may exist beyond the current search limit."}
-            </p>
-            {paged.items.length?<div className="ogcl-matches-results">
-              {paged.items.map(member=><MemberResult key={member.userId} member={member}
-                Photo={Photo} favorited={active.favorites.has(member.userId)}
-                onFavorite={(id,value)=>void favorite(id,value)}
-                busy={busyId===member.userId} canFavorite={!!connections}
-                now={now}/>)}
-            </div>:<p className="ogcl-matches-empty">
-              {tab==="quiver"?"No mutual Quickmatch Likes yet.":
-                tab==="favorites"?"You haven't saved anyone to Favorites yet.":
-                  "No available members match your filters."}
-            </p>}
-            {paged.totalPages>1&&<nav className="ogcl-pages" aria-label="Matches pages">
-              {Array.from({length:paged.totalPages},(_,i)=><button key={i} type="button"
-                aria-current={paged.page===i+1?"page":undefined}
-                onClick={()=>setPage(i+1)}>{i+1}</button>)}
-            </nav>}
-          </>}
-        </div>
-        {sidebar}
-      </div>
+      {tab==="search"&&settingsError&&<p className="ogcl-matches-warning" role="status">{settingsError}</p>}
+      {tab==="favorites"&&connections&&<p className="ogcl-matches-inbound-count">
+        You have been favorited by {active.favoritedByCount} {active.favoritedByCount===1?"person":"people"}.
+      </p>}
+      {tab==="quiver"&&<p className="ogcl-matches-description">
+        People you liked in Quickmatch who liked you back.
+      </p>}
+      {tab==="favorites"&&<p className="ogcl-matches-description">
+        Members you've saved to Favorites. Only you can see this list.
+      </p>}
+      {tab!=="search"&&connectionsLoading&&<p role="status">Loading {tab==="quiver"?"Quiver":"Favorites"}…</p>}
+      {tab!=="search"&&connectionsError&&<div role="alert" className="ogcl-error">
+        <p>{connectionsError}</p><button type="button" onClick={()=>void load()}>Retry</button>
+      </div>}
+      {tab==="search"&&!connections&&<p className="ogcl-matches-warning" role="status">
+        Favorites controls will be available after your saved Favorites load.
+      </p>}
+      {favoriteError&&<p role="alert" className="ogcl-error">{favoriteError}</p>}
+      {tab==="search"&&searchLoading&&!visibleSearch&&<p role="status">Loading matches…</p>}
+      {tab==="search"&&searchError&&<div role="alert" className="ogcl-error">
+        <p>{searchError}</p>
+        <button type="button" onClick={()=>setSearchRevision(x=>x+1)}>Retry search</button>
+      </div>}
+      {(tab==="search"?!!visibleSearch:!connectionsLoading&&!connectionsError&&!!connections)&&<>
+        <p className="ogcl-matches-result-count">
+          {paged.total} {paged.total===1?"member":"members"}
+          {tab==="search"&&visibleSearch?.truncated&&" · More eligible profiles may exist beyond the current search limit."}
+        </p>
+        {paged.items.length?<div className="ogcl-matches-results">
+          {paged.items.map(member=><MemberResult key={member.userId} member={member}
+            Photo={Photo} favorited={active.favorites.has(member.userId)}
+            onFavorite={(id,value)=>void favorite(id,value)}
+            busy={busyId===member.userId} canFavorite={!!connections}
+            now={now}/>)}
+        </div>:<p className="ogcl-matches-empty">
+          {tab==="quiver"?"No mutual Quickmatch Likes yet.":
+            tab==="favorites"?"You haven't saved anyone to Favorites yet.":
+              "No available members match your filters."}
+        </p>}
+        {paged.totalPages>1&&<nav className="ogcl-pages" aria-label="Matches pages">
+          {Array.from({length:paged.totalPages},(_,i)=><button key={i} type="button"
+            aria-current={paged.page===i+1?"page":undefined}
+            onClick={()=>setPage(i+1)}>{i+1}</button>)}
+        </nav>}
+      </>}
     </div>
   </section>;
 }

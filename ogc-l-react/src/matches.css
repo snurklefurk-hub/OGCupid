@@ -1,4 +1,8 @@
 .ogcl-matches-head {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
   padding:29px 18px 9px;
   background:linear-gradient(var(--okc-white),var(--okc-paper-dim));
   border:0;
@@ -29,7 +33,6 @@
 .filter-chip{position:relative;display:inline-flex;align-items:center;min-width:0;max-width:100%;box-sizing:border-box;border:1px solid #c3d2df;border-radius:14px;background:var(--okc-pale-blue);box-shadow:inset 0 1px var(--okc-white)}
 .classic-search .filter-chip>button{display:flex;align-items:center;justify-content:space-between;gap:14px;max-width:100%;min-width:0;border:0;background:transparent;color:var(--okc-heading);padding:3px 10px;font:bold 11px/15px Verdana,sans-serif;text-align:left;cursor:pointer;overflow-wrap:anywhere}
 .chip-extras>.green{min-width:min(148px,100%)}
-@media(max-width:520px){.classic-search .chip-flow .filter-chip>button{gap:3px;padding:3px 6px}.chip-flow{gap:5px}}
 .classic-search .filter-chip>button:first-child{flex:1}
 .classic-search .filter-chip>button+button{padding:0 6px;color:#526d88}
 .filter-chip.green{background:linear-gradient(#e0edce,#cedfb8);border-color:#bbcfaa}
@@ -43,9 +46,9 @@
 .age-options{width:66px;max-height:min(190px,32vh);overflow-y:auto;overscroll-behavior:contain}
 
 .chip-order {border-top:1px solid var(--okc-line);}
-.classic-search .chip-order .filter-chip>button {min-width:min(193px,70vw);}
+.classic-search .chip-order .filter-chip>button {min-width:193px;}
 .classic-search footer {display:flex;justify-content:space-between;gap:10px;padding:9px 0 0;background:var(--okc-paper);}
-.classic-search footer button,.ogcl-match-favorite,.ogcl-match-questions .ogcl-button {
+.classic-search footer button,.ogcl-match-favorite {
   border:1px solid var(--okc-line);
   border-radius:3px;
   background:linear-gradient(var(--okc-white),var(--okc-paper-dim));
@@ -59,24 +62,9 @@
   width:34%;color:var(--okc-white);border-color:var(--okc-blue);
   background:linear-gradient(to bottom,var(--okc-blue-light),var(--okc-blue));
 }
-.classic-search footer button:hover,.ogcl-match-favorite:hover:not(:disabled),.ogcl-match-questions .ogcl-button:hover {
+.classic-search footer button:hover,.ogcl-match-favorite:hover:not(:disabled) {
   border-color:var(--okc-sky-mid);
 }
-.ogcl-matches-columns {display:grid;grid-template-columns:minmax(0,1fr) minmax(155px,24%);gap:15px;}
-.ogcl-matches-main {min-width:0;}
-.ogcl-match-questions {margin:0 0 9px;background:var(--okc-paper-dim);}
-.ogcl-match-questions h2 {
-  margin:0;padding:8px 10px;border-bottom:1px solid var(--okc-line);
-  color:var(--okc-ink);font:bold 12px/17px Verdana,sans-serif;
-}
-.ogcl-match-questions p {margin:0;padding:9px 10px;color:var(--okc-heading);}
-.ogcl-match-questions .ogcl-button {margin:0 10px 10px;text-decoration:none;text-shadow:none;box-shadow:none;}
-.ogcl-right-in-matches .ogcl-editorial-card {
-  background:var(--okc-paper-dim);color:var(--okc-ink);box-shadow:none;
-}
-.ogcl-right-in-matches .ogcl-editorial-card strong {color:var(--okc-heading);}
-.ogcl-right-in-matches a.ogcl-editorial-card:hover,
-.ogcl-right-in-matches a.ogcl-editorial-card:focus-visible {background:var(--okc-pale-blue);}
 .ogcl-matches-description,.ogcl-matches-inbound-count {margin:0 0 10px;color:var(--okc-ink);font-size:11px;}
 .ogcl-matches-result-count {color:var(--okc-ink);font-size:10px;margin:0 0 8px;}
 .ogcl-matches-results {border:1px solid var(--okc-line);}
@@ -144,21 +132,3 @@
 .ogcl-matches-empty {padding:16px 10px;background:var(--okc-white);border:1px solid var(--okc-line);}
 .ogcl-matches-warning {color:#936100;font:11px/17px Verdana,sans-serif;}
 
-@media(max-width:800px) {
-  .ogcl-matches-head {padding:15px 12px 9px;}
-  .ogcl-matches-tabs {padding-inline:10px;}
-  .ogcl-matches-body {padding:12px;}
-  .ogcl-matches-columns {grid-template-columns:minmax(0,1fr);}
-  .ogcl-right-in-matches {padding:0;}
-}
-@media(max-width:520px) {
-  .ogcl-matches-tabs button {padding-inline:10px;}
-  .ogcl-match-result {grid-template-columns:64px minmax(0,1fr);gap:0 9px;padding:9px;}
-  .ogcl-match-result-photo {width:64px;}
-  .ogcl-match-result-score {
-    grid-column:1/-1;grid-row:auto;flex-direction:row;align-items:center;gap:7px;
-    flex-wrap:wrap;margin:8px 0 0;padding:6px;
-  }
-  .ogcl-match-result-score small:last-of-type {margin:0;}
-  .ogcl-match-favorite {width:auto;margin-left:auto;}
-}

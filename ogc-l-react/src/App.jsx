@@ -1,5 +1,5 @@
 import React, {lazy, Suspense, useEffect, useMemo, useState} from "react";
-import {Navigate, NavLink, Outlet, Route, Routes, useMatch} from "react-router-dom";
+import {Navigate, NavLink, Outlet, Route, Routes} from "react-router-dom";
 import {defaultRoute, primaryNavigation} from "./navigation.mjs";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {SidebarPromos, ProfileFloater, ProfileRefinement} from "./ClassicSidebar.jsx";
@@ -106,17 +106,13 @@ function LeftRail() {
   );
 }
 
-function RightRail({inMatches=false}) {
+function RightRail() {
   const {kind,user,onboarding} = useMemberSession();
   const keys=["identity","locality","profile","photo","quiz","explored"];
   const percent=Math.round(keys.filter(key=>onboarding?.[key]===true).length/keys.length*100);
   return (
-    <aside className={"ogcl-right"+(inMatches?" ogcl-right-in-matches":"")} aria-label="Profile and site features">
-      {inMatches ? <section className="ogcl-match-questions">
-        <h2>Improve your matches</h2>
-        <p>How would you answer the next match question?</p>
-        <NavLink className="ogcl-button" to="/questions">Answer questions</NavLink>
-      </section> : <ProfileFloater Photo={MemberPhoto}/>}
+    <aside className="ogcl-right" aria-label="Profile and site features">
+      <ProfileFloater Photo={MemberPhoto}/>
       {kind==="onboarding" && <section className="ogcl-side-card ogcl-onboarding-widget">
         {user?.id && onboarding?.photo && <MemberPhoto member={{userId:user.id}}/>}
         <h2>Complete your profile</h2>
@@ -169,11 +165,8 @@ function RouteLoading(){
 }
 
 function AppShell() {
-  const {kind} = useMemberSession();
-  const matches = useMatch("/matches");
-  const useMatchesLayout = kind==="member" && Boolean(matches);
   return (
-    <div className={"ogcl-app"+(useMatchesLayout?" ogcl-app-matches":"")}>
+    <div className="ogcl-app">
       <a className="ogcl-skip" href="#ogcl-content" onClick={event=>{
         event.preventDefault();
         document.getElementById("ogcl-content")?.focus();
@@ -193,7 +186,7 @@ function AppShell() {
           </nav>
         </footer>
       </main>
-      {!useMatchesLayout && <RightRail />}
+      <RightRail />
     </div>
   );
 }
@@ -345,7 +338,7 @@ export default function App() {
         <Route path="terms" element={<EmbeddedEditorial pageKey="terms"/>} />
         <Route path="contact" element={<ContactPage/>} />
         <Route path="photos" element={<MemberGate><PhotoManager/></MemberGate>} />
-        <Route path="matches" element={<MemberGate><MatchesView Photo={MemberPhoto} sidebar={<RightRail inMatches/>}/></MemberGate>} />
+        <Route path="matches" element={<MemberGate><MatchesView Photo={MemberPhoto}/></MemberGate>} />
         <Route path="profile" element={<MemberGate><ProfileEditor /></MemberGate>} />
         <Route path="settings" element={<MemberGate><ProfileSettings /></MemberGate>} />
         <Route path="profiles/:slug" element={<MemberGate><PublicMemberProfile Photo={MemberPhoto} /></MemberGate>} />

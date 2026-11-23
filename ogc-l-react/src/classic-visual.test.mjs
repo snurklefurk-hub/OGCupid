@@ -16,7 +16,6 @@ test("desktop navigation keeps the five existing destinations with compact label
   assert.deepEqual(primaryNavigation.map(x=>x.label),
     ["Matches","Messages","Visitors","Quickmatch","Community"]);
   assert.match(css,/\.ogcl-nav-link \{/);
-  assert.match(css,/@media\(min-width:801px\)/);
   assert.match(app,/<TopMemberNav\/>/);
   assert.match(app,/ProfileFloater Photo=\{MemberPhoto\}/);
   assert.match(app,/<MemberGate allowOnboarding><CommunityChat \/><\/MemberGate>/);

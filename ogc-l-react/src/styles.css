@@ -23,9 +23,8 @@ button, input, textarea, select {font:inherit;}
 .ogcl-app {
   display:grid;
   position:relative;
-  align-items:start;
-  grid-template-columns:16% minmax(0,1fr) 16%;
-  width:min(1150px,100%);
+  grid-template-columns:184px minmax(0,1fr) 184px;
+  width:1150px;
   min-height:100vh;
   margin:0 auto;
 }
@@ -108,19 +107,6 @@ a.ogcl-nav-link:hover {background:var(--okc-navy-line);color:var(--okc-white);}
 .ogcl-footer a {color:var(--okc-sky);}
 .ogcl-skip {position:absolute;left:-9999px;top:0;}
 .ogcl-skip:focus {left:10px;top:10px;z-index:30;background:var(--okc-white);padding:9px;color:var(--okc-navy);}
-
-@media(max-width:800px){
-  .ogcl-app {grid-template-columns:minmax(0,1fr);}
-  .ogcl-brand {height:56px;justify-content:flex-start;padding:8px 12px;}
-  .ogcl-primary {display:flex;flex-wrap:wrap;}
-  .ogcl-nav-link {flex:none;padding:7px 10px;font-size:11px;}
-  .ogcl-nav-icon {font-size:15px;flex-basis:15px;}
-  .ogcl-left-note,.ogcl-right:not(.ogcl-right-in-matches) {display:none;}
-  .ogcl-sheet {min-height:0;}
-  .ogcl-view-head {padding:15px 12px;}
-  .ogcl-content-panel {padding:12px;}
-  .ogcl-footer {padding-inline:12px;}
-}
 
 /* Member identity, onboarding and real recommendations. App shell dimensions
    remain unchanged while account state and center routes switch. */
@@ -465,17 +451,6 @@ a.ogcl-editorial-card:hover,a.ogcl-editorial-card:focus-visible {background:var(
   background:var(--okc-sky-mid);
 }
 .ogcl-profile-floater .ogcl-photo-placeholder {font-size:23px;color:var(--okc-navy);}
-@media(min-width:801px) {
-  .ogcl-app-matches .ogcl-center {grid-column:2/-1;}
-  .ogcl-right-in-matches {padding:0;}
-}
-@media(max-width:800px) {
-  .ogcl-left .ogcl-editorial-stack {display:none;}
-}
-@media(max-width:520px) {
-  .ogcl-nav-link {padding-inline:8px;}
-  .ogcl-nav-icon {display:none;}
-}
 /* Correctly marked as future functionality without inventing activities. */
 .ogcl-quickmatch-view {
   width:min(100%,550px);max-width:550px;margin:8px auto 14px;
