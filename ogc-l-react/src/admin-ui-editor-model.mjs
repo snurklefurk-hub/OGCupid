@@ -12,6 +12,7 @@ export const EDITOR_PAGES=Object.freeze([
   {path:"/community",label:"Community"},
   {path:"/persona",label:"Persona"},
   {path:"/ogtrends",label:"OGTrends"},
+  {path:"/sitemap",label:"Sitemap"},
   {path:"/admin",label:"Administration"}
 ]);
 export const EDITOR_MAIN_NAV_AREAS=Object.freeze(primaryNavigation.map(({path,label})=>{
@@ -94,7 +95,7 @@ const shellText=[
     .map(name=>({id:"shell.public."+name,label:"Left links · "+name,scope:"shell",max:90})),
   ...["profile","settings","account","admin","signout","signin","join"]
     .map(name=>({id:"shell.account."+name,label:"Account bar · "+name,scope:"shell",max:90})),
-  ...["ogtrends","persona","contact","privacy","terms"]
+  ...["ogtrends","persona","contact","privacy","terms","sitemap"]
     .map(name=>({id:"shell.footer."+name,label:"Footer · "+name,scope:"shell",max:90})),
   {id:"shell.footer.disclaimer",label:"Footer disclaimer",scope:"shell",max:500},
   {id:"shell.suggestions",label:"Suggested members heading",scope:"shell",max:90},
@@ -102,7 +103,7 @@ const shellText=[
   // still styles the card regions but cannot override their saved copy.
 ].map(target=>({...target,selector:'[data-ogc-edit-text="'+target.id+'"]'}));
 export const EDITOR_PAGE_TEXT_ROUTES=new Set([
-  "/matches","/quickmatch","/questions","/messages","/community","/persona","/ogtrends","/admin"
+  "/matches","/quickmatch","/questions","/messages","/community","/persona","/ogtrends","/sitemap","/admin"
 ]);
 export const EDITOR_TEXT_TARGETS=Object.freeze([
   ...shellText,
