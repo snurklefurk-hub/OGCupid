@@ -44,11 +44,16 @@ function updatePublishedDom(design,page){
   for(const target of EDITOR_TEXT_TARGETS){
     if(!editorTextTarget(target.id,page))continue;
     const scope=target.scope==="shell"?"*":page;
-    const value=design.texts?.[scope]?.[target.id];
-    if(typeof value!=="string")continue;
     const element=root.querySelector(target.selector);
-    if(element&&!element.children.length&&element.textContent!==value)
-      element.textContent=value; // never innerHTML or member-owned content
+    if(!element||element.children.length)continue;
+    // Store the React source label once so removing a published override
+    // restores the original without requiring a full reload.
+    if(!element.hasAttribute("data-ogc-original-published-text"))
+      element.setAttribute("data-ogc-original-published-text",element.textContent||"");
+    const value=design.texts?.[scope]?.[target.id]??
+      element.getAttribute("data-ogc-original-published-text");
+    if(element.textContent!==value)element.textContent=value;
+    // Never innerHTML or member-owned content.
   }
   const view=allowedPages.has(page)?root.querySelector(".ogcl-sheet .ogcl-view"):null;
   if(!view)return;
