@@ -1,3 +1,5 @@
+import pageCopyCatalog from "virtual:ogc-page-copy";
+import {applySitePageCopy} from "./site-page-copy.mjs";
 import React,{useCallback,useEffect,useMemo,useRef,useState} from "react";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {
@@ -79,6 +81,7 @@ function putPreview(doc,draft,page,selected){
   }
   // Apply draft text ONLY to known static labels. Preserve original text so
   // Reset returns the preview to React's source copy; never use innerHTML.
+  applySitePageCopy(doc,draft,page);
   for(const target of EDITOR_TEXT_TARGETS){
     if(!editorTextTarget(target.id,page))continue;
     for(const element of doc.querySelectorAll(target.selector)){
@@ -152,6 +155,7 @@ export default function AdminUiEditor({onUnsavedChange}){
   const [scale,setScale]=useState(.64);
   const [inspected,setInspected]=useState({values:{},text:"",tokens:{}});
   const [propertyFilter,setPropertyFilter]=useState("");
+  const [renderedCopy,setRenderedCopy]=useState([]);
   const [availableText,setAvailableText]=useState([]);
   const [addType,setAddType]=useState("paragraph");
   const [history,setHistory]=useState([]);
@@ -356,6 +360,11 @@ export default function AdminUiEditor({onUnsavedChange}){
           const next={values,text,tokens,navGap};
           return JSON.stringify(previous)===JSON.stringify(next)?previous:next;
         });
+        const generated=Array.from(doc.querySelectorAll('.ogcl-sheet [data-ogc-edit-text^="site."]'),el=>{
+          const id=el.getAttribute("data-ogc-edit-text"),source=el.getAttribute("data-ogc-editor-original-text")||"";
+          return {id,source,label:source.slice(0,90),pages:[page]};
+        });
+        setRenderedCopy(previous=>JSON.stringify(previous)===JSON.stringify(generated)?previous:generated);
         const available=EDITOR_TEXT_TARGETS.filter(t=>editorTextTarget(t.id,page)&&
           [...doc.querySelectorAll(t.selector)].some(el=>!el.children.length))
           .map(t=>t.id);
@@ -385,11 +394,13 @@ export default function AdminUiEditor({onUnsavedChange}){
   }
   const chosenBlock=selected.kind==="block"?blocks.find(b=>b.id===selected.id):null;
   const chosenArea=selected.kind!=="block"?EDITOR_AREAS.find(a=>a.id===selected.id):null;
+  const pageCatalog=useMemo(()=>Array.from(new Map([...pageCopyCatalog,...renderedCopy].filter(item=>item.pages.includes(page)).map(item=>[item.id,item])).values()),[page,renderedCopy]);
+  const catalogItem=pageCatalog.find(item=>item.id===selected.id&&item.pages.includes(page));
   const chosenText=selected.kind==="text"||chosenArea?.id.startsWith("shell.nav.")?
-    editorTextTarget(selected.id,page):null;
+    (catalogItem?{...editorTextTarget(selected.id,page),...catalogItem}:editorTextTarget(selected.id,page)):null;
   const textScope=chosenText?.scope==="shell"?"*":page;
   const currentText=chosenText?
-    draft.texts[textScope]?.[chosenText.id]??inspected.text:"";
+    draft.texts[textScope]?.[chosenText.id]??catalogItem?.source??inspected.text:"";
   function updateText(value){
     if(!chosenText||chosenText.scope!==workspace)return;
     // Text only, no HTML editing or control characters.
@@ -562,6 +573,7 @@ export default function AdminUiEditor({onUnsavedChange}){
   const textLayers=EDITOR_TEXT_TARGETS.filter(target=>
     target.scope===workspace&&!target.id.startsWith("shell.nav.")&&availableText.includes(target.id)&&layerMatches(target.label)
   );
+  if(workspace==="page")textLayers.push(...pageCatalog.filter(item=>item.pages.includes(page)&&layerMatches(item.source)));
   const activeLabel=chosenBlock?editorBlockHtmlLabel(chosenBlock):
     chosenArea?.label||chosenText?.label||(selected.kind==="palette"?"Global palette":"Select a layer");
 

@@ -168,3 +168,11 @@ test("center field copy is saved on its own page",()=>{
   assert.deepEqual(validatedDesign(document),document);
   assert.equal(validatedDesign({...blank,texts:{"/messages":{[id]:"Show profiles"}}}),null);
 });
+
+test("authored paragraph edits round-trip for non-profile routes",()=>{
+ const id="site.text.0123456789abcdefabcd";
+ for(const page of ["/quickmatch","/visitors","/ogtrends/references","/privacy","/join"]){
+ const doc={...blank,texts:{[page]:{[id]:"Replacement copy"}}}; assert.deepEqual(validatedDesign(doc),doc);
+ }
+ assert.equal(validatedDesign({...blank,texts:{"/profile":{[id]:"Wrong scope"}}}),null);
+});

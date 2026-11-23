@@ -13,7 +13,8 @@ export const EDITOR_PAGES=Object.freeze([
   {path:"/persona",label:"Persona"},
   {path:"/ogtrends",label:"OGTrends"},
   {path:"/sitemap",label:"Sitemap"},
-  {path:"/admin",label:"Administration"}
+  {path:"/admin",label:"Administration"},
+  ...Object.entries({visitors:"Visitors",settings:"Settings",photos:"Photos",account:"Account",signin:"Sign in",join:"Join",recover:"Recovery",verify:"Verification",onboarding:"Onboarding",contact:"Contact",privacy:"Privacy",terms:"Terms","ogtrends/zero":"OgTrends · The Big Idea","ogtrends/perfect-profile":"OgTrends · Perfect Profile","ogtrends/references":"OgTrends · Dating References"}).map(([path,label])=>({path:"/"+path,label}))
 ]);
 export const EDITOR_MAIN_NAV_AREAS=Object.freeze(primaryNavigation.map(({path,label})=>{
   const key=path.slice(1);
@@ -201,6 +202,10 @@ export const EDITOR_TEXT_TARGETS=Object.freeze([
 ]);
 const TEXT_TARGETS=new Map(EDITOR_TEXT_TARGETS.map(x=>[x.id,x]));
 export const editorTextTarget=(id,page)=> {
+  if(typeof id==="string"&&/^site\.(text|hint)\.[a-f0-9]{20}$/.test(id)&&page!=="/profile"&&allowedPages.has(page)){
+    return {id,scope:"page",max:16000,attribute:id.startsWith("site.hint.")?"placeholder":undefined,
+      selector:'.ogcl-sheet [data-ogc-edit-text="'+id+'"]'};
+  }
   const target=TEXT_TARGETS.get(id);
   if(target?.route)return target.route===page?target:null;
   return target && (target.scope==="shell"||EDITOR_PAGE_TEXT_ROUTES.has(page))?target:null;
@@ -216,7 +221,7 @@ export const EDITOR_TOKENS=Object.freeze([
   {id:"--okc-line",label:"Borders",default:"#dddddd"},
   {id:"--okc-green",label:"Green accents",default:"#63a62f"}
 ]);
-export const EDITOR_LINK_ROUTES=Object.freeze([...EDITOR_PAGES,
+export const EDITOR_LINK_ROUTES=Object.freeze([...EDITOR_PAGES.filter(item=>["/matches","/quickmatch","/profile","/questions","/messages","/community","/persona","/ogtrends","/admin"].includes(item.path)),
   {path:"/join",label:"Join"},{path:"/contact",label:"Contact"},
   {path:"/privacy",label:"Privacy"},{path:"/terms",label:"Terms"}]);
 export const EDITOR_BLOCK_TYPES=Object.freeze([
