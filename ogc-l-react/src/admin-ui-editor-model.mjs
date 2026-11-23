@@ -50,6 +50,7 @@ export const EDITOR_PAGE_AREAS=Object.freeze([
 export const EDITOR_AREAS=Object.freeze([...EDITOR_SHELL_AREAS,...EDITOR_PAGE_AREAS]);
 
 export const EDITOR_VIEWPORTS=Object.freeze([
+  {id:"editor",label:"Editing canvas · 1150 × 850",width:1150,height:850},
   {id:"1920",label:"Full HD · 1920 × 1080",width:1920,height:1080},
   {id:"2560",label:"QHD · 2560 × 1440",width:2560,height:1440},
   {id:"3840",label:"4K · 3840 × 2160",width:3840,height:2160}
@@ -150,8 +151,8 @@ function cleanStyle(input,area=""){
     if(key.startsWith("margin")&&["leftRail","rightRail","siteBackground","centerSheet"].includes(area))continue;
     if(COLORS.has(key)&&typeof value==="string"&&HEX.test(value))
       result[key]=value.toLowerCase();
-    else if(NUMBERS.has(key)&&Number.isInteger(value)&&value>=0&&value<=NUMBERS.get(key))
-      result[key]=value;
+    else if(NUMBERS.has(key)&&Number.isFinite(value)&&value>=0&&value<=NUMBERS.get(key))
+      result[key]=Math.round(value*10)/10;
     else if(SELECTS.has(key)&&SELECTS.get(key).includes(value))result[key]=value;
   }
   return result;
@@ -196,7 +197,7 @@ export function sanitizeEditorDraft(raw){
       const target=editorTextTarget(id,scope==="*" ? "/matches" : scope);
       if(!target || (scope==="*"&&target.scope!=="shell") ||
          (scope!=="*"&&target.scope!=="page"))continue;
-      if(typeof value!=="string"||value.length<1||value.length>target.max)continue;
+      if(typeof value!=="string"||value.length>target.max)continue;
       // textContent only; newline, invisible control characters and tags
       // cannot become markup or executable HTML in the preview.
       if(/[\u0000-\u001f\u007f]/.test(value))continue;
