@@ -20,3 +20,18 @@ test("profile content and values rendered from members do not become page copy",
   assert.deepEqual(result.entries.map(e=>e.source),["Reply"]);
   assert.ok(result.code.includes("{message.body}"));
 });
+
+test("the saved Quickmatch replacement renders and Reset restores the original paragraph",async()=>{
+  const {applySitePageCopy}=await import("./src/site-page-copy.mjs");
+  const {blankEditorDraft,sanitizeEditorDraft}=await import("./src/admin-ui-editor-model.mjs");
+  const src=readFileSync(new URL("./src/QuickmatchView.jsx",import.meta.url),"utf8");
+  const entry=compilePageCopy(src,"QuickmatchView.jsx").entries.find(item=>item.source.startsWith("Match percentages are based"));
+  const el={children:[],textContent:entry.source,getAttribute:()=>entry.id};
+  const root={querySelectorAll:()=>[el]};
+  const draft=blankEditorDraft();
+  draft.texts["/quickmatch"]={[entry.id]:"Your answers determine your match score."};
+  applySitePageCopy(root,sanitizeEditorDraft(JSON.parse(JSON.stringify(draft))),"/quickmatch");
+  assert.equal(el.textContent,"Your answers determine your match score.");
+  applySitePageCopy(root,blankEditorDraft(),"/quickmatch");
+  assert.equal(el.textContent,entry.source);
+});

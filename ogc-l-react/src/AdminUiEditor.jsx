@@ -573,7 +573,7 @@ export default function AdminUiEditor({onUnsavedChange}){
   const textLayers=EDITOR_TEXT_TARGETS.filter(target=>
     target.scope===workspace&&!target.id.startsWith("shell.nav.")&&availableText.includes(target.id)&&layerMatches(target.label)
   );
-  if(workspace==="page")textLayers.push(...pageCatalog.filter(item=>item.pages.includes(page)&&layerMatches(item.source)));
+  if(workspace==="page")textLayers.push(...pageCatalog.filter(item=>!textLayers.some(target=>target.id===item.id)&&layerMatches(item.source)));
   const activeLabel=chosenBlock?editorBlockHtmlLabel(chosenBlock):
     chosenArea?.label||chosenText?.label||(selected.kind==="palette"?"Global palette":"Select a layer");
 

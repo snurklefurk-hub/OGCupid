@@ -56,14 +56,25 @@ export function compilePageCopy(code,file){
     }
     if(node.type==="JSXElement"){
       const open=node.openingElement,name=open.name.name,attrs=open.attributes;
-      if(attrs.some(a=>a.name?.name==="data-ogc-edit-text")||["script","style","ProfileShowcase"].includes(name))return;
+      const existing=attrs.find(a=>a.name?.name==="data-ogc-edit-text");
+      if(existing){
+        const id=textValue(existing.value);
+        if(id?.startsWith("copy.")){
+          const source=textValue(attrs.find(a=>a.name?.name==="placeholder")?.value)||
+            node.children.map(c=>c.type==="JSXText"?jsxText(c.value):textValue(c.expression)||"").join("");
+          if(source.trim())entries.set(id,{id,source,label:source.trim().slice(0,90),pages:scope.map(p=>"/"+p)});
+        }
+        return;
+      }
+      if(["script","style","ProfileShowcase"].includes(name))return;
       // Preserve existing page heading/intro IDs, including saved designs.
       const standardHead=attrs.some(a=>a.name?.name==="className"&&String(a.value?.value).includes("ogcl-view-head"));
-      if(standardHead&&scope.every(p=>["matches","quickmatch","questions","messages","community","persona","admin"].includes(p)))return;
+      const legacyHead=standardHead&&scope.every(p=>["matches","quickmatch","questions","messages","community","persona","admin"].includes(p));
       const hint=attrs.find(a=>a.name?.name==="placeholder"),placeholder=textValue(hint?.value);
       if(placeholder)edits.push([hint.start,hint.start,'data-ogc-edit-text="'+marker(placeholder,scope,"placeholder")+'" ']);
       const children=node.children.filter(c=>c.type!=="JSXText"||jsxText(c.value).trim());
       for(const child of children){
+        if(legacyHead&&child.type==="JSXElement"&&(child.openingElement.name.name==="h1"||child===children.find(c=>c.openingElement?.name.name==="p")))continue;
         let value=child.type==="JSXText"?jsxText(child.value):textValue(child.expression);
         if(value?.trim()&&/[\p{L}\p{N}]/u.test(value)){
           const id=marker(value,scope);
