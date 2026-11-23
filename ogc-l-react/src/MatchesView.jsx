@@ -256,7 +256,7 @@ export default function MatchesView({Photo}){
       <h1 id="ogcl-matches-title">Matches</h1>
       <NavLink to="/questions">Answer match questions</NavLink>
     </header>
-    <nav className="ogcl-matches-tabs" aria-label="Matches sections">
+    <nav className="ogcl-matches-tabs ogcl-period-tabs" aria-label="Matches sections">
       {TABS.map(([id,label])=><button type="button" key={id}
         aria-current={tab===id?"page":undefined} onClick={()=>setTab(id)}>
         {label}{id==="quiver"&&connections?" ("+connections.quiver.length+")":""}

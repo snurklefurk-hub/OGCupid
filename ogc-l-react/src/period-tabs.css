@@ -1,0 +1,142 @@
+/* OG Cupid's 2012-era paper tabs: softly graded gray strip and a raised
+   cream-white active tab. This is a shared style; page state and routing
+   remain owned by the original Matches, Quickmatch, Profile and Admin views. */
+:root {
+  --ogc-tab-gradient-top: #ecebed;
+  --ogc-tab-gradient-bottom: #d8d7db;
+  --ogc-tab-edge: #c7c6ca;
+  --ogc-tab-ink: #777477;
+  --ogc-tab-paper: var(--okc-paper);
+}
+
+/* The reference is compact: plain inactive labels, a shallow rounded tab,
+   and one quiet horizontal gradient spanning the available page width. */
+.ogcl-view nav.ogcl-period-tabs {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  gap: 2px;
+  min-height: 40px;
+  padding: 8px 18px 0;
+  margin: 0;
+  background: linear-gradient(to bottom,var(--ogc-tab-gradient-top),var(--ogc-tab-gradient-bottom));
+  border: 0;
+  border-bottom: 1px solid var(--ogc-tab-edge);
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.ogcl-view nav.ogcl-period-tabs > button {
+  appearance: none;
+  display: block;
+  flex: 0 0 auto;
+  min-height: 25px;
+  margin: 0 0 -1px;
+  padding: 5px 12px 6px;
+  color: var(--ogc-tab-ink);
+  background: transparent;
+  border: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+  border-radius: 5px 5px 0 0;
+  box-shadow: none;
+  font: bold 11px/16px Verdana,Arial,sans-serif;
+  text-shadow: 0 1px 0 #fff9;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.ogcl-view nav.ogcl-period-tabs > button:hover:not([aria-current="page"]):not(:disabled) {
+  background: linear-gradient(#f2f1f3,#e8e7ea);
+  border-color: #d1d0d4;
+  border-bottom-color: transparent;
+  color: #5e5b60;
+  text-decoration: none;
+}
+.ogcl-view nav.ogcl-period-tabs > button[aria-current="page"] {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(to bottom,#fcfcfd,var(--ogc-tab-paper));
+  border: 1px solid #d4d2d6;
+  border-bottom-color: var(--ogc-tab-paper);
+  color: #777477;
+  box-shadow: 0 -1px 3px #0000000b;
+  text-decoration: none;
+}
+.ogcl-view nav.ogcl-period-tabs > button:focus-visible,
+.ogcl-profile-tabs a:focus-visible {
+  outline: 2px solid var(--okc-blue);
+  outline-offset: -2px;
+}
+.ogcl-view nav.ogcl-period-tabs > button:disabled {cursor:progress;opacity:.65;}
+
+/* MATCHES: the strip sits directly under the page heading, flush with
+   the existing content column. No changes to filters or pagination. */
+.ogcl-matches-page > nav.ogcl-matches-tabs.ogcl-period-tabs {margin:0;}
+
+/* QUICKMATCH: pull the tab strip to the content panel edges to achieve
+   the same continuous gray band as the MATCHES and profile reference. */
+.ogcl-view nav.ogcl-quickmatch-tabs.ogcl-period-tabs {
+  margin:-16px -18px 16px;
+}
+
+/* ADMIN: one continuous strip, including the Refresh action. Its nav
+   remains in the same component so section state and auth are unchanged. */
+.ogcl-admin .ogcl-admin-toolbar {
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  gap: 8px;
+  min-height: 40px;
+  margin: -18px -20px 18px;
+  padding: 8px 14px 0;
+  background: linear-gradient(to bottom,var(--ogc-tab-gradient-top),var(--ogc-tab-gradient-bottom));
+  border: 0;
+  border-bottom: 1px solid var(--ogc-tab-edge);
+}
+.ogcl-admin .ogcl-admin-toolbar nav.ogcl-period-tabs {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  overflow-x: auto;
+}
+.ogcl-admin .ogcl-admin-toolbar > .ogcl-button {
+  flex: 0 0 auto;
+  align-self: center;
+  min-height: 27px;
+  margin-bottom: 5px;
+  padding: 4px 10px;
+}
+
+/* Preserve the profile reference itself: it gets the same gradient,
+   curved top corners, and subtle paper-colored active surface. */
+.ogcl-profile-tabs {
+  min-height: 40px;
+  padding-top: 8px;
+  background: linear-gradient(to bottom,var(--ogc-tab-gradient-top),var(--ogc-tab-gradient-bottom));
+  border-bottom-color: var(--ogc-tab-edge);
+}
+.ogcl-profile-tabs a {
+  margin-bottom: -1px;
+  border: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+  border-radius: 5px 5px 0 0;
+  color: var(--ogc-tab-ink);
+  text-shadow: 0 1px 0 #fff9;
+}
+.ogcl-profile-tabs a:hover:not(.active) {
+  background: linear-gradient(#f2f1f3,#e8e7ea);
+  border-color: #d1d0d4;
+  border-bottom-color: transparent;
+  text-decoration: none;
+}
+.ogcl-profile-tabs a.active {
+  background: linear-gradient(to bottom,#fcfcfd,var(--ogc-tab-paper));
+  border-color: #d4d2d6;
+  border-bottom-color: var(--ogc-tab-paper);
+  box-shadow: 0 -1px 3px #0000000b;
+}
