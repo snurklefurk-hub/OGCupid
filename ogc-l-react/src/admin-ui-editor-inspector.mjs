@@ -24,7 +24,7 @@ export function inspectEditorProperty(style,property){
   }
   if(property.kind==="number"){
     const number=Number.parseFloat(raw);
-    return {value:Number.isFinite(number)&&number>=0?
+    return {value:Number.isFinite(number)&&number>=(property.min??0)?
       Math.round(number*10)/10:"",raw:raw||"not set"};
   }
   if(property.kind==="select"){

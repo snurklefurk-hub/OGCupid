@@ -1,6 +1,6 @@
 import {
   EDITOR_SCHEMA, EDITOR_PAGES, EDITOR_SHELL_AREAS, EDITOR_PAGE_AREAS,
-  EDITOR_TOKENS, EDITOR_PROPERTIES, sanitizeEditorDraft,
+  EDITOR_TOKENS, EDITOR_PROPERTIES, editorStyleEntries, editorStyleValue, styleShorthand, sanitizeEditorDraft,
 } from "./admin-ui-editor-model.mjs";
 
 const cssName = key => key.replace(/[A-Z]/g, letter => "-" + letter.toLowerCase());
@@ -54,9 +54,9 @@ export function formatEditorCss(draft, scope) {
     !["mainNavigation","mainNavLinks"].includes(area.id) || Object.keys(areas[area.id] || {}).length
   ).map(area => [
     area.selector,
-    Object.entries(areas[area.id] || {}).map(([key,value]) => {
+    editorStyleEntries(areas[area.id] || {}).map(([key,value]) => {
       const property = cssName(key);
-      return [property, properties.get(property)?.kind === "number" ? value + "px" : value];
+      return [property, editorStyleValue(value)];
     }),
   ]);
   if (scope === "*") rules.unshift([":root", Object.entries(draft.tokens)]);
@@ -68,9 +68,10 @@ export function formatEditorCss(draft, scope) {
 function cssValue(name, value, palette) {
   const property = properties.get(name);
   if (palette ? tokens.has(name) : property?.kind === "color") {
-    return hex.test(value) ? value.toLowerCase() : undefined;
+    return hex.test(value) ? value.toLowerCase() : !palette && value === "transparent" ? value : undefined;
   }
-  if (!palette && property?.kind === "number" && /^(?:\d+(?:\.\d)?|\.\d)px$|^0$/.test(value)) {
+  if (!palette && property?.percent && value.endsWith("%")) return value;
+  if (!palette && property?.kind === "number" && /^-?(?:\d+(?:\.\d)?|\.\d)px$|^0$/.test(value)) {
     return Number.parseFloat(value);
   }
   if (!palette && property?.kind === "select" && property.options.includes(value)) return value;
@@ -119,6 +120,7 @@ export function parseEditorCss(source, draft, scope) {
       if (parsed === undefined) fail(at, "Unsupported property or value for " + name + ".");
       const key = palette ? name : properties.get(name).key;
       if (Object.hasOwn(values, key)) fail(at, "Duplicate declaration for " + name + ".");
+      for(const name of Object.keys(values))if(styleShorthand(name)===key)delete values[name];
       values[key] = parsed;
       if (!palette) {
         const probe = sanitizeEditorDraft({version:EDITOR_SCHEMA,areas:{[scope]:{[area]:{[key]:parsed}}}});

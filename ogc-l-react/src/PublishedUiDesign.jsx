@@ -2,7 +2,7 @@ import React,{useEffect,useMemo,useState} from "react";
 import {useLocation} from "react-router-dom";
 import "./published-ui-design.css";
 import {
-  EDITOR_PAGES,EDITOR_TEXT_TARGETS,EDITOR_PROPERTIES,EDITOR_LINK_ROUTES,
+  EDITOR_PAGES,EDITOR_TEXT_TARGETS,editorStyleEntries,editorStyleValue,EDITOR_LINK_ROUTES,
   editorTextTarget,editorPreviewCss,sanitizeEditorDraft
 } from "./admin-ui-editor-model.mjs";
 
@@ -31,11 +31,7 @@ function makeBlock(block){
     }
   }
   if(block.type!=="divider")el.textContent=block.text;
-  for(const property of EDITOR_PROPERTIES){
-    const value=block.style?.[property.key];
-    if(value!==undefined)el.style[property.key]=
-      typeof value==="number"?value+"px":value;
-  }
+  for(const [key,value] of editorStyleEntries(block.style))el.style[key]=editorStyleValue(value);
   return el;
 }
 function updatePublishedDom(design,page){

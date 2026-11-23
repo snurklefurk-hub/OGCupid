@@ -12,8 +12,8 @@ function reactRoute(destination){
 }
 function Tile({title,body,destination,editorKey}) {
   const inner=<><strong data-ogc-edit-text={editorKey?editorKey+".title":undefined}>{title}</strong><span data-ogc-edit-text={editorKey?editorKey+".body":undefined}>{body}</span></>;
-  if(!destination)return <div className="ogcl-editorial-card ogcl-inert">{inner}</div>;
-  return <NavLink className="ogcl-editorial-card" to={reactRoute(destination)}>{inner}</NavLink>;
+  if(!destination)return <div data-ogc-card={editorKey} className="ogcl-editorial-card ogcl-inert">{inner}</div>;
+  return <NavLink data-ogc-card={editorKey} className="ogcl-editorial-card" to={reactRoute(destination)}>{inner}</NavLink>;
 }
 
 export function SidebarPromos({side}) {

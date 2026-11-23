@@ -4,7 +4,7 @@ import {
   blankEditorDraft,sanitizeEditorDraft,editorPreviewCss,
   moveEditorBlock,editorBlockHtmlLabel,EDITOR_PAGES,EDITOR_AREAS,
   EDITOR_SHELL_AREAS,EDITOR_PAGE_AREAS,EDITOR_MAIN_NAV_AREAS,EDITOR_SCHEMA,editorAreaScope,
-  EDITOR_TOKENS,EDITOR_BLOCK_TYPES,EDITOR_PROPERTIES,
+  EDITOR_TOKENS,EDITOR_BLOCK_TYPES,EDITOR_PROPERTIES,editorPropertyAvailable,editorStyleEntries,editorStyleValue,styleShorthand,
   EDITOR_VIEWPORTS,EDITOR_TEXT_TARGETS,EDITOR_LINK_ROUTES,editorTextTarget
 } from "./admin-ui-editor-model.mjs";
 import {computedEditorSnapshot} from "./admin-ui-editor-inspector.mjs";
@@ -33,8 +33,7 @@ function previewBlock(doc,block,selected){
   if(tag==="button")element.type="button";
   element.draggable=true;
   if(tag!=="hr")element.textContent=block.text;
-  for(const [key,value] of Object.entries(block.style))element.style[key]=
-    typeof value==="number"?value+"px":value;
+  for(const [key,value] of editorStyleEntries(block.style))element.style[key]=editorStyleValue(value);
   if(selected?.kind==="block"&&selected.id===block.id)element.classList.add("ogcl-editor-preview-selected");
   return element;
 }
@@ -101,6 +100,37 @@ function putPreview(doc,draft,page,selected){
     if(selector)doc.querySelectorAll(selector).forEach(el=>el.setAttribute("data-ogc-editor-selected","true"));
   }
 }
+function NumericStyleInput({property,value,change}){
+  const percent=typeof value==="string"&&value.endsWith("%");
+  const unit=percent?"%":"px";
+  const current=value===""?"":String(parseFloat(value));
+  // Keep partial keyboard input (a minus sign or decimal point) until blur.
+  const [editing,setEditing]=useState(null);
+  const limit=percent?100:property.max;
+  const commitValue=(raw,nextUnit)=>{
+    if(raw===""){change(null);return;}
+    const number=Number(raw);
+    if(Number.isFinite(number)&&number>=property.min&&number<=(nextUnit==="%"?100:property.max)){
+      const rounded=Math.round(number*10)/10;
+      change(nextUnit==="%"?rounded+"%":rounded);
+    }
+  };
+  return <span className="ogcl-studio-number">
+    <input id={"ogc-style-"+property.key} type="number" aria-label={property.label} min={property.min} max={limit} step="0.1"
+      value={editing??current}
+      onChange={event=>{
+        const input=event.currentTarget;
+        setEditing(input.value);
+        if(!input.validity.badInput)commitValue(input.value,unit);
+      }}
+      onBlur={()=>setEditing(null)}/>
+    {property.percent&&<select aria-label={property.label+" unit"} value={unit}
+      onChange={event=>commitValue(String(Math.min(Number(current),event.target.value==="%"?100:property.max)),event.target.value)}>
+      <option value="px">px</option><option value="%">%</option>
+    </select>}
+  </span>;
+}
+
 export default function AdminUiEditor({onUnsavedChange}){
   const {user,adminRequest}=useMemberSession();
   const [page,setPage]=useState("/matches");
@@ -117,6 +147,7 @@ export default function AdminUiEditor({onUnsavedChange}){
   const viewport=EDITOR_VIEWPORTS.find(x=>x.id===viewportId)||EDITOR_VIEWPORTS[0];
   const [scale,setScale]=useState(.64);
   const [inspected,setInspected]=useState({values:{},text:"",tokens:{}});
+  const [propertyFilter,setPropertyFilter]=useState("");
   const [availableText,setAvailableText]=useState([]);
   const [addType,setAddType]=useState("paragraph");
   const [history,setHistory]=useState([]);
@@ -332,10 +363,11 @@ export default function AdminUiEditor({onUnsavedChange}){
   const blocks=draft.pages[page]||[];
   const sharedGroups=[
     ["Site background & logo",["siteBackground","brand"]],
-    ["Left column",["leftRail","leftPromos","leftEditorial"]],
+    ["Left column",["leftRail","leftPromos","leftEditorial",...["0","1","2"].map(n=>"shell.promo.left."+n)]],
+    ["Navigation spacing",["navSpacing"]],
     ["Main navigation",EDITOR_MAIN_NAV_AREAS.map(area=>area.id)],
     ["Top account links",["accountBar","accountLinks","accountActions"]],
-    ["Right column",["rightRail","profileFloater","rightCard","rightEditorial"]],
+    ["Right column",["rightRail","profileFloater","refinementCard","rightCard","rightEditorial",...["0","1","2"].map(n=>"shell.promo.right."+n)]],
     ["Center frame & legal footer",["centerSheet","legalFooter","footerLinks","footerLinkLabels"]]
   ];
   function chooseWorkspace(next){
@@ -345,7 +377,7 @@ export default function AdminUiEditor({onUnsavedChange}){
     setNotice("");
   }
   const chosenBlock=selected.kind==="block"?blocks.find(b=>b.id===selected.id):null;
-  const chosenArea=selected.kind==="area"?EDITOR_AREAS.find(a=>a.id===selected.id):null;
+  const chosenArea=selected.kind!=="block"?EDITOR_AREAS.find(a=>a.id===selected.id):null;
   const chosenText=selected.kind==="text"||chosenArea?.id.startsWith("shell.nav.")?
     editorTextTarget(selected.id,page):null;
   const textScope=chosenText?.scope==="shell"?"*":page;
@@ -367,8 +399,8 @@ export default function AdminUiEditor({onUnsavedChange}){
       chosenText.id==="page.heading"?"pageTitle":"pageHeader":
       chosenText.id.startsWith("shell.footer.")?"footerLinkLabels":
       chosenText.id.startsWith("shell.account.")?"accountActions":
-      chosenText.id.startsWith("shell.promo.left.")?"leftEditorial":
-      chosenText.id.startsWith("shell.promo.right.")?"rightEditorial":"leftPromos";
+      chosenText.id.startsWith("shell.promo.")?chosenText.id.split(".").slice(0,-1).join("."):
+      chosenText.id.startsWith("shell.refinement.")?"refinementCard":"leftPromos";
     setSelected({kind:"area",id});
   }
   const areaScope=chosenArea&&editorAreaScope(chosenArea.id)==="shell"?"*":page;
@@ -376,11 +408,14 @@ export default function AdminUiEditor({onUnsavedChange}){
   const updateArea=(property,value)=>commit(next=>{
     const target=selected.kind==="block"&&workspace==="page"?
       next.pages[page]?.find(b=>b.id===selected.id)?.style:
-      selected.kind==="area"&&editorAreaScope(selected.id)===workspace?
+      chosenArea&&editorAreaScope(selected.id)===workspace?
         ((next.areas[areaScope]??={})[selected.id]??={}):null;
     if(!target)return next;
     if(value===null||value==="")delete target[property];
-    else target[property]=value;
+    else {
+      for(const key of Object.keys(target))if(styleShorthand(key)===property)delete target[key];
+      target[property]=value;
+    }
     return next;
   });
   const updateBlock=(id,patch)=>commit(next=>{
@@ -549,32 +584,33 @@ export default function AdminUiEditor({onUnsavedChange}){
     const live=inspected.values[property.key]||{value:"",raw:"Unavailable in this preview"};
     const value=override??live.value??"";
     return <div className="ogcl-studio-style-field" key={property.key}>
-      <label title={live.raw}>{property.label}
+      <div className="ogcl-studio-control"><label htmlFor={"ogc-style-"+property.key} title={live.raw}>{property.label}</label>
         {property.kind==="select"?
-          <select value={value} onChange={event=>updateArea(property.key,event.target.value||null)}>
+          <select id={"ogc-style-"+property.key} value={value} onChange={event=>updateArea(property.key,event.target.value||null)}>
             {value===""&&<option value="">Inherited</option>}
-            {property.options.map(option=><option key={option} value={option}>{option}</option>)}
+            {property.options.map(option=><option key={option} value={option}>{property.key==="backgroundImage"?"None (flat fill)":option}</option>)}
           </select>:
-          <input type={property.kind==="color"?"color":"number"}
-            min={property.kind==="number"?0:undefined}
-            max={property.kind==="number"?property.max:undefined}
-            step={property.kind==="number"?0.1:undefined}
-            value={property.kind==="color"?(value||"#ffffff"):value}
-            onChange={event=>updateArea(property.key,property.kind==="color"?
-              event.target.value:event.target.value===""?null:Number(event.target.value))}/>}
-      </label>
+          property.kind==="color"?
+          <input id={"ogc-style-"+property.key} type="color" value={/^#[0-9a-f]{6}$/i.test(value)?value:"#ffffff"}
+            onChange={event=>updateArea(property.key,event.target.value)}/>:
+          <NumericStyleInput property={property} value={value}
+            change={next=>updateArea(property.key,next)}/>}
+
+      </div>
+      {property.kind==="color"&&<button type="button" title={"Transparent "+property.label}
+        aria-pressed={value==="transparent"||live.raw==="rgba(0, 0, 0, 0)"&&override===undefined}
+        onClick={()=>updateArea(property.key,"transparent")}>Clear fill</button>}
       <button type="button" title={"Reset "+property.label} disabled={override===undefined}
         onClick={()=>updateArea(property.key,null)}>Reset</button>
     </div>;
   }
 
-  const styleGroups=[
-    ["Colors",EDITOR_PROPERTIES.filter(property=>property.kind==="color")],
-    ["Type",EDITOR_PROPERTIES.filter(property=>/^(font|textAlign|lineHeight)/.test(property.key))],
-    ["Spacing",EDITOR_PROPERTIES.filter(property=>
-      /^(padding|margin)/.test(property.key)||(property.key==="minHeight"&&chosenArea?.id==="pageHeader"))],
-    ["Borders",EDITOR_PROPERTIES.filter(property=>/^border(?!Color)/.test(property.key))],
-  ];
+  const search=propertyFilter.trim().toLowerCase();
+  const styleGroups=["Colors","Size","Layout","Spacing","Type","Borders"].map(group=>[
+    group,EDITOR_PROPERTIES.filter(property=>property.group===group&&
+      editorPropertyAvailable(property.key,chosenArea?.id)&&
+      (group+" "+property.label+" "+property.key).toLowerCase().includes(search))
+  ]).filter(([,properties])=>properties.length);
   const choosePage=next=>{
     setPage(next);
     if(workspace==="page")setSelected({kind:"area",id:"pageHeader"});
@@ -724,7 +760,12 @@ export default function AdminUiEditor({onUnsavedChange}){
               onChange={event=>updateBlock(chosenBlock.id,{hidden:event.target.checked})}/> Hide block</label>
             <button type="button" onClick={()=>removeBlock(chosenBlock.id)}>Remove block</button>
           </div>}
-          {(chosenBlock||chosenArea)&&styleGroups.map(([label,properties])=><details key={label} open={label==="Colors"}>
+          {(chosenBlock||chosenArea)&&<label className="ogcl-studio-property-filter">Find a control
+            <input type="search" value={propertyFilter} placeholder="Width, gap, radius…"
+              onChange={event=>setPropertyFilter(event.target.value)}/>
+          </label>}
+          {(chosenBlock||chosenArea)&&!styleGroups.length&&<p>No matching controls.</p>}
+          {(chosenBlock||chosenArea)&&styleGroups.map(([label,properties])=><details key={label} open={Boolean(search)||label==="Colors"||chosenArea?.id==="navSpacing"}>
             <summary>{label}</summary>
             {properties.map(styleControl)}
           </details>)}

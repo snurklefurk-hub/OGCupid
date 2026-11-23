@@ -184,3 +184,12 @@
 .ogcl-studio-history {border-top:1px solid var(--studio-line);padding:8px 10px;}
 .ogcl-studio-history summary {cursor:pointer;font-weight:bold;}
 .ogcl-studio-history div {display:flex;flex-wrap:wrap;gap:9px;align-items:center;padding-block-start:7px;}
+
+.ogcl-studio-property-filter,.ogcl-studio-control {
+  display:grid;gap:3px;flex:1;min-width:0;color:var(--studio-muted);font-size:11px;
+}
+.ogcl-studio-property-filter {margin:8px 0;}
+.ogcl-studio-number {display:flex;gap:4px;}
+.ogcl-studio-number input {width:0;min-width:0;flex:1;}
+.ogcl-studio-number select {width:4.2em;}
+.ogcl-studio-style-field button[aria-pressed="true"] {border-color:#2963a4;}
