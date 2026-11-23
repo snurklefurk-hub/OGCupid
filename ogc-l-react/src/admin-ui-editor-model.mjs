@@ -29,14 +29,14 @@ export const EDITOR_AREAS=Object.freeze([
   {id:"siteBackground",label:"Site background",selector:"body"}
 ]);
 export const EDITOR_TOKENS=Object.freeze([
-  {id:"--okc-blue",label:"Site background"},
-  {id:"--okc-navy",label:"Navigation blue"},
-  {id:"--okc-pink",label:"Heading pink"},
-  {id:"--okc-heading",label:"Section headings"},
-  {id:"--okc-paper",label:"Page background"},
-  {id:"--okc-ink",label:"Body text"},
-  {id:"--okc-line",label:"Borders"},
-  {id:"--okc-green",label:"Green accents"}
+  {id:"--okc-blue",label:"Site background",default:"#2963a4"},
+  {id:"--okc-navy",label:"Navigation blue",default:"#183b62"},
+  {id:"--okc-pink",label:"Heading pink",default:"#f83265"},
+  {id:"--okc-heading",label:"Section headings",default:"#264e79"},
+  {id:"--okc-paper",label:"Page background",default:"#f6f6f6"},
+  {id:"--okc-ink",label:"Body text",default:"#555555"},
+  {id:"--okc-line",label:"Borders",default:"#dddddd"},
+  {id:"--okc-green",label:"Green accents",default:"#63a62f"}
 ]);
 export const EDITOR_BLOCK_TYPES=Object.freeze([
   {type:"heading",label:"Heading"},
@@ -50,12 +50,14 @@ export const EDITOR_PROPERTIES=Object.freeze([
   {key:"color",label:"Text color",kind:"color"},
   {key:"borderColor",label:"Border color",kind:"color"},
   {key:"fontSize",label:"Font size (px)",kind:"number",max:42},
+  {key:"fontFamily",label:"Typeface",kind:"select",options:["Verdana","Arial","Georgia","Tahoma"]},
   {key:"padding",label:"Padding (px)",kind:"number",max:80},
   {key:"margin",label:"Margin (px)",kind:"number",max:80},
   {key:"borderRadius",label:"Corner radius (px)",kind:"number",max:30}
 ]);
 const COLORS=new Set(EDITOR_PROPERTIES.filter(p=>p.kind==="color").map(p=>p.key));
 const NUMBERS=new Map(EDITOR_PROPERTIES.filter(p=>p.kind==="number").map(p=>[p.key,p.max]));
+const FONTS=new Set(["Verdana","Arial","Georgia","Tahoma"]);
 const allowedPages=new Set(EDITOR_PAGES.map(x=>x.path));
 const allowedAreas=new Map(EDITOR_AREAS.map(x=>[x.id,x.selector]));
 const allowedTokens=new Set(EDITOR_TOKENS.map(x=>x.id));
@@ -72,6 +74,7 @@ function cleanStyle(input){
       result[key]=value.toLowerCase();
     else if(NUMBERS.has(key)&&Number.isInteger(value)&&value>=0&&value<=NUMBERS.get(key))
       result[key]=value;
+    else if(key==="fontFamily"&&FONTS.has(value))result[key]=value;
   }
   return result;
 }
