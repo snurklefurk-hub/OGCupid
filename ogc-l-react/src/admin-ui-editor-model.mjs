@@ -128,6 +128,7 @@ export const EDITOR_PROPERTIES=Object.freeze([
   {key:"fontWeight",label:"Font weight",kind:"select",options:["400","500","600","700"]},
   {key:"textAlign",label:"Text alignment",kind:"select",options:["left","center","right"]},
   {key:"lineHeight",label:"Line height (px)",kind:"number",max:80},
+  {key:"minHeight",label:"Minimum height (px)",kind:"number",max:480},
   ...["Top","Right","Bottom","Left"].map(side=>({
     key:"padding"+side,label:"Padding "+side.toLowerCase()+" (px)",kind:"number",max:80
   })),
@@ -158,6 +159,7 @@ function cleanStyle(input,area=""){
   const result={};
   if(!isObject(input))return result;
   for(const [key,value] of Object.entries(input)){
+    if(key==="minHeight"&&area!=="pageHeader")continue;
     // Margin on structural rails could break the edge-locked three columns.
     if(key.startsWith("margin")&&["leftRail","rightRail","siteBackground","centerSheet"].includes(area))continue;
     if(COLORS.has(key)&&typeof value==="string"&&HEX.test(value))

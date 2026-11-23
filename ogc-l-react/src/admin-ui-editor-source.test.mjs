@@ -25,6 +25,18 @@ test("visual styles round trip through the CSS editor for each scope",()=>{
   assert.match(formatEditorCss(initial,"/matches"),/font-weight: 700;/);
 });
 
+test("page header minimum height round trips through scoped CSS",()=>{
+  const page="/matches";
+  const selector=".ogcl-sheet .ogcl-view-head";
+  const draft=parseEditorCss(selector+" { min-height: 90px; }",blankEditorDraft(),page);
+  assert.deepEqual(draft.areas[page],{pageHeader:{minHeight:90}});
+  assert.match(formatEditorCss(draft,page),/min-height: 90px;/);
+  assert.match(editorPreviewCss(draft,page),/\.ogcl-view-head\{min-height:90px;/);
+  assert.doesNotMatch(editorPreviewCss(draft,"/messages"),/min-height:/);
+  assert.throws(()=>parseEditorCss(selector+" { min-height: 481px; }",draft,page),/out of range/);
+  assert.throws(()=>parseEditorCss(".ogcl-left { min-height: 90px; }",draft,"*"),/unavailable/);
+});
+
 test("the five Main Nav links have independent CSS rules in the site shell",()=>{
   const draft=blankEditorDraft();
   const scope="*";

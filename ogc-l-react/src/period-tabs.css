@@ -18,8 +18,11 @@
   border-bottom: 1px solid var(--ogc-tab-edge);
   background: linear-gradient(to bottom,var(--ogc-tab-gradient-top),var(--ogc-tab-gradient-bottom));
 }
-.ogcl-view .ogcl-period-stage > .ogcl-view-head {
+/* Give Design Studio's page-header rule precedence over this default. */
+:where(.ogcl-view .ogcl-period-stage) > .ogcl-view-head {
   min-height: 145px;
+}
+.ogcl-view .ogcl-period-stage > .ogcl-view-head {
   margin: 0;
   padding: 26px 18px 12px;
   background: transparent;
@@ -113,9 +116,6 @@
 }
 
 /* MATCHES: preserve the search/quiver/favorites content and actions. */
-.ogcl-matches-page .ogcl-period-stage > .ogcl-matches-head {
-  min-height: 145px;
-}
 .ogcl-matches-page .ogcl-period-stage nav.ogcl-matches-tabs.ogcl-period-tabs {
   margin: 0;
 }

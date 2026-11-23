@@ -68,6 +68,14 @@ test("admin saves are bounded and use checked server-side version",async()=>{
   }
 });
 
+test("admin drafts accept minimum height for a page header",async()=>{
+  const document={...blank,areas:{"/matches":{pageHeader:{minHeight:90}}}};
+  const result=await send("/admin/ui-design","PUT",{document,expectedVersion:7});
+  assert.equal(result.status,200);
+  assert.deepEqual(JSON.parse(result.calls[0].args[0]),document);
+  assert.equal(validatedDesign({...blank,areas:{"*":{leftRail:{minHeight:90}}}}),null);
+});
+
 test("admin saves keep five individual navigation overrides and existing group styles",async()=>{
   const shared={mainNavLinks:{fontWeight:"600"}};
   for(const [i,link] of ["matches","messages","visitors","quickmatch","community"].entries()){
