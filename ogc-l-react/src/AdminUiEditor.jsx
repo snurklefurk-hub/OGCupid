@@ -571,7 +571,8 @@ export default function AdminUiEditor({onUnsavedChange}){
   const styleGroups=[
     ["Colors",EDITOR_PROPERTIES.filter(property=>property.kind==="color")],
     ["Type",EDITOR_PROPERTIES.filter(property=>/^(font|textAlign|lineHeight)/.test(property.key))],
-    ["Spacing",EDITOR_PROPERTIES.filter(property=>/^(padding|margin)/.test(property.key))],
+    ["Spacing",EDITOR_PROPERTIES.filter(property=>
+      /^(padding|margin)/.test(property.key)||(property.key==="minHeight"&&chosenArea?.id==="pageHeader"))],
     ["Borders",EDITOR_PROPERTIES.filter(property=>/^border(?!Color)/.test(property.key))],
   ];
   const choosePage=next=>{
