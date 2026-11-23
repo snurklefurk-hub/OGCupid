@@ -36,8 +36,9 @@ test("sign-out clears private state before backend confirmation",()=>{
   assert.match(provider, /Sign-out could not be confirmed/);
 });
 
-test("every route uses the same fixed-width desktop shell and native document scrolling",()=>{
-  assert.match(css, /\.ogcl-app \{[^}]*grid-template-columns:184px minmax\(0,1fr\) 184px;\s*width:1150px;\s*min-height:100vh;\s*margin:0 auto/);
+test("every route uses the same edge-locked three-column desktop shell and native scrolling",()=>{
+  assert.match(css, /\.ogcl-app \{[^}]*grid-template-columns:184px minmax\(0,1fr\) 184px;\s*width:100%;\s*min-height:100vh;\s*margin:0;/);
+  assert.doesNotMatch(css, /\.ogcl-app \{[^}]*width:1150px|\.ogcl-app \{[^}]*margin:0 auto/);
   assert.equal([...css.matchAll(/\.ogcl-app\b/g)].length,1);
   assert.match(css, /\.ogcl-left, \.ogcl-right \{height:auto;overflow:visible/);
   assert.match(css, /\.ogcl-center \{height:auto;[^}]*overflow:visible/);
