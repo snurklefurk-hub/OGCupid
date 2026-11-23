@@ -47,7 +47,7 @@ test("clean /sitemap entry works on the static host and fallback forwards it",()
   const bridge=read("../../public/404.html");
   const entry=read("../../public/sitemap/index.html");
   assert.match(bridge,/__ogc_route/);
-  assert.match(bridge,/location\.replace\("\/\?__ogc_route="/);
+  assert.match(bridge,/location\.replace\(base\+"\/\?__ogc_route="/);
   const publish=read("../../scripts/publish-ogcl-production.mjs");
   assert.match(publish,/writeFileSync\(output,routeHtml\)/);
   // The compiled app entry replaces the old compatibility bridge on publish.
