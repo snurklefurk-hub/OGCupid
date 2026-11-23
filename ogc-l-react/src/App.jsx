@@ -77,7 +77,7 @@ function LeftRail() {
       <NavLink className="ogcl-brand" to="/matches" aria-label="OG Cupid member home">
         <img src="/brand/ogcupid-logo-white.png" width="172" height="42" alt="OG Cupid" />
       </NavLink>
-      <nav className="ogcl-primary" aria-label="OG Cupid main">
+      <nav className="ogcl-main-nav" aria-label="OG Cupid main">
         {primaryNavigation.map(({path,label,icon}) => {
           const content = <><span className="ogcl-nav-icon" aria-hidden="true">{icon}</span><span data-ogc-edit-text={"shell.nav."+path.slice(1)}>{label}</span></>;
           return (isMember || (kind==="onboarding" && path==="/community")) ? <NavLink key={path} to={path}

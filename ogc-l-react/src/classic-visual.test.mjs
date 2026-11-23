@@ -15,7 +15,10 @@ const member=read("./PublicMemberProfile.jsx");
 test("desktop navigation keeps the five existing destinations with compact labels",()=>{
   assert.deepEqual(primaryNavigation.map(x=>x.label),
     ["Matches","Messages","Visitors","Quickmatch","Community"]);
-  assert.match(css,/\.ogcl-nav-link \{/);
+  assert.match(app,/<nav className="ogcl-main-nav" aria-label="OG Cupid main">/);
+  assert.match(css,/\.ogcl-main-nav \{display:grid;gap:3px;margin-bottom:3px;\}/);
+  assert.match(css,/\.ogcl-nav-link \{[^}]*background:var\(--okc-navy\);[^}]*border-radius:5px;/);
+  assert.doesNotMatch(app,/\bogcl-primary\b/);
   assert.match(app,/<TopMemberNav\/>/);
   assert.match(app,/ProfileFloater Photo=\{MemberPhoto\}/);
   assert.match(app,/<MemberGate allowOnboarding><CommunityChat \/><\/MemberGate>/);
