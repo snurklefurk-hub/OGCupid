@@ -3,6 +3,7 @@ import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {
   blankEditorDraft,sanitizeEditorDraft,editorPreviewCss,
   moveEditorBlock,editorBlockHtmlLabel,EDITOR_PAGES,EDITOR_AREAS,
+  EDITOR_SHELL_AREAS,EDITOR_PAGE_AREAS,EDITOR_SCHEMA,editorAreaScope,
   EDITOR_TOKENS,EDITOR_BLOCK_TYPES,EDITOR_PROPERTIES
 } from "./admin-ui-editor-model.mjs";
 import "./admin-ui-editor.css";
@@ -80,11 +81,11 @@ function putPreview(doc,draft,page,selected){
 export default function AdminUiEditor(){
   const {user}=useMemberSession();
   const [page,setPage]=useState("/matches");
+  const [workspace,setWorkspace]=useState("shell");
   const [draft,setDraft]=useState(()=>blankEditorDraft());
   const [savedText,setSavedText]=useState("");
   const [notice,setNotice]=useState("");
-  const [selected,setSelected]=useState({kind:"area",id:"pageHeader"});
-  const [scope,setScope]=useState("page");
+  const [selected,setSelected]=useState({kind:"area",id:"brand"});
   const [frameVersion,setFrameVersion]=useState(0);
   const [zoomMode,setZoomMode]=useState("fit");
   const [scale,setScale]=useState(.64);
@@ -106,11 +107,25 @@ export default function AdminUiEditor(){
   },[]);
   useEffect(()=>{
     if(!user?.id)return;
-    const loaded=sanitizeEditorDraft(readStored(storageKey(user.id),blankEditorDraft()));
+    const original=readStored(storageKey(user.id),blankEditorDraft());
+    const loaded=sanitizeEditorDraft(original);
+    if(original?.version===1){
+      // The original draft is retained intact. Page-specific attempts to
+      // restyle shared rails cannot safely be promoted to sitewide styles.
+      try{
+        const backup=storageKey(user.id)+":before-shell-split";
+        if(window.localStorage.getItem(backup)===null)
+          window.localStorage.setItem(backup,JSON.stringify(original));
+        window.localStorage.setItem(storageKey(user.id),JSON.stringify(loaded));
+        setNotice("Earlier draft upgraded. The original was backed up; page-specific outer-column styling was not promoted sitewide.");
+      }catch{setNotice("Earlier draft loaded in memory; browser storage did not allow migration.");}
+    }
     setDraft(loaded);
     setSavedText(JSON.stringify(loaded));
     const savedRecords=readStored(recordKey(user.id),[]);
-    setHistory(Array.isArray(savedRecords)?savedRecords.slice(0,10).filter(entry=>entry&&typeof entry.at==="string"&&entry.draft?.version===1):[]);
+    setHistory(Array.isArray(savedRecords)?savedRecords.slice(0,10)
+      .filter(entry=>entry&&typeof entry.at==="string"&&[1,EDITOR_SCHEMA].includes(entry.draft?.version))
+      .map(entry=>({...entry,draft:sanitizeEditorDraft(entry.draft)})):[]);
     undoStack.current=[];redoStack.current=[];
   },[user?.id]);
   const hasChanges=JSON.stringify(draft)!==savedText;
@@ -136,10 +151,20 @@ export default function AdminUiEditor(){
       const target=event.target;
       if(!(target instanceof doc.defaultView.Element))return;
       const block=target.closest("[data-ogc-editor-block-id]");
-      if(block){setSelected({kind:"block",id:block.getAttribute("data-ogc-editor-block-id")});return;}
+      if(block){
+        setWorkspace("page");
+        setSelected({kind:"block",id:block.getAttribute("data-ogc-editor-block-id")});
+        return;
+      }
       for(let parent=target;parent&&parent.nodeType===1;parent=parent.parentElement){
+        // A click on a rail, header bar or footer changes the editor to the
+        // Site Shell workspace. It can never become a per-page style.
         const area=EDITOR_AREAS.find(a=>parent.matches(a.selector));
-        if(area){setSelected({kind:"area",id:area.id});return;}
+        if(area){
+          setWorkspace(editorAreaScope(area.id));
+          setSelected({kind:"area",id:area.id});
+          return;
+        }
       }
     };
     const prevent=event=>{event.preventDefault();event.stopPropagation();event.stopImmediatePropagation?.();};
@@ -197,34 +222,50 @@ export default function AdminUiEditor(){
     return()=>window.clearInterval(interval);
   },[draft,page,selected,frameVersion]);
   const blocks=draft.pages[page]||[];
+  const sharedGroups=[
+    ["Site background & logo",["siteBackground","brand"]],
+    ["Left column",["leftRail","mainNavigation","mainNavLinks","publicNavigation","leftPromos","leftEditorial"]],
+    ["Top account links",["accountBar","accountLinks","accountActions"]],
+    ["Right column",["rightRail","profileFloater","rightCard","rightEditorial"]],
+    ["Center frame & legal footer",["centerSheet","legalFooter","footerLinks","footerLinkLabels"]]
+  ];
+  function chooseWorkspace(next){
+    setWorkspace(next);
+    setSelected({kind:"area",id:next==="shell"?"brand":"pageHeader"});
+    setNotice("");
+  }
   const chosenBlock=selected.kind==="block"?blocks.find(b=>b.id===selected.id):null;
   const chosenArea=selected.kind==="area"?EDITOR_AREAS.find(a=>a.id===selected.id):null;
-  const areaScope=scope==="global"?"*":page;
+  const areaScope=chosenArea&&editorAreaScope(chosenArea.id)==="shell"?"*":page;
   const activeStyle=chosenBlock?.style||draft.areas[areaScope]?.[selected.id]||{};
   const updateArea=(property,value)=>commit(next=>{
-    const target=selected.kind==="block"?
+    const target=selected.kind==="block"&&workspace==="page"?
       next.pages[page]?.find(b=>b.id===selected.id)?.style:
-      (next.areas[areaScope]??={})[selected.id]??={};
+      selected.kind==="area"&&editorAreaScope(selected.id)===workspace?
+        ((next.areas[areaScope]??={})[selected.id]??={}):null;
     if(!target)return next;
     if(value===null||value==="")delete target[property];
     else target[property]=value;
     return next;
   });
   const updateBlock=(id,patch)=>commit(next=>{
-    const item=next.pages[page]?.find(b=>b.id===id);
+    const item=workspace==="page"?next.pages[page]?.find(b=>b.id===id):null;
     if(item)Object.assign(item,patch);
     return next;
   });
   function addBlock(){
+    if(workspace!=="page")return;
     const block=newBlock(addType);
     commit(next=>{(next.pages[page]??=[]).push(block);return next;});
     setSelected({kind:"block",id:block.id});
   }
   function removeBlock(id){
+    if(workspace!=="page")return;
     commit(next=>{next.pages[page]=(next.pages[page]||[]).filter(b=>b.id!==id);return next;});
     setSelected({kind:"area",id:"mainContent"});
   }
   function moveBlock(id,to){
+    if(workspace!=="page")return;
     commit(next=>{
       const old=next.pages[page]||[];
       const from=old.findIndex(b=>b.id===id);
@@ -262,12 +303,22 @@ export default function AdminUiEditor(){
   return <section className="ogcl-ui-editor" aria-label="Visual UI Editor">
     <header className="ogcl-ui-editor-intro">
       <div><h2>Visual UI Editor</h2>
-        <p>Edit supported regions on a real, interactive preview. The permanent left, center and right columns are locked.</p></div>
+        <p>Edit the shared site shell separately from each page’s center content. All three columns remain permanently present.</p></div>
       <span className="ogcl-ui-draft-label">LOCAL DRAFT · NOT PUBLISHED</span>
     </header>
+    <nav className="ogcl-ui-editor-workspaces" aria-label="Editing workspace">
+      <button type="button" className={workspace==="shell"?"selected":""}
+        aria-current={workspace==="shell"?"page":undefined} onClick={()=>chooseWorkspace("shell")}>
+        Site Shell <small>Shared across every page</small>
+      </button>
+      <button type="button" className={workspace==="page"?"selected":""}
+        aria-current={workspace==="page"?"page":undefined} onClick={()=>chooseWorkspace("page")}>
+        Page Content <small>Center column only</small>
+      </button>
+    </nav>
     <div className="ogcl-ui-editor-toolbar">
-      <label>Preview page
-        <select value={page} onChange={e=>{setPage(e.target.value);setSelected({kind:"area",id:"pageHeader"});}}>
+      <label>{workspace==="shell"?"Page used for preview":"Editing center page"}
+        <select value={page} onChange={e=>{setPage(e.target.value);if(workspace==="page")setSelected({kind:"area",id:"pageHeader"});}}>
           {EDITOR_PAGES.map(item=><option key={item.path} value={item.path}>{item.label}</option>)}
         </select>
       </label>
@@ -282,16 +333,31 @@ export default function AdminUiEditor(){
       <button className="ogcl-button" type="button" onClick={save} disabled={!hasChanges}>Save draft</button>
     </div>
     <div className={"ogcl-ui-editor-grid"+(compact?" is-compact":"")}>
-      {!compact&&<aside className="ogcl-ui-editor-panel" aria-label="Page structure">
-        <h3>Page structure</h3>
-        <p className="ogcl-admin-muted">Click an area in the preview or pick it here.</p>
-        <p className="ogcl-ui-editor-panel-caption">Fixed site regions</p>
-        <div className="ogcl-ui-editor-elements">
-          {EDITOR_AREAS.map(area=><button key={area.id} type="button"
-            className={selected.kind==="area"&&selected.id===area.id?"selected":""}
-            onClick={()=>setSelected({kind:"area",id:area.id})}>{area.label}</button>)}
-        </div>
-        <p className="ogcl-ui-editor-panel-caption">Added blocks · {blocks.length}/24</p>
+      {!compact&&<aside className="ogcl-ui-editor-panel" aria-label={workspace==="shell"?"Shared site shell structure":"Page content structure"}>
+        <h3>{workspace==="shell"?"Site Shell":"Center Page Content"}</h3>
+        <p className="ogcl-admin-muted">{workspace==="shell"?
+          "These regions stay the same when you navigate. Changes here apply everywhere.":
+          "Only the routed center page is editable here. Outer columns, account links and footer are protected."}</p>
+        {workspace==="shell"?
+          sharedGroups.map(([title,ids])=><section key={title}>
+            <p className="ogcl-ui-editor-panel-caption">{title}</p>
+            <div className="ogcl-ui-editor-elements">
+              {ids.map(id=>{
+                const area=EDITOR_SHELL_AREAS.find(a=>a.id===id);
+                return <button key={id} type="button"
+                  className={selected.kind==="area"&&selected.id===id?"selected":""}
+                  onClick={()=>setSelected({kind:"area",id})}>{area.label}</button>;
+              })}
+            </div>
+          </section>):
+          <>
+            <p className="ogcl-ui-editor-panel-caption">Center page regions</p>
+            <div className="ogcl-ui-editor-elements">
+              {EDITOR_PAGE_AREAS.map(area=><button key={area.id} type="button"
+                className={selected.kind==="area"&&selected.id===area.id?"selected":""}
+                onClick={()=>setSelected({kind:"area",id:area.id})}>{area.label}</button>)}
+            </div>
+            <p className="ogcl-ui-editor-panel-caption">Added center blocks · {blocks.length}/24</p>
         <ol className="ogcl-ui-editor-block-list">
           {blocks.map((block,index)=><li key={block.id} draggable
             onDragStart={()=>setDragId(block.id)}
@@ -317,9 +383,10 @@ export default function AdminUiEditor(){
           <button type="button" disabled={blocks.length>=24} onClick={addBlock}>+ Add block</button>
         </div>
         <p className="ogcl-admin-muted">Drag the added blocks to reorder, or use the arrow buttons.</p>
+          </>}
       </aside>}
       <div className="ogcl-ui-editor-stage-wrap">
-        <p className="ogcl-ui-editor-panel-caption">Live page preview · click to select · links and forms disabled</p>
+        <p className="ogcl-ui-editor-panel-caption">{workspace==="shell"?"Shared site shell preview":"Center page preview"} · click to select · links and forms disabled</p>
         <div className="ogcl-ui-editor-stage" ref={stage}>
           <div className="ogcl-ui-editor-frame-viewport"
             style={{width:1150*scale,height:850*scale}}>
@@ -334,12 +401,10 @@ export default function AdminUiEditor(){
         <h3>Properties</h3>
         <p className="ogcl-ui-editor-selection">{chosenBlock?
           editorBlockHtmlLabel(chosenBlock):chosenArea?.label||"Choose an element"}</p>
-        {chosenArea&&<label>Apply to
-          <select value={scope} onChange={e=>setScope(e.target.value)}>
-            <option value="page">This page only</option>
-            <option value="global">All pages</option>
-          </select>
-        </label>}
+        {chosenArea&&<p className="ogcl-ui-editor-scope">
+          {workspace==="shell"?"Applies to every page · shared site shell":
+            "Applies only to the center of "+EDITOR_PAGES.find(x=>x.path===page)?.label}
+        </p>}
         {chosenBlock&&<>
           {chosenBlock.type!=="divider"&&<label>Text
             <textarea rows={4} maxLength={500} value={chosenBlock.text}
@@ -367,8 +432,8 @@ export default function AdminUiEditor(){
             </div>
           </label>)}
         </div>}
-        <h3>Global palette</h3>
-        <p className="ogcl-admin-muted">Changes here affect all previewed pages.</p>
+        {workspace==="shell"&&<><h3>Global palette</h3>
+        <p className="ogcl-admin-muted">These colors are shared across all pages, including their center content.</p>
         <div className="ogcl-ui-editor-properties">
           {EDITOR_TOKENS.map(token=><label key={token.id}>{token.label}
             <div className="ogcl-ui-editor-property">
@@ -378,7 +443,7 @@ export default function AdminUiEditor(){
                 onClick={()=>commit(next=>{delete next.tokens[token.id];return next;})}>↺</button>
             </div>
           </label>)}
-        </div>
+        </div></>}
       </aside>}
     </div>
     <footer className="ogcl-ui-editor-footer">
