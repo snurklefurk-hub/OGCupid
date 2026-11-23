@@ -21,7 +21,7 @@ test("Vite staging isolates the React root and copies published Persona/editoria
 
 test("native account and member navigation does not escape to the old member app",()=>{
   assert.match(app,/const loadEditorial=\(\)=>import\("\.\/EditorialPages\.jsx"\)/);
-  assert.ok(app.includes('const profileHref = slug => "#/profiles/"'));
+  assert.ok(app.includes('const profileHref = slug => "/profiles/"'));
   for(const path of ['<Route path="join"','<Route path="onboarding"','<Route path="recover"',
     '<Route path="photos"','<Route path="account"']){
     assert.ok(app.includes(path),path);

@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
-import { copyFileSync, cpSync, mkdirSync } from "node:fs";
+import { copyFileSync, cpSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { SITEMAP_PATHS } from "./src/sitemap-pages.mjs";
 import { fileURLToPath } from "node:url";
 
 // The same React app has two isolated targets:
@@ -54,6 +55,16 @@ export default defineConfig({
       }
       mkdirSync(stagingTarget+"account/assets/",{recursive:true});
       copyFileSync(publicSource+"account/persona.html",stagingTarget+"account/persona.html");
+      // Keep the independent /ogc-l/ preview on BrowserRouter too.
+      // Direct /ogc-l/matches refreshes load its compiled React entry.
+      const previewHtml=readFileSync(stagingTarget+"index.html","utf8");
+      for(const route of SITEMAP_PATHS){
+        if(!/^\/[a-z0-9-]+(?:\/[a-z0-9-]+)*$/.test(route))
+          throw new Error("Invalid preview route: "+route);
+        const folder=stagingTarget+route.slice(1)+"/";
+        mkdirSync(folder,{recursive:true});
+        writeFileSync(folder+"index.html",previewHtml);
+      }
       for(const file of [
         "ogcl-embedded.css","favicon.png","lovable-home.css",
         "member-home-theme.css","okc-2011.css","okc-period-site.css",

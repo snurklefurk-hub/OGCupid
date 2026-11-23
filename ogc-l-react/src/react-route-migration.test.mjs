@@ -4,19 +4,17 @@ import {readFileSync,readdirSync} from "node:fs";
 import {fileURLToPath} from "node:url";
 import {join,relative} from "node:path";
 import {runInNewContext} from "node:vm";
+import {SITEMAP_PATHS} from "./sitemap-pages.mjs";
+import {normalizeSiteRoute} from "./browser-location.mjs";
 
 const source=readFileSync(new URL("./App.jsx",import.meta.url),"utf8");
+const main=readFileSync(new URL("./main.jsx",import.meta.url),"utf8");
 const editorials=readFileSync(new URL("./EditorialPages.jsx",import.meta.url),"utf8");
 const entry=readFileSync(new URL("../../public/index.html",import.meta.url),"utf8");
 const legacyRoot=fileURLToPath(new URL("../../public/",import.meta.url));
 const read=path=>readFileSync(new URL("../../public/"+path,import.meta.url),"utf8");
-const expectedLegacy=[
-  "account/index.html","account/persona.html","contact/index.html",
-  "ogtrends/index.html","ogtrends/zero/index.html",
-  "ogtrends/perfect-profile/index.html","ogtrends/references/index.html",
-  "privacy/index.html","terms/index.html","profiles/index.html",
-  "questions/index.html","quiz/index.html","sitemap/index.html"
-];
+const fixedLegacy=["account/persona.html","profiles/index.html","quiz/index.html"];
+const generatedEntries=SITEMAP_PATHS.map(path=>path.slice(1)+"/index.html");
 const canonical=[
   "signin","join","recover","verify","onboarding","account","persona",
   "ogtrends","ogtrends/zero","ogtrends/perfect-profile",
@@ -24,6 +22,7 @@ const canonical=[
   "photos","matches","profile","settings","profiles/:slug","questions",
   "quickmatch","messages","messages/:peerId","community","admin"
 ];
+
 function listHtml(dir){
   return readdirSync(dir,{withFileTypes:true}).flatMap(ent=>{
     const abs=join(dir,ent.name);
@@ -37,25 +36,34 @@ function redirectFor(page,pathname="/",search="",hash=""){
   assert.ok(match,"Redirect script missing for "+page);
   let redirect=null;
   const location={pathname,search,hash,replace:url=>{redirect=url;}};
-  runInNewContext(match[1],{location,URLSearchParams});
+  runInNewContext(match[1],{location,URLSearchParams,URL});
   return redirect;
 }
 
-test("every published HTML document except React root and Render fallback is a compatibility redirect",()=>{
+test("production has one React app and only known static/legacy entry points",()=>{
   const all=listHtml(legacyRoot).sort();
-  assert.deepEqual(all,["404.html","index.html",...expectedLegacy].sort());
+  const allowed=new Set(["404.html","index.html",...fixedLegacy,...generatedEntries]);
+  assert.ok(all.every(file=>allowed.has(file)),
+    "Unexpected standalone HTML: "+all.filter(file=>!allowed.has(file)).join(", "));
   assert.match(entry,/<div id="root"><\/div>/);
   assert.match(entry,/\/assets\/index-[\w-]+\.js/);
-  for(const file of expectedLegacy){
+  assert.match(main,/import \{ BrowserRouter \}/);
+  assert.match(main,/<BrowserRouter\b/);
+  assert.doesNotMatch(main,/\bHashRouter\b/);
+  for(const file of all.filter(file=>file!=="404.html"&&file!=="index.html")){
     const html=read(file);
-    assert.match(html,/location\.replace\(/,file);
+    assert.ok(html.includes('id="root"')||html.includes("location.replace("),
+      file+" should either boot React or redirect a historical alias");
     assert.doesNotMatch(html,/<main\b|<article\b|<form\b|<iframe\b/i,
-      file+" unexpectedly has an independent page implementation");
+      file+" unexpectedly has a second page implementation");
   }
-  assert.doesNotMatch(read("404.html"),/<main\b|<article\b|<form\b/i);
+  const publish=readFileSync(new URL("../../scripts/publish-ogcl-production.mjs",import.meta.url),"utf8");
+  assert.match(publish,/SITEMAP_SECTIONS/);
+  assert.match(publish,/writeFileSync\(output,routeHtml\)/);
+  assert.match(publish,/noindex,follow/);
 });
 
-test("every canonical user-facing page is rendered by a React route",()=>{
+test("all canonical user-facing pages are React routes",()=>{
   for(const path of canonical)
     assert.ok(source.includes('<Route path="'+path+'"'),"No React page: "+path);
   assert.match(source,/<Route path="\*"/);
@@ -69,46 +77,46 @@ test("every canonical user-facing page is rendered by a React route",()=>{
   assert.doesNotMatch(editorials,/<iframe|contentDocument/);
 });
 
-test("legacy /quiz and /questions go directly into React with query and fragment preserved",()=>{
-  for(const [path,react] of [["quiz/index.html","persona"],
-    ["questions/index.html","questions"]]){
-    const html=read(path);
-    assert.match(html,new RegExp('content="0;url=\\/#\\/'+react+'"'));
-    assert.equal(redirectFor(path,"/"+path.split("/")[0]+"/","?x=1","#section"),
-      "/#/"+react+"?x=1#section");
-    assert.equal(redirectFor(path),"/#/"+react);
+test("legacy Persona entry points redirect to clean, query-preserving routes",()=>{
+  for(const page of ["quiz/index.html","account/persona.html"]){
+    assert.equal(redirectFor(page,"/quiz/","?persona=RBSDm","#result"),
+      "/persona?persona=RBSDm#result");
+    assert.doesNotMatch(read(page),/\/#\/persona/);
   }
-  assert.equal(redirectFor("sitemap/index.html","/sitemap"),"/#/sitemap");
-  assert.equal(redirectFor("quiz/index.html","/quiz/","?persona=RBSDm"),
-    "/#/persona?persona=RBSDm");
+  // The old Questions bridge may exist before the first production build;
+  // after publishing, /questions/index.html is a real React entry.
+  const questions=read("questions/index.html");
+  if(questions.includes('id="root"')){
+    assert.match(questions,/\/assets\/index-[\w-]+\.js/);
+  }else{
+    assert.match(questions,/location\.replace\(/);
+  }
 });
 
-test("Render 404 bridge forwards clean deep links to the correct React pages",()=>{
+test("static host fallback preserves dynamic deep links without resurrecting hashes",()=>{
   const cases=[
-    ["/admin","","","/#/admin"],
-    ["/sitemap","","","/#/sitemap"],
-    ["/messages","","","/#/messages"],
-    ["/messages/00000000-0000-4000-8000-000000000007","","",
-      "/#/messages/00000000-0000-4000-8000-000000000007"],
-    ["/photos","","","/#/photos"],
-    ["/questions/","","","/#/questions"],
-    ["/profile","","","/#/profile"],
-    ["/visitors","","","/#/visitors"],
-    ["/ogtrends/references","","","/#/ogtrends/references"],
-    ["/profiles/river-riley","","#photos","/#/profiles/river-riley?tab=photos"],
-    ["/profiles/river-riley/","?tab=questions","#photos",
-      "/#/profiles/river-riley?tab=questions"],
-    ["/quiz","?persona=RBSDm","","/#/persona?persona=RBSDm"],
-    ["/unknown-page","","","/#/not-found"],
-    ["/profiles/invalid.name","","","/#/not-found"]
+    ["/admin","",""],["/sitemap","",""],["/matches","",""],
+    ["/messages/00000000-0000-4000-8000-000000000007","",""],
+    ["/profiles/river-riley","?tab=questions","#photos"],
+    ["/profiles/river-riley","","#photos"],
+    ["/not-a-route","",""]
   ];
-  for(const [path,search,hash,expectation] of cases)
-    assert.equal(redirectFor("404.html",path,search,hash),expectation,path);
+  for(const [path,search,hash] of cases){
+    const redirected=redirectFor("404.html",path,search,hash);
+    const expected=path+search+hash;
+    const parsed=new URL("https://ogcupid.com"+redirected);
+    assert.equal(parsed.pathname,"/",path);
+    assert.equal(parsed.searchParams.get("__ogc_route"),expected,path);
+    if(path==="/profiles/river-riley"&&hash==="#photos"){
+      const normalized=normalizeSiteRoute(expected,"https://ogcupid.com");
+      assert.match(normalized,/^\/profiles\/river-riley\?tab=/);
+    }
+  }
+  assert.doesNotMatch(read("404.html"),/\/#\//);
 });
 
-test("member app is retained only as rollback source, not a second published UI",()=>{
-  assert.doesNotMatch(entry,/member-app|home-dashboard|onboarding-ui|profile-showcase\.js/);
-  assert.doesNotMatch(source,/legacyHref\("/);
-  assert.match(read("account/index.html"),/location\.replace\("\/#"/);
-  assert.match(read("profiles/index.html"),/location\.replace\("\/#\/profiles\//);
+test("legacy generic /profiles directory goes to clean matches route",()=>{
+  const html=read("profiles/index.html");
+  assert.match(html,/location\.replace\(/);
+  assert.doesNotMatch(html,/\/#\//);
 });

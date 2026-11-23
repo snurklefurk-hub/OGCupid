@@ -6,36 +6,14 @@
   <meta name="robots" content="noindex,nofollow">
   <title>OG Cupid</title>
   <script>
-    // Render's static-site 404 fallback. The React HashRouter owns all pages.
-    // Only known application paths are forwarded; unrelated URLs stay 404.
-    const path = location.pathname.replace(/\/+$/, "") || "/";
-    const aliases = {
-      "/signin":"/signin", "/join":"/join", "/recover":"/recover",
-      "/verify":"/verify", "/onboarding":"/onboarding",
-      "/account":"/account", "/persona":"/persona", "/quiz":"/persona",
-      "/matches":"/matches", "/visitors":"/visitors",
-      "/profile":"/profile", "/profiles":"/matches", "/photos":"/photos",
-      "/settings":"/settings", "/questions":"/questions",
-      "/messages":"/messages", "/quickmatch":"/quickmatch",
-      "/community":"/community", "/admin":"/admin",
-      "/ogtrends":"/ogtrends", "/ogtrends/zero":"/ogtrends/zero",
-      "/ogtrends/perfect-profile":"/ogtrends/perfect-profile",
-      "/ogtrends/references":"/ogtrends/references",
-      "/privacy":"/privacy", "/terms":"/terms", "/contact":"/contact",
-      "/sitemap":"/sitemap"
-    };
-    const profile = path.match(/^\/profiles\/([a-z0-9]+(?:-[a-z0-9]+)*)$/);
-    const thread = path.match(/^\/messages\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i);
-    const target = profile ? "/profiles/" + profile[1] :
-      thread ? "/messages/" + thread[1] : aliases[path] || "/not-found";
-    const params = new URLSearchParams(location.search);
-    if (profile && !params.has("tab")) {
-      const oldTab = location.hash.slice(1).toLowerCase();
-      if (["photos","questions","personality"].includes(oldTab)) params.set("tab", oldTab);
-    }
-    const query = params.toString();
-    location.replace("/#" + target + (query ? "?" + query : ""));
+    // Static-host fallback for dynamic profile and message-thread routes.
+    // The canonical root loads BrowserRouter and restores this same-origin
+    // path with history.replaceState BEFORE React mounts. No #/ links.
+    // Unknown paths continue to React's regular "Page not found" view.
+    var base=location.pathname.startsWith("/ogc-l/")?"/ogc-l":"";
+    location.replace(base+"/?__ogc_route="+encodeURIComponent(
+      location.pathname.slice(base.length)+location.search+location.hash));
   </script>
 </head>
-<body><a href="/#/not-found">Continue to OG Cupid</a></body>
+<body><p><a href="/">Continue to OG Cupid</a></p></body>
 </html>

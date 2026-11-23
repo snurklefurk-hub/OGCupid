@@ -1,22 +1,26 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { HashRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
+import {migrateBrowserLocation} from "./browser-location.mjs";
 import App from "./App.jsx";
 import {MemberSessionProvider} from "./MemberSessionProvider.jsx";
 import "./styles.css";
 import "./period-tabs.css";
+
+// Normalize bookmarked /#/ URLs and static-host deep-link recovery before
+// React Router chooses its initial page. Do not reload for canonicalization.
+migrateBrowserLocation(window,import.meta.env.BASE_URL);
 
 const root = document.getElementById("root");
 if (!root) throw new Error("OGC-L root element missing");
 
 createRoot(root).render(
   <React.StrictMode>
-    {/* Hash routing works at the independent /ogc-l/ preview URL without
-        changing Render rewrite rules that still serve the legacy site. */}
-    <HashRouter>
+    {/* Canonical, shareable paths; the static build supplies direct route entries. */}
+    <BrowserRouter basename={import.meta.env.BASE_URL === "/" ? undefined : import.meta.env.BASE_URL}>
       <MemberSessionProvider>
         <App />
       </MemberSessionProvider>
-    </HashRouter>
+    </BrowserRouter>
   </React.StrictMode>
 );

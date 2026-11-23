@@ -43,12 +43,24 @@ jobs:
           test -s public/quiz/index.html
           test -s public/ogtrends/index.html
           grep -q '/assets/' index.html
+          test -s public/sitemap/index.html
+          grep -q 'id="root"' public/sitemap/index.html
+          test -s public/matches/index.html
+          grep -q 'id="root"' public/matches/index.html
+          test -s public/onboarding/index.html
+          grep -q 'id="root"' public/onboarding/index.html
           ! grep -q 'noindex,nofollow' index.html
       - name: Publish verified compiled files to live main
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A -f index.html public/index.html public/assets
+          git add -A -f index.html public/index.html public/assets public/404.html
+          # Commit all generated fixed-route HTML entries alongside the build.
+          # Keep other unrelated public/ assets out of the publish commit.
+          while IFS= read -r entry; do
+            git add -A -f "$entry"
+          done < <(node -e 'import("./ogc-l-react/src/sitemap-pages.mjs").then(m=>m.SITEMAP_PATHS.forEach(path=>console.log("public"+path+"/index.html")))')
+          git add -A -f public/quiz/index.html public/account/persona.html public/profiles/index.html
           if ! git diff --cached --quiet; then
             git commit -m "build: publish updated OG Cupid React member and admin UI"
             for attempt in 1 2 3 4 5 6; do
