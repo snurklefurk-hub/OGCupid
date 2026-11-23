@@ -31,7 +31,7 @@ const RecoveryForm=lazy(()=>loadAccounts().then(m=>({default:m.RecoveryForm})));
 const VerifyForm=lazy(()=>loadAccounts().then(m=>({default:m.VerifyForm})));
 const AccountManagement=lazy(()=>loadAccounts().then(m=>({default:m.AccountManagement})));
 
-const profileHref = slug => "#/profiles/" + encodeURIComponent(slug);
+const profileHref = slug => "/profiles/" + encodeURIComponent(slug);
 const questionScore = member => member.matchPercent === null
   ? "Not enough shared answers"
   : member.matchPercent + "% question match · " + member.commonQuestions + " shared";
@@ -61,13 +61,13 @@ export function MemberPhoto({member}) {
 }
 
 function MemberCard({member}) {
-  return <a className="ogcl-member-link" href={profileHref(member.slug)}>
+  return <NavLink className="ogcl-member-link" to={profileHref(member.slug)}>
     <MemberPhoto member={member} />
     <span className="ogcl-member-copy">
       <strong>{member.displayName}</strong>
       <small>{questionScore(member)}</small>
     </span>
-  </a>;
+  </NavLink>;
 }
 
 function LeftRail({promoSelection}) {
@@ -94,10 +94,10 @@ function LeftRail({promoSelection}) {
       {isMember && !discoveryUnavailable && recommendations.length>0 && <section className="ogcl-left-note" aria-label="Suggested members">
         <h2 data-ogc-edit-text="shell.suggestions">You might like</h2>
         <div className="ogcl-suggested-thumbnails">
-          {recommendations.map(member=><a key={member.userId} href={profileHref(member.slug)}
+          {recommendations.map(member=><NavLink key={member.userId} to={profileHref(member.slug)}
             aria-label={"View member profile: "+member.displayName}>
             <MemberPhoto member={member}/>
-          </a>)}
+          </NavLink>)}
         </div>
       </section>}
       <SidebarPromos side="left" selection={promoSelection}/>

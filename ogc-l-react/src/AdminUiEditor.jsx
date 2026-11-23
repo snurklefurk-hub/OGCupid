@@ -236,7 +236,8 @@ export default function AdminUiEditor({onUnsavedChange}){
   const previewUrl=useMemo(()=>{
     const search=new URLSearchParams(window.location.search);
     search.set("ogc-ui-preview","1");
-    return window.location.pathname+"?"+search.toString()+"#"+page;
+    // Preview the actual clean route, not a legacy HashRouter fragment.
+    return page+"?"+search.toString();
   },[page]);
   useEffect(()=>{
     const resize=()=>{

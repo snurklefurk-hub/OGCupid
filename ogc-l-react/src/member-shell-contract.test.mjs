@@ -8,7 +8,7 @@ const provider = readFileSync(new URL("./MemberSessionProvider.jsx", import.meta
 const css = readFileSync(new URL("./styles.css", import.meta.url), "utf8");
 
 test("one persistent session provider wraps all routed member views",()=>{
-  assert.match(entry, /<HashRouter>\s*<MemberSessionProvider>\s*<App\s*\/>/);
+  assert.match(entry, /<BrowserRouter\b[^>]*>\s*<MemberSessionProvider>\s*<App\s*\/>/);
   assert.match(provider, /const version = useRef\(0\)/);
   assert.match(provider, /setSession\(blank\)/);
 });

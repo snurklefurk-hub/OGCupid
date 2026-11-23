@@ -1,5 +1,6 @@
-import {readFileSync,writeFileSync,existsSync} from "node:fs";
-import {resolve} from "node:path";
+import {readFileSync,writeFileSync,existsSync,mkdirSync} from "node:fs";
+import {resolve,dirname} from "node:path";
+import {SITEMAP_SECTIONS} from "../ogc-l-react/src/sitemap-pages.mjs";
 
 if(process.env.OGCL_PRODUCTION_ROOT!=="true")
   throw new Error("Refusing to publish outside explicit production build mode.");
@@ -40,4 +41,30 @@ if(/VITE_OGC_(AUTH|MEMBER_API)_URL|DATABASE_URL|NEON_AUTH_JWKS_URL|sk_live/i.tes
   throw new Error("Possible environment setting leaked into published HTML");
 writeFileSync(resolve(built),html);
 writeFileSync(resolve("index.html"),html);
-console.log("Verified React production root, account bridge, static routes, and "+assets.length+" entrypoint assets.");
+
+// Render's static-host deployment does not yet have a verified catch-all
+// rewrite rule. Publish a real React HTML entry at each fixed canonical URL
+// instead of redirecting it to /#/; deep links load successfully with HTTP 200.
+// The tiny 404 bridge handles dynamic profile/conversation URLs that cannot be
+// enumerated at build time. This produces the SAME React app, not separate UIs.
+const paths=new Set();
+for(const section of SITEMAP_SECTIONS){
+  for(const page of section.items){
+    if(!/^\/[a-z0-9-]+(?:\/[a-z0-9-]+)*$/.test(page.path)||
+       paths.has(page.path))throw new Error("Invalid or duplicate site route: "+page.path);
+    paths.add(page.path);
+    const output=resolve("public",page.path.slice(1),"index.html");
+    mkdirSync(dirname(output),{recursive:true});
+    const title=page.label.replaceAll("&","&amp;").replaceAll("<","&lt;");
+    let routeHtml=html.replace(/<title>[^<]*<\/title>/,
+      "<title>"+title+" | OG Cupid</title>");
+    if(page.access!=="public")
+      routeHtml=routeHtml.replace('<meta name="robots" content="index,follow">',
+        '<meta name="robots" content="noindex,follow">');
+    if(!routeHtml.includes('id="root"')||!routeHtml.includes("/assets/"))
+      throw new Error("Invalid route entry for "+page.path);
+    writeFileSync(output,routeHtml);
+  }
+}
+console.log("Verified canonical React root and "+paths.size+
+  " direct clean URL entries; "+assets.length+" compiled assets.");

@@ -1,10 +1,10 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><title>OG Cupid profiles</title><script>
     (function () {
       var path = location.pathname.match(/^\/profiles\/([a-z0-9]+(?:-[a-z0-9]+)*)\/?$/);
-      if (!path) { location.replace("/#/matches"); return; }
+      if (!path) { location.replace("/matches"); return; }
       var known = {photos:true,questions:true,personality:true};
       var tab = String(location.hash || "").replace(/^#/, "").toLowerCase();
       var suffix = known[tab] ? "?tab=" + tab : "";
-      location.replace("/#/profiles/" + encodeURIComponent(path[1]) + suffix);
+      location.replace("/profiles/" + encodeURIComponent(path[1]) + suffix);
     }());
-  </script><a href="/#/matches">Continue to OG Cupid</a></html>
+  </script><a href="/matches">Continue to OG Cupid</a></html>

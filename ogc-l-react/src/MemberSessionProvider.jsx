@@ -315,7 +315,7 @@ export function MemberSessionProvider({children}) {
   },[]);
   const signUp=useCallback(async(name,email,password)=>{
     if(!gateway)throw new MemberAccessError("unavailable","Registration is unavailable.");
-    await gateway.signUp(name,email,password,window.location.origin+"/#/onboarding");
+    await gateway.signUp(name,email,password,window.location.origin+"/onboarding");
     return refresh();
   },[refresh]);
   const requestRecovery=useCallback(async(email)=>{
@@ -328,7 +328,7 @@ export function MemberSessionProvider({children}) {
   },[]);
   const requestEmailVerification=useCallback(async(email)=>{
     if(!gateway)throw new MemberAccessError("unavailable","Verification is unavailable.");
-    return gateway.requestEmailVerification(email,window.location.origin+"/#/onboarding");
+    return gateway.requestEmailVerification(email,window.location.origin+"/onboarding");
   },[]);
   const deleteMyAccount=useCallback(async(password,confirm)=>{
     if(!gateway)throw new MemberAccessError("unavailable","Account deletion is unavailable.");
