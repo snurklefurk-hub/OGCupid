@@ -46,9 +46,12 @@ test("sitemap is public, uses the shared three-column shell and appropriate acce
 test("clean /sitemap entry works on the static host and fallback forwards it",()=>{
   const bridge=read("../../public/404.html");
   const entry=read("../../public/sitemap/index.html");
-  assert.match(bridge,/"\/sitemap":"\/sitemap"/);
-  assert.match(entry,/location\.replace\("\/#\/sitemap"\)/);
-  assert.match(entry,/href="\/#\/sitemap"/);
+  assert.match(bridge,/__ogc_route/);
+  assert.match(bridge,/location\.replace\("\/\?__ogc_route="/);
+  const publish=read("../../scripts/publish-ogcl-production.mjs");
+  assert.match(publish,/writeFileSync\(output,routeHtml\)/);
+  // The compiled app entry replaces the old compatibility bridge on publish.
+  assert.ok(entry.includes('id="root"')||entry.includes('location.replace("/#/sitemap")'));
   assert.doesNotMatch(entry,/src="https?:|<form|<iframe/);
 });
 

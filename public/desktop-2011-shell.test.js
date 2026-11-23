@@ -59,9 +59,13 @@ test("both pages use the same left, center, and right grid positions without sep
   assert.match(right, /height:auto!important/);
 });
 
-test("historical member documents route into the React shell", () => {
+test("historical member documents enter the React shell through clean URLs", () => {
   for (const html of [account,profile]) {
-    assert.match(html, /location\.replace\("\/#/);
-    assert.doesNotMatch(html, /<script\s+[^>]*src=|legacy|<main\b/);
+    // The account path is replaced with a React entry at publication; the
+    // historical /profiles directory remains a clean-path redirect.
+    assert.ok(html.includes('id="root"')||html.includes("location.replace("));
+    assert.doesNotMatch(html, /<main\b/);
   }
+  assert.match(profile,/location\.replace\("\/matches"/);
+  assert.doesNotMatch(profile,/\/\#\/matches/);
 });

@@ -37,7 +37,9 @@ test("canonical legal, research, Contact and Persona source bodies are retained"
     assert.ok(existsSync(new URL(path,import.meta.url)),path);
     assert.ok(editorial.includes(key+":{") || editorial.includes('"'+key+'":{'),key);
     const html=read(path);
-    assert.match(html,/location\.replace\("\/#\//);
+    // Pre-build canonical HTML is a redirect; published clean paths boot
+    // the same React root directly. /account/persona.html remains an alias.
+    assert.ok(html.includes('id="root"')||html.includes("location.replace("),path);
     assert.match(html,/<title>[^<]+<\/title>/i);
     assert.doesNotMatch(html,/<main\b|ogcl_embed/i);
   }
@@ -73,6 +75,8 @@ test("editorial and Persona render without runtime HTML loading",()=>{
   assert.match(staged,/ogcl-embedded\.css/);
 });
 test("historical /quiz and /questions links reach React routes",()=>{
-  assert.match(read("../../public/quiz/index.html"),/content="0;url=\/#\/persona"/);
-  assert.match(read("../../public/questions/index.html"),/content="0;url=\/#\/questions"/);
+  assert.match(read("../../public/quiz/index.html"),/content="0;url=\/persona"/);
+  const questions=read("../../public/questions/index.html");
+  assert.ok(questions.includes('id="root"')||
+    /content="0;url=\/#\/questions"/.test(questions));
 });
