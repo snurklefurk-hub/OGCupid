@@ -23,6 +23,7 @@ const shortId=id=>typeof id==="string"?id.slice(0,8):"—";
 export default function AdminDashboard(){
   const {adminRequest}=useMemberSession();
   const [tab,setTab]=useState("overview");
+  const [editorDirty,setEditorDirty]=useState(false);
   const [editingMember,setEditingMember]=useState(null);
   const [summary,setSummary]=useState(null);
   const [members,setMembers]=useState([]);
@@ -167,7 +168,10 @@ export default function AdminDashboard(){
         <nav aria-label="Administration sections" className="ogcl-period-tabs">
           {["overview","reports","community","members","audit","ui-editor"].map(t=><button key={t} type="button"
             className={tab===t?"selected":""} aria-current={tab===t?"page":undefined}
-            onClick={()=>{setTab(t);setError("");setNotice("");}}>{t==="audit"?"Action log":t==="ui-editor"?"UI Editor":t[0].toUpperCase()+t.slice(1)}</button>)}
+            onClick={()=>{
+              if(tab==="ui-editor"&&t!==tab&&editorDirty&&!window.confirm("Leave the editor and discard unsaved edits?"))return;
+              setTab(t);setError("");setNotice("");
+            }}>{t==="audit"?"Action log":t==="ui-editor"?"UI Editor":t[0].toUpperCase()+t.slice(1)}</button>)}
         </nav>
         <button type="button" className="ogcl-button ogcl-secondary" disabled={busy||tab==="ui-editor"}
           onClick={()=>void reload()}>{busy?"Working…":"Refresh"}</button>
@@ -177,7 +181,9 @@ export default function AdminDashboard(){
       {error&&<p role="alert" className="ogcl-error">{error}</p>}
       {notice&&<p role="status" className="ogcl-save-confirmation">{notice}</p>}
 
-      {tab==="ui-editor"&&<React.Suspense fallback={<p role="status">Loading visual editor…</p>}><AdminUiEditor/></React.Suspense>}
+      {tab==="ui-editor"&&<React.Suspense fallback={<p role="status">Loading editor…</p>}>
+        <AdminUiEditor onUnsavedChange={setEditorDirty}/>
+      </React.Suspense>}
       {tab==="overview"&&<>
         <div className="ogcl-admin-stats">
           {[

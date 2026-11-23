@@ -116,7 +116,7 @@ test("editor renders draft text with textContent, never as HTML or changed URLs"
   assert.match(editor,/element\.textContent=text/);
   assert.match(editor,/data-ogc-editor-original-text/);
   assert.match(editor,/setSelected\(\{kind:"text",id:textTarget\.id\}\)/);
-  assert.match(editor,/Edit text ·/);
+  assert.match(editor,/<label>Edit text/);
   assert.match(editor,/Restore original text/);
   assert.match(editor,/Style this region/);
   assert.match(editor,/setAvailableText\(/);

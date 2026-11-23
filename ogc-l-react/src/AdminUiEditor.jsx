@@ -8,6 +8,8 @@ import {
   EDITOR_VIEWPORTS,EDITOR_TEXT_TARGETS,EDITOR_LINK_ROUTES,editorTextTarget
 } from "./admin-ui-editor-model.mjs";
 import {computedEditorSnapshot} from "./admin-ui-editor-inspector.mjs";
+import {formatEditorCss,parseEditorCss,parseEditorJson} from "./admin-ui-editor-source.mjs";
+import AdminUiCodePane from "./AdminUiCodePane.jsx";
 import "./admin-ui-editor.css";
 
 // Administrator-only design editor: server drafts are authoritative.
@@ -54,7 +56,7 @@ function putPreview(doc,draft,page,selected){
   if(css.textContent!==nextCss)css.textContent=nextCss;
 
   let region=doc.querySelector("[data-ogc-editor-region]");
-  const view=doc.querySelector(".ogcl-view");
+  const view=doc.querySelector(".ogcl-sheet .ogcl-view");
   if(view&&!region){
     region=doc.createElement("section");region.className="ogcl-editor-preview-region";
     region.setAttribute("data-ogc-editor-region","true");
@@ -83,7 +85,7 @@ function putPreview(doc,draft,page,selected){
     if(!element || element.children.length)continue;
     if(!element.hasAttribute("data-ogc-editor-original-text"))
       element.setAttribute("data-ogc-editor-original-text",element.textContent||"");
-    if(target.scope==="page")element.setAttribute("data-ogc-edit-text",target.id);
+    element.setAttribute("data-ogc-edit-text",target.id);
     const scope=target.scope==="shell"?"*":page;
     const chosen=draft.texts[scope]?.[target.id];
     const text=chosen??element.getAttribute("data-ogc-editor-original-text");
@@ -99,11 +101,13 @@ function putPreview(doc,draft,page,selected){
     if(selector)doc.querySelectorAll(selector).forEach(el=>el.setAttribute("data-ogc-editor-selected","true"));
   }
 }
-export default function AdminUiEditor(){
+export default function AdminUiEditor({onUnsavedChange}){
   const {user,adminRequest}=useMemberSession();
   const [page,setPage]=useState("/matches");
   const [workspace,setWorkspace]=useState("shell");
-  const [draft,setDraft]=useState(()=>blankEditorDraft());
+  const [draft,setDraft]=useState(blankEditorDraft);
+  const draftRef=useRef(draft);
+  const replaceDraft=useCallback(value=>{draftRef.current=value;setDraft(value);},[]);
   const [savedText,setSavedText]=useState("");
   const [notice,setNotice]=useState("");
   const [selected,setSelected]=useState({kind:"area",id:"brand"});
@@ -123,18 +127,23 @@ export default function AdminUiEditor(){
   const [busy,setBusy]=useState(false);
   const [dragId,setDragId]=useState(null);
   const [compact,setCompact]=useState(false);
+  const [mode,setMode]=useState("visual");
+  const [language,setLanguage]=useState("css");
+  const [sourceText,setSourceText]=useState(null);
+  const [sourceError,setSourceError]=useState("");
+  const [layerFilter,setLayerFilter]=useState("");
+  const [loadingDraft,setLoadingDraft]=useState(true);
   const frame=useRef(null),stage=useRef(null);
   const undoStack=useRef([]),redoStack=useRef([]);
   const commit=useCallback(update=>{
-    setDraft(previous=>{
-      const edited=sanitizeEditorDraft(update(JSON.parse(JSON.stringify(previous))));
-      if(JSON.stringify(edited)===JSON.stringify(previous))return previous;
-      undoStack.current=[...undoStack.current.slice(-39),previous];
-      redoStack.current=[];
-      return edited;
-    });
+    const previous=draftRef.current;
+    const edited=sanitizeEditorDraft(update(structuredClone(previous)));
+    if(JSON.stringify(edited)===JSON.stringify(previous))return;
+    undoStack.current=[...undoStack.current.slice(-39),previous];
+    redoStack.current=[];
+    replaceDraft(edited);
     setNotice("");
-  },[]);
+  },[replaceDraft]);
   useEffect(()=>{
     if(!user?.id)return;
     const original=readStored(storageKey(user.id),blankEditorDraft());
@@ -150,19 +159,20 @@ export default function AdminUiEditor(){
         setNotice("Earlier draft upgraded. The original was backed up; page-specific outer-column styling was not promoted sitewide.");
       }catch{setNotice("Earlier draft loaded in memory; browser storage did not allow migration.");}
     }
-    setDraft(loaded);
+    replaceDraft(loaded);
     setSavedText(JSON.stringify(loaded));
     const savedRecords=readStored(recordKey(user.id),[]);
     setHistory(Array.isArray(savedRecords)?savedRecords.slice(0,10)
       .filter(entry=>entry&&typeof entry.at==="string"&&[1,EDITOR_SCHEMA].includes(entry.draft?.version))
       .map(entry=>({...entry,draft:sanitizeEditorDraft(entry.draft)})):[]);
     undoStack.current=[];redoStack.current=[];
-  },[user?.id]);
+  },[user?.id,replaceDraft]);
   const hasChanges=JSON.stringify(draft)!==savedText;
   useEffect(()=>{
     if(!user?.id)return;
     let live=true;
     setServerVersion(null);
+    setLoadingDraft(true);
     void adminRequest("/admin/ui-design").then(state=>{
       if(!live)return;
       setServerVersion(state.draftVersion);
@@ -174,20 +184,22 @@ export default function AdminUiEditor(){
       // Migrate an older browser-only draft once when no remote draft exists.
       // Never replace a newer server draft with browser storage.
       if(state.draftVersion===0&&localHasEdits){
-        setDraft(local);
+        replaceDraft(local);
         setSavedText(JSON.stringify(fromServer));
         setNotice("Your earlier browser draft is ready to import. Choose Save draft to store it on the server.");
       }else{
-        setDraft(fromServer);
+        replaceDraft(fromServer);
         setSavedText(JSON.stringify(fromServer));
         setNotice("Server draft loaded. Changes are private until you publish.");
       }
       undoStack.current=[];redoStack.current=[];
     }).catch(()=>{
-      if(live)setNotice("Could not load your server draft. Publishing is unavailable; your browser backup is untouched.");
+      if(live)setNotice("Could not load the server draft. Reopen the editor to retry.");
+    }).finally(()=>{
+      if(live)setLoadingDraft(false);
     });
     return()=>{live=false;};
-  },[user?.id,adminRequest]);
+  },[user?.id,adminRequest,replaceDraft]);
   const previewUrl=useMemo(()=>{
     const search=new URLSearchParams(window.location.search);
     search.set("ogc-ui-preview","1");
@@ -204,14 +216,14 @@ export default function AdminUiEditor(){
     if(observer&&stage.current)observer.observe(stage.current);
     window.addEventListener("resize",resize);
     return()=>{observer?.disconnect();window.removeEventListener("resize",resize);};
-  },[zoomMode,compact,viewport.width]);
+  },[zoomMode,compact,mode,viewport.width]);
   useEffect(()=>{
     const doc=frame.current?.contentDocument;
     if(!doc)return;
     const intercept=event=>{
       event.preventDefault();event.stopPropagation();event.stopImmediatePropagation?.();
       const target=event.target;
-      if(!(target instanceof doc.defaultView.Element))return;
+      if(mode!=="visual"||!(target instanceof doc.defaultView.Element))return;
       const block=target.closest("[data-ogc-editor-block-id]");
       if(block){
         setWorkspace("page");
@@ -240,7 +252,7 @@ export default function AdminUiEditor(){
     const prevent=event=>{event.preventDefault();event.stopPropagation();event.stopImmediatePropagation?.();};
     const previewDragStart=event=>{
       const element=event.target?.closest?.("[data-ogc-editor-block-id]");
-      if(!element){prevent(event);return;}
+      if(mode!=="visual"||!element){prevent(event);return;}
       const id=element.getAttribute("data-ogc-editor-block-id");
       if(event.dataTransfer)event.dataTransfer.setData("text/plain",id);
       if(event.dataTransfer)event.dataTransfer.effectAllowed="move";
@@ -252,17 +264,13 @@ export default function AdminUiEditor(){
       const target=event.target?.closest?.("[data-ogc-editor-block-id]");
       const source=event.dataTransfer?.getData("text/plain");
       prevent(event);
-      if(target&&source){
-        setDraft(previous=>{
-          const next=JSON.parse(JSON.stringify(previous));
+      if(mode==="visual"&&!busy&&!loadingDraft&&target&&source){
+        commit(next=>{
           const list=next.pages[page]||[];
           const start=list.findIndex(block=>block.id===source);
           const end=list.findIndex(block=>block.id===target.getAttribute("data-ogc-editor-block-id"));
-          if(start<0||end<0||start===end)return previous;
-          undoStack.current=[...undoStack.current.slice(-39),previous];
-          redoStack.current=[];
-          next.pages[page]=moveEditorBlock(list,start,end);
-          return sanitizeEditorDraft(next);
+          if(start>=0&&end>=0&&start!==end)next.pages[page]=moveEditorBlock(list,start,end);
+          return next;
         });
       }
     };
@@ -278,14 +286,14 @@ export default function AdminUiEditor(){
       doc.removeEventListener("dragover",previewDragOver,true);
       doc.removeEventListener("drop",previewDrop,true);
     };
-  },[frameVersion,page]);
+  },[frameVersion,page,mode,busy,loadingDraft,commit]);
   useEffect(()=>{
     const doc=frame.current?.contentDocument;
-    if(!doc)return;
+    if(!doc?.body)return;
     const render=()=>{
       try{
-        if(!doc.querySelector(".ogcl-view"))return;
-        putPreview(doc,draft,page,selected);
+        if(!doc.querySelector(".ogcl-app"))return;
+        putPreview(doc,draft,page,mode==="visual"?selected:null);
         const selector=selected.kind==="block"?
           '[data-ogc-editor-block-id="'+selected.id+'"]':
           selected.kind==="text"?editorTextTarget(selected.id,page)?.selector:
@@ -310,9 +318,10 @@ export default function AdminUiEditor(){
       }catch{ /* Preview may be remounting while route loads. */ }
     };
     render();
-    const interval=window.setInterval(render,350);
-    return()=>window.clearInterval(interval);
-  },[draft,page,selected,frameVersion]);
+    const observer=new MutationObserver(render);
+    observer.observe(doc.body,{childList:true,subtree:true,characterData:true});
+    return()=>observer.disconnect();
+  },[draft,page,selected,frameVersion,mode]);
   const blocks=draft.pages[page]||[];
   const sharedGroups=[
     ["Site background & logo",["siteBackground","brand"]],
@@ -323,6 +332,7 @@ export default function AdminUiEditor(){
   ];
   function chooseWorkspace(next){
     setWorkspace(next);
+    setLayerFilter("");
     setSelected({kind:"area",id:next==="shell"?"brand":"pageHeader"});
     setNotice("");
   }
@@ -372,7 +382,7 @@ export default function AdminUiEditor(){
     return next;
   });
   function addBlock(){
-    if(workspace!=="page")return;
+    if(workspace!=="page"||blocks.length>=24)return;
     const block=newBlock(addType);
     commit(next=>{(next.pages[page]??=[]).push(block);return next;});
     setSelected({kind:"block",id:block.id});
@@ -394,20 +404,20 @@ export default function AdminUiEditor(){
   function undo(){
     const prior=undoStack.current.pop();
     if(!prior)return;
-    redoStack.current.push(draft);setDraft(prior);setNotice("");
+    redoStack.current.push(draftRef.current);replaceDraft(prior);setNotice("");
   }
   function redo(){
     const next=redoStack.current.pop();
     if(!next)return;
-    undoStack.current.push(draft);setDraft(next);setNotice("");
+    undoStack.current.push(draftRef.current);replaceDraft(next);setNotice("");
   }
-  function acceptServerState(state,replaceDraft=true){
+  function acceptServerState(state,replaceLocal=true){
     setServerVersion(state.draftVersion);
     setPublishedRevision(state.publishedRevision??null);
     setPublishedHistory(Array.isArray(state.history)?state.history:[]);
-    if(replaceDraft){
+    if(replaceLocal){
       const clean=sanitizeEditorDraft(state.draft);
-      setDraft(clean);
+      replaceDraft(clean);
       setSavedText(JSON.stringify(clean));
       undoStack.current=[];redoStack.current=[];
     }
@@ -429,7 +439,7 @@ export default function AdminUiEditor(){
     return state;
   }
   async function save(){
-    if(!user?.id||busy||serverVersion===null)return;
+    if(!user?.id||busy||serverVersion===null||sourceDirty)return;
     setBusy(true);setNotice("");
     try{
       await persistDraft();
@@ -439,7 +449,7 @@ export default function AdminUiEditor(){
     }finally{setBusy(false);}
   }
   async function publish(){
-    if(busy||serverVersion===null)return;
+    if(busy||serverVersion===null||sourceDirty)return;
     if(!window.confirm("Publish this design to ALL visitors now?"))return;
     setBusy(true);setNotice("");
     try{
@@ -456,7 +466,7 @@ export default function AdminUiEditor(){
   async function rollback(){
     const revision=Number(rollbackId);
     if(!Number.isSafeInteger(revision)||revision<1||busy||serverVersion===null)return;
-    if(hasChanges){
+    if(hasChanges||sourceDirty){
       setNotice("Save or discard your unsaved changes before restoring a published version.");
       return;
     }
@@ -474,228 +484,272 @@ export default function AdminUiEditor(){
   }
   function restore(index){
     const entry=history[index];
-    if(!entry)return;
+    if(!entry||sourceDirty)return;
     commit(()=>entry.draft);
     setNotice("Snapshot loaded as an unsaved draft.");
   }
-  return <section className="ogcl-ui-editor" aria-label="Visual UI Editor">
-    <header className="ogcl-ui-editor-intro">
-      <div><h2>Visual UI Editor</h2>
-        <p>Edit the shared site shell separately from each page’s center content. All three columns remain permanently present.</p></div>
-      <span className="ogcl-ui-draft-label">{serverVersion===null?"CONNECTING…":
-          busy?"SAVING…":"SERVER DRAFT · "+(publishedRevision===null?"NOT YET PUBLISHED":"LIVE #"+publishedRevision)}</span>
+  const cssScope=workspace==="shell"?"*":page;
+  const pageLabel=EDITOR_PAGES.find(item=>item.path===page)?.label??page;
+  const scopeLabel=workspace==="shell"?"Site shell":pageLabel;
+  const generatedSource=useMemo(()=>language==="css"
+    ?formatEditorCss(draft,cssScope)
+    :JSON.stringify(draft,null,2)+"\n",[draft,cssScope,language]);
+  const sourceDirty=sourceText!==null;
+  const unsaved=hasChanges||sourceDirty;
+  const working=busy||loadingDraft;
+  const canSave=serverVersion!==null&&!working&&!sourceDirty;
+  const layerMatches=label=>label.toLowerCase().includes(layerFilter.trim().toLowerCase());
+  const textLayers=EDITOR_TEXT_TARGETS.filter(target=>
+    target.scope===workspace&&availableText.includes(target.id)&&layerMatches(target.label)
+  );
+  const activeLabel=chosenBlock?editorBlockHtmlLabel(chosenBlock):
+    chosenArea?.label||chosenText?.label||(selected.kind==="palette"?"Global palette":"Select a layer");
+
+  useEffect(()=>{onUnsavedChange?.(unsaved&&!loadingDraft);},[unsaved,loadingDraft,onUnsavedChange]);
+  useEffect(()=>()=>onUnsavedChange?.(false),[onUnsavedChange]);
+  useEffect(()=>{
+    if(!unsaved||loadingDraft)return;
+    const warn=event=>{event.preventDefault();event.returnValue="";};
+    window.addEventListener("beforeunload",warn);
+    return()=>window.removeEventListener("beforeunload",warn);
+  },[unsaved,loadingDraft]);
+
+  function editSource(value){
+    setSourceText(value===generatedSource?null:value);
+    setSourceError("");
+  }
+  function discardSource(){
+    setSourceText(null);
+    setSourceError("");
+  }
+  function applySource(){
+    if(!sourceDirty||working)return;
+    try{
+      const next=language==="css"?parseEditorCss(sourceText,draft,cssScope):parseEditorJson(sourceText);
+      commit(()=>next);
+      discardSource();
+      setNotice("Code applied to the draft.");
+    }catch(error){setSourceError(error.message);}
+  }
+
+  function layerButton(kind,id,label){
+    return <button key={id} type="button" className="ogcl-studio-layer"
+      aria-pressed={selected.kind===kind&&selected.id===id} onClick={()=>setSelected({kind,id})}
+      title={label}>{label}</button>;
+  }
+
+  function styleControl(property){
+    const override=activeStyle[property.key];
+    const live=inspected.values[property.key]||{value:"",raw:"Unavailable in this preview"};
+    const value=override??live.value??"";
+    return <div className="ogcl-studio-style-field" key={property.key}>
+      <label title={live.raw}>{property.label}
+        {property.kind==="select"?
+          <select value={value} onChange={event=>updateArea(property.key,event.target.value||null)}>
+            {value===""&&<option value="">Inherited</option>}
+            {property.options.map(option=><option key={option} value={option}>{option}</option>)}
+          </select>:
+          <input type={property.kind==="color"?"color":"number"}
+            min={property.kind==="number"?0:undefined}
+            max={property.kind==="number"?property.max:undefined}
+            step={property.kind==="number"?0.1:undefined}
+            value={property.kind==="color"?(value||"#ffffff"):value}
+            onChange={event=>updateArea(property.key,property.kind==="color"?
+              event.target.value:event.target.value===""?null:Number(event.target.value))}/>}
+      </label>
+      <button type="button" title={"Reset "+property.label} disabled={override===undefined}
+        onClick={()=>updateArea(property.key,null)}>Reset</button>
+    </div>;
+  }
+
+  const styleGroups=[
+    ["Colors",EDITOR_PROPERTIES.filter(property=>property.kind==="color")],
+    ["Type",EDITOR_PROPERTIES.filter(property=>/^(font|textAlign|lineHeight)/.test(property.key))],
+    ["Spacing",EDITOR_PROPERTIES.filter(property=>/^(padding|margin)/.test(property.key))],
+    ["Borders",EDITOR_PROPERTIES.filter(property=>/^border(?!Color)/.test(property.key))],
+  ];
+  const choosePage=next=>{
+    setPage(next);
+    if(workspace==="page")setSelected({kind:"area",id:"pageHeader"});
+  };
+
+  return <section className="ogcl-ui-editor" aria-label="OG Cupid Design Studio">
+    <header className="ogcl-studio-header">
+      <div>
+        <h2>Design Studio</h2>
+        <p className="ogcl-studio-state">
+          {loadingDraft?"Loading draft":busy?"Working…":serverVersion===null?"Draft unavailable":unsaved?"Unsaved draft":"Draft saved"}
+          {publishedRevision!==null&&<span>Live revision #{publishedRevision}</span>}
+        </p>
+      </div>
+      <div className="ogcl-studio-actions">
+        <button type="button" onClick={undo} disabled={working||sourceDirty||!undoStack.current.length}>Undo</button>
+        <button type="button" onClick={redo} disabled={working||sourceDirty||!redoStack.current.length}>Redo</button>
+        <button type="button" onClick={save} disabled={!canSave||!hasChanges}>Save draft</button>
+        <button className="ogcl-studio-accent" type="button" onClick={publish} disabled={!canSave}>Publish to live site</button>
+      </div>
     </header>
-    <nav className="ogcl-ui-editor-workspaces" aria-label="Editing workspace">
-      <button type="button" className={workspace==="shell"?"selected":""}
-        aria-current={workspace==="shell"?"page":undefined} onClick={()=>chooseWorkspace("shell")}>
-        Site Shell <small>Shared across every page</small>
-      </button>
-      <button type="button" className={workspace==="page"?"selected":""}
-        aria-current={workspace==="page"?"page":undefined} onClick={()=>chooseWorkspace("page")}>
-        Page Content <small>Center column only</small>
-      </button>
-    </nav>
-    <div className="ogcl-ui-editor-toolbar">
-      <label>{workspace==="shell"?"Page used for preview":"Editing center page"}
-        <select value={page} onChange={e=>{setPage(e.target.value);if(workspace==="page")setSelected({kind:"area",id:"pageHeader"});}}>
+    <div className="ogcl-studio-command">
+      <div className="ogcl-studio-segments" role="group" aria-label="Editor mode">
+        <button type="button" aria-pressed={mode==="visual"} disabled={sourceDirty} onClick={()=>setMode("visual")}>Visual</button>
+        <button type="button" aria-pressed={mode==="code"} onClick={()=>{setMode("code");setCompact(false);}}>Code</button>
+      </div>
+      <div className="ogcl-studio-segments" role="group" aria-label="Edit scope">
+        <button type="button" aria-pressed={workspace==="shell"} disabled={sourceDirty}
+          onClick={()=>chooseWorkspace("shell")}>Site shell</button>
+        <button type="button" aria-pressed={workspace==="page"} disabled={sourceDirty}
+          onClick={()=>chooseWorkspace("page")}>Page content</button>
+      </div>
+      <label>Page
+        <select value={page} disabled={sourceDirty} onChange={event=>choosePage(event.target.value)}>
           {EDITOR_PAGES.map(item=><option key={item.path} value={item.path}>{item.label}</option>)}
         </select>
       </label>
-      <label>Preview resolution
-        <select aria-label="Preview resolution" value={viewportId}
-          onChange={e=>setViewportId(e.target.value)}>
-          {EDITOR_VIEWPORTS.map(preset=><option key={preset.id} value={preset.id}>
-            {preset.label}
-          </option>)}
-        </select>
-      </label>
-      <label>Zoom
-        <select value={zoomMode} onChange={e=>setZoomMode(e.target.value)}>
-          <option value="fit">Fit</option><option value="50">50%</option><option value="75">75%</option><option value="100">100%</option>
-        </select>
-      </label>
-      <button type="button" onClick={()=>setCompact(v=>!v)}>{compact?"Show inspector":"Larger preview"}</button>
-      <button type="button" onClick={undo} disabled={!undoStack.current.length}>Undo</button>
-      <button type="button" onClick={redo} disabled={!redoStack.current.length}>Redo</button>
-      <button className="ogcl-button" type="button" onClick={save}
-        disabled={!hasChanges||busy||serverVersion===null}>Save draft</button>
-      <button className="ogcl-button ogcl-ui-editor-publish" type="button" onClick={publish}
-        disabled={busy||serverVersion===null}>Publish to live site</button>
+      {mode==="visual"&&<button type="button" className="ogcl-studio-expand" aria-pressed={compact}
+        onClick={()=>setCompact(value=>!value)}>{compact?"Show editing panels":"Expand preview"}</button>}
     </div>
-    <div className={"ogcl-ui-editor-grid"+(compact?" is-compact":"")}>
-      {!compact&&<aside className="ogcl-ui-editor-panel" aria-label={workspace==="shell"?"Shared site shell structure":"Page content structure"}>
-        <h3>{workspace==="shell"?"Site Shell":"Center Page Content"}</h3>
-        <p className="ogcl-admin-muted">{workspace==="shell"?
-          "These regions stay the same when you navigate. Changes here apply everywhere.":
-          "Only the routed center page is editable here. Outer columns, account links and footer are protected."}</p>
-        {workspace==="shell"?
-          sharedGroups.map(([title,ids])=><section key={title}>
-            <p className="ogcl-ui-editor-panel-caption">{title}</p>
-            <div className="ogcl-ui-editor-elements">
-              {ids.map(id=>{
-                const area=EDITOR_SHELL_AREAS.find(a=>a.id===id);
-                return <button key={id} type="button"
-                  className={selected.kind==="area"&&selected.id===id?"selected":""}
-                  onClick={()=>setSelected({kind:"area",id})}>{area.label}</button>;
-              })}
-            </div>
-          </section>):
-          <>
-            <p className="ogcl-ui-editor-panel-caption">Center page regions</p>
-            <div className="ogcl-ui-editor-elements">
-              {EDITOR_PAGE_AREAS.map(area=><button key={area.id} type="button"
-                className={selected.kind==="area"&&selected.id===area.id?"selected":""}
-                onClick={()=>setSelected({kind:"area",id:area.id})}>{area.label}</button>)}
-            </div>
-            <p className="ogcl-ui-editor-panel-caption">Added center blocks · {blocks.length}/24</p>
-        <ol className="ogcl-ui-editor-block-list">
-          {blocks.map((block,index)=><li key={block.id} draggable
-            onDragStart={()=>setDragId(block.id)}
-            onDragOver={event=>event.preventDefault()}
-            onDrop={event=>{event.preventDefault();if(dragId)moveBlock(dragId,index);setDragId(null);}}
-            onDragEnd={()=>setDragId(null)}>
-            <button type="button" className={selected.kind==="block"&&selected.id===block.id?"selected":""}
-              onClick={()=>setSelected({kind:"block",id:block.id})}>
-              <span aria-hidden="true">⠿</span> {editorBlockHtmlLabel(block)}{block.hidden?" (hidden)":""}
-            </button>
-            <div className="ogcl-ui-editor-reorder">
-              <button type="button" disabled={!index} title="Move up" onClick={()=>moveBlock(block.id,index-1)}>↑</button>
-              <button type="button" disabled={index===blocks.length-1} title="Move down" onClick={()=>moveBlock(block.id,index+1)}>↓</button>
-              <button type="button" title="Remove this added block" onClick={()=>removeBlock(block.id)}>×</button>
-            </div>
-          </li>)}
-        </ol>
-        <div className="ogcl-ui-editor-add">
-          <select value={addType} onChange={e=>setAddType(e.target.value)}
-            aria-label="New block type">
-            {EDITOR_BLOCK_TYPES.map(block=><option key={block.type} value={block.type}>{block.label}</option>)}
-          </select>
-          <button type="button" disabled={blocks.length>=24} onClick={addBlock}>+ Add block</button>
-        </div>
-        <p className="ogcl-admin-muted">Drag the added blocks to reorder, or use the arrow buttons.</p>
+    {notice&&<p role="status" className="ogcl-studio-notice">{notice}</p>}
+
+    <div className={"ogcl-studio-workspace studio-"+mode+(compact&&mode==="visual"?" studio-expanded":"")}>
+      {mode==="visual"&&!compact&&<aside className="ogcl-studio-layers" aria-label="Layers">
+        <h3>Layers</h3>
+        <label className="ogcl-studio-find">Filter layers
+          <input type="search" value={layerFilter} onChange={event=>setLayerFilter(event.target.value)}/>
+        </label>
+        <fieldset disabled={working}>
+          {workspace==="shell"?<>
+            {layerMatches("Global palette")&&layerButton("palette","tokens","Global palette")}
+            {sharedGroups.map(([title,ids])=>{
+              const layers=ids.map(id=>EDITOR_SHELL_AREAS.find(area=>area.id===id)).filter(area=>layerMatches(area.label));
+              return layers.length>0&&<details key={title} open>
+                <summary>{title}</summary>
+                {layers.map(area=>layerButton("area",area.id,area.label))}
+              </details>;
+            })}
+          </>:<>
+            <details open><summary>Page regions</summary>
+              {EDITOR_PAGE_AREAS.filter(area=>layerMatches(area.label)).map(area=>layerButton("area",area.id,area.label))}
+            </details>
+            <details open><summary>Custom blocks</summary>
+              <ol className="ogcl-studio-blocks">
+                {blocks.map((block,index)=>layerMatches(editorBlockHtmlLabel(block))&&<li key={block.id} draggable
+                  onDragStart={()=>setDragId(block.id)}
+                  onDragOver={event=>event.preventDefault()}
+                  onDrop={event=>{event.preventDefault();if(dragId)moveBlock(dragId,index);setDragId(null);}}
+                  onDragEnd={()=>setDragId(null)}>
+                  {layerButton("block",block.id,editorBlockHtmlLabel(block)+(block.hidden?" (hidden)":""))}
+                  <button type="button" disabled={!index} title="Move up" aria-label={"Move "+editorBlockHtmlLabel(block)+" up"}
+                    onClick={()=>moveBlock(block.id,index-1)}>↑</button>
+                  <button type="button" disabled={index===blocks.length-1} title="Move down" aria-label={"Move "+editorBlockHtmlLabel(block)+" down"}
+                    onClick={()=>moveBlock(block.id,index+1)}>↓</button>
+                </li>)}
+              </ol>
+              <div className="ogcl-studio-insert">
+                <select value={addType} onChange={event=>setAddType(event.target.value)} aria-label="New block type">
+                  {EDITOR_BLOCK_TYPES.map(block=><option key={block.type} value={block.type}>{block.label}</option>)}
+                </select>
+                <button type="button" disabled={blocks.length>=24} onClick={addBlock}>Add block</button>
+              </div>
+            </details>
           </>}
-        <section className="ogcl-ui-editor-text-list" aria-label="Editable site text">
-          <h3>Text and labels</h3>
-          <p className="ogcl-admin-muted">Select a heading or label in the preview, or choose one below.</p>
-          <div className="ogcl-ui-editor-elements">
-            {EDITOR_TEXT_TARGETS.filter(target=>target.scope===workspace&&availableText.includes(target.id)).map(target=>
-              <button key={target.id} type="button" className={selected.kind==="text"&&selected.id===target.id?"selected":""}
-                onClick={()=>setSelected({kind:"text",id:target.id})}>{target.label}</button>)}
-          </div>
-          {!EDITOR_TEXT_TARGETS.some(target=>target.scope===workspace&&availableText.includes(target.id))&&
-            <p className="ogcl-admin-muted">No editable static text on this preview yet.</p>}
-        </section>
+          {textLayers.length>0&&<details open><summary>Text and labels</summary>
+            {textLayers.map(target=>layerButton("text",target.id,target.label))}
+          </details>}
+        </fieldset>
       </aside>}
-      <div className="ogcl-ui-editor-stage-wrap">
-        <p className="ogcl-ui-editor-panel-caption">{workspace==="shell"?"Shared site shell preview":"Center page preview"} · {viewport.width} × {viewport.height} CSS px · {Math.round(scale*100)}% · click text to edit · links disabled</p>
-        <div className="ogcl-ui-editor-stage" ref={stage}>
-          <div className="ogcl-ui-editor-frame-viewport"
-            style={{width:viewport.width*scale,height:viewport.height*scale}}>
-            <iframe ref={frame} key={page} title={"OG Cupid "+page+" editor preview"}
-              src={previewUrl} onLoad={()=>setFrameVersion(v=>v+1)}
-              style={{width:viewport.width,height:viewport.height,transform:"scale("+scale+")",transformOrigin:"top left"}}
-              tabIndex={-1}/>
+
+      <section className="ogcl-studio-canvas" aria-label="Preview canvas">
+        <div className="ogcl-studio-canvas-bar">
+          <strong>Preview</strong>
+          <select aria-label="Preview resolution" value={viewportId} onChange={event=>setViewportId(event.target.value)}>
+            {EDITOR_VIEWPORTS.map(preset=><option key={preset.id} value={preset.id}>{preset.label}</option>)}
+          </select>
+          <select aria-label="Preview zoom" value={zoomMode} onChange={event=>setZoomMode(event.target.value)}>
+            <option value="fit">Fit width</option><option value="50">50%</option>
+            <option value="75">75%</option><option value="100">100%</option>
+          </select>
+          <span className="ogcl-studio-zoom">{Math.round(scale*100)}%</span>
+        </div>
+        <div className="ogcl-studio-stage" ref={stage}>
+          <div className="ogcl-studio-frame" style={{width:viewport.width*scale,height:viewport.height*scale}}>
+            <iframe ref={frame} key={page} title={"OG Cupid "+page+" editor preview"} src={previewUrl}
+              sandbox="allow-same-origin allow-scripts" onLoad={()=>setFrameVersion(value=>value+1)}
+              style={{width:viewport.width,height:viewport.height,transform:"scale("+scale+")"}} tabIndex={-1}/>
           </div>
         </div>
-      </div>
-      {!compact&&<aside className="ogcl-ui-editor-panel" aria-label="Selected element properties">
-        <h3>Properties</h3>
-        <p className="ogcl-ui-editor-selection">{chosenBlock?
-          editorBlockHtmlLabel(chosenBlock):chosenArea?.label||chosenText?.label||"Choose an element"}</p>
-        {chosenArea&&<p className="ogcl-ui-editor-scope">
-          {workspace==="shell"?"Applies to every page · shared site shell":
-            "Applies only to the center of "+EDITOR_PAGES.find(x=>x.path===page)?.label}
-        </p>}
-        {chosenText&&<div className="ogcl-ui-editor-text-edit">
-          <label>Edit text · {chosenText.scope==="shell"?"all pages":EDITOR_PAGES.find(p=>p.path===page)?.label}
-            <textarea rows={chosenText.max>160?5:2} maxLength={chosenText.max}
-              value={currentText} onChange={e=>updateText(e.target.value)}
-              aria-label={"Edit "+chosenText.label}/>
-          </label>
-          <p className="ogcl-admin-muted">Links retain their destinations and buttons retain their behavior. Save privately, then Publish to make these changes public.</p>
-          <div className="ogcl-ui-editor-text-actions">
+      </section>
+
+      {mode==="visual"&&!compact&&<aside className="ogcl-studio-inspector" aria-label="Inspector">
+        <h3>Inspector</h3>
+        <header>
+          <strong>{activeLabel}</strong>
+          <span>{workspace==="shell"?"All pages":pageLabel+" · Center column"}</span>
+        </header>
+        <fieldset disabled={working} key={selected.kind+":"+selected.id}>
+          {selected.kind==="palette"&&EDITOR_TOKENS.map(token=><div className="ogcl-studio-style-field" key={token.id}>
+            <label>{token.label}
+              <input type="color" value={draft.tokens[token.id]||inspected.tokens[token.id]||token.default}
+                onChange={event=>commit(next=>{next.tokens[token.id]=event.target.value;return next;})}/>
+            </label>
+            <button type="button" title={"Reset "+token.label} disabled={!draft.tokens[token.id]}
+              onClick={()=>commit(next=>{delete next.tokens[token.id];return next;})}>Reset</button>
+          </div>)}
+          {chosenText&&<div className="ogcl-studio-copy">
+            <label>Edit text
+              <textarea rows={chosenText.max>160?5:2} maxLength={chosenText.max} value={currentText}
+                onChange={event=>updateText(event.target.value)} aria-label={"Edit "+chosenText.label}/>
+            </label>
             <button type="button" onClick={resetText}>Restore original text</button>
             <button type="button" onClick={styleRelatedText}>Style this region</button>
-          </div>
-        </div>}
-        {chosenBlock&&<>
-          {chosenBlock.type!=="divider"&&<label>Text
-            <textarea rows={4} maxLength={500} value={chosenBlock.text}
-              onChange={e=>updateBlock(chosenBlock.id,{text:e.target.value})}/>
-          </label>}
-          {chosenBlock.type==="button"&&<label>Button destination
-            <select aria-label="Button destination" value={chosenBlock.href||""}
-              onChange={e=>updateBlock(chosenBlock.id,{href:e.target.value})}>
-              <option value="">No action (disabled)</option>
-              {EDITOR_LINK_ROUTES.map(route=><option key={route.path} value={route.path}>{route.label}</option>)}
-            </select>
-          </label>}
-          <label className="ogcl-ui-editor-check"><input type="checkbox" checked={chosenBlock.hidden}
-            onChange={e=>updateBlock(chosenBlock.id,{hidden:e.target.checked})}/> Hide block in preview</label>
-        </>}
-        {(chosenBlock||chosenArea)&&<>
-        <p className="ogcl-ui-editor-computed-note">Current live values from the preview. Resetting a property restores its CSS value.</p>
-        <div className="ogcl-ui-editor-properties">
-          {EDITOR_PROPERTIES.map(property=>{
-            const override=activeStyle[property.key];
-            const live=inspected.values[property.key]||{value:"",raw:"Not available"};
-            const shown=override??live.value;
-            const value=shown??"";
-            return <label key={property.key}>{property.label}
-              <div className="ogcl-ui-editor-property">
-                {property.kind==="select"?
-                  <select value={value} onChange={e=>updateArea(property.key,e.target.value||null)}>
-                    {value===""&&<option value="">Current: {live.raw}</option>}
-                    {property.options.map(option=><option key={option} value={option}>{option}</option>)}
-                  </select>:
-                  <input type={property.kind==="color"?"color":"number"}
-                    min={property.kind==="number"?0:undefined}
-                    max={property.kind==="number"?property.max:undefined}
-                    step={property.kind==="number"?"0.1":undefined}
-                    value={property.kind==="color"?(value||"#ffffff"):value}
-                    onChange={e=>updateArea(property.key,property.kind==="color"?
-                      e.target.value:e.target.value===""?null:Number(e.target.value))}/>}
-                <button type="button" title={"Reset "+property.label} onClick={()=>updateArea(property.key,null)}>↺</button>
-              </div>
-              <span className="ogcl-ui-editor-computed-value" title="Computed from the preview">
-                Current: {live.raw}
-              </span>
-            </label>;
-          })}
-        </div></>}
-        {workspace==="shell"&&<><h3>Global palette</h3>
-        <p className="ogcl-admin-muted">These colors are shared across all pages, including their center content.</p>
-        <div className="ogcl-ui-editor-properties">
-          {EDITOR_TOKENS.map(token=><label key={token.id}>{token.label}
-            <div className="ogcl-ui-editor-property">
-              <input type="color" value={draft.tokens[token.id]||inspected.tokens[token.id]||token.default}
-                onChange={e=>commit(next=>{next.tokens[token.id]=e.target.value;return next;})}/>
-              <button type="button" title={"Reset "+token.label}
-                onClick={()=>commit(next=>{delete next.tokens[token.id];return next;})}>↺</button>
-            </div>
-          </label>)}
-        </div></>}
+          </div>}
+          {chosenBlock&&<div className="ogcl-studio-copy">
+            {chosenBlock.type!=="divider"&&<label>Block text
+              <textarea rows={4} maxLength={500} value={chosenBlock.text}
+                onChange={event=>updateBlock(chosenBlock.id,{text:event.target.value})}/>
+            </label>}
+            {chosenBlock.type==="button"&&<label>Button destination
+              <select value={chosenBlock.href||""} onChange={event=>updateBlock(chosenBlock.id,{href:event.target.value})}>
+                <option value="">No action</option>
+                {EDITOR_LINK_ROUTES.map(route=><option key={route.path} value={route.path}>{route.label}</option>)}
+              </select>
+            </label>}
+            <label className="ogcl-studio-check"><input type="checkbox" checked={chosenBlock.hidden}
+              onChange={event=>updateBlock(chosenBlock.id,{hidden:event.target.checked})}/> Hide block</label>
+            <button type="button" onClick={()=>removeBlock(chosenBlock.id)}>Remove block</button>
+          </div>}
+          {(chosenBlock||chosenArea)&&styleGroups.map(([label,properties])=><details key={label} open={label==="Colors"}>
+            <summary>{label}</summary>
+            {properties.map(styleControl)}
+          </details>)}
+        </fieldset>
       </aside>}
+
+      {mode==="code"&&<AdminUiCodePane language={language} changeLanguage={setLanguage}
+        source={sourceText??generatedSource} edit={editSource} dirty={sourceDirty} error={sourceError}
+        locked={working} scopeLabel={scopeLabel} apply={applySource} discard={discardSource}/>}
     </div>
-    <footer className="ogcl-ui-editor-footer">
-      <strong>{hasChanges?"Unsaved draft changes":"Draft up to date"}</strong>
-      <span>Drafts are saved privately on the server. Publishing updates the public site's design without a Render rebuild.</span>
-      <label>Published versions
-        <select aria-label="Published versions" value={rollbackId} onChange={e=>setRollbackId(e.target.value)}>
-          <option value="">Select a revision to restore…</option>
-          {publishedHistory.map(entry=><option key={entry.revision} value={entry.revision}>
-            #{entry.revision} · {new Date(entry.publishedAt).toLocaleString()}
-          </option>)}
-        </select>
-      </label>
-      <button type="button" onClick={rollback} disabled={!rollbackId||busy||serverVersion===null}>Restore live version</button>
-      <label>Saved snapshots
-        <select value="" onChange={e=>restore(Number(e.target.value))}>
-          <option value="">Restore a snapshot…</option>
-          {history.map((h,i)=><option key={i} value={i}>{new Date(h.at).toLocaleString()}</option>)}
-        </select>
-      </label>
-    </footer>
-    {notice&&<p role="status" className="ogcl-ui-editor-notice">{notice}</p>}
+
+    <details className="ogcl-studio-history">
+      <summary>Version history</summary>
+      <div>
+        <label>Published versions
+          <select aria-label="Published versions" value={rollbackId} onChange={event=>setRollbackId(event.target.value)}>
+            <option value="">Choose a revision…</option>
+            {publishedHistory.map(entry=><option key={entry.revision} value={entry.revision}>
+              #{entry.revision} · {new Date(entry.publishedAt).toLocaleString()}
+            </option>)}
+          </select>
+        </label>
+        <button type="button" onClick={rollback} disabled={!rollbackId||!canSave||hasChanges}>Restore live version</button>
+        <label>Local snapshots
+          <select value="" disabled={working||sourceDirty} onChange={event=>{
+            if(event.target.value!=="")restore(Number(event.target.value));
+          }}>
+            <option value="">Choose a snapshot…</option>
+            {history.map((record,index)=><option key={index} value={index}>{new Date(record.at).toLocaleString()}</option>)}
+          </select>
+        </label>
+      </div>
+    </details>
   </section>;
 }

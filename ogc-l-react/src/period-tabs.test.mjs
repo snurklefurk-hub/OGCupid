@@ -44,7 +44,7 @@ test("tabs keep their original navigation and protections",()=>{
   const admin=source("./AdminDashboard.jsx");
   assert.match(matches,/onClick=\{\(\)=>setTab\(id\)\}/);
   assert.match(quickmatch,/setSearchParams\(key==="matches"\?\{\}:\{tab:key\}\)/);
-  assert.match(admin,/onClick=\{\(\)=>\{setTab\(t\);setError\(""\);setNotice\(""\);\}\}/);
+  assert.match(admin,/onClick=\{\(\)=>\{[^]*editorDirty[^]*setTab\(t\);setError\(""\);setNotice\(""\);/);
   assert.match(admin,/disabled=\{busy\|\|tab==="ui-editor"\}/);
   assert.match(admin,/if\(denied\)return/);
 });
