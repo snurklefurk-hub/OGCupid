@@ -20,15 +20,21 @@ export const EDITOR_SHELL_AREAS=Object.freeze([
   {id:"leftRail",label:"Left column",selector:".ogcl-left"},
   {id:"brand",label:"Logo region",selector:".ogcl-left .ogcl-brand"},
   {id:"mainNavigation",label:"Primary navigation",selector:".ogcl-left .ogcl-primary"},
+  {id:"mainNavLinks",label:"Primary navigation links",selector:".ogcl-left .ogcl-nav-link"},
   {id:"publicNavigation",label:"Secondary navigation",selector:".ogcl-left .ogcl-public-nav"},
   {id:"leftPromos",label:"Left-column features",selector:".ogcl-left .ogcl-left-note"},
+  {id:"leftEditorial",label:"Left-column promotion cards",selector:".ogcl-left .ogcl-editorial-stack"},
   {id:"rightRail",label:"Right column",selector:".ogcl-right"},
+  {id:"profileFloater",label:"Your profile photo",selector:".ogcl-right .ogcl-profile-floater"},
   {id:"rightCard",label:"Right-column cards",selector:".ogcl-right .ogcl-side-card"},
+  {id:"rightEditorial",label:"Right-column promotion cards",selector:".ogcl-right .ogcl-editorial-stack"},
   {id:"accountBar",label:"Top account bar",selector:".ogcl-center .ogcl-banner"},
   {id:"accountLinks",label:"Profile / Settings / Account / Admin / Sign out",selector:".ogcl-center .ogcl-top-links"},
+  {id:"accountActions",label:"Top account link text & buttons",selector:".ogcl-center .ogcl-top-links a, .ogcl-center .ogcl-top-links button"},
   {id:"centerSheet",label:"Center-column frame",selector:".ogcl-center .ogcl-sheet"},
   {id:"legalFooter",label:"Legal footer",selector:".ogcl-center .ogcl-footer"},
-  {id:"footerLinks",label:"Footer links",selector:".ogcl-center .ogcl-footer nav"}
+  {id:"footerLinks",label:"Footer link group",selector:".ogcl-center .ogcl-footer nav"},
+  {id:"footerLinkLabels",label:"Footer link text",selector:".ogcl-center .ogcl-footer a"}
 ]);
 // ONLY descendants of the actual routed .ogcl-sheet are page-editable.
 // A page-level selector must never reach .ogcl-left/.ogcl-right, top nav or
