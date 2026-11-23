@@ -25,6 +25,20 @@ test("visual styles round trip through the CSS editor for each scope",()=>{
   assert.match(formatEditorCss(initial,"/matches"),/font-weight: 700;/);
 });
 
+test("the five Main Nav links have independent CSS rules in the site shell",()=>{
+  const draft=blankEditorDraft();
+  const scope="*";
+  const css=formatEditorCss(draft,scope);
+  const routes=["matches","messages","visitors","quickmatch","community"];
+  const rule=route=>'.ogcl-left .ogcl-nav-link[data-ogc-nav="'+route+'"]';
+  for(const route of routes)assert.ok(css.includes(rule(route)+" {"));
+  assert.doesNotMatch(css,/\.ogcl-left \.ogcl-nav-link \{/);
+  const updated=parseEditorCss(rule("messages")+" { color: #123456; }",draft,scope);
+  assert.deepEqual(updated.areas[scope],{"shell.nav.messages":{color:"#123456"}});
+  assert.match(editorPreviewCss(updated,"/matches"),/\[data-ogc-nav="messages"\]\{color:#123456;/);
+  assert.doesNotMatch(editorPreviewCss(updated,"/matches"),/\[data-ogc-nav="matches"\]/);
+});
+
 test("CSS edits update the published model and can clear a scope",()=>{
   const initial = source();
   const text = "/* Header override */\n.ogcl-sheet .ogcl-view-head h1 {\n  color: #AA3344;\n  font-size: 27.5px\n}";

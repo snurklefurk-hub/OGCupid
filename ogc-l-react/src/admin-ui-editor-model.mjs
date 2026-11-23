@@ -1,5 +1,7 @@
 // Admin-only, declarative UI editor draft format. The fixed shell and page
 // content have separate scopes; neither can alter the other through CSS.
+import {primaryNavigation} from "./navigation.mjs";
+
 export const EDITOR_SCHEMA=2;
 export const EDITOR_PAGES=Object.freeze([
   {path:"/matches",label:"MATCHES"},
@@ -12,6 +14,11 @@ export const EDITOR_PAGES=Object.freeze([
   {path:"/ogtrends",label:"OGTrends"},
   {path:"/admin",label:"Administration"}
 ]);
+export const EDITOR_MAIN_NAV_AREAS=Object.freeze(primaryNavigation.map(({path,label})=>{
+  const key=path.slice(1);
+  return {id:"shell.nav."+key,label,selector:'.ogcl-left .ogcl-nav-link[data-ogc-nav="'+key+'"]'};
+}));
+
 // Shared on ALL routes, irrespective of what is displayed in the center.
 // Include the top account links and legal footer even though they physically
 // sit above/below the center sheet in AppShell.
@@ -21,6 +28,7 @@ export const EDITOR_SHELL_AREAS=Object.freeze([
   {id:"brand",label:"Logo region",selector:".ogcl-left .ogcl-brand"},
   {id:"mainNavigation",label:"Primary navigation",selector:".ogcl-left .ogcl-primary"},
   {id:"mainNavLinks",label:"Primary navigation links",selector:".ogcl-left .ogcl-nav-link"},
+  ...EDITOR_MAIN_NAV_AREAS,
   {id:"publicNavigation",label:"Secondary navigation",selector:".ogcl-left .ogcl-public-nav"},
   {id:"leftPromos",label:"Left-column features",selector:".ogcl-left .ogcl-left-note"},
   {id:"leftEditorial",label:"Left-column promotion cards",selector:".ogcl-left .ogcl-editorial-stack"},
@@ -59,8 +67,7 @@ export const EDITOR_VIEWPORTS=Object.freeze([
 // saved drafts, nor live user names, messages, answers, or other private data.
 // The shared entries are identified by hardcoded attributes in App/ClassicSidebar.
 const shellText=[
-  ...["matches","messages","visitors","quickmatch","community"]
-    .map(name=>({id:"shell.nav."+name,label:"Main navigation · "+name,scope:"shell",max:90})),
+  ...EDITOR_MAIN_NAV_AREAS.map(({id,label})=>({id,label,scope:"shell",max:90})),
   ...["persona","ogtrends","contact"]
     .map(name=>({id:"shell.public."+name,label:"Left links · "+name,scope:"shell",max:90})),
   ...["profile","settings","account","admin","signout","signin","join"]

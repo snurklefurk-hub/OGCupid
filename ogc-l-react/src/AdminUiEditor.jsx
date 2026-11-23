@@ -3,7 +3,7 @@ import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {
   blankEditorDraft,sanitizeEditorDraft,editorPreviewCss,
   moveEditorBlock,editorBlockHtmlLabel,EDITOR_PAGES,EDITOR_AREAS,
-  EDITOR_SHELL_AREAS,EDITOR_PAGE_AREAS,EDITOR_SCHEMA,editorAreaScope,
+  EDITOR_SHELL_AREAS,EDITOR_PAGE_AREAS,EDITOR_MAIN_NAV_AREAS,EDITOR_SCHEMA,editorAreaScope,
   EDITOR_TOKENS,EDITOR_BLOCK_TYPES,EDITOR_PROPERTIES,
   EDITOR_VIEWPORTS,EDITOR_TEXT_TARGETS,EDITOR_LINK_ROUTES,editorTextTarget
 } from "./admin-ui-editor-model.mjs";
@@ -230,6 +230,12 @@ export default function AdminUiEditor({onUnsavedChange}){
         setSelected({kind:"block",id:block.getAttribute("data-ogc-editor-block-id")});
         return;
       }
+      const navItem=EDITOR_MAIN_NAV_AREAS.find(area=>target.closest(area.selector));
+      if(navItem){
+        setWorkspace("shell");
+        setSelected({kind:"area",id:navItem.id});
+        return;
+      }
       const textElement=target.closest("[data-ogc-edit-text]");
       const textId=textElement?.getAttribute("data-ogc-edit-text");
       const textTarget=editorTextTarget(textId,page);
@@ -301,8 +307,9 @@ export default function AdminUiEditor({onUnsavedChange}){
         const element=selector?doc.querySelector(selector):null;
         const values=element?computedEditorSnapshot(doc.defaultView.getComputedStyle(element),
           EDITOR_PROPERTIES):{};
-        const text=selected.kind==="text"?
-          element?.getAttribute("data-ogc-editor-original-text")||"":"";
+        const textTarget=editorTextTarget(selected.id,page);
+        const text=textTarget?
+          doc.querySelector(textTarget.selector)?.getAttribute("data-ogc-editor-original-text")||"":"";
         const tokens=Object.fromEntries(EDITOR_TOKENS.map(token=>[
           token.id,doc.defaultView.getComputedStyle(doc.documentElement)
             .getPropertyValue(token.id).trim()||token.default
@@ -325,7 +332,8 @@ export default function AdminUiEditor({onUnsavedChange}){
   const blocks=draft.pages[page]||[];
   const sharedGroups=[
     ["Site background & logo",["siteBackground","brand"]],
-    ["Left column",["leftRail","mainNavigation","mainNavLinks","leftPromos","leftEditorial"]],
+    ["Left column",["leftRail","leftPromos","leftEditorial"]],
+    ["Main navigation",EDITOR_MAIN_NAV_AREAS.map(area=>area.id)],
     ["Top account links",["accountBar","accountLinks","accountActions"]],
     ["Right column",["rightRail","profileFloater","rightCard","rightEditorial"]],
     ["Center frame & legal footer",["centerSheet","legalFooter","footerLinks","footerLinkLabels"]]
@@ -338,7 +346,8 @@ export default function AdminUiEditor({onUnsavedChange}){
   }
   const chosenBlock=selected.kind==="block"?blocks.find(b=>b.id===selected.id):null;
   const chosenArea=selected.kind==="area"?EDITOR_AREAS.find(a=>a.id===selected.id):null;
-  const chosenText=selected.kind==="text"?editorTextTarget(selected.id,page):null;
+  const chosenText=selected.kind==="text"||chosenArea?.id.startsWith("shell.nav.")?
+    editorTextTarget(selected.id,page):null;
   const textScope=chosenText?.scope==="shell"?"*":page;
   const currentText=chosenText?
     draft.texts[textScope]?.[chosenText.id]??inspected.text:"";
@@ -358,7 +367,6 @@ export default function AdminUiEditor({onUnsavedChange}){
       chosenText.id==="page.heading"?"pageTitle":"pageHeader":
       chosenText.id.startsWith("shell.footer.")?"footerLinkLabels":
       chosenText.id.startsWith("shell.account.")?"accountActions":
-      chosenText.id.startsWith("shell.nav.")?"mainNavLinks":
       chosenText.id.startsWith("shell.promo.left.")?"leftEditorial":
       chosenText.id.startsWith("shell.promo.right.")?"rightEditorial":"leftPromos";
     setSelected({kind:"area",id});
@@ -498,7 +506,7 @@ export default function AdminUiEditor({onUnsavedChange}){
   const canSave=serverVersion!==null&&!working&&!sourceDirty;
   const layerMatches=label=>label.toLowerCase().includes(layerFilter.trim().toLowerCase());
   const textLayers=EDITOR_TEXT_TARGETS.filter(target=>
-    target.scope===workspace&&availableText.includes(target.id)&&layerMatches(target.label)
+    target.scope===workspace&&!target.id.startsWith("shell.nav.")&&availableText.includes(target.id)&&layerMatches(target.label)
   );
   const activeLabel=chosenBlock?editorBlockHtmlLabel(chosenBlock):
     chosenArea?.label||chosenText?.label||(selected.kind==="palette"?"Global palette":"Select a layer");
@@ -698,7 +706,7 @@ export default function AdminUiEditor({onUnsavedChange}){
                 onChange={event=>updateText(event.target.value)} aria-label={"Edit "+chosenText.label}/>
             </label>
             <button type="button" onClick={resetText}>Restore original text</button>
-            <button type="button" onClick={styleRelatedText}>Style this region</button>
+            {selected.kind==="text"&&<button type="button" onClick={styleRelatedText}>Style this region</button>}
           </div>}
           {chosenBlock&&<div className="ogcl-studio-copy">
             {chosenBlock.type!=="divider"&&<label>Block text
