@@ -81,9 +81,10 @@ function LeftRail() {
         {primaryNavigation.map(({path,label,icon}) => {
           const content = <><span className="ogcl-nav-icon" aria-hidden="true">{icon}</span><span data-ogc-edit-text={"shell.nav."+path.slice(1)}>{label}</span></>;
           return (isMember || (kind==="onboarding" && path==="/community")) ? <NavLink key={path} to={path}
+            data-ogc-nav={path.slice(1)}
             className={({isActive})=>isActive?"ogcl-nav-link active":"ogcl-nav-link"}>
             {content}
-          </NavLink> : <span key={path} className="ogcl-nav-link ogcl-locked" aria-disabled="true">
+          </NavLink> : <span key={path} data-ogc-nav={path.slice(1)} className="ogcl-nav-link ogcl-locked" aria-disabled="true">
             {content}
           </span>;
         })}

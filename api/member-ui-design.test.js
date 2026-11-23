@@ -68,6 +68,17 @@ test("admin saves are bounded and use checked server-side version",async()=>{
   }
 });
 
+test("admin saves keep five individual navigation overrides and existing group styles",async()=>{
+  const shared={mainNavLinks:{fontWeight:"600"}};
+  for(const [i,link] of ["matches","messages","visitors","quickmatch","community"].entries()){
+    shared["shell.nav."+link]={fontSize:12+i};
+  }
+  const document={...blank,areas:{"*":shared}};
+  const result=await send("/admin/ui-design","PUT",{document,expectedVersion:7});
+  assert.equal(result.status,200);
+  assert.deepEqual(JSON.parse(result.calls[0].args[0]),document);
+});
+
 test("publish and rollback cannot trust caller-supplied content or actor ID",async()=>{
   const pub=await send("/admin/ui-design/publish","POST",{expectedVersion:3});
   assert.equal(pub.status,200);

@@ -48,9 +48,13 @@ export function parseEditorJson(source) {
 }
 
 export function formatEditorCss(draft, scope) {
-  const rules = scopeAreas(scope).map(area => [
+  const areas = draft.areas[scope] || {};
+  // Keep stored group rules readable while exposing individual links in a new draft.
+  const rules = scopeAreas(scope).filter(area =>
+    !["mainNavigation","mainNavLinks"].includes(area.id) || Object.keys(areas[area.id] || {}).length
+  ).map(area => [
     area.selector,
-    Object.entries(draft.areas[scope]?.[area.id] || {}).map(([key,value]) => {
+    Object.entries(areas[area.id] || {}).map(([key,value]) => {
       const property = cssName(key);
       return [property, properties.get(property)?.kind === "number" ? value + "px" : value];
     }),
