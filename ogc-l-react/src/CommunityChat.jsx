@@ -110,8 +110,8 @@ export default function CommunityChat(){
   if(kind!=="member"&&kind!=="onboarding"){
     return <section className="ogcl-view">
       <header className="ogcl-view-head"><h1>Community</h1></header>
-      <div className="ogcl-content-panel"><p>Sign in to join the community chatroom.</p>
-        <p><NavLink to="/signin">Sign in</NavLink> · <NavLink to="/join">Join OG Cupid</NavLink></p>
+      <div className="ogcl-content-panel"><p><span data-ogc-edit-text="copy.community.sign-in-to-join-the-community-chatroom">Sign in to join the community chatroom.</span></p>
+        <p><NavLink to="/signin"><span data-ogc-edit-text="copy.community.sign-in">Sign in</span></NavLink> · <NavLink to="/join"><span data-ogc-edit-text="copy.community.join-og-cupid">Join OG Cupid</span></NavLink></p>
       </div></section>;
   }
   return <section className="ogcl-view ogcl-community" aria-labelledby="ogcl-community-heading">
@@ -120,9 +120,9 @@ export default function CommunityChat(){
       <p>One room. Everyone signed in is welcome. Just type and press Enter.</p>
     </header>
     <div className="ogcl-community-panel">
-      <div className="ogcl-community-topline"><strong>OG Cupid · The Lounge</strong>
+      <div className="ogcl-community-topline"><strong><span data-ogc-edit-text="copy.community.og-cupid-the-lounge">OG Cupid · The Lounge</span></strong>
         <span>Messages refresh automatically · No online count or private rooms</span>
-        <button type="button" onClick={()=>void load(true)}>Refresh</button>
+        <button type="button" onClick={()=>void load(true)}><span data-ogc-edit-text="copy.community.refresh">Refresh</span></button>
       </div>
       <div className="ogcl-community-log" role="log" aria-label="Community chat messages"
         ref={feedRef} aria-live="polite" aria-relevant="additions text"
@@ -146,24 +146,24 @@ export default function CommunityChat(){
           {message.senderId!==user?.id&&<button type="button"
             className="ogcl-community-report"
             aria-label={"Report message from "+message.name}
-            onClick={()=>{setReportId(reportId===message.id?null:message.id);setReason("spam");}}>Report</button>}
+            onClick={()=>{setReportId(reportId===message.id?null:message.id);setReason("spam");}}><span data-ogc-edit-text="copy.community.report">Report</span></button>}
           {reportId===message.id&&<div className="ogcl-community-report-form">
-            <label>Report reason <select value={reason} onChange={e=>setReason(e.target.value)}>
+            <label><span data-ogc-edit-text="copy.community.report-reason">Report reason</span> <select value={reason} onChange={e=>setReason(e.target.value)}>
               {REASONS.map(([key,label])=><option key={key} value={key}>{label}</option>)}
             </select></label>
             <button type="button" disabled={reporting} onClick={()=>void report(message.id)}>
               {reporting?"Sending…":"Submit report"}</button>
-            <button type="button" disabled={reporting} onClick={()=>setReportId(null)}>Cancel</button>
+            <button type="button" disabled={reporting} onClick={()=>setReportId(null)}><span data-ogc-edit-text="copy.community.cancel">Cancel</span></button>
           </div>}
         </div>)}
       </div>
       {error&&<p className="ogcl-community-error" role="alert">{error}</p>}
       {notice&&<p className="ogcl-community-status" role="status">{notice}</p>}
       <form className="ogcl-community-compose" onSubmit={send}>
-        <label htmlFor="ogcl-community-input">Message</label>
+        <label htmlFor="ogcl-community-input"><span data-ogc-edit-text="copy.community.message">Message</span></label>
         <input id="ogcl-community-input" ref={inputRef} type="text" autoComplete="off"
           maxLength={500} value={draft} onChange={e=>setDraft(e.target.value)}
-          placeholder="Say something…" aria-label="Chatroom message"/>
+          data-ogc-edit-text="copy.community.placeholder-say-something" placeholder="Say something…" aria-label="Chatroom message"/>
         <button type="submit" disabled={sending||!draft.trim()}>
           {sending?"Sending…":"Send"}</button>
       </form>

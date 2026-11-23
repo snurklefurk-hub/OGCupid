@@ -56,13 +56,13 @@ export default function ProfileEditor() {
       {loading && <p role="status">Loading saved essays…</p>}
       {error && <p className="ogcl-error" role="alert">{error}</p>}
       {profile && <>
-        <p><strong>{profile.displayName}</strong>{profile.slug && <> · <NavLink to={"/profiles/"+profile.slug}>View public profile</NavLink></>}</p>
+        <p><strong>{profile.displayName}</strong>{profile.slug && <> · <NavLink to={"/profiles/"+profile.slug}><span data-ogc-edit-text="copy.profile.view-public-profile">View public profile</span></NavLink></>}</p>
         <div className="ogcl-essay-list">
           {LIVE_ESSAYS.map(essay=><section className="ogcl-essay" key={essay.key}>
             <div className="ogcl-essay-title">
-              <h2>{essay.label}</h2>
+              <h2 data-ogc-edit-text={"copy.profile.essay-"+essay.key}>{essay.label}</h2>
               {active!==essay.key && <button type="button" disabled={busy}
-                onClick={()=>edit(essay.key)}>Edit</button>}
+                onClick={()=>edit(essay.key)}><span data-ogc-edit-text="copy.profile.edit">Edit</span></button>}
             </div>
             {active===essay.key ?
               <form onSubmit={save} className="ogcl-essay-edit">
@@ -72,7 +72,7 @@ export default function ProfileEditor() {
                   <small>{draft.length} / {essay.max} characters</small>
                   <button type="submit" disabled={busy}>{busy?"Saving…":"Save"}</button>
                   <button type="button" disabled={busy}
-                    onClick={()=>{setActive(null);setError("");}}>Cancel</button>
+                    onClick={()=>{setActive(null);setError("");}}><span data-ogc-edit-text="copy.profile.cancel">Cancel</span></button>
                 </div>
               </form> :
               <p className={profile.fields[essay.key]?"ogcl-essay-body":"ogcl-essay-empty"}>
@@ -81,8 +81,8 @@ export default function ProfileEditor() {
             {saved===essay.key && <p className="ogcl-save-confirmation" role="status">Saved.</p>}
           </section>)}
         </div>
-        <p><NavLink to="/questions">Edit your saved match question answers</NavLink> · <NavLink to="/settings">Profile Settings</NavLink></p>
-        <p className="ogcl-quiet">Your other profile settings, question answers and photos are unchanged when you save an essay.</p>
+        <p><NavLink to="/questions"><span data-ogc-edit-text="copy.profile.edit-your-saved-match-question-answers">Edit your saved match question answers</span></NavLink> · <NavLink to="/settings"><span data-ogc-edit-text="copy.profile.profile-settings">Profile Settings</span></NavLink></p>
+        <p className="ogcl-quiet"><span data-ogc-edit-text="copy.profile.your-other-profile-settings-question-answers-and-photos">Your other profile settings, question answers and photos are unchanged when you save an essay.</span></p>
       </>}
     </div>
   </section>;

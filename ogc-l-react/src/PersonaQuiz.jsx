@@ -72,11 +72,11 @@ export default function PersonaQuiz({onboarding}){
     <header className="ogcl-view-head"><h1 ref={title} tabIndex={-1}>The Dating Persona Test</h1><p>40 questions. 32 dating personas.</p></header>
     <div className="ogcl-content-panel">
       {screen==="intro"&&<>
-        <fieldset><legend>Choose your Dating Persona results</legend>
+        <fieldset><legend><span data-ogc-edit-text="copy.persona.choose-your-dating-persona-results">Choose your Dating Persona results</span></legend>
           {["m","f"].map(value=><label key={value}><input type="radio" name="persona-style" checked={style===value} onChange={()=>setStyle(value)}/>{value==="m"?"Male":"Female"}</label>)}
         </fieldset>
-        <button className="ogcl-button" onClick={()=>changeScreen("quiz")}>Start the test</button>{" "}
-        <button className="ogcl-button" onClick={catalog}>See all 32 personas</button>
+        <button className="ogcl-button" onClick={()=>changeScreen("quiz")}><span data-ogc-edit-text="copy.persona.start-the-test">Start the test</span></button>{" "}
+        <button className="ogcl-button" onClick={catalog}><span data-ogc-edit-text="copy.persona.see-all-32-personas">See all 32 personas</span></button>
       </>}
       {screen==="quiz"&&<form className="ogcl-account-form" onSubmit={next}>
         <p>Page {page+1} of {PAGE_COUNT} · {answers.filter(Number.isInteger).length} of {questions.length} answered</p>
@@ -90,12 +90,12 @@ export default function PersonaQuiz({onboarding}){
             </label>)}
           </fieldset>;
         })}
-        {page>0&&<button type="button" onClick={()=>{setPage(page-1);focusTitle();}}>Back</button>}
+        {page>0&&<button type="button" onClick={()=>{setPage(page-1);focusTitle();}}><span data-ogc-edit-text="copy.persona.back">Back</span></button>}
         <button>{page===PAGE_COUNT-1?"Reveal my persona":"Next questions"}</button>
       </form>}
       {screen==="catalog"&&<>
-        <h2>All 32 dating personas</h2>
-        <button className="ogcl-button" onClick={()=>changeScreen(catalogOrigin)}>Back</button>
+        <h2><span data-ogc-edit-text="copy.persona.all-32-dating-personas">All 32 dating personas</span></h2>
+        <button className="ogcl-button" onClick={()=>changeScreen(catalogOrigin)}><span data-ogc-edit-text="copy.persona.back">Back</span></button>
         <ul>{order.flatMap(code=>["m","f"].map(value=><li key={code+value}>
           <button type="button" disabled={saveState==="saving"} onClick={()=>{setResult(code);setStyle(value);setScored(null);changeScreen("result");}}>{archetypes[code][value][0]} ({code+value})</button>
         </li>))}</ul>
@@ -112,13 +112,13 @@ export default function PersonaQuiz({onboarding}){
         {historicalGuidance[key]&&<><p>Always avoid: {historicalGuidance[key].avoid}</p><p>Consider: {historicalGuidance[key].consider}</p>
           {historicalGuidance[key].source&&<a href={historicalGuidance[key].source}>Archived result source</a>}</>}
         {scored&&<p>Directional scores: {sides.map((axis,i)=>axis.description+": "+scored.sum[i]).join(" · ")}</p>}
-        <button className="ogcl-button" onClick={()=>setStyle(style==="m"?"f":"m")}>Switch result style</button>{" "}
-        <button className="ogcl-button" disabled={saveState==="saving"} onClick={retake}>Retake the test</button>{" "}
-        <button className="ogcl-button" disabled={saveState==="saving"} onClick={catalog}>See all personas</button>
-        <p><NavLink to={"/persona?persona="+key}>Link to this result</NavLink></p>
+        <button className="ogcl-button" onClick={()=>setStyle(style==="m"?"f":"m")}><span data-ogc-edit-text="copy.persona.switch-result-style">Switch result style</span></button>{" "}
+        <button className="ogcl-button" disabled={saveState==="saving"} onClick={retake}><span data-ogc-edit-text="copy.persona.retake-the-test">Retake the test</span></button>{" "}
+        <button className="ogcl-button" disabled={saveState==="saving"} onClick={catalog}><span data-ogc-edit-text="copy.persona.see-all-personas">See all personas</span></button>
+        <p><NavLink to={"/persona?persona="+key}><span data-ogc-edit-text="copy.persona.link-to-this-result">Link to this result</span></NavLink></p>
         {saveState==="saving"&&<p role="status">Saving your Persona result…</p>}
-        {saveState==="saved"&&<p role="status">Saved to your OG Cupid profile. {onboarding&&<NavLink to="/onboarding" onClick={()=>void refresh()}>Continue onboarding</NavLink>}</p>}
-        {saveState==="error"&&scored&&<p role="alert">Your result couldn’t be saved. <button className="ogcl-button" onClick={()=>void save(scored.code)}>Retry save</button></p>}
+        {saveState==="saved"&&<p role="status">Saved to your OG Cupid profile. {onboarding&&<NavLink to="/onboarding" onClick={()=>void refresh()}><span data-ogc-edit-text="copy.persona.continue-onboarding">Continue onboarding</span></NavLink>}</p>}
+        {saveState==="error"&&scored&&<p role="alert">Your result couldn’t be saved. <button className="ogcl-button" onClick={()=>void save(scored.code)}><span data-ogc-edit-text="copy.persona.retry-save">Retry save</span></button></p>}
       </>}
     </div>
   </section>;

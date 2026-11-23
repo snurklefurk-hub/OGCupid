@@ -81,15 +81,17 @@ function putPreview(doc,draft,page,selected){
   // Reset returns the preview to React's source copy; never use innerHTML.
   for(const target of EDITOR_TEXT_TARGETS){
     if(!editorTextTarget(target.id,page))continue;
-    const element=doc.querySelector(target.selector);
+    for(const element of doc.querySelectorAll(target.selector)){
     if(!element || element.children.length)continue;
     if(!element.hasAttribute("data-ogc-editor-original-text"))
-      element.setAttribute("data-ogc-editor-original-text",element.textContent||"");
+      element.setAttribute("data-ogc-editor-original-text",(target.attribute?element.getAttribute(target.attribute):element.textContent)||"");
     element.setAttribute("data-ogc-edit-text",target.id);
     const scope=target.scope==="shell"?"*":page;
     const chosen=draft.texts[scope]?.[target.id];
     const text=chosen??element.getAttribute("data-ogc-editor-original-text");
-    if(element.textContent!==text)element.textContent=text;
+    if(target.attribute){if(element.getAttribute(target.attribute)!==text)element.setAttribute(target.attribute,text);}
+    else if(element.textContent!==text)element.textContent=text;
+    }
   }
   doc.querySelectorAll("[data-ogc-editor-selected]").forEach(el=>el.removeAttribute("data-ogc-editor-selected"));
   if(selected?.kind==="text"){
@@ -269,7 +271,7 @@ export default function AdminUiEditor({onUnsavedChange}){
         setSelected({kind:"area",id:navItem.id});
         return;
       }
-      const textElement=target.closest("[data-ogc-edit-text]");
+      const textElement=target.closest("[data-ogc-edit-text]")||target.closest("button,label")?.querySelector("[data-ogc-edit-text]");
       const textId=textElement?.getAttribute("data-ogc-edit-text");
       const textTarget=editorTextTarget(textId,page);
       if(textTarget){
@@ -400,7 +402,7 @@ export default function AdminUiEditor({onUnsavedChange}){
   function styleRelatedText(){
     if(!chosenText)return;
     const id=chosenText.scope==="page"?
-      chosenText.id==="page.heading"?"pageTitle":"pageHeader":
+      chosenText.id==="page.heading"?"pageTitle":chosenText.id==="page.intro"?"pageHeader":"mainContent":
       chosenText.id.startsWith("shell.footer.")?"footerLinkLabels":
       chosenText.id.startsWith("shell.account.")?"accountActions":
       chosenText.id.startsWith("shell.promo.")?chosenText.id.split(".").slice(0,-1).join("."):

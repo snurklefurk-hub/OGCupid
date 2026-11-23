@@ -38,17 +38,20 @@ function updatePublishedDom(design,page){
   const root=window.document.querySelector(".ogcl-app");
   if(!root)return;
   for(const target of EDITOR_TEXT_TARGETS){
-    if(!editorTextTarget(target.id,page))continue;
-    const scope=target.scope==="shell"?"*":page;
-    const element=root.querySelector(target.selector);
+    const textPage=target.route==="/messages"&&page.startsWith("/messages/")?"/messages":page;
+    if(!editorTextTarget(target.id,textPage))continue;
+    const scope=target.scope==="shell"?"*":textPage;
+    for(const element of root.querySelectorAll(target.selector)){
     if(!element||element.children.length)continue;
     // Store the React source label once so removing a published override
     // restores the original without requiring a full reload.
     if(!element.hasAttribute("data-ogc-original-published-text"))
-      element.setAttribute("data-ogc-original-published-text",element.textContent||"");
+      element.setAttribute("data-ogc-original-published-text",(target.attribute?element.getAttribute(target.attribute):element.textContent)||"");
     const value=design.texts?.[scope]?.[target.id]??
       element.getAttribute("data-ogc-original-published-text");
-    if(element.textContent!==value)element.textContent=value;
+    if(target.attribute){if(element.getAttribute(target.attribute)!==value)element.setAttribute(target.attribute,value);}
+    else if(element.textContent!==value)element.textContent=value;
+    }
     // Never innerHTML or member-owned content.
   }
   const view=allowedPages.has(page)?root.querySelector(".ogcl-sheet .ogcl-view"):null;
