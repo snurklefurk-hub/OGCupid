@@ -2,7 +2,7 @@ import React,{useEffect,useMemo,useState} from "react";
 import {useLocation} from "react-router-dom";
 import "./published-ui-design.css";
 import {
-  EDITOR_PAGES,EDITOR_TEXT_TARGETS,EDITOR_PROPERTIES,
+  EDITOR_PAGES,EDITOR_TEXT_TARGETS,EDITOR_PROPERTIES,EDITOR_LINK_ROUTES,
   editorTextTarget,editorPreviewCss,sanitizeEditorDraft
 } from "./admin-ui-editor-model.mjs";
 
@@ -20,12 +20,15 @@ const validRelease=data=>data&&typeof data==="object"?
 
 function makeBlock(block){
   const tags={heading:"h2",paragraph:"p",notice:"div",divider:"hr",button:"button"};
-  const el=document.createElement(tags[block.type]||"p");
+  const linked=block.type==="button"&&EDITOR_LINK_ROUTES.some(route=>route.path===block.href);
+  const el=document.createElement(linked?"a":tags[block.type]||"p");
   el.className="ogcl-editor-preview-block ogcl-editor-preview-"+block.type;
   if(block.type==="button"){
-    // A design draft cannot invent an action or destination. Never make a
-    // nonfunctional editor-created button appear interactive to visitors.
-    el.type="button";el.disabled=true;el.title="Presentation only; no action configured";
+    if(linked)el.setAttribute("href","#"+block.href);
+    else{
+      // A draft cannot invent a URL or arbitrary JS handler.
+      el.type="button";el.disabled=true;el.title="No action configured";
+    }
   }
   if(block.type!=="divider")el.textContent=block.text;
   for(const property of EDITOR_PROPERTIES){

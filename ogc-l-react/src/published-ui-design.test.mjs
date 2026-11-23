@@ -31,6 +31,7 @@ test("editor's draft iframe cannot fight the live site's observer",()=>{
 test("published blocks do not execute newly invented button actions",()=>{
   const loader=source("./PublishedUiDesign.jsx");
   assert.match(loader,/el\.disabled=true/);
+  assert.match(loader,/el\.setAttribute\("href","#"\+block\.href\)/);
   assert.match(loader,/el\.textContent=block\.text/);
   assert.match(loader,/EDITOR_PROPERTIES/);
 });

@@ -118,3 +118,18 @@ test("migration is additive, uses immutable history and SQL role checks",()=>{
   assert.match(migration,/GRANT EXECUTE ON FUNCTION app_private\.ui_design_public/);
   assert.doesNotMatch(migration,/GRANT (SELECT|INSERT|UPDATE|DELETE) ON app_private\.ui_design_(releases|state) TO ogcupid_member_api/);
 });
+
+
+test("only explicit internal routes are permitted for editor-created links",()=>{
+  const valid={...blank,pages:{"/matches":[{
+    id:"block-navigation",type:"button",text:"Find matches",hidden:false,
+    href:"/matches",style:{}
+  }]}};
+  assert.deepEqual(validatedDesign(valid),valid);
+  assert.equal(validatedDesign({...valid,pages:{"/matches":[
+    {...valid.pages["/matches"][0],href:"javascript:alert(1)"}
+  ]}}),null);
+  assert.equal(validatedDesign({...valid,pages:{"/matches":[
+    {...valid.pages["/matches"][0],href:"https://evil.example"}
+  ]}}),null);
+});

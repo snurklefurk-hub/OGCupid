@@ -102,6 +102,9 @@ export const EDITOR_TOKENS=Object.freeze([
   {id:"--okc-line",label:"Borders",default:"#dddddd"},
   {id:"--okc-green",label:"Green accents",default:"#63a62f"}
 ]);
+export const EDITOR_LINK_ROUTES=Object.freeze([...EDITOR_PAGES,
+  {path:"/join",label:"Join"},{path:"/contact",label:"Contact"},
+  {path:"/privacy",label:"Privacy"},{path:"/terms",label:"Terms"}]);
 export const EDITOR_BLOCK_TYPES=Object.freeze([
   {type:"heading",label:"Heading"},
   {type:"paragraph",label:"Paragraph"},
@@ -138,6 +141,7 @@ const shellAreas=new Map(EDITOR_SHELL_AREAS.map(x=>[x.id,x.selector]));
 const pageAreas=new Map(EDITOR_PAGE_AREAS.map(x=>[x.id,x.selector]));
 const allowedTokens=new Set(EDITOR_TOKENS.map(x=>x.id));
 const blockTypes=new Set(EDITOR_BLOCK_TYPES.map(x=>x.type));
+const linkRoutes=new Set(EDITOR_LINK_ROUTES.map(x=>x.path));
 const HEX=/^#[0-9a-fA-F]{6}$/;
 const ID=/^block-[a-z0-9-]{1,32}$/;
 const isObject=x=>!!x&&typeof x==="object"&&!Array.isArray(x);
@@ -161,6 +165,7 @@ function cleanBlock(raw){
   if(!isObject(raw)||!ID.test(raw.id)||!blockTypes.has(raw.type))return null;
   const text=typeof raw.text==="string"?raw.text.slice(0,500):"";
   return {id:raw.id,type:raw.type,text,hidden:raw.hidden===true,
+    ...(raw.type==="button"&&linkRoutes.has(raw.href)?{href:raw.href}:{}),
     style:cleanStyle(raw.style)};
 }
 export function sanitizeEditorDraft(raw){

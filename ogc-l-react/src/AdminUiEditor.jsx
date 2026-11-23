@@ -5,7 +5,7 @@ import {
   moveEditorBlock,editorBlockHtmlLabel,EDITOR_PAGES,EDITOR_AREAS,
   EDITOR_SHELL_AREAS,EDITOR_PAGE_AREAS,EDITOR_SCHEMA,editorAreaScope,
   EDITOR_TOKENS,EDITOR_BLOCK_TYPES,EDITOR_PROPERTIES,
-  EDITOR_VIEWPORTS,EDITOR_TEXT_TARGETS,editorTextTarget
+  EDITOR_VIEWPORTS,EDITOR_TEXT_TARGETS,EDITOR_LINK_ROUTES,editorTextTarget
 } from "./admin-ui-editor-model.mjs";
 import {computedEditorSnapshot} from "./admin-ui-editor-inspector.mjs";
 import "./admin-ui-editor.css";
@@ -622,6 +622,13 @@ export default function AdminUiEditor(){
           {chosenBlock.type!=="divider"&&<label>Text
             <textarea rows={4} maxLength={500} value={chosenBlock.text}
               onChange={e=>updateBlock(chosenBlock.id,{text:e.target.value})}/>
+          </label>}
+          {chosenBlock.type==="button"&&<label>Button destination
+            <select aria-label="Button destination" value={chosenBlock.href||""}
+              onChange={e=>updateBlock(chosenBlock.id,{href:e.target.value})}>
+              <option value="">No action (disabled)</option>
+              {EDITOR_LINK_ROUTES.map(route=><option key={route.path} value={route.path}>{route.label}</option>)}
+            </select>
           </label>}
           <label className="ogcl-ui-editor-check"><input type="checkbox" checked={chosenBlock.hidden}
             onChange={e=>updateBlock(chosenBlock.id,{hidden:e.target.checked})}/> Hide block in preview</label>
