@@ -224,10 +224,10 @@ export default function AdminUiEditor(){
   const blocks=draft.pages[page]||[];
   const sharedGroups=[
     ["Site background & logo",["siteBackground","brand"]],
-    ["Left column",["leftRail","mainNavigation","publicNavigation","leftPromos"]],
-    ["Top account links",["accountBar","accountLinks"]],
-    ["Right column",["rightRail","rightCard"]],
-    ["Center frame & legal footer",["centerSheet","legalFooter","footerLinks"]]
+    ["Left column",["leftRail","mainNavigation","mainNavLinks","publicNavigation","leftPromos","leftEditorial"]],
+    ["Top account links",["accountBar","accountLinks","accountActions"]],
+    ["Right column",["rightRail","profileFloater","rightCard","rightEditorial"]],
+    ["Center frame & legal footer",["centerSheet","legalFooter","footerLinks","footerLinkLabels"]]
   ];
   function chooseWorkspace(next){
     setWorkspace(next);
