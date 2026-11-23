@@ -325,7 +325,7 @@ export default function AdminUiEditor({onUnsavedChange}){
   const blocks=draft.pages[page]||[];
   const sharedGroups=[
     ["Site background & logo",["siteBackground","brand"]],
-    ["Left column",["leftRail","mainNavigation","mainNavLinks","publicNavigation","leftPromos","leftEditorial"]],
+    ["Left column",["leftRail","mainNavigation","mainNavLinks","leftPromos","leftEditorial"]],
     ["Top account links",["accountBar","accountLinks","accountActions"]],
     ["Right column",["rightRail","profileFloater","rightCard","rightEditorial"]],
     ["Center frame & legal footer",["centerSheet","legalFooter","footerLinks","footerLinkLabels"]]
@@ -359,7 +359,6 @@ export default function AdminUiEditor({onUnsavedChange}){
       chosenText.id.startsWith("shell.footer.")?"footerLinkLabels":
       chosenText.id.startsWith("shell.account.")?"accountActions":
       chosenText.id.startsWith("shell.nav.")?"mainNavLinks":
-      chosenText.id.startsWith("shell.public.")?"publicNavigation":
       chosenText.id.startsWith("shell.promo.left.")?"leftEditorial":
       chosenText.id.startsWith("shell.promo.right.")?"rightEditorial":"leftPromos";
     setSelected({kind:"area",id});

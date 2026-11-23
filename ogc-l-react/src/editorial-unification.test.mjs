@@ -15,11 +15,11 @@ test("all canonical editorial and legal pages route inside one React member shel
     "ogtrends/references","privacy","terms","contact"]){
     assert.ok(app.includes('<Route path="'+slug+'"'),slug);
   }
-  assert.match(app, /<nav className="ogcl-public-nav"/);
+  assert.doesNotMatch(app, /ogcl-public-nav/);
   assert.match(app, /<footer className="ogcl-footer"/);
   assert.match(app, /<NavLink[^>]*to="\/privacy">Privacy/);
   assert.match(app, /<NavLink[^>]*to="\/terms">Terms/);
-  assert.match(app, /<NavLink[^>]*to="\/persona">Dating Persona Test/);
+  assert.match(app, /<NavLink data-ogc-edit-text="shell\.footer\.persona" to="\/persona">Dating Persona/);
 });
 
 test("canonical legal, research, Contact and Persona source bodies are retained",()=>{
