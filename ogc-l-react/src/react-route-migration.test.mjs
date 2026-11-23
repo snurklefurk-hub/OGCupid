@@ -15,12 +15,12 @@ const expectedLegacy=[
   "ogtrends/index.html","ogtrends/zero/index.html",
   "ogtrends/perfect-profile/index.html","ogtrends/references/index.html",
   "privacy/index.html","terms/index.html","profiles/index.html",
-  "questions/index.html","quiz/index.html"
+  "questions/index.html","quiz/index.html","sitemap/index.html"
 ];
 const canonical=[
   "signin","join","recover","verify","onboarding","account","persona",
   "ogtrends","ogtrends/zero","ogtrends/perfect-profile",
-  "ogtrends/references","privacy","terms","contact",
+  "ogtrends/references","privacy","terms","contact","sitemap",
   "photos","matches","profile","settings","profiles/:slug","questions",
   "quickmatch","messages","messages/:peerId","community","admin"
 ];
@@ -78,6 +78,7 @@ test("legacy /quiz and /questions go directly into React with query and fragment
       "/#/"+react+"?x=1#section");
     assert.equal(redirectFor(path),"/#/"+react);
   }
+  assert.equal(redirectFor("sitemap/index.html","/sitemap"),"/#/sitemap");
   assert.equal(redirectFor("quiz/index.html","/quiz/","?persona=RBSDm"),
     "/#/persona?persona=RBSDm");
 });
@@ -85,6 +86,7 @@ test("legacy /quiz and /questions go directly into React with query and fragment
 test("Render 404 bridge forwards clean deep links to the correct React pages",()=>{
   const cases=[
     ["/admin","","","/#/admin"],
+    ["/sitemap","","","/#/sitemap"],
     ["/messages","","","/#/messages"],
     ["/messages/00000000-0000-4000-8000-000000000007","","",
       "/#/messages/00000000-0000-4000-8000-000000000007"],
