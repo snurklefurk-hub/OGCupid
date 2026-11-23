@@ -170,12 +170,12 @@ test("editor switches workspaces on preview selection but saves shell and page s
   assert.match(component,/useState\("shell"\)/);
   assert.match(component,/chooseWorkspace\("shell"\)/);
   assert.match(component,/chooseWorkspace\("page"\)/);
-  assert.match(component,/Site Shell <small>Shared across every page/);
-  assert.match(component,/Page Content <small>Center column only/);
+  assert.match(component,/onClick=\{\(\)=>chooseWorkspace\("shell"\)\}>Site shell/);
+  assert.match(component,/onClick=\{\(\)=>chooseWorkspace\("page"\)\}>Page content/);
   assert.match(component,/editorAreaScope\(selected\.id\)===workspace/);
   assert.match(component,/setWorkspace\(editorAreaScope\(area\.id\)\)/);
   assert.match(component,/next\.areas\[areaScope\]/);
-  assert.match(component,/workspace==="shell"&&<><h3>Global palette/);
+  assert.match(component,/layerButton\("palette","tokens","Global palette"\)/);
   assert.match(component,/:before-shell-split/);
   assert.doesNotMatch(component,/scope==="global"/);
 });
