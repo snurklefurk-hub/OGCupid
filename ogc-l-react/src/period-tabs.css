@@ -4,7 +4,6 @@
 :root {
   --ogc-tab-gradient-top: #f8f8fa;
   --ogc-tab-gradient-bottom: #c9c9ce;
-  --ogc-page-header-gradient: linear-gradient(to bottom,var(--ogc-tab-gradient-top),var(--ogc-tab-gradient-bottom));
   --ogc-tab-edge: #d1d1d5;
   --ogc-tab-ink: #69696d;
   --ogc-tab-paper: var(--okc-paper);
@@ -17,7 +16,7 @@
   padding: 0;
   border-radius: 5px 5px 0 0;
   border-bottom: 1px solid var(--ogc-tab-edge);
-  background: var(--ogc-page-header-gradient);
+  background: linear-gradient(to bottom,var(--ogc-tab-gradient-top),var(--ogc-tab-gradient-bottom));
 }
 /* Give Design Studio's page-header rule precedence over this default. */
 :where(.ogcl-view .ogcl-period-stage) > .ogcl-view-head {
