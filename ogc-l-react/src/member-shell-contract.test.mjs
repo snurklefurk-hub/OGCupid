@@ -36,15 +36,15 @@ test("sign-out clears private state before backend confirmation",()=>{
   assert.match(provider, /Sign-out could not be confirmed/);
 });
 
-test("three-column shell uses native document scrolling rather than per-column scrollbars",()=>{
-  assert.match(css, /grid-template-columns:16% minmax\(0,1fr\) 16%/);
-  assert.match(css, /width:min\(1150px,100%\);\s*min-height:100vh;\s*margin:0 auto/);
+test("every route uses the same fixed-width desktop shell and native document scrolling",()=>{
+  assert.match(css, /\.ogcl-app \{[^}]*grid-template-columns:184px minmax\(0,1fr\) 184px;\s*width:1150px;\s*min-height:100vh;\s*margin:0 auto/);
+  assert.equal([...css.matchAll(/\.ogcl-app\b/g)].length,1);
   assert.match(css, /\.ogcl-left, \.ogcl-right \{height:auto;overflow:visible/);
   assert.match(css, /\.ogcl-center \{height:auto;[^}]*overflow:visible/);
   assert.doesNotMatch(css, /height:100dvh|\.ogcl-center \{[^}]*overflow:auto/);
-  assert.match(css, /\.ogcl-app-matches \.ogcl-center \{grid-column:2\/-1/);
-  assert.match(app, /<LeftRail\s*\/>\s*<main[^>]*>[^]*<Suspense[^]*?<Outlet\s*\/><\/Suspense>[^]*!useMatchesLayout && <RightRail\s*\/>/);
-  assert.match(app, /sidebar=\{<RightRail inMatches\/>\}/);
+  assert.match(app, /<LeftRail\s*\/>\s*<main[^>]*>[^]*<Suspense[^]*?<Outlet\s*\/><\/Suspense>[^]*?<\/main>\s*<RightRail\s*\/>\s*<\/div>/);
+  assert.equal([...app.matchAll(/<RightRail\b/g)].length,1);
+  assert.match(app, /<Routes>\s*<Route element=\{<AppShell\s*\/>\}>/);
 });
 
 test("React gateway does not persist bearer tokens or account data in browser storage",()=>{
