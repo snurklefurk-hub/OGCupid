@@ -37,7 +37,7 @@ test("draft only exposes supported routes, editable selectors and bounded block 
   };
   const clean=sanitizeEditorDraft(input);
   assert.deepEqual(clean.tokens,{"--okc-blue":"#123456"});
-  assert.deepEqual(clean.areas["*"].pageTitle,{color:"#abcdef",padding:18});
+  assert.deepEqual(clean.areas["/matches"].pageTitle,{color:"#abcdef",padding:18});
   assert.deepEqual(clean.areas["/matches"].matchCard,{backgroundColor:"#abcdef"});
   assert.equal(clean.pages["/matches"].length,1);
   assert.equal(clean.pages["/unknown"],undefined);
