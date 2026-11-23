@@ -100,7 +100,7 @@ export default function MatchQuestions() {
           <div className="ogcl-question-topic">{current.question.topic}</div>
           <h2>{current.question.prompt}</h2>
           <fieldset>
-            <legend>Your answer</legend>
+            <legend><span data-ogc-edit-text="copy.questions.your-answer">Your answer</span></legend>
             {current.question.options.map((label,index)=>{
               const id=current.question.optionIds[index];
               return <label className="ogcl-question-answer" key={id}>
@@ -114,8 +114,8 @@ export default function MatchQuestions() {
             })}
           </fieldset>
           <fieldset>
-            <legend>Answers you'd accept from someone else</legend>
-            <p className="ogcl-quiet">Choose all that you'd consider compatible.</p>
+            <legend><span data-ogc-edit-text="copy.questions.answers-you-d-accept-from-someone-else">Answers you'd accept from someone else</span></legend>
+            <p className="ogcl-quiet"><span data-ogc-edit-text="copy.questions.choose-all-that-you-d-consider-compatible">Choose all that you'd consider compatible.</span></p>
             {current.question.options.map((label,index)=>{
               const id=current.question.optionIds[index];
               return <label className="ogcl-question-answer" key={id}>
@@ -138,7 +138,7 @@ export default function MatchQuestions() {
             </label>
           </fieldset>
           <fieldset>
-            <legend>How important is this question?</legend>
+            <legend><span data-ogc-edit-text="copy.questions.how-important-is-this-question">How important is this question?</span></legend>
             <div className="ogcl-question-importance">
               {QUESTION_IMPORTANCE.filter(option=>option.value!==0).map(option=>
                 <label key={option.value}>
@@ -162,9 +162,9 @@ export default function MatchQuestions() {
             {busy?"Saving answer…":reviewId?"Update saved answer":"Save answer & next question"}
           </button>
         </form> : <>
-          <h2>All published questions answered</h2>
-          <p>All published match questions have been saved to your member account.</p>
-          <p><NavLink to="/matches">Explore your matches</NavLink></p>
+          <h2><span data-ogc-edit-text="copy.questions.all-published-questions-answered">All published questions answered</span></h2>
+          <p><span data-ogc-edit-text="copy.questions.all-published-match-questions-have-been-saved-to-your-m">All published match questions have been saved to your member account.</span></p>
+          <p><NavLink to="/matches"><span data-ogc-edit-text="copy.questions.explore-your-matches">Explore your matches</span></NavLink></p>
         </>}
       </>}
     </div>

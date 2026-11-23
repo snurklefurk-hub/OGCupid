@@ -161,3 +161,10 @@ test("admin saves expanded visual properties on individual cards and blocks",asy
   assert.equal(result.status,200);
   assert.deepEqual(JSON.parse(result.calls[0].args[0]),document);
 });
+
+test("center field copy is saved on its own page",()=>{
+  const id="copy.matches.show-me";
+  const document={...blank,texts:{"/matches":{[id]:"Show profiles"}}};
+  assert.deepEqual(validatedDesign(document),document);
+  assert.equal(validatedDesign({...blank,texts:{"/messages":{[id]:"Show profiles"}}}),null);
+});

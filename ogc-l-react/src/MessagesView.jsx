@@ -67,12 +67,12 @@ export default function MessagesView(){
       <p>Private conversations with actual OG Cupid members.</p>
     </header>
     <div className="ogcl-content-panel ogcl-messages">
-      {peerId&&<p><NavLink to="/messages">‹ Back to inbox</NavLink></p>}
+      {peerId&&<p><NavLink to="/messages"><span data-ogc-edit-text="copy.messages.back-to-inbox">‹ Back to inbox</span></NavLink></p>}
       {loading&&<p role="status">Loading saved messages…</p>}
       {error&&<p role="alert" className="ogcl-error">{error}</p>}
       {notice&&<p role="status" className="ogcl-save-confirmation">{notice}</p>}
       {!peerId&&!loading&&inbox&&<>
-        <p className="ogcl-quiet">Only conversations you've actually had appear here. No fake activity or read receipts.</p>
+        <p className="ogcl-quiet"><span data-ogc-edit-text="copy.messages.only-conversations-you-ve-actually-had-appear-here-no-f">Only conversations you've actually had appear here. No fake activity or read receipts.</span></p>
         {inbox.length? <ul className="ogcl-inbox-list">{inbox.map(item=>
           <li key={item.peerId}>
             <NavLink to={"/messages/"+item.peerId} className="ogcl-conversation-link">
@@ -81,7 +81,7 @@ export default function MessagesView(){
               <span>{item.lastMessage.senderId===user?.id?"You: ":""}{item.lastMessage.body}</span>
             </NavLink>
           </li>)}</ul> :
-          <p>Your inbox is empty. To say hello, open someone's <NavLink to="/matches">profile in MATCHES</NavLink>.</p>}
+          <p>Your inbox is empty. To say hello, open someone's <NavLink to="/matches"><span data-ogc-edit-text="copy.messages.profile-in-matches">profile in MATCHES</span></NavLink>.</p>}
       </>}
       {peerId&&!loading&&thread&&<>
         <div className="ogcl-thread-head">
@@ -101,20 +101,20 @@ export default function MessagesView(){
                 </button>}
               </footer>
               {reportId===item.id&&<div className="ogcl-report-form">
-                <label>Reason <select value={reason} onChange={e=>setReason(e.target.value)}>
+                <label><span data-ogc-edit-text="copy.messages.reason">Reason</span> <select value={reason} onChange={e=>setReason(e.target.value)}>
                   <option value="spam">Spam</option><option value="harassment">Harassment</option>
                   <option value="other">Other</option>
                 </select></label>
                 <button className="ogcl-button" type="button" disabled={busy}
-                  onClick={()=>void submitReport(item.id)}>Submit report</button>
+                  onClick={()=>void submitReport(item.id)}><span data-ogc-edit-text="copy.messages.submit-report">Submit report</span></button>
               </div>}
             </article>;
-          }):<p>No messages yet. Say hello to start the conversation.</p>}
+          }):<p><span data-ogc-edit-text="copy.messages.no-messages-yet-say-hello-to-start-the-conversation">No messages yet. Say hello to start the conversation.</span></p>}
         </div>
         {thread.canSend&&!thread.pairBlocked?<form className="ogcl-message-compose" onSubmit={send}>
-          <label htmlFor="ogcl-message-text">Write a message</label>
+          <label htmlFor="ogcl-message-text"><span data-ogc-edit-text="copy.messages.write-a-message">Write a message</span></label>
           <textarea id="ogcl-message-text" rows={4} maxLength={2000} required value={draft}
-            onChange={event=>setDraft(event.target.value)} placeholder="Say something thoughtful…" />
+            onChange={event=>setDraft(event.target.value)} data-ogc-edit-text="copy.messages.placeholder-say-something-thoughtful" placeholder="Say something thoughtful…" />
           <div><span>{draft.length}/2000</span>
             <button type="submit" className="ogcl-button" disabled={busy||!draft.trim()}>
               {busy?"Sending…":"Send message"}

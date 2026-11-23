@@ -32,7 +32,7 @@ function MemberResult({member,Photo,favorited,onFavorite,busy,canFavorite,now}){
       {status&&<p className={"ogcl-match-result-presence"+(online?" is-online":"")}>
         {status==="Online now"?status:"Last online: "+status.toLowerCase()}</p>}
     </div>
-    {member.aboutMe&&<p className="ogcl-match-result-blurb"><strong>My self-summary</strong>{" "}{member.aboutMe}</p>}
+    {member.aboutMe&&<p className="ogcl-match-result-blurb"><strong><span data-ogc-edit-text="copy.matches.my-self-summary">My self-summary</span></strong>{" "}{member.aboutMe}</p>}
     <div className="ogcl-match-result-score">
       {typeof member.matchPercent==="number"
         ?<><span>{member.matchPercent}% Match</span><small>Provisional</small></>
@@ -105,7 +105,7 @@ function SearchControls({filters,update,toggleChoice,reset,apply,hasLocation,mem
   return <form ref={form} className="classic-search" onSubmit={e=>{e.preventDefault();apply();setOpen("");}}
     onKeyDown={e=>{if(e.key==="Escape"&&open){document.getElementById("chip-"+open)?.focus();setOpen("");}}}>
     <div className="chip-preferences">
-      <p>Show me</p><div className="chip-flow">
+      <p><span data-ogc-edit-text="copy.matches.show-me">Show me</span></p><div className="chip-flow">
         {choices("genders","Gender",LOOKING_GENDERS)}
         {choices("whoLike","Who like",LOOKING_GENDERS)}
         {chip("age",`Ages ${filters.ageMin} to ${filters.ageMax}`,<div className="age-menu">{["ageMin","ageMax"].map(key=><div key={key}>
@@ -131,10 +131,10 @@ function SearchControls({filters,update,toggleChoice,reset,apply,hasLocation,mem
           filters.kidPlans?()=>update("kidPlans",""):null)}
       </div>
     </div>
-    <div className="chip-order"><p>Order by</p>
+    <div className="chip-order"><p><span data-ogc-edit-text="copy.matches.order-by">Order by</span></p>
       {chip("sort",filters.sort==="match"?"Special Blend":SEARCH_SORTS.find(s=>s.value===filters.sort)?.label,
         SEARCH_SORTS.map(s=>menuRow(s.value==="match"?"Special Blend (Match %)":s.label,filters.sort===s.value,()=>pick("sort",s.value))))}
-    </div><footer><button type="submit">Search</button><button type="button" onClick={()=>{reset();setExpanded(false);setOpen("");}}>Reset</button></footer>
+    </div><footer><button type="submit"><span data-ogc-edit-text="copy.matches.search">Search</span></button><button type="button" onClick={()=>{reset();setExpanded(false);setOpen("");}}><span data-ogc-edit-text="copy.matches.reset">Reset</span></button></footer>
   </form>;
 }
 export default function MatchesView({Photo}){
@@ -260,7 +260,7 @@ export default function MatchesView({Photo}){
     <nav className="ogcl-matches-tabs ogcl-period-tabs" aria-label="Matches sections">
       {TABS.map(([id,label])=><button type="button" key={id}
         aria-current={tab===id?"page":undefined} onClick={()=>setTab(id)}>
-        {label}{id==="quiver"&&connections?" ("+connections.quiver.length+")":""}
+        <span data-ogc-edit-text={"copy.matches.tab-"+id}>{label}</span>{id==="quiver"&&connections?" ("+connections.quiver.length+")":""}
       </button>)}
     </nav>
     </div>
@@ -281,7 +281,7 @@ export default function MatchesView({Photo}){
       </p>}
       {tab!=="search"&&connectionsLoading&&<p role="status">Loading {tab==="quiver"?"Quiver":"Favorites"}…</p>}
       {tab!=="search"&&connectionsError&&<div role="alert" className="ogcl-error">
-        <p>{connectionsError}</p><button type="button" onClick={()=>void load()}>Retry</button>
+        <p>{connectionsError}</p><button type="button" onClick={()=>void load()}><span data-ogc-edit-text="copy.matches.retry">Retry</span></button>
       </div>}
       {tab==="search"&&!connections&&<p className="ogcl-matches-warning" role="status">
         Favorites controls will be available after your saved Favorites load.
@@ -290,7 +290,7 @@ export default function MatchesView({Photo}){
       {tab==="search"&&searchLoading&&!visibleSearch&&<p role="status">Loading matches…</p>}
       {tab==="search"&&searchError&&<div role="alert" className="ogcl-error">
         <p>{searchError}</p>
-        <button type="button" onClick={()=>setSearchRevision(x=>x+1)}>Retry search</button>
+        <button type="button" onClick={()=>setSearchRevision(x=>x+1)}><span data-ogc-edit-text="copy.matches.retry-search">Retry search</span></button>
       </div>}
       {(tab==="search"?!!visibleSearch:!connectionsLoading&&!connectionsError&&!!connections)&&<>
         <p className="ogcl-matches-result-count">

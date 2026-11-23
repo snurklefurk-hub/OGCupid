@@ -96,7 +96,7 @@ export default function QuickmatchView({Photo}) {
         {VIEWS.map(([key,label])=><button key={key} type="button"
           aria-current={tab===key?"page":undefined} disabled={busy}
           onClick={()=>{setSearchParams(key==="matches"?{}:{tab:key});setError("");setNotice("");}}>
-          {label}{key==="incoming"&&quickState?" ("+quickState.incomingLikes.length+")":""}
+          <span data-ogc-edit-text={"copy.quickmatch.tab-"+key}>{label}</span>{key==="incoming"&&quickState?" ("+quickState.incomingLikes.length+")":""}
         </button>)}
       </nav>
     </div>
@@ -105,7 +105,7 @@ export default function QuickmatchView({Photo}) {
         Friend and Enemy percentages aren't calculated yet.</p>
       {loading&&<p role="status">Loading your saved Quickmatch decisions…</p>}
       {discoveryLoading&&<p role="status">Loading Quickmatch profiles…</p>}
-      {discoveryUnavailable&&<p role="alert" className="ogcl-error">Member discovery is unavailable.</p>}
+      {discoveryUnavailable&&<p role="alert" className="ogcl-error"><span data-ogc-edit-text="copy.quickmatch.member-discovery-is-unavailable">Member discovery is unavailable.</span></p>}
       {error&&<p role="alert" className="ogcl-error">{error}</p>}
       {notice&&<p role="status" className="ogcl-save-confirmation">{notice}</p>}
       {!loading&&quickState&&!discoveryLoading&&!discoveryUnavailable&&tab==="matches"&&
@@ -121,7 +121,7 @@ export default function QuickmatchView({Photo}) {
               Skip for now
             </button>}
           </QuickmatchRestrictedProfile>
-        </article>:<p>No new eligible Quickmatch profiles right now.</p>)}
+        </article>:<p><span data-ogc-edit-text="copy.quickmatch.no-new-eligible-quickmatch-profiles-right-now">No new eligible Quickmatch profiles right now.</span></p>)}
       {!loading&&quickState&&!discoveryLoading&&!discoveryUnavailable&&tab!=="matches"&&<>
         <p className="ogcl-quiet">{visible.length} currently visible member{visible.length===1?"":"s"}.
           Mutual Likes are saved in MATCHES → Quiver. Other members' Dislikes aren't disclosed.</p>
@@ -148,7 +148,7 @@ export default function QuickmatchView({Photo}) {
               </button>}
             </article>;
           })}
-        </div>:<p>No currently visible members in this list.</p>}
+        </div>:<p><span data-ogc-edit-text="copy.quickmatch.no-currently-visible-members-in-this-list">No currently visible members in this list.</span></p>}
         {paged.totalPages>1&&<nav className="ogcl-pages" aria-label="Quickmatch list pages">
           {Array.from({length:paged.totalPages},(_,i)=><button key={i} type="button"
             aria-current={paged.page===i+1?"page":undefined}
