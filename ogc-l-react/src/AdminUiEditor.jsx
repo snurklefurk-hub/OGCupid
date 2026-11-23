@@ -8,7 +8,7 @@ import {
   EDITOR_VIEWPORTS,EDITOR_TEXT_TARGETS,EDITOR_LINK_ROUTES,editorTextTarget
 } from "./admin-ui-editor-model.mjs";
 import {computedEditorSnapshot} from "./admin-ui-editor-inspector.mjs";
-import {formatEditorCss,parseEditorCss,parseEditorJson} from "./admin-ui-editor-source.mjs";
+import {formatEditorCss,parseEditorCss,parseEditorJson,setNavStyle} from "./admin-ui-editor-source.mjs";
 import AdminUiCodePane from "./AdminUiCodePane.jsx";
 import "./admin-ui-editor.css";
 
@@ -96,7 +96,8 @@ function putPreview(doc,draft,page,selected){
     if(target)doc.querySelector(target.selector)?.setAttribute("data-ogc-editor-selected","true");
   }
   if(selected?.kind==="area"){
-    const selector=EDITOR_AREAS.find(area=>area.id===selected.id)?.selector;
+    const selector=EDITOR_MAIN_NAV_AREAS.some(area=>area.id===selected.id)?
+      EDITOR_AREAS.find(area=>area.id==="mainNavLinks").selector:EDITOR_AREAS.find(area=>area.id===selected.id)?.selector;
     if(selector)doc.querySelectorAll(selector).forEach(el=>el.setAttribute("data-ogc-editor-selected","true"));
   }
 }
@@ -404,8 +405,11 @@ export default function AdminUiEditor({onUnsavedChange}){
     setSelected({kind:"area",id});
   }
   const areaScope=chosenArea&&editorAreaScope(chosenArea.id)==="shell"?"*":page;
+  const navSelected=EDITOR_MAIN_NAV_AREAS.some(area=>area.id===chosenArea?.id);
+  const navStyles=draft.areas["*"]||{};
   const activeStyle=chosenBlock?.style||draft.areas[areaScope]?.[selected.id]||{};
   const updateArea=(property,value)=>commit(next=>{
+    if(navSelected){setNavStyle(next,property,value);return next;}
     const target=selected.kind==="block"&&workspace==="page"?
       next.pages[page]?.find(b=>b.id===selected.id)?.style:
       chosenArea&&editorAreaScope(selected.id)===workspace?
@@ -566,7 +570,7 @@ export default function AdminUiEditor({onUnsavedChange}){
   function applySource(){
     if(!sourceDirty||working)return;
     try{
-      const next=language==="css"?parseEditorCss(sourceText,draft,cssScope):parseEditorJson(sourceText);
+      const next=language==="css"?parseEditorCss(sourceText,draft,cssScope):parseEditorJson(sourceText,draft);
       commit(()=>next);
       discardSource();
       setNotice("Code applied to the draft.");
@@ -580,7 +584,8 @@ export default function AdminUiEditor({onUnsavedChange}){
   }
 
   function styleControl(property){
-    const override=activeStyle[property.key];
+    const override=activeStyle[property.key]??(navSelected?navStyles.mainNavLinks?.[property.key]:undefined);
+    const canReset=override!==undefined||navSelected&&EDITOR_MAIN_NAV_AREAS.some(({id})=>navStyles[id]?.[property.key]!==undefined);
     const live=inspected.values[property.key]||{value:"",raw:"Unavailable in this preview"};
     const value=override??live.value??"";
     return <div className="ogcl-studio-style-field" key={property.key}>
@@ -600,7 +605,7 @@ export default function AdminUiEditor({onUnsavedChange}){
       {property.kind==="color"&&<button type="button" title={"Transparent "+property.label}
         aria-pressed={value==="transparent"||live.raw==="rgba(0, 0, 0, 0)"&&override===undefined}
         onClick={()=>updateArea(property.key,"transparent")}>Clear fill</button>}
-      <button type="button" title={"Reset "+property.label} disabled={override===undefined}
+      <button type="button" title={"Reset "+property.label} disabled={!canReset}
         onClick={()=>updateArea(property.key,null)}>Reset</button>
     </div>;
   }
@@ -726,7 +731,7 @@ export default function AdminUiEditor({onUnsavedChange}){
         <h3>Inspector</h3>
         <header>
           <strong>{activeLabel}</strong>
-          <span>{workspace==="shell"?"All pages":pageLabel+" · Center column"}</span>
+          <span>{navSelected?"Styles apply to all 5 buttons":workspace==="shell"?"All pages":pageLabel+" · Center column"}</span>
         </header>
         <fieldset disabled={working} key={selected.kind+":"+selected.id}>
           {selected.kind==="palette"&&EDITOR_TOKENS.map(token=><div className="ogcl-studio-style-field" key={token.id}>

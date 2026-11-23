@@ -1,6 +1,6 @@
 import {
   EDITOR_SCHEMA, EDITOR_PAGES, EDITOR_SHELL_AREAS, EDITOR_PAGE_AREAS,
-  EDITOR_TOKENS, EDITOR_PROPERTIES, editorStyleEntries, editorStyleValue, styleShorthand, sanitizeEditorDraft,
+  EDITOR_TOKENS, EDITOR_PROPERTIES, EDITOR_MAIN_NAV_AREAS, editorStyleEntries, editorStyleValue, styleShorthand, sanitizeEditorDraft,
 } from "./admin-ui-editor-model.mjs";
 
 const cssName = key => key.replace(/[A-Z]/g, letter => "-" + letter.toLowerCase());
@@ -33,7 +33,48 @@ function firstDifference(value, clean, path) {
   return null;
 }
 
-export function parseEditorJson(source) {
+const navIds=["mainNavLinks",...EDITOR_MAIN_NAV_AREAS.map(area=>area.id)];
+
+// The shared selector styles the five buttons. Earlier drafts can contain
+// more specific rules; clear only the property being edited in those rules.
+export function setNavStyle(draft,key,value){
+  const shell=draft.areas["*"]??={};
+  for(const id of navIds){
+    const style=shell[id];
+    if(!style)continue;
+    delete style[key];
+    if(value!=null)for(const name of Object.keys(style)){
+      if(styleShorthand(name)===key)delete style[name];
+    }
+    // A legacy per-button shorthand outranks a shared longhand in the cascade.
+    if(id!=="mainNavLinks"&&value!=null&&Object.hasOwn(style,styleShorthand(key)))style[key]=value;
+    if(!Object.keys(style).length)delete shell[id];
+  }
+  if(value!=null)(shell.mainNavLinks??={})[key]=value;
+  if(!Object.keys(shell).length)delete draft.areas["*"];
+}
+
+function linkNavCodeEdits(before,after){
+  if(!before)return after;
+  const edits=new Map();
+  for(const id of navIds){
+    const old=before.areas["*"]?.[id]||{};
+    const next=after.areas["*"]?.[id]||{};
+    for(const key of new Set([...Object.keys(old),...Object.keys(next)])){
+      if(old[key]===next[key])continue;
+      const value=next[key];
+      if(value!==undefined&&edits.has(key)&&edits.get(key)!=null&&edits.get(key)!==value){
+        throw new Error("Choose one "+cssName(key)+" value for all five main navigation buttons.");
+      }
+      if(value!==undefined||!edits.has(key))edits.set(key,value);
+    }
+  }
+  // Apply shorthand edits first so explicit per-side values in code survive.
+  for(const [key,value] of editorStyleEntries(Object.fromEntries(edits)))setNavStyle(after,key,value);
+  return after;
+}
+
+export function parseEditorJson(source, previous) {
   let input;
   try {
     input = JSON.parse(source);
@@ -44,14 +85,14 @@ export function parseEditorJson(source) {
   const clean = sanitizeEditorDraft(input);
   const difference = firstDifference(input, clean, "design");
   if (difference) throw new Error("Unsupported or missing value at " + difference + ".");
-  return draftSize(clean);
+  return draftSize(linkNavCodeEdits(previous,clean));
 }
 
 export function formatEditorCss(draft, scope) {
   const areas = draft.areas[scope] || {};
-  // Keep stored group rules readable while exposing individual links in a new draft.
+  // Present a single button rule. Existing individual overrides remain visible until edited.
   const rules = scopeAreas(scope).filter(area =>
-    !["mainNavigation","mainNavLinks"].includes(area.id) || Object.keys(areas[area.id] || {}).length
+    (area.id!=="mainNavigation" && !EDITOR_MAIN_NAV_AREAS.some(nav=>nav.id===area.id)) || Object.keys(areas[area.id] || {}).length
   ).map(area => [
     area.selector,
     editorStyleEntries(areas[area.id] || {}).map(([key,value]) => {
@@ -133,5 +174,6 @@ export function parseEditorCss(source, draft, scope) {
   }
   if (Object.keys(styles).length) next.areas[scope] = styles;
   else delete next.areas[scope];
-  return draftSize(sanitizeEditorDraft(next));
+  const clean=sanitizeEditorDraft(next);
+  return draftSize(scope==="*"?linkNavCodeEdits(draft,clean):clean);
 }
