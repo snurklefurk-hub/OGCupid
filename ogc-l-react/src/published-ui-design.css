@@ -1,0 +1,7 @@
+/* Only editor-sanitized, published blocks; no arbitrary HTML or links. */
+.ogcl-published-region{display:grid;gap:10px;padding:12px 18px;border-bottom:1px dashed #b7c9da}
+.ogcl-published-region .ogcl-editor-preview-block{position:relative}
+.ogcl-published-region .ogcl-editor-preview-notice{background:#e7eef5;border:1px solid #c2d4e6;padding:12px}
+.ogcl-published-region .ogcl-editor-preview-button{justify-self:start;background:#2963a4;color:white;border:0;padding:8px 16px;text-decoration:none;display:inline-block}
+.ogcl-published-region .ogcl-editor-preview-button:disabled{opacity:1;cursor:default}
+.ogcl-published-region .ogcl-editor-preview-divider{width:100%;border:0;border-top:1px solid #c2d4e6}

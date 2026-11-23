@@ -5,13 +5,13 @@ import {
   moveEditorBlock,editorBlockHtmlLabel,EDITOR_PAGES,EDITOR_AREAS,
   EDITOR_SHELL_AREAS,EDITOR_PAGE_AREAS,EDITOR_SCHEMA,editorAreaScope,
   EDITOR_TOKENS,EDITOR_BLOCK_TYPES,EDITOR_PROPERTIES,
-  EDITOR_VIEWPORTS,EDITOR_TEXT_TARGETS,editorTextTarget
+  EDITOR_VIEWPORTS,EDITOR_TEXT_TARGETS,EDITOR_LINK_ROUTES,editorTextTarget
 } from "./admin-ui-editor-model.mjs";
 import {computedEditorSnapshot} from "./admin-ui-editor-inspector.mjs";
 import "./admin-ui-editor.css";
 
-// An administrator-only workspace. Its drafts live in the current browser;
-// publishing for all members requires a separate server-authorized release path.
+// Administrator-only design editor: server drafts are authoritative.
+// Local snapshots remain only as a recoverable backup for existing users.
 const storageKey=id=>"ogc-admin-ui-editor-v1:"+id;
 const recordKey=id=>storageKey(id)+":history";
 function readStored(key,fallback){
@@ -100,7 +100,7 @@ function putPreview(doc,draft,page,selected){
   }
 }
 export default function AdminUiEditor(){
-  const {user}=useMemberSession();
+  const {user,adminRequest}=useMemberSession();
   const [page,setPage]=useState("/matches");
   const [workspace,setWorkspace]=useState("shell");
   const [draft,setDraft]=useState(()=>blankEditorDraft());
@@ -116,6 +116,11 @@ export default function AdminUiEditor(){
   const [availableText,setAvailableText]=useState([]);
   const [addType,setAddType]=useState("paragraph");
   const [history,setHistory]=useState([]);
+  const [serverVersion,setServerVersion]=useState(null);
+  const [publishedRevision,setPublishedRevision]=useState(null);
+  const [publishedHistory,setPublishedHistory]=useState([]);
+  const [rollbackId,setRollbackId]=useState("");
+  const [busy,setBusy]=useState(false);
   const [dragId,setDragId]=useState(null);
   const [compact,setCompact]=useState(false);
   const frame=useRef(null),stage=useRef(null);
@@ -154,8 +159,40 @@ export default function AdminUiEditor(){
     undoStack.current=[];redoStack.current=[];
   },[user?.id]);
   const hasChanges=JSON.stringify(draft)!==savedText;
-  const previewUrl=useMemo(()=>
-    window.location.pathname+window.location.search+"#"+page,[page]);
+  useEffect(()=>{
+    if(!user?.id)return;
+    let live=true;
+    setServerVersion(null);
+    void adminRequest("/admin/ui-design").then(state=>{
+      if(!live)return;
+      setServerVersion(state.draftVersion);
+      setPublishedRevision(state.publishedRevision??null);
+      setPublishedHistory(Array.isArray(state.history)?state.history:[]);
+      const fromServer=sanitizeEditorDraft(state.draft);
+      const local=sanitizeEditorDraft(readStored(storageKey(user.id),blankEditorDraft()));
+      const localHasEdits=JSON.stringify(local)!==JSON.stringify(blankEditorDraft());
+      // Migrate an older browser-only draft once when no remote draft exists.
+      // Never replace a newer server draft with browser storage.
+      if(state.draftVersion===0&&localHasEdits){
+        setDraft(local);
+        setSavedText(JSON.stringify(fromServer));
+        setNotice("Your earlier browser draft is ready to import. Choose Save draft to store it on the server.");
+      }else{
+        setDraft(fromServer);
+        setSavedText(JSON.stringify(fromServer));
+        setNotice("Server draft loaded. Changes are private until you publish.");
+      }
+      undoStack.current=[];redoStack.current=[];
+    }).catch(()=>{
+      if(live)setNotice("Could not load your server draft. Publishing is unavailable; your browser backup is untouched.");
+    });
+    return()=>{live=false;};
+  },[user?.id,adminRequest]);
+  const previewUrl=useMemo(()=>{
+    const search=new URLSearchParams(window.location.search);
+    search.set("ogc-ui-preview","1");
+    return window.location.pathname+"?"+search.toString()+"#"+page;
+  },[page]);
   useEffect(()=>{
     const resize=()=>{
       if(!stage.current)return;
@@ -364,16 +401,76 @@ export default function AdminUiEditor(){
     if(!next)return;
     undoStack.current.push(draft);setDraft(next);setNotice("");
   }
-  function save(){
-    if(!user?.id)return;
+  function acceptServerState(state,replaceDraft=true){
+    setServerVersion(state.draftVersion);
+    setPublishedRevision(state.publishedRevision??null);
+    setPublishedHistory(Array.isArray(state.history)?state.history:[]);
+    if(replaceDraft){
+      const clean=sanitizeEditorDraft(state.draft);
+      setDraft(clean);
+      setSavedText(JSON.stringify(clean));
+      undoStack.current=[];redoStack.current=[];
+    }
+  }
+  async function persistDraft(){
+    if(serverVersion===null)throw new Error("Server draft is not ready.");
+    const value=sanitizeEditorDraft(draft);
+    const state=await adminRequest("/admin/ui-design","PUT",
+      {document:value,expectedVersion:serverVersion});
+    acceptServerState(state,false);
+    setSavedText(JSON.stringify(value));
+    // Browser snapshots are backups only. The server owns the latest draft.
     try{
-      const value=sanitizeEditorDraft(draft);
       window.localStorage.setItem(storageKey(user.id),JSON.stringify(value));
       const records=[{at:new Date().toISOString(),draft:value},...history].slice(0,10);
       window.localStorage.setItem(recordKey(user.id),JSON.stringify(records));
-      setHistory(records);setSavedText(JSON.stringify(value));
-      setNotice("Draft saved to this browser only. The public site has not changed.");
-    }catch{setNotice("Couldn't save the draft in this browser. Check your storage settings.");}
+      setHistory(records);
+    }catch{/* The committed server draft is authoritative. */}
+    return state;
+  }
+  async function save(){
+    if(!user?.id||busy||serverVersion===null)return;
+    setBusy(true);setNotice("");
+    try{
+      await persistDraft();
+      setNotice("Draft saved to the server. The live site has not changed.");
+    }catch{
+      setNotice("Draft wasn't saved. Check your connection, or reload if another browser edited it.");
+    }finally{setBusy(false);}
+  }
+  async function publish(){
+    if(busy||serverVersion===null)return;
+    if(!window.confirm("Publish this design to ALL visitors now?"))return;
+    setBusy(true);setNotice("");
+    try{
+      const state=hasChanges?await persistDraft():{draftVersion:serverVersion};
+      const published=await adminRequest("/admin/ui-design/publish","POST",
+        {expectedVersion:state.draftVersion});
+      acceptServerState(published);
+      window.dispatchEvent(new Event("ogc-design-published"));
+      setNotice("Published revision #"+published.publishedRevision+". The public site will show it on refresh.");
+    }catch{
+      setNotice("Publish failed. Your draft remains private; reload if another administrator changed it.");
+    }finally{setBusy(false);}
+  }
+  async function rollback(){
+    const revision=Number(rollbackId);
+    if(!Number.isSafeInteger(revision)||revision<1||busy||serverVersion===null)return;
+    if(hasChanges){
+      setNotice("Save or discard your unsaved changes before restoring a published version.");
+      return;
+    }
+    if(!window.confirm("Restore revision #"+revision+" to the LIVE website? This creates a new release."))return;
+    setBusy(true);setNotice("");
+    try{
+      const state=await adminRequest("/admin/ui-design/rollback","POST",
+        {revision,expectedVersion:serverVersion});
+      acceptServerState(state);setRollbackId("");
+      window.dispatchEvent(new Event("ogc-design-published"));
+      setNotice("Restored revision #"+revision+" as new live release #"+state.publishedRevision+".");
+    }catch{
+      setNotice("Rollback failed. Reload to check whether another administrator published a change.");
+    }finally{setBusy(false);}
   }
   function restore(index){
     const entry=history[index];
@@ -385,7 +482,8 @@ export default function AdminUiEditor(){
     <header className="ogcl-ui-editor-intro">
       <div><h2>Visual UI Editor</h2>
         <p>Edit the shared site shell separately from each page’s center content. All three columns remain permanently present.</p></div>
-      <span className="ogcl-ui-draft-label">LOCAL DRAFT · NOT PUBLISHED</span>
+      <span className="ogcl-ui-draft-label">{serverVersion===null?"CONNECTING…":
+          busy?"SAVING…":"SERVER DRAFT · "+(publishedRevision===null?"NOT YET PUBLISHED":"LIVE #"+publishedRevision)}</span>
     </header>
     <nav className="ogcl-ui-editor-workspaces" aria-label="Editing workspace">
       <button type="button" className={workspace==="shell"?"selected":""}
@@ -419,7 +517,10 @@ export default function AdminUiEditor(){
       <button type="button" onClick={()=>setCompact(v=>!v)}>{compact?"Show inspector":"Larger preview"}</button>
       <button type="button" onClick={undo} disabled={!undoStack.current.length}>Undo</button>
       <button type="button" onClick={redo} disabled={!redoStack.current.length}>Redo</button>
-      <button className="ogcl-button" type="button" onClick={save} disabled={!hasChanges}>Save draft</button>
+      <button className="ogcl-button" type="button" onClick={save}
+        disabled={!hasChanges||busy||serverVersion===null}>Save draft</button>
+      <button className="ogcl-button ogcl-ui-editor-publish" type="button" onClick={publish}
+        disabled={busy||serverVersion===null}>Publish to live site</button>
     </div>
     <div className={"ogcl-ui-editor-grid"+(compact?" is-compact":"")}>
       {!compact&&<aside className="ogcl-ui-editor-panel" aria-label={workspace==="shell"?"Shared site shell structure":"Page content structure"}>
@@ -511,7 +612,7 @@ export default function AdminUiEditor(){
               value={currentText} onChange={e=>updateText(e.target.value)}
               aria-label={"Edit "+chosenText.label}/>
           </label>
-          <p className="ogcl-admin-muted">This updates the visible preview text only; links keep their destinations and buttons keep their behavior. Drafts are not published.</p>
+          <p className="ogcl-admin-muted">Links retain their destinations and buttons retain their behavior. Save privately, then Publish to make these changes public.</p>
           <div className="ogcl-ui-editor-text-actions">
             <button type="button" onClick={resetText}>Restore original text</button>
             <button type="button" onClick={styleRelatedText}>Style this region</button>
@@ -521,6 +622,13 @@ export default function AdminUiEditor(){
           {chosenBlock.type!=="divider"&&<label>Text
             <textarea rows={4} maxLength={500} value={chosenBlock.text}
               onChange={e=>updateBlock(chosenBlock.id,{text:e.target.value})}/>
+          </label>}
+          {chosenBlock.type==="button"&&<label>Button destination
+            <select aria-label="Button destination" value={chosenBlock.href||""}
+              onChange={e=>updateBlock(chosenBlock.id,{href:e.target.value})}>
+              <option value="">No action (disabled)</option>
+              {EDITOR_LINK_ROUTES.map(route=><option key={route.path} value={route.path}>{route.label}</option>)}
+            </select>
           </label>}
           <label className="ogcl-ui-editor-check"><input type="checkbox" checked={chosenBlock.hidden}
             onChange={e=>updateBlock(chosenBlock.id,{hidden:e.target.checked})}/> Hide block in preview</label>
@@ -571,7 +679,16 @@ export default function AdminUiEditor(){
     </div>
     <footer className="ogcl-ui-editor-footer">
       <strong>{hasChanges?"Unsaved draft changes":"Draft up to date"}</strong>
-      <span>Preview and saved drafts are private to this browser. Publishing to all visitors is not enabled yet.</span>
+      <span>Drafts are saved privately on the server. Publishing updates the public site's design without a Render rebuild.</span>
+      <label>Published versions
+        <select aria-label="Published versions" value={rollbackId} onChange={e=>setRollbackId(e.target.value)}>
+          <option value="">Select a revision to restore…</option>
+          {publishedHistory.map(entry=><option key={entry.revision} value={entry.revision}>
+            #{entry.revision} · {new Date(entry.publishedAt).toLocaleString()}
+          </option>)}
+        </select>
+      </label>
+      <button type="button" onClick={rollback} disabled={!rollbackId||busy||serverVersion===null}>Restore live version</button>
       <label>Saved snapshots
         <select value="" onChange={e=>restore(Number(e.target.value))}>
           <option value="">Restore a snapshot…</option>

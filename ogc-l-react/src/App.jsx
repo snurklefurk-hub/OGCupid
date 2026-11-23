@@ -1,6 +1,7 @@
 import React, {lazy, Suspense, useEffect, useMemo, useState} from "react";
 import {Navigate, NavLink, Outlet, Route, Routes} from "react-router-dom";
 import {defaultRoute, primaryNavigation} from "./navigation.mjs";
+import PublishedUiDesign from "./PublishedUiDesign.jsx";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {SidebarPromos, ProfileFloater, ProfileRefinement} from "./ClassicSidebar.jsx";
 import {filterAndSortMembers, pageMembers} from "./member-directory.mjs";
@@ -167,6 +168,7 @@ function RouteLoading(){
 function AppShell() {
   return (
     <div className="ogcl-app">
+      <PublishedUiDesign />
       <a className="ogcl-skip" href="#ogcl-content" onClick={event=>{
         event.preventDefault();
         document.getElementById("ogcl-content")?.focus();

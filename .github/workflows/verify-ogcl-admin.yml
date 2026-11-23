@@ -4,6 +4,9 @@ on:
     branches: [OGC-lovable, main]
     paths:
       - 'api/member-admin.js'
+      - 'api/member-ui-design.js'
+      - 'api/member-ui-design.test.js'
+      - 'db/migrations/034_admin_ui_design_publishing.sql'
       - 'api/admin-member-editor.js'
       - 'api/admin-member-editor.test.js'
       - 'api/member-admin.test.js'
@@ -27,7 +30,7 @@ jobs:
         run: |
           node --check api/member-admin.js
           node --check api/admin-member-editor.js
-          node --test api/member-admin.test.js api/admin-member-editor.test.js
+          node --test api/member-admin.test.js api/admin-member-editor.test.js api/member-ui-design.test.js
       - name: Bundle real member Function with admin routes
         run: |
           npm ci
