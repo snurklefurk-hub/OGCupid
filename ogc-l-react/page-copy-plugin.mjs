@@ -7,7 +7,7 @@ import {parseAst} from "rolldown/parseAst";
 const src=fileURLToPath(new URL("./src/",import.meta.url));
 const catalogId="virtual:ogc-page-copy";
 const routes={
-  AccountPages:["join","recover","verify","account"],AdminDashboard:["admin"],
+  SitemapPage:["sitemap"],AccountPages:["join","recover","verify","account"],AdminDashboard:["admin"],
   AdminMemberEditor:["admin"],CommunityReportsAdmin:["admin"],App:["visitors","signin"],
   CommunityChat:["community"],ContactPage:["contact"],MatchesView:["matches"],
   MatchQuestions:["questions"],MessagesView:["messages"],Onboarding:["onboarding"],
@@ -20,9 +20,9 @@ const articleRoutes={ogtrends:"ogtrends",zero:"ogtrends/zero","perfect-profile":
 const skipFunctions=new Set(["AppShell","LeftRail","RightRail","AdminLink","TopMemberNav","MemberPhoto","MemberCard","MemberResult"]);
 const formRoutes={SignInForm:"signin",JoinForm:"join",RecoveryForm:"recover",VerifyForm:"verify",AccountManagement:"account"};
 const authoredExpressions={
-  App:["title","intro","footnote"],AccountPages:["title","intro","label"],
-  PersonaQuiz:["question.prompt","question.note","option","result.name","persona.name"],
-  MatchQuestions:["q.prompt","current.prompt","question.prompt","label","option.label"],
+  SitemapPage:["section.title","page.label","page.note"],App:["title","intro","footnote"],AccountPages:["title","intro","label"],
+  PersonaQuiz:["question.prompt","question.note","option","result.name","persona.name","paragraph","archetypes[result][style][0]","archetypes[result][style][1]","archetypes[opposite][style][0]","historicalGuidance[key].avoid","historicalGuidance[key].consider"],
+  MatchQuestions:["q.prompt","current.prompt","current.question.prompt","current.question.topic","question.prompt","label","option.label"],
   ProfileSettings:["field.label","option"],LookingForSettings:["option.label","label"],
   EditorialPages:["page.title"],AdminDashboard:["label"],Onboarding:["field.label","option.label","label"]
 };

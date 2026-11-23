@@ -14,7 +14,7 @@ export const EDITOR_PAGES=Object.freeze([
   {path:"/ogtrends",label:"OGTrends"},
   {path:"/sitemap",label:"Sitemap"},
   {path:"/admin",label:"Administration"},
-  ...Object.entries({visitors:"Visitors",settings:"Settings",photos:"Photos",account:"Account",signin:"Sign in",join:"Join",recover:"Recovery",verify:"Verification",onboarding:"Onboarding",contact:"Contact",privacy:"Privacy",terms:"Terms","ogtrends/zero":"OgTrends · The Big Idea","ogtrends/perfect-profile":"OgTrends · Perfect Profile","ogtrends/references":"OgTrends · Dating References"}).map(([path,label])=>({path:"/"+path,label}))
+  ...Object.entries({sitemap:"Sitemap",visitors:"Visitors",settings:"Settings",photos:"Photos",account:"Account",signin:"Sign in",join:"Join",recover:"Recovery",verify:"Verification",onboarding:"Onboarding",contact:"Contact",privacy:"Privacy",terms:"Terms","ogtrends/zero":"OgTrends · The Big Idea","ogtrends/perfect-profile":"OgTrends · Perfect Profile","ogtrends/references":"OgTrends · Dating References"}).map(([path,label])=>({path:"/"+path,label}))
 ]);
 export const EDITOR_MAIN_NAV_AREAS=Object.freeze(primaryNavigation.map(({path,label})=>{
   const key=path.slice(1);

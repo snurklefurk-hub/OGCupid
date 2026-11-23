@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "vite build",
+    "build": "node --test page-copy-plugin.test.mjs && vite build",
     "preview": "vite preview",
     "test": "node --test src/*.test.mjs"
   },
