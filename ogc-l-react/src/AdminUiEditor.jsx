@@ -26,6 +26,7 @@ function previewBlock(doc,block,selected){
   element.setAttribute("data-ogc-editor-block-id",block.id);
   element.className="ogcl-editor-preview-block ogcl-editor-preview-"+block.type;
   if(tag==="button")element.type="button";
+  element.draggable=true;
   if(tag!=="hr")element.textContent=block.text;
   for(const [key,value] of Object.entries(block.style))element.style[key]=
     typeof value==="number"?value+"px":value;
@@ -108,7 +109,8 @@ export default function AdminUiEditor(){
     const loaded=sanitizeEditorDraft(readStored(storageKey(user.id),blankEditorDraft()));
     setDraft(loaded);
     setSavedText(JSON.stringify(loaded));
-    setHistory(readStored(recordKey(user.id),[]).slice(0,10));
+    const savedRecords=readStored(recordKey(user.id),[]);
+    setHistory(Array.isArray(savedRecords)?savedRecords.slice(0,10).filter(entry=>entry&&typeof entry.at==="string"&&entry.draft?.version===1):[]);
     undoStack.current=[];redoStack.current=[];
   },[user?.id]);
   const hasChanges=JSON.stringify(draft)!==savedText;
@@ -140,12 +142,46 @@ export default function AdminUiEditor(){
         if(area){setSelected({kind:"area",id:area.id});return;}
       }
     };
-    const prevent=event=>{event.preventDefault();event.stopImmediatePropagation?.();};
+    const prevent=event=>{event.preventDefault();event.stopPropagation();event.stopImmediatePropagation?.();};
+    const previewDragStart=event=>{
+      const element=event.target?.closest?.("[data-ogc-editor-block-id]");
+      if(!element){prevent(event);return;}
+      const id=element.getAttribute("data-ogc-editor-block-id");
+      if(event.dataTransfer)event.dataTransfer.setData("text/plain",id);
+      if(event.dataTransfer)event.dataTransfer.effectAllowed="move";
+    };
+    const previewDragOver=event=>{
+      if(event.target?.closest?.("[data-ogc-editor-block-id]"))event.preventDefault();
+    };
+    const previewDrop=event=>{
+      const target=event.target?.closest?.("[data-ogc-editor-block-id]");
+      const source=event.dataTransfer?.getData("text/plain");
+      prevent(event);
+      if(target&&source){
+        setDraft(previous=>{
+          const next=JSON.parse(JSON.stringify(previous));
+          const list=next.pages[page]||[];
+          const start=list.findIndex(block=>block.id===source);
+          const end=list.findIndex(block=>block.id===target.getAttribute("data-ogc-editor-block-id"));
+          if(start<0||end<0||start===end)return previous;
+          undoStack.current=[...undoStack.current.slice(-39),previous];
+          redoStack.current=[];
+          next.pages[page]=moveEditorBlock(list,start,end);
+          return sanitizeEditorDraft(next);
+        });
+      }
+    };
     doc.addEventListener("click",intercept,true);
-    doc.addEventListener("submit",prevent,true);
+    for(const type of ["submit","change","input","keydown"])doc.addEventListener(type,prevent,true);
+    doc.addEventListener("dragstart",previewDragStart,true);
+    doc.addEventListener("dragover",previewDragOver,true);
+    doc.addEventListener("drop",previewDrop,true);
     return()=>{
       doc.removeEventListener("click",intercept,true);
-      doc.removeEventListener("submit",prevent,true);
+      for(const type of ["submit","change","input","keydown"])doc.removeEventListener(type,prevent,true);
+      doc.removeEventListener("dragstart",previewDragStart,true);
+      doc.removeEventListener("dragover",previewDragOver,true);
+      doc.removeEventListener("drop",previewDrop,true);
     };
   },[frameVersion,page]);
   useEffect(()=>{
@@ -315,13 +351,18 @@ export default function AdminUiEditor(){
         {(chosenBlock||chosenArea)&&<div className="ogcl-ui-editor-properties">
           {EDITOR_PROPERTIES.map(property=><label key={property.key}>{property.label}
             <div className="ogcl-ui-editor-property">
-              <input type={property.kind==="color"?"color":"number"}
-                min={property.kind==="number"?0:undefined}
-                max={property.kind==="number"?property.max:undefined}
-                placeholder={property.kind==="number"?"Default":undefined}
-                value={property.kind==="color"?(activeStyle[property.key]||"#ffffff"):(activeStyle[property.key]??"")}
-                onChange={e=>updateArea(property.key,property.kind==="color"?e.target.value:
-                  e.target.value===""?null:Number(e.target.value))}/>
+              {property.kind==="select"?
+                <select value={activeStyle[property.key]||""} onChange={e=>updateArea(property.key,e.target.value||null)}>
+                  <option value="">Site default</option>
+                  {property.options.map(value=><option key={value} value={value}>{value}</option>)}
+                </select>:
+                <input type={property.kind==="color"?"color":"number"}
+                  min={property.kind==="number"?0:undefined}
+                  max={property.kind==="number"?property.max:undefined}
+                  placeholder={property.kind==="number"?"Default":undefined}
+                  value={property.kind==="color"?(activeStyle[property.key]||"#ffffff"):(activeStyle[property.key]??"")}
+                  onChange={e=>updateArea(property.key,property.kind==="color"?e.target.value:
+                    e.target.value===""?null:Number(e.target.value))}/>} 
               <button type="button" title={"Reset "+property.label} onClick={()=>updateArea(property.key,null)}>↺</button>
             </div>
           </label>)}
@@ -331,7 +372,7 @@ export default function AdminUiEditor(){
         <div className="ogcl-ui-editor-properties">
           {EDITOR_TOKENS.map(token=><label key={token.id}>{token.label}
             <div className="ogcl-ui-editor-property">
-              <input type="color" value={draft.tokens[token.id]||"#2963a4"}
+              <input type="color" value={draft.tokens[token.id]||token.default}
                 onChange={e=>commit(next=>{next.tokens[token.id]=e.target.value;return next;})}/>
               <button type="button" title={"Reset "+token.label}
                 onClick={()=>commit(next=>{delete next.tokens[token.id];return next;})}>↺</button>
