@@ -17,9 +17,9 @@ test("all canonical editorial and legal pages route inside one React member shel
   }
   assert.match(app, /<nav className="ogcl-public-nav"/);
   assert.match(app, /<footer className="ogcl-footer"/);
-  assert.match(app, /<NavLink to="\/privacy">Privacy/);
-  assert.match(app, /<NavLink to="\/terms">Terms/);
-  assert.match(app, /<NavLink to="\/persona">Dating Persona Test/);
+  assert.match(app, /<NavLink[^>]*to="\/privacy">Privacy/);
+  assert.match(app, /<NavLink[^>]*to="\/terms">Terms/);
+  assert.match(app, /<NavLink[^>]*to="\/persona">Dating Persona Test/);
 });
 
 test("canonical legal, research, Contact and Persona source bodies are retained",()=>{

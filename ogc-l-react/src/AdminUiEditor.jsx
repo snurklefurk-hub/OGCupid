@@ -4,8 +4,10 @@ import {
   blankEditorDraft,sanitizeEditorDraft,editorPreviewCss,
   moveEditorBlock,editorBlockHtmlLabel,EDITOR_PAGES,EDITOR_AREAS,
   EDITOR_SHELL_AREAS,EDITOR_PAGE_AREAS,EDITOR_SCHEMA,editorAreaScope,
-  EDITOR_TOKENS,EDITOR_BLOCK_TYPES,EDITOR_PROPERTIES
+  EDITOR_TOKENS,EDITOR_BLOCK_TYPES,EDITOR_PROPERTIES,
+  EDITOR_VIEWPORTS,EDITOR_TEXT_TARGETS,editorTextTarget
 } from "./admin-ui-editor-model.mjs";
+import {computedEditorSnapshot} from "./admin-ui-editor-inspector.mjs";
 import "./admin-ui-editor.css";
 
 // An administrator-only workspace. Its drafts live in the current browser;
@@ -38,6 +40,7 @@ const EDITOR_OVERLAY_STYLE=[
   ".ogcl-editor-preview-block{position:relative;}",
   ".ogcl-editor-preview-block:hover{outline:2px dashed #f83265!important;outline-offset:2px;cursor:crosshair;}",
   ".ogcl-editor-preview-selected,[data-ogc-editor-selected]{outline:3px solid #f83265!important;outline-offset:2px;}",
+  "[data-ogc-edit-text]:hover{outline:2px dashed #f83265!important;outline-offset:2px;cursor:text;}",
   ".ogcl-editor-preview-region{display:grid;gap:10px;padding:12px 18px;border-bottom:1px dashed #b7c9da;}",
   ".ogcl-editor-preview-notice{background:#e7eef5;border:1px solid #c2d4e6;padding:12px;}",
   ".ogcl-editor-preview-button{justify-self:start;background:#2963a4;color:white;border:0;padding:8px 16px;}",
@@ -72,7 +75,25 @@ function putPreview(doc,draft,page,selected){
         el.getAttribute("data-ogc-editor-block-id")===selected.id
       )?.classList.add("ogcl-editor-preview-selected");
   }
+  // Apply draft text ONLY to known static labels. Preserve original text so
+  // Reset returns the preview to React's source copy; never use innerHTML.
+  for(const target of EDITOR_TEXT_TARGETS){
+    if(!editorTextTarget(target.id,page))continue;
+    const element=doc.querySelector(target.selector);
+    if(!element || element.children.length)continue;
+    if(!element.hasAttribute("data-ogc-editor-original-text"))
+      element.setAttribute("data-ogc-editor-original-text",element.textContent||"");
+    if(target.scope==="page")element.setAttribute("data-ogc-edit-text",target.id);
+    const scope=target.scope==="shell"?"*":page;
+    const chosen=draft.texts[scope]?.[target.id];
+    const text=chosen??element.getAttribute("data-ogc-editor-original-text");
+    if(element.textContent!==text)element.textContent=text;
+  }
   doc.querySelectorAll("[data-ogc-editor-selected]").forEach(el=>el.removeAttribute("data-ogc-editor-selected"));
+  if(selected?.kind==="text"){
+    const target=editorTextTarget(selected.id,page);
+    if(target)doc.querySelector(target.selector)?.setAttribute("data-ogc-editor-selected","true");
+  }
   if(selected?.kind==="area"){
     const selector=EDITOR_AREAS.find(area=>area.id===selected.id)?.selector;
     if(selector)doc.querySelectorAll(selector).forEach(el=>el.setAttribute("data-ogc-editor-selected","true"));
@@ -88,7 +109,11 @@ export default function AdminUiEditor(){
   const [selected,setSelected]=useState({kind:"area",id:"brand"});
   const [frameVersion,setFrameVersion]=useState(0);
   const [zoomMode,setZoomMode]=useState("fit");
+  const [viewportId,setViewportId]=useState("editor");
+  const viewport=EDITOR_VIEWPORTS.find(x=>x.id===viewportId)||EDITOR_VIEWPORTS[0];
   const [scale,setScale]=useState(.64);
+  const [inspected,setInspected]=useState({values:{},text:"",tokens:{}});
+  const [availableText,setAvailableText]=useState([]);
   const [addType,setAddType]=useState("paragraph");
   const [history,setHistory]=useState([]);
   const [dragId,setDragId]=useState(null);
@@ -134,15 +159,15 @@ export default function AdminUiEditor(){
   useEffect(()=>{
     const resize=()=>{
       if(!stage.current)return;
-      const fit=Math.min(1,Math.max(.2,(stage.current.clientWidth-24)/1150));
-      setScale(zoomMode==="fit"?fit:zoomMode==="100"?1:.75);
+      const fit=Math.min(1,Math.max(.05,(stage.current.clientWidth-24)/viewport.width));
+      setScale(zoomMode==="fit"?fit:zoomMode==="100"?1:zoomMode==="50"?.5:.75);
     };
     resize();
     const observer=typeof ResizeObserver==="function"?new ResizeObserver(resize):null;
     if(observer&&stage.current)observer.observe(stage.current);
     window.addEventListener("resize",resize);
     return()=>{observer?.disconnect();window.removeEventListener("resize",resize);};
-  },[zoomMode,compact]);
+  },[zoomMode,compact,viewport.width]);
   useEffect(()=>{
     const doc=frame.current?.contentDocument;
     if(!doc)return;
@@ -154,6 +179,14 @@ export default function AdminUiEditor(){
       if(block){
         setWorkspace("page");
         setSelected({kind:"block",id:block.getAttribute("data-ogc-editor-block-id")});
+        return;
+      }
+      const textElement=target.closest("[data-ogc-edit-text]");
+      const textId=textElement?.getAttribute("data-ogc-edit-text");
+      const textTarget=editorTextTarget(textId,page);
+      if(textTarget){
+        setWorkspace(textTarget.scope);
+        setSelected({kind:"text",id:textTarget.id});
         return;
       }
       for(let parent=target;parent&&parent.nodeType===1;parent=parent.parentElement){
@@ -214,7 +247,29 @@ export default function AdminUiEditor(){
     if(!doc)return;
     const render=()=>{
       try{
-        if(doc.querySelector(".ogcl-view"))putPreview(doc,draft,page,selected);
+        if(!doc.querySelector(".ogcl-view"))return;
+        putPreview(doc,draft,page,selected);
+        const selector=selected.kind==="block"?
+          '[data-ogc-editor-block-id="'+selected.id+'"]':
+          selected.kind==="text"?editorTextTarget(selected.id,page)?.selector:
+          EDITOR_AREAS.find(area=>area.id===selected.id)?.selector;
+        const element=selector?doc.querySelector(selector):null;
+        const values=element?computedEditorSnapshot(doc.defaultView.getComputedStyle(element),
+          EDITOR_PROPERTIES):{};
+        const text=selected.kind==="text"?
+          element?.getAttribute("data-ogc-editor-original-text")||"":"";
+        const tokens=Object.fromEntries(EDITOR_TOKENS.map(token=>[
+          token.id,doc.defaultView.getComputedStyle(doc.documentElement)
+            .getPropertyValue(token.id).trim()||token.default
+        ]));
+        setInspected(previous=>{
+          const next={values,text,tokens};
+          return JSON.stringify(previous)===JSON.stringify(next)?previous:next;
+        });
+        const available=EDITOR_TEXT_TARGETS.filter(t=>editorTextTarget(t.id,page)&&
+          [...doc.querySelectorAll(t.selector)].some(el=>!el.children.length))
+          .map(t=>t.id);
+        setAvailableText(prev=>JSON.stringify(prev)===JSON.stringify(available)?prev:available);
       }catch{ /* Preview may be remounting while route loads. */ }
     };
     render();
@@ -236,6 +291,32 @@ export default function AdminUiEditor(){
   }
   const chosenBlock=selected.kind==="block"?blocks.find(b=>b.id===selected.id):null;
   const chosenArea=selected.kind==="area"?EDITOR_AREAS.find(a=>a.id===selected.id):null;
+  const chosenText=selected.kind==="text"?editorTextTarget(selected.id,page):null;
+  const textScope=chosenText?.scope==="shell"?"*":page;
+  const currentText=chosenText?
+    draft.texts[textScope]?.[chosenText.id]??inspected.text:"";
+  function updateText(value){
+    if(!chosenText||chosenText.scope!==workspace)return;
+    // Text only, no HTML editing or control characters.
+    const cleaned=value.replace(/\s*\r?\n+\s*/g," ");
+    commit(next=>{(next.texts[textScope]??={})[chosenText.id]=cleaned;return next;});
+  }
+  function resetText(){
+    if(!chosenText)return;
+    commit(next=>{if(next.texts[textScope])delete next.texts[textScope][chosenText.id];return next;});
+  }
+  function styleRelatedText(){
+    if(!chosenText)return;
+    const id=chosenText.scope==="page"?
+      chosenText.id==="page.heading"?"pageTitle":"pageHeader":
+      chosenText.id.startsWith("shell.footer.")?"footerLinkLabels":
+      chosenText.id.startsWith("shell.account.")?"accountActions":
+      chosenText.id.startsWith("shell.nav.")?"mainNavLinks":
+      chosenText.id.startsWith("shell.public.")?"publicNavigation":
+      chosenText.id.startsWith("shell.promo.left.")?"leftEditorial":
+      chosenText.id.startsWith("shell.promo.right.")?"rightEditorial":"leftPromos";
+    setSelected({kind:"area",id});
+  }
   const areaScope=chosenArea&&editorAreaScope(chosenArea.id)==="shell"?"*":page;
   const activeStyle=chosenBlock?.style||draft.areas[areaScope]?.[selected.id]||{};
   const updateArea=(property,value)=>commit(next=>{
@@ -322,9 +403,17 @@ export default function AdminUiEditor(){
           {EDITOR_PAGES.map(item=><option key={item.path} value={item.path}>{item.label}</option>)}
         </select>
       </label>
+      <label>Preview resolution
+        <select aria-label="Preview resolution" value={viewportId}
+          onChange={e=>setViewportId(e.target.value)}>
+          {EDITOR_VIEWPORTS.map(preset=><option key={preset.id} value={preset.id}>
+            {preset.label}
+          </option>)}
+        </select>
+      </label>
       <label>Zoom
         <select value={zoomMode} onChange={e=>setZoomMode(e.target.value)}>
-          <option value="fit">Fit</option><option value="75">75%</option><option value="100">100%</option>
+          <option value="fit">Fit</option><option value="50">50%</option><option value="75">75%</option><option value="100">100%</option>
         </select>
       </label>
       <button type="button" onClick={()=>setCompact(v=>!v)}>{compact?"Show inspector":"Larger preview"}</button>
@@ -384,15 +473,26 @@ export default function AdminUiEditor(){
         </div>
         <p className="ogcl-admin-muted">Drag the added blocks to reorder, or use the arrow buttons.</p>
           </>}
+        <section className="ogcl-ui-editor-text-list" aria-label="Editable site text">
+          <h3>Text and labels</h3>
+          <p className="ogcl-admin-muted">Select a heading or label in the preview, or choose one below.</p>
+          <div className="ogcl-ui-editor-elements">
+            {EDITOR_TEXT_TARGETS.filter(target=>target.scope===workspace&&availableText.includes(target.id)).map(target=>
+              <button key={target.id} type="button" className={selected.kind==="text"&&selected.id===target.id?"selected":""}
+                onClick={()=>setSelected({kind:"text",id:target.id})}>{target.label}</button>)}
+          </div>
+          {!EDITOR_TEXT_TARGETS.some(target=>target.scope===workspace&&availableText.includes(target.id))&&
+            <p className="ogcl-admin-muted">No editable static text on this preview yet.</p>}
+        </section>
       </aside>}
       <div className="ogcl-ui-editor-stage-wrap">
-        <p className="ogcl-ui-editor-panel-caption">{workspace==="shell"?"Shared site shell preview":"Center page preview"} · click to select · links and forms disabled</p>
+        <p className="ogcl-ui-editor-panel-caption">{workspace==="shell"?"Shared site shell preview":"Center page preview"} · {viewport.width} × {viewport.height} CSS px · {Math.round(scale*100)}% · click text to edit · links disabled</p>
         <div className="ogcl-ui-editor-stage" ref={stage}>
           <div className="ogcl-ui-editor-frame-viewport"
-            style={{width:1150*scale,height:850*scale}}>
+            style={{width:viewport.width*scale,height:viewport.height*scale}}>
             <iframe ref={frame} key={page} title={"OG Cupid "+page+" editor preview"}
               src={previewUrl} onLoad={()=>setFrameVersion(v=>v+1)}
-              style={{width:1150,height:850,transform:"scale("+scale+")",transformOrigin:"top left"}}
+              style={{width:viewport.width,height:viewport.height,transform:"scale("+scale+")",transformOrigin:"top left"}}
               tabIndex={-1}/>
           </div>
         </div>
@@ -400,11 +500,23 @@ export default function AdminUiEditor(){
       {!compact&&<aside className="ogcl-ui-editor-panel" aria-label="Selected element properties">
         <h3>Properties</h3>
         <p className="ogcl-ui-editor-selection">{chosenBlock?
-          editorBlockHtmlLabel(chosenBlock):chosenArea?.label||"Choose an element"}</p>
+          editorBlockHtmlLabel(chosenBlock):chosenArea?.label||chosenText?.label||"Choose an element"}</p>
         {chosenArea&&<p className="ogcl-ui-editor-scope">
           {workspace==="shell"?"Applies to every page · shared site shell":
             "Applies only to the center of "+EDITOR_PAGES.find(x=>x.path===page)?.label}
         </p>}
+        {chosenText&&<div className="ogcl-ui-editor-text-edit">
+          <label>Edit text · {chosenText.scope==="shell"?"all pages":EDITOR_PAGES.find(p=>p.path===page)?.label}
+            <textarea rows={chosenText.max>160?5:2} maxLength={chosenText.max}
+              value={currentText} onChange={e=>updateText(e.target.value)}
+              aria-label={"Edit "+chosenText.label}/>
+          </label>
+          <p className="ogcl-admin-muted">This updates the visible preview text only; links keep their destinations and buttons keep their behavior. Drafts are not published.</p>
+          <div className="ogcl-ui-editor-text-actions">
+            <button type="button" onClick={resetText}>Restore original text</button>
+            <button type="button" onClick={styleRelatedText}>Style this region</button>
+          </div>
+        </div>}
         {chosenBlock&&<>
           {chosenBlock.type!=="divider"&&<label>Text
             <textarea rows={4} maxLength={500} value={chosenBlock.text}
@@ -413,31 +525,42 @@ export default function AdminUiEditor(){
           <label className="ogcl-ui-editor-check"><input type="checkbox" checked={chosenBlock.hidden}
             onChange={e=>updateBlock(chosenBlock.id,{hidden:e.target.checked})}/> Hide block in preview</label>
         </>}
-        {(chosenBlock||chosenArea)&&<div className="ogcl-ui-editor-properties">
-          {EDITOR_PROPERTIES.map(property=><label key={property.key}>{property.label}
-            <div className="ogcl-ui-editor-property">
-              {property.kind==="select"?
-                <select value={activeStyle[property.key]||""} onChange={e=>updateArea(property.key,e.target.value||null)}>
-                  <option value="">Site default</option>
-                  {property.options.map(value=><option key={value} value={value}>{value}</option>)}
-                </select>:
-                <input type={property.kind==="color"?"color":"number"}
-                  min={property.kind==="number"?0:undefined}
-                  max={property.kind==="number"?property.max:undefined}
-                  placeholder={property.kind==="number"?"Default":undefined}
-                  value={property.kind==="color"?(activeStyle[property.key]||"#ffffff"):(activeStyle[property.key]??"")}
-                  onChange={e=>updateArea(property.key,property.kind==="color"?e.target.value:
-                    e.target.value===""?null:Number(e.target.value))}/>} 
-              <button type="button" title={"Reset "+property.label} onClick={()=>updateArea(property.key,null)}>↺</button>
-            </div>
-          </label>)}
-        </div>}
+        {(chosenBlock||chosenArea)&&<>
+        <p className="ogcl-ui-editor-computed-note">Current live values from the preview. Resetting a property restores its CSS value.</p>
+        <div className="ogcl-ui-editor-properties">
+          {EDITOR_PROPERTIES.map(property=>{
+            const override=activeStyle[property.key];
+            const live=inspected.values[property.key]||{value:"",raw:"Not available"};
+            const shown=override??live.value;
+            const value=shown??"";
+            return <label key={property.key}>{property.label}
+              <div className="ogcl-ui-editor-property">
+                {property.kind==="select"?
+                  <select value={value} onChange={e=>updateArea(property.key,e.target.value||null)}>
+                    {value===""&&<option value="">Current: {live.raw}</option>}
+                    {property.options.map(option=><option key={option} value={option}>{option}</option>)}
+                  </select>:
+                  <input type={property.kind==="color"?"color":"number"}
+                    min={property.kind==="number"?0:undefined}
+                    max={property.kind==="number"?property.max:undefined}
+                    step={property.kind==="number"?"0.1":undefined}
+                    value={property.kind==="color"?(value||"#ffffff"):value}
+                    onChange={e=>updateArea(property.key,property.kind==="color"?
+                      e.target.value:e.target.value===""?null:Number(e.target.value))}/>}
+                <button type="button" title={"Reset "+property.label} onClick={()=>updateArea(property.key,null)}>↺</button>
+              </div>
+              <span className="ogcl-ui-editor-computed-value" title="Computed from the preview">
+                Current: {live.raw}
+              </span>
+            </label>;
+          })}
+        </div></>}
         {workspace==="shell"&&<><h3>Global palette</h3>
         <p className="ogcl-admin-muted">These colors are shared across all pages, including their center content.</p>
         <div className="ogcl-ui-editor-properties">
           {EDITOR_TOKENS.map(token=><label key={token.id}>{token.label}
             <div className="ogcl-ui-editor-property">
-              <input type="color" value={draft.tokens[token.id]||token.default}
+              <input type="color" value={draft.tokens[token.id]||inspected.tokens[token.id]||token.default}
                 onChange={e=>commit(next=>{next.tokens[token.id]=e.target.value;return next;})}/>
               <button type="button" title={"Reset "+token.label}
                 onClick={()=>commit(next=>{delete next.tokens[token.id];return next;})}>↺</button>

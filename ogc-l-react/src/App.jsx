@@ -78,7 +78,7 @@ function LeftRail() {
       </NavLink>
       <nav className="ogcl-primary" aria-label="OG Cupid main">
         {primaryNavigation.map(({path,label,icon}) => {
-          const content = <><span className="ogcl-nav-icon" aria-hidden="true">{icon}</span><span>{label}</span></>;
+          const content = <><span className="ogcl-nav-icon" aria-hidden="true">{icon}</span><span data-ogc-edit-text={"shell.nav."+path.slice(1)}>{label}</span></>;
           return (isMember || (kind==="onboarding" && path==="/community")) ? <NavLink key={path} to={path}
             className={({isActive})=>isActive?"ogcl-nav-link active":"ogcl-nav-link"}>
             {content}
@@ -88,12 +88,12 @@ function LeftRail() {
         })}
       </nav>
       <nav className="ogcl-public-nav" aria-label="More on OG Cupid">
-        <NavLink to="/persona">Dating Persona Test</NavLink>
-        <NavLink to="/ogtrends">OgTrends</NavLink>
-        <NavLink to="/contact">Contact</NavLink>
+        <NavLink data-ogc-edit-text="shell.public.persona" to="/persona">Dating Persona Test</NavLink>
+        <NavLink data-ogc-edit-text="shell.public.ogtrends" to="/ogtrends">OgTrends</NavLink>
+        <NavLink data-ogc-edit-text="shell.public.contact" to="/contact">Contact</NavLink>
       </nav>
       {isMember && !discoveryUnavailable && recommendations.length>0 && <section className="ogcl-left-note" aria-label="Suggested members">
-        <h2>You might like</h2>
+        <h2 data-ogc-edit-text="shell.suggestions">You might like</h2>
         <div className="ogcl-suggested-thumbnails">
           {recommendations.map(member=><a key={member.userId} href={profileHref(member.slug)}
             aria-label={"View member profile: "+member.displayName}>
@@ -138,7 +138,7 @@ function AdminLink() {
       .catch(()=>{if(active)setAllowed(false);});
     return ()=>{active=false;};
   },[kind,adminRequest]);
-  return allowed?<NavLink to="/admin">Admin</NavLink>:null;
+  return allowed?<NavLink data-ogc-edit-text="shell.account.admin" to="/admin">Admin</NavLink>:null;
 }
 
 function TopMemberNav() {
@@ -146,16 +146,16 @@ function TopMemberNav() {
   return <nav className="ogcl-top-links" aria-label="Member account">
     {(session.kind==="member"||session.kind==="onboarding") && <>
       {session.kind==="member"&&<>
-        <NavLink to={session.profile?.slug?"/profiles/"+session.profile.slug:"/profile"}>Profile</NavLink>
-        <NavLink to="/settings">Settings</NavLink>
+        <NavLink data-ogc-edit-text="shell.account.profile" to={session.profile?.slug?"/profiles/"+session.profile.slug:"/profile"}>Profile</NavLink>
+        <NavLink data-ogc-edit-text="shell.account.settings" to="/settings">Settings</NavLink>
       </>}
-      <NavLink to="/account">Account</NavLink>
+      <NavLink data-ogc-edit-text="shell.account.account" to="/account">Account</NavLink>
       <AdminLink />
-      <button type="button" onClick={session.signOut}>Sign out</button>
+      <button data-ogc-edit-text="shell.account.signout" type="button" onClick={session.signOut}>Sign out</button>
     </>}
     {session.kind==="guest" && <>
-      <NavLink to="/signin">Sign in</NavLink>
-      <NavLink to="/join">Join OG Cupid</NavLink>
+      <NavLink data-ogc-edit-text="shell.account.signin" to="/signin">Sign in</NavLink>
+      <NavLink data-ogc-edit-text="shell.account.join" to="/join">Join OG Cupid</NavLink>
     </>}
   </nav>;
 }
@@ -176,13 +176,13 @@ function AppShell() {
         <div className="ogcl-banner"><TopMemberNav/></div>
         <div className="ogcl-sheet"><Suspense fallback={<RouteLoading/>}><Outlet /></Suspense></div>
         <footer className="ogcl-footer" aria-label="Site information">
-          <span>OG Cupid · Independent, not affiliated with OkCupid or Match Group.</span>
+          <span data-ogc-edit-text="shell.footer.disclaimer">OG Cupid · Independent, not affiliated with OkCupid or Match Group.</span>
           <nav aria-label="Site links">
-            <NavLink to="/ogtrends">OgTrends</NavLink>
-            <NavLink to="/persona">Dating Persona</NavLink>
-            <NavLink to="/contact">Contact</NavLink>
-            <NavLink to="/privacy">Privacy</NavLink>
-            <NavLink to="/terms">Terms</NavLink>
+            <NavLink data-ogc-edit-text="shell.footer.ogtrends" to="/ogtrends">OgTrends</NavLink>
+            <NavLink data-ogc-edit-text="shell.footer.persona" to="/persona">Dating Persona</NavLink>
+            <NavLink data-ogc-edit-text="shell.footer.contact" to="/contact">Contact</NavLink>
+            <NavLink data-ogc-edit-text="shell.footer.privacy" to="/privacy">Privacy</NavLink>
+            <NavLink data-ogc-edit-text="shell.footer.terms" to="/terms">Terms</NavLink>
           </nav>
         </footer>
       </main>

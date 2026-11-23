@@ -10,7 +10,7 @@ test("admin page is member-gated, and navigation appears after server confirmati
   assert.match(app,/<AdminGate><AdminDashboard/);
   assert.match(app,/kind==="onboarding"\?children:<MemberGate>/);
   assert.match(app,/adminRequest\("\/admin"\)\.then/);
-  assert.match(app,/return allowed\?<NavLink to="\/admin">Admin/);
+  assert.match(app,/return allowed\?<NavLink[^>]*to="\/admin">Admin/);
   assert.doesNotMatch(app,/snurklefurk@gmail\.com/);
 });
 test("admin gateway uses the live Neon JWT and no local authority claim",()=>{

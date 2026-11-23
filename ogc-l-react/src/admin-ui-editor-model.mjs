@@ -48,6 +48,50 @@ export const EDITOR_PAGE_AREAS=Object.freeze([
   {id:"matchCard",label:"MATCHES profile cards",selector:".ogcl-sheet .ogcl-match-result"}
 ]);
 export const EDITOR_AREAS=Object.freeze([...EDITOR_SHELL_AREAS,...EDITOR_PAGE_AREAS]);
+
+export const EDITOR_VIEWPORTS=Object.freeze([
+  {id:"editor",label:"Editing canvas · 1150 × 850",width:1150,height:850},
+  {id:"1920",label:"Full HD · 1920 × 1080",width:1920,height:1080},
+  {id:"2560",label:"QHD · 2560 × 1440",width:2560,height:1440},
+  {id:"3840",label:"4K · 3840 × 2160",width:3840,height:2160}
+]);
+// Explicit text-only allowlist: never use arbitrary DOM selector strings from
+// saved drafts, nor live user names, messages, answers, or other private data.
+// The shared entries are identified by hardcoded attributes in App/ClassicSidebar.
+const shellText=[
+  ...["matches","messages","visitors","quickmatch","community"]
+    .map(name=>({id:"shell.nav."+name,label:"Main navigation · "+name,scope:"shell",max:90})),
+  ...["persona","ogtrends","contact"]
+    .map(name=>({id:"shell.public."+name,label:"Left links · "+name,scope:"shell",max:90})),
+  ...["profile","settings","account","admin","signout","signin","join"]
+    .map(name=>({id:"shell.account."+name,label:"Account bar · "+name,scope:"shell",max:90})),
+  ...["ogtrends","persona","contact","privacy","terms"]
+    .map(name=>({id:"shell.footer."+name,label:"Footer · "+name,scope:"shell",max:90})),
+  {id:"shell.footer.disclaimer",label:"Footer disclaimer",scope:"shell",max:500},
+  {id:"shell.suggestions",label:"Suggested members heading",scope:"shell",max:90},
+  ...["left","right"].flatMap(side=>[0,1,2].flatMap(n=>[
+    {id:"shell.promo."+side+"."+n+".title",label:side+" promotion "+(n+1)+" title",scope:"shell",max:120},
+    {id:"shell.promo."+side+"."+n+".body",label:side+" promotion "+(n+1)+" copy",scope:"shell",max:500}
+  ])),
+  {id:"shell.refinement.title",label:"Profile refinement title",scope:"shell",max:120},
+  {id:"shell.refinement.body",label:"Profile refinement copy",scope:"shell",max:500}
+].map(target=>({...target,selector:'[data-ogc-edit-text="'+target.id+'"]'}));
+export const EDITOR_PAGE_TEXT_ROUTES=new Set([
+  "/matches","/quickmatch","/questions","/messages","/community","/persona","/ogtrends","/admin"
+]);
+export const EDITOR_TEXT_TARGETS=Object.freeze([
+  ...shellText,
+  {id:"page.heading",label:"Center page heading",scope:"page",
+    selector:".ogcl-sheet .ogcl-view-head h1",max:160},
+  {id:"page.intro",label:"Center page introduction",scope:"page",
+    selector:".ogcl-sheet .ogcl-view-head > p:first-of-type",max:500}
+]);
+const TEXT_TARGETS=new Map(EDITOR_TEXT_TARGETS.map(x=>[x.id,x]));
+export const editorTextTarget=(id,page)=> {
+  const target=TEXT_TARGETS.get(id);
+  return target && (target.scope==="shell"||EDITOR_PAGE_TEXT_ROUTES.has(page))?target:null;
+};
+
 export const EDITOR_TOKENS=Object.freeze([
   {id:"--okc-blue",label:"Site background",default:"#2963a4"},
   {id:"--okc-navy",label:"Navigation blue",default:"#183b62"},
@@ -71,12 +115,23 @@ export const EDITOR_PROPERTIES=Object.freeze([
   {key:"borderColor",label:"Border color",kind:"color"},
   {key:"fontSize",label:"Font size (px)",kind:"number",max:42},
   {key:"fontFamily",label:"Typeface",kind:"select",options:["Verdana","Arial","Georgia","Tahoma"]},
-  {key:"padding",label:"Padding (px)",kind:"number",max:80},
-  {key:"margin",label:"Margin (px)",kind:"number",max:80},
-  {key:"borderRadius",label:"Corner radius (px)",kind:"number",max:30}
+  {key:"fontWeight",label:"Font weight",kind:"select",options:["400","500","600","700"]},
+  {key:"textAlign",label:"Text alignment",kind:"select",options:["left","center","right"]},
+  {key:"lineHeight",label:"Line height (px)",kind:"number",max:80},
+  ...["Top","Right","Bottom","Left"].map(side=>({
+    key:"padding"+side,label:"Padding "+side.toLowerCase()+" (px)",kind:"number",max:80
+  })),
+  ...["Top","Right","Bottom","Left"].map(side=>({
+    key:"margin"+side,label:"Margin "+side.toLowerCase()+" (px)",kind:"number",max:80
+  })),
+  {key:"borderRadius",label:"Corner radius · top-left (px)",kind:"number",max:30},
+  {key:"borderWidth",label:"Border width (px)",kind:"number",max:12},
+  {key:"borderStyle",label:"Border style",kind:"select",options:["none","solid","dashed","dotted"]}
 ]);
 const COLORS=new Set(EDITOR_PROPERTIES.filter(p=>p.kind==="color").map(p=>p.key));
-const NUMBERS=new Map(EDITOR_PROPERTIES.filter(p=>p.kind==="number").map(p=>[p.key,p.max]));
+const NUMBERS=new Map([...EDITOR_PROPERTIES.filter(p=>p.kind==="number").map(p=>[p.key,p.max]),
+  ["padding",80],["margin",80]]); // Legacy one-value spacing survives older drafts.
+const SELECTS=new Map(EDITOR_PROPERTIES.filter(p=>p.kind==="select").map(p=>[p.key,p.options]));
 const FONTS=new Set(["Verdana","Arial","Georgia","Tahoma"]);
 const allowedPages=new Set(EDITOR_PAGES.map(x=>x.path));
 const shellAreas=new Map(EDITOR_SHELL_AREAS.map(x=>[x.id,x.selector]));
@@ -87,18 +142,18 @@ const HEX=/^#[0-9a-fA-F]{6}$/;
 const ID=/^block-[a-z0-9-]{1,32}$/;
 const isObject=x=>!!x&&typeof x==="object"&&!Array.isArray(x);
 export const editorAreaScope=id=>shellAreas.has(id)?"shell":pageAreas.has(id)?"page":null;
-export function blankEditorDraft(){return {version:EDITOR_SCHEMA,tokens:{},areas:{},pages:{}};}
+export function blankEditorDraft(){return {version:EDITOR_SCHEMA,tokens:{},areas:{},pages:{},texts:{}};}
 function cleanStyle(input,area=""){
   const result={};
   if(!isObject(input))return result;
   for(const [key,value] of Object.entries(input)){
     // Margin on structural rails could break the edge-locked three columns.
-    if(key==="margin"&&["leftRail","rightRail","siteBackground","centerSheet"].includes(area))continue;
+    if(key.startsWith("margin")&&["leftRail","rightRail","siteBackground","centerSheet"].includes(area))continue;
     if(COLORS.has(key)&&typeof value==="string"&&HEX.test(value))
       result[key]=value.toLowerCase();
-    else if(NUMBERS.has(key)&&Number.isInteger(value)&&value>=0&&value<=NUMBERS.get(key))
-      result[key]=value;
-    else if(key==="fontFamily"&&FONTS.has(value))result[key]=value;
+    else if(NUMBERS.has(key)&&Number.isFinite(value)&&value>=0&&value<=NUMBERS.get(key))
+      result[key]=Math.round(value*10)/10;
+    else if(SELECTS.has(key)&&SELECTS.get(key).includes(value))result[key]=value;
   }
   return result;
 }
@@ -134,6 +189,21 @@ export function sanitizeEditorDraft(raw){
       ...perArea
     }))if(pageAreas.has(area))scoped[area]=cleanStyle(style,area);
     if(Object.keys(scoped).length)result.areas[page]=scoped;
+  }
+  if(isObject(raw.texts))for(const [scope,targets] of Object.entries(raw.texts)){
+    if(scope!=="*"&&!allowedPages.has(scope)||!isObject(targets))continue;
+    const cleaned={};
+    for(const [id,value] of Object.entries(targets)){
+      const target=editorTextTarget(id,scope==="*" ? "/matches" : scope);
+      if(!target || (scope==="*"&&target.scope!=="shell") ||
+         (scope!=="*"&&target.scope!=="page"))continue;
+      if(typeof value!=="string"||value.length>target.max)continue;
+      // textContent only; newline, invisible control characters and tags
+      // cannot become markup or executable HTML in the preview.
+      if(/[\u0000-\u001f\u007f]/.test(value))continue;
+      cleaned[id]=value;
+    }
+    if(Object.keys(cleaned).length)result.texts[scope]=cleaned;
   }
   if(isObject(raw.pages))for(const [page,blocks] of Object.entries(raw.pages)){
     if(!allowedPages.has(page)||!Array.isArray(blocks))continue;
