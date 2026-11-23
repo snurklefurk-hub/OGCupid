@@ -15,6 +15,7 @@ import { handleConnections,isConnectionPath,connectionMethodAllowed } from "./me
 import {handleCommunity,isCommunityPath,communityMethodAllowed} from "./member-community.js";
 import { isAdminPath, adminMethodAllowed, handleAdmin } from "./member-admin.js";
 import { handlePublicUiDesign } from "./member-ui-design.js";
+import { handlePublicPromos } from "./member-promos.js";
 
 const required = ["DATABASE_URL", "NEON_AUTH_JWKS_URL", "NEON_AUTH_BASE_URL"] as const;
 for (const name of required) {
@@ -327,6 +328,8 @@ export default {
     // Public design read never exposes administrator drafts or account state.
     if(url.pathname==="/ui-design" || url.pathname==="/ui-design/")
       return handlePublicUiDesign(request,pool,json);
+    if(url.pathname==="/promos"||url.pathname==="/promos/")
+      return handlePublicPromos(request,pool,json);
     const profilePath = url.pathname === "/profile" || url.pathname === "/profile/";
     const memberProfileMatch = url.pathname.match(/^\/profiles\/([a-z0-9]+(?:-[a-z0-9]+)*)\/?$/);
     const answersPath = url.pathname === "/answers" || url.pathname === "/answers/";

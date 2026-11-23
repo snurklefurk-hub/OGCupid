@@ -1,5 +1,6 @@
 import {isAdminEditorPath,adminEditorMethodAllowed,handleAdminEditor} from "./admin-member-editor.js";
 import {isAdminUiDesignPath,adminUiDesignMethodAllowed,handleAdminUiDesign} from "./member-ui-design.js";
+import {isAdminPromosPath,adminPromosMethodAllowed,handleAdminPromos} from "./member-promos.js";
 // Administrator-only member API. JWT identity and liveness are verified
 // upstream; SQL SECURITY DEFINER functions independently check the live
 // Neon Auth admin role for every read and write.
@@ -23,10 +24,11 @@ async function bodyFor(request,keys){
   return {body:parsed};
 }
 
-export function isAdminPath(pathname){return adminRoute.test(pathname)||isAdminEditorPath(pathname)||isAdminUiDesignPath(pathname);}
+export function isAdminPath(pathname){return adminRoute.test(pathname)||isAdminEditorPath(pathname)||isAdminUiDesignPath(pathname)||isAdminPromosPath(pathname);}
 export function adminMethodAllowed(pathname,method){
   if(isAdminEditorPath(pathname))return adminEditorMethodAllowed(pathname,method);
   if(isAdminUiDesignPath(pathname))return adminUiDesignMethodAllowed(pathname,method);
+  if(isAdminPromosPath(pathname))return adminPromosMethodAllowed(pathname,method);
   const m=pathname.match(adminRoute);
   if(!m)return false;
   return m[3] ? method==="POST" && (m[3]==="action"||m[3]==="reinstate")
@@ -35,6 +37,7 @@ export function adminMethodAllowed(pathname,method){
 export async function handleAdmin(request,userId,url,withMember,json){
   if(isAdminEditorPath(url.pathname))return handleAdminEditor(request,userId,url,withMember,json);
   if(isAdminUiDesignPath(url.pathname))return handleAdminUiDesign(request,userId,url,withMember,json);
+  if(isAdminPromosPath(url.pathname))return handleAdminPromos(request,userId,url,withMember,json);
   const m=url.pathname.match(adminRoute);
   if(!m)return json(request,{error:"Not found"},404);
   if(!adminMethodAllowed(url.pathname,request.method))

@@ -4,6 +4,7 @@ import {defaultRoute, primaryNavigation} from "./navigation.mjs";
 import PublishedUiDesign from "./PublishedUiDesign.jsx";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {SidebarPromos, ProfileFloater, ProfileRefinement} from "./ClassicSidebar.jsx";
+import {useSitePromos} from "./use-site-promos.mjs";
 import {filterAndSortMembers, pageMembers} from "./member-directory.mjs";
 import {recommendedPhotoMembers} from "./classic-editorial.mjs";
 
@@ -68,7 +69,7 @@ function MemberCard({member}) {
   </a>;
 }
 
-function LeftRail() {
+function LeftRail({promoSelection}) {
   const {kind, discovery, discoveryUnavailable} = useMemberSession();
   const isMember = kind === "member";
   const recommendations = useMemo(() => recommendedPhotoMembers(discovery), [discovery]);
@@ -98,12 +99,12 @@ function LeftRail() {
           </a>)}
         </div>
       </section>}
-      <SidebarPromos side="left"/>
+      <SidebarPromos side="left" selection={promoSelection}/>
     </aside>
   );
 }
 
-function RightRail() {
+function RightRail({promoSelection}) {
   const {kind,user,onboarding} = useMemberSession();
   const keys=["identity","locality","profile","photo","quiz","explored"];
   const percent=Math.round(keys.filter(key=>onboarding?.[key]===true).length/keys.length*100);
@@ -120,8 +121,8 @@ function RightRail() {
         </div>
         <NavLink to="/onboarding">Continue your setup</NavLink>
       </section>}
-      <ProfileRefinement/>
-      <SidebarPromos side="right"/>
+      <ProfileRefinement selection={promoSelection}/>
+      <SidebarPromos side="right" selection={promoSelection}/>
     </aside>
   );
 }
@@ -162,6 +163,7 @@ function RouteLoading(){
 }
 
 function AppShell() {
+  const promoSelection=useSitePromos();
   return (
     <div className="ogcl-app">
       <PublishedUiDesign />
@@ -169,7 +171,7 @@ function AppShell() {
         event.preventDefault();
         document.getElementById("ogcl-content")?.focus();
       }}>Skip to content</a>
-      <LeftRail />
+      <LeftRail promoSelection={promoSelection}/>
       <main id="ogcl-content" className="ogcl-center" tabIndex={-1}>
         <div className="ogcl-banner"><TopMemberNav/></div>
         <div className="ogcl-sheet"><Suspense fallback={<RouteLoading/>}><Outlet /></Suspense></div>
@@ -184,7 +186,7 @@ function AppShell() {
           </nav>
         </footer>
       </main>
-      <RightRail />
+      <RightRail promoSelection={promoSelection}/>
     </div>
   );
 }

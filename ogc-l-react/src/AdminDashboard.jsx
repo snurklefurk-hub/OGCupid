@@ -5,6 +5,7 @@ import CommunityReportsAdmin from "./CommunityReportsAdmin.jsx";
 import AdminMemberEditor from "./AdminMemberEditor.jsx";
 
 const AdminUiEditor=React.lazy(()=>import("./AdminUiEditor.jsx"));
+const AdminPromos=React.lazy(()=>import("./AdminPromos.jsx"));
 
 const choices=[
   ["start_review","Mark under review"],
@@ -24,6 +25,7 @@ export default function AdminDashboard(){
   const {adminRequest}=useMemberSession();
   const [tab,setTab]=useState("overview");
   const [editorDirty,setEditorDirty]=useState(false);
+  const [promoDirty,setPromoDirty]=useState(false);
   const [editingMember,setEditingMember]=useState(null);
   const [summary,setSummary]=useState(null);
   const [members,setMembers]=useState([]);
@@ -166,10 +168,11 @@ export default function AdminDashboard(){
     </header>
       <div className="ogcl-admin-toolbar">
         <nav aria-label="Administration sections" className="ogcl-period-tabs">
-          {["overview","reports","community","members","audit","ui-editor"].map(t=><button key={t} type="button"
+          {["overview","reports","community","members","promos","audit","ui-editor"].map(t=><button key={t} type="button"
             className={tab===t?"selected":""} aria-current={tab===t?"page":undefined}
             onClick={()=>{
-              if(tab==="ui-editor"&&t!==tab&&editorDirty&&!window.confirm("Leave the editor and discard unsaved edits?"))return;
+              if(t!==tab&&(tab==="ui-editor"&&editorDirty||tab==="promos"&&promoDirty)&&
+                !window.confirm("Leave this editor and discard unsaved edits?"))return;
               setTab(t);setError("");setNotice("");
             }}>{t==="audit"?"Action log":t==="ui-editor"?"UI Editor":t[0].toUpperCase()+t.slice(1)}</button>)}
         </nav>
@@ -183,6 +186,9 @@ export default function AdminDashboard(){
 
       {tab==="ui-editor"&&<React.Suspense fallback={<p role="status">Loading editor…</p>}>
         <AdminUiEditor onUnsavedChange={setEditorDirty}/>
+      </React.Suspense>}
+      {tab==="promos"&&<React.Suspense fallback={<p role="status">Loading promos…</p>}>
+        <AdminPromos onUnsavedChange={setPromoDirty}/>
       </React.Suspense>}
       {tab==="overview"&&<>
         <div className="ogcl-admin-stats">

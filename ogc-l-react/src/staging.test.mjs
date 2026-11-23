@@ -27,7 +27,8 @@ test("native account and member navigation does not escape to the old member app
     assert.ok(app.includes(path),path);
   }
   assert.doesNotMatch(app,/legacyHref\("\/account/);
-  assert.match(sidebars,/function reactRoute/);
+  assert.match(sidebars,/resolvePromoUrl/);
+  assert.match(sidebars,/<NavLink data-ogc-card=\{editorKey\} className="ogcl-editorial-card" to=\{destination\.to\}/);
   assert.doesNotMatch(sidebars,/legacyHref/);
   assert.match(promotions,/case "ogtrends":return/);
   assert.match(promotions,/case "persona":return/);
