@@ -46,8 +46,13 @@ export function normalizeSiteRoute(raw,origin){
   return pathname+(query?"?"+query:"")+fragment;
 }
 
-export function migrateBrowserLocation(browser){
+export function migrateBrowserLocation(browser,basename="/"){
   const {location,history}=browser;
+  const base=basename==="/"?"":
+    "/"+String(basename).replace(/^\/+|\/+$/g,"");
+  const localPath=base&&(location.pathname===base||
+    location.pathname.startsWith(base+"/"))?
+      location.pathname.slice(base.length)||"/":location.pathname;
   const params=new URLSearchParams(location.search);
   let target=null;
   if(params.has(ROUTE_RECOVERY_PARAM)){
@@ -55,17 +60,18 @@ export function migrateBrowserLocation(browser){
   }else if(location.hash.startsWith("#/")){
     target=normalizeSiteRoute(location.hash.slice(1),location.origin)||"/not-found";
   }else{
-    const candidate=location.pathname+location.search+location.hash;
+    const candidate=localPath+location.search+location.hash;
     // Preserve ordinary legal/document anchors such as #scope.
-    const oldAccount=location.pathname.replace(/\/+$/,"")==="/account"&&
+    const oldAccount=localPath.replace(/\/+$/,"")==="/account"&&
       (params.has("join")||params.has("recover")||
        Object.hasOwn(accountAnchors,location.hash.toLowerCase()));
-    const oldProfile=profilePattern.test(location.pathname.replace(/\/+$/,""))&&
+    const oldProfile=profilePattern.test(localPath.replace(/\/+$/,""))&&
       oldProfileTabs.has(location.hash.slice(1).toLowerCase());
-    if(oldAccount||oldProfile||location.pathname.length>1&&location.pathname.endsWith("/")){
+    if(oldAccount||oldProfile||localPath.length>1&&localPath.endsWith("/")){
       target=normalizeSiteRoute(candidate,location.origin);
     }
   }
+  if(target!==null&&base)target=base+(target==="/"?"/":target);
   if(target!==null&&target!==location.pathname+location.search+location.hash)
     history.replaceState(history.state,"",target);
   return target;

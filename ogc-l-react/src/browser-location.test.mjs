@@ -70,3 +70,17 @@ test("legacy migration cannot become an external redirect or invent profile path
   }
   assert.equal(normalizeSiteRoute("/admin",origin),"/admin");
 });
+
+
+test("staging preview keeps its /ogc-l/ base for direct and saved hash routes",()=>{
+  const location=new URL("https://ogcupid.com/ogc-l/#/matches");
+  let path=null;
+  const browser={location,history:{state:null,replaceState(_s,_t,p){path=p;}}};
+  migrateBrowserLocation(browser,"/ogc-l/");
+  assert.equal(path,"/ogc-l/matches");
+  const fallback=new URL("https://ogcupid.com/ogc-l/?__ogc_route="+
+    encodeURIComponent("/profiles/river-riley"));
+  const stage={location:fallback,history:{state:null,replaceState(_s,_t,p){path=p;}}};
+  migrateBrowserLocation(stage,"/ogc-l/");
+  assert.equal(path,"/ogc-l/profiles/river-riley");
+});

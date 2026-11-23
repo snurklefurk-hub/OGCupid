@@ -10,8 +10,9 @@
     // The canonical root loads BrowserRouter and restores this same-origin
     // path with history.replaceState BEFORE React mounts. No #/ links.
     // Unknown paths continue to React's regular "Page not found" view.
-    location.replace("/?__ogc_route="+encodeURIComponent(
-      location.pathname+location.search+location.hash));
+    var base=location.pathname.startsWith("/ogc-l/")?"/ogc-l":"";
+    location.replace(base+"/?__ogc_route="+encodeURIComponent(
+      location.pathname.slice(base.length)+location.search+location.hash));
   </script>
 </head>
 <body><p><a href="/">Continue to OG Cupid</a></p></body>

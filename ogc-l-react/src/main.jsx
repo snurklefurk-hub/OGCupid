@@ -9,7 +9,7 @@ import "./period-tabs.css";
 
 // Normalize bookmarked /#/ URLs and static-host deep-link recovery before
 // React Router chooses its initial page. Do not reload for canonicalization.
-migrateBrowserLocation(window);
+migrateBrowserLocation(window,import.meta.env.BASE_URL);
 
 const root = document.getElementById("root");
 if (!root) throw new Error("OGC-L root element missing");
