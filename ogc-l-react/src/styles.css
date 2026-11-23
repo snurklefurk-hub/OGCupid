@@ -23,10 +23,12 @@ button, input, textarea, select {font:inherit;}
 .ogcl-app {
   display:grid;
   position:relative;
+  /* Keep both 184px side rails flush with the browser edges. The center
+     grows with the desktop viewport instead of centering a fixed-width site. */
   grid-template-columns:184px minmax(0,1fr) 184px;
-  width:1150px;
+  width:100%;
   min-height:100vh;
-  margin:0 auto;
+  margin:0;
 }
 .ogcl-left, .ogcl-right {height:auto;overflow:visible;min-width:0;}
 .ogcl-left {color:var(--okc-sky);}
