@@ -4,8 +4,10 @@ import {
   blankEditorDraft,sanitizeEditorDraft,editorPreviewCss,
   moveEditorBlock,editorBlockHtmlLabel,EDITOR_PAGES,EDITOR_AREAS,
   EDITOR_SHELL_AREAS,EDITOR_PAGE_AREAS,EDITOR_SCHEMA,editorAreaScope,
-  EDITOR_TOKENS,EDITOR_BLOCK_TYPES,EDITOR_PROPERTIES
+  EDITOR_TOKENS,EDITOR_BLOCK_TYPES,EDITOR_PROPERTIES,
+  EDITOR_VIEWPORTS,EDITOR_TEXT_TARGETS,editorTextTarget
 } from "./admin-ui-editor-model.mjs";
+import {computedEditorSnapshot} from "./admin-ui-editor-inspector.mjs";
 import "./admin-ui-editor.css";
 
 // An administrator-only workspace. Its drafts live in the current browser;
@@ -38,6 +40,7 @@ const EDITOR_OVERLAY_STYLE=[
   ".ogcl-editor-preview-block{position:relative;}",
   ".ogcl-editor-preview-block:hover{outline:2px dashed #f83265!important;outline-offset:2px;cursor:crosshair;}",
   ".ogcl-editor-preview-selected,[data-ogc-editor-selected]{outline:3px solid #f83265!important;outline-offset:2px;}",
+  "[data-ogc-edit-text]:hover{outline:2px dashed #f83265!important;outline-offset:2px;cursor:text;}",
   ".ogcl-editor-preview-region{display:grid;gap:10px;padding:12px 18px;border-bottom:1px dashed #b7c9da;}",
   ".ogcl-editor-preview-notice{background:#e7eef5;border:1px solid #c2d4e6;padding:12px;}",
   ".ogcl-editor-preview-button{justify-self:start;background:#2963a4;color:white;border:0;padding:8px 16px;}",
@@ -72,7 +75,25 @@ function putPreview(doc,draft,page,selected){
         el.getAttribute("data-ogc-editor-block-id")===selected.id
       )?.classList.add("ogcl-editor-preview-selected");
   }
+  // Apply draft text ONLY to known static labels. Preserve original text so
+  // Reset returns the preview to React's source copy; never use innerHTML.
+  for(const target of EDITOR_TEXT_TARGETS){
+    if(!editorTextTarget(target.id,page))continue;
+    const element=doc.querySelector(target.selector);
+    if(!element || element.children.length)continue;
+    if(!element.hasAttribute("data-ogc-editor-original-text"))
+      element.setAttribute("data-ogc-editor-original-text",element.textContent||"");
+    if(target.scope==="page")element.setAttribute("data-ogc-edit-text",target.id);
+    const scope=target.scope==="shell"?"*":page;
+    const chosen=draft.texts[scope]?.[target.id];
+    const text=chosen??element.getAttribute("data-ogc-editor-original-text");
+    if(element.textContent!==text)element.textContent=text;
+  }
   doc.querySelectorAll("[data-ogc-editor-selected]").forEach(el=>el.removeAttribute("data-ogc-editor-selected"));
+  if(selected?.kind==="text"){
+    const target=editorTextTarget(selected.id,page);
+    if(target)doc.querySelector(target.selector)?.setAttribute("data-ogc-editor-selected","true");
+  }
   if(selected?.kind==="area"){
     const selector=EDITOR_AREAS.find(area=>area.id===selected.id)?.selector;
     if(selector)doc.querySelectorAll(selector).forEach(el=>el.setAttribute("data-ogc-editor-selected","true"));
@@ -88,7 +109,10 @@ export default function AdminUiEditor(){
   const [selected,setSelected]=useState({kind:"area",id:"brand"});
   const [frameVersion,setFrameVersion]=useState(0);
   const [zoomMode,setZoomMode]=useState("fit");
+  const [viewportId,setViewportId]=useState("editor");
+  const viewport=EDITOR_VIEWPORTS.find(x=>x.id===viewportId)||EDITOR_VIEWPORTS[0];
   const [scale,setScale]=useState(.64);
+  const [inspected,setInspected]=useState({values:{},text:""});
   const [addType,setAddType]=useState("paragraph");
   const [history,setHistory]=useState([]);
   const [dragId,setDragId]=useState(null);
@@ -134,15 +158,15 @@ export default function AdminUiEditor(){
   useEffect(()=>{
     const resize=()=>{
       if(!stage.current)return;
-      const fit=Math.min(1,Math.max(.2,(stage.current.clientWidth-24)/1150));
-      setScale(zoomMode==="fit"?fit:zoomMode==="100"?1:.75);
+      const fit=Math.min(1,Math.max(.05,(stage.current.clientWidth-24)/viewport.width));
+      setScale(zoomMode==="fit"?fit:zoomMode==="100"?1:zoomMode==="50"?.5:.75);
     };
     resize();
     const observer=typeof ResizeObserver==="function"?new ResizeObserver(resize):null;
     if(observer&&stage.current)observer.observe(stage.current);
     window.addEventListener("resize",resize);
     return()=>{observer?.disconnect();window.removeEventListener("resize",resize);};
-  },[zoomMode,compact]);
+  },[zoomMode,compact,viewport.width]);
   useEffect(()=>{
     const doc=frame.current?.contentDocument;
     if(!doc)return;
@@ -154,6 +178,14 @@ export default function AdminUiEditor(){
       if(block){
         setWorkspace("page");
         setSelected({kind:"block",id:block.getAttribute("data-ogc-editor-block-id")});
+        return;
+      }
+      const textElement=target.closest("[data-ogc-edit-text]");
+      const textId=textElement?.getAttribute("data-ogc-edit-text");
+      const textTarget=editorTextTarget(textId,page);
+      if(textTarget){
+        setWorkspace(textTarget.scope);
+        setSelected({kind:"text",id:textTarget.id});
         return;
       }
       for(let parent=target;parent&&parent.nodeType===1;parent=parent.parentElement){
@@ -214,7 +246,21 @@ export default function AdminUiEditor(){
     if(!doc)return;
     const render=()=>{
       try{
-        if(doc.querySelector(".ogcl-view"))putPreview(doc,draft,page,selected);
+        if(!doc.querySelector(".ogcl-view"))return;
+        putPreview(doc,draft,page,selected);
+        const selector=selected.kind==="block"?
+          '[data-ogc-editor-block-id="'+selected.id+'"]':
+          selected.kind==="text"?editorTextTarget(selected.id,page)?.selector:
+          EDITOR_AREAS.find(area=>area.id===selected.id)?.selector;
+        const element=selector?doc.querySelector(selector):null;
+        const values=element?computedEditorSnapshot(doc.defaultView.getComputedStyle(element),
+          EDITOR_PROPERTIES):{};
+        const text=selected.kind==="text"?
+          element?.getAttribute("data-ogc-editor-original-text")||"":"";
+        setInspected(previous=>{
+          const next={values,text};
+          return JSON.stringify(previous)===JSON.stringify(next)?previous:next;
+        });
       }catch{ /* Preview may be remounting while route loads. */ }
     };
     render();
