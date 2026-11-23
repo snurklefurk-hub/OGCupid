@@ -17,3 +17,38 @@
 .ogcl-footer nav{display:flex;flex-wrap:wrap;gap:5px 14px;margin-top:8px}
 .ogcl-footer a{color:#2963a4}
 @media(max-width:700px){.ogcl-footer{padding:12px}}
+
+.ogcl-editorial .hero.ogcl-view-head {margin:-16px -18px 16px}
+.ogcl-trends {background:var(--okc-paper)}
+.ogcl-trends > .ogcl-content-panel {padding:16px 18px 28px}
+.ogcl-trends .ogcl-view-head > a {display:inline-block;margin-bottom:8px;font-size:12px}
+.ogcl-trends .index-intro p {margin:0 0 14px}
+.ogcl-trends .cards {border:1px solid var(--okc-line);background:white}
+.ogcl-trends .card {padding:14px 16px}
+.ogcl-trends .card + .card {border-top:1px solid var(--okc-rowline)}
+.ogcl-trends .card h2 {margin:4px 0;color:var(--okc-heading)}
+.ogcl-trends .card p {margin:4px 0;max-width:80ch}
+.ogcl-trends .card .tag {color:var(--okc-ink-soft);font-size:11px}
+.ogcl-trends .card .read {display:inline-block;margin-top:4px}
+.ogcl-trends .prose {max-width:88ch;margin:0 auto;font:13px/1.65 Verdana,sans-serif;color:var(--okc-ink)}
+.ogcl-trends .prose > h2 {margin:24px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--okc-rowline)}
+.ogcl-trends .prose > p {margin:0 0 12px}
+.ogcl-trends .prose > :is(figure,.editors-note,.founder-announcement) {margin:16px 0;padding:14px;background:white;border:1px solid var(--okc-line)}
+.ogcl-trends :is(.fig-caption,.pricing-note,.plot-axis) {color:var(--okc-ink);font-size:11px}
+.ogcl-trends .fig-caption {margin-top:12px}
+.ogcl-trends .bar-heading,.ogcl-trends .plot-axis,.ogcl-trends .article-nav {display:flex;justify-content:space-between;gap:12px}
+.ogcl-trends .article-nav {margin-top:18px;padding-top:12px;border-top:1px solid var(--okc-line)}
+.ogcl-trends .bar-item {margin:8px 0}
+.ogcl-trends .bar-lane {height:12px;background:var(--okc-pale-blue)}
+.ogcl-trends .bar-fill {display:block;height:100%;background:var(--okc-blue)}
+.ogcl-trends .bar-fill.coral {background:var(--okc-pink)}
+.ogcl-trends .waffle-wrap {display:flex;align-items:center;gap:18px}
+.ogcl-trends .waffle {display:grid;grid-template-columns:repeat(10,10px);gap:2px}
+.ogcl-trends .waffle span {height:10px;background:var(--okc-rowline)}
+.ogcl-trends .waffle .reply {background:var(--okc-blue)}
+.ogcl-trends .waffle-key b {margin-right:5px}
+.ogcl-trends .flow-panel svg {display:block;width:100%;height:auto}
+.ogcl-trends .pricing-scroll {overflow-x:auto}
+.ogcl-trends .competitor-pricing {width:100%;border-collapse:collapse;background:white}
+.ogcl-trends .competitor-pricing :is(td,th) {padding:7px 9px;border:1px solid var(--okc-line);text-align:left;vertical-align:top}
+.ogcl-trends .competitor-pricing thead {background:var(--okc-pale-blue)}
