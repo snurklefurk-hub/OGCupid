@@ -1,7 +1,7 @@
 import React,{useCallback,useEffect,useMemo,useRef,useState} from "react";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {
-  blankEditorDraft,sanitizeEditorDraft,editorPreviewCss,
+  blankEditorDraft,sanitizeEditorDraft,editorPreviewCss,navButtonOverrides,
   moveEditorBlock,editorBlockHtmlLabel,EDITOR_PAGES,EDITOR_AREAS,
   EDITOR_SHELL_AREAS,EDITOR_PAGE_AREAS,EDITOR_MAIN_NAV_AREAS,EDITOR_SCHEMA,editorAreaScope,
   EDITOR_TOKENS,EDITOR_BLOCK_TYPES,EDITOR_PROPERTIES,editorPropertyAvailable,editorStyleEntries,editorStyleValue,styleShorthand,
@@ -42,6 +42,7 @@ const EDITOR_OVERLAY_STYLE=[
   ".ogcl-editor-preview-block:hover{outline:2px dashed #f83265!important;outline-offset:2px;cursor:crosshair;}",
   ".ogcl-editor-preview-selected,[data-ogc-editor-selected]{outline:3px solid #f83265!important;outline-offset:2px;}",
   "[data-ogc-edit-text]:hover{outline:2px dashed #f83265!important;outline-offset:2px;cursor:text;}",
+  ".ogcl-nav-link[data-ogc-editor-selected]{outline-width:1px!important;outline-offset:-4px;}",
   ".ogcl-editor-preview-region{display:grid;gap:10px;padding:12px 18px;border-bottom:1px dashed #b7c9da;}",
   ".ogcl-editor-preview-notice{background:#e7eef5;border:1px solid #c2d4e6;padding:12px;}",
   ".ogcl-editor-preview-button{justify-self:start;background:#2963a4;color:white;border:0;padding:8px 16px;}",
@@ -347,7 +348,9 @@ export default function AdminUiEditor({onUnsavedChange}){
             .getPropertyValue(token.id).trim()||token.default
         ]));
         setInspected(previous=>{
-          const next={values,text,tokens};
+          const nav=doc.querySelector(".ogcl-main-nav");
+          const navGap=nav?parseFloat(doc.defaultView.getComputedStyle(nav).rowGap):null;
+          const next={values,text,tokens,navGap};
           return JSON.stringify(previous)===JSON.stringify(next)?previous:next;
         });
         const available=EDITOR_TEXT_TARGETS.filter(t=>editorTextTarget(t.id,page)&&
@@ -407,7 +410,16 @@ export default function AdminUiEditor({onUnsavedChange}){
   const areaScope=chosenArea&&editorAreaScope(chosenArea.id)==="shell"?"*":page;
   const navSelected=EDITOR_MAIN_NAV_AREAS.some(area=>area.id===chosenArea?.id);
   const navStyles=draft.areas["*"]||{};
-  const activeStyle=chosenBlock?.style||draft.areas[areaScope]?.[selected.id]||{};
+  const activeStyle=navSelected?{...navStyles.mainNavLinks,...navButtonOverrides(navStyles[selected.id],navStyles.mainNavLinks)}:
+    chosenBlock?.style||draft.areas[areaScope]?.[selected.id]||{};
+  const editNavGap=navSelected||chosenArea?.id==="navSpacing";
+  const updateGap=value=>commit(next=>{
+    const shell=next.areas["*"]??={};
+    const spacing=shell.navSpacing??={};
+    if(value===null)delete spacing.rowGap;
+    else spacing.rowGap=value;
+    return next;
+  });
   const updateArea=(property,value)=>commit(next=>{
     if(navSelected){setNavStyle(next,property,value);return next;}
     const target=selected.kind==="block"&&workspace==="page"?
@@ -611,9 +623,11 @@ export default function AdminUiEditor({onUnsavedChange}){
   }
 
   const search=propertyFilter.trim().toLowerCase();
+  const gapControl=editNavGap&&"space between buttons spacing row gap (px)".includes(search);
   const styleGroups=["Colors","Size","Layout","Spacing","Type","Borders"].map(group=>[
     group,EDITOR_PROPERTIES.filter(property=>property.group===group&&
       editorPropertyAvailable(property.key,chosenArea?.id)&&
+      !(editNavGap&&property.key==="rowGap")&&!(chosenArea?.id==="navSpacing"&&property.key==="columnGap")&&
       (group+" "+property.label+" "+property.key).toLowerCase().includes(search))
   ]).filter(([,properties])=>properties.length);
   const choosePage=next=>{
@@ -769,7 +783,15 @@ export default function AdminUiEditor({onUnsavedChange}){
             <input type="search" value={propertyFilter} placeholder="Width, gap, radius…"
               onChange={event=>setPropertyFilter(event.target.value)}/>
           </label>}
-          {(chosenBlock||chosenArea)&&!styleGroups.length&&<p>No matching controls.</p>}
+          {gapControl&&<div className="ogcl-studio-style-field">
+            <div className="ogcl-studio-control"><label htmlFor="ogc-style-navGap">Space between buttons (px)</label>
+              <NumericStyleInput property={{key:"navGap",label:"Space between buttons (px)",min:0,max:512}}
+                value={navStyles.navSpacing?.rowGap??inspected.navGap??""} change={updateGap}/>
+            </div>
+            <button type="button" title="Reset space between buttons" disabled={navStyles.navSpacing?.rowGap===undefined}
+              onClick={()=>updateGap(null)}>Reset</button>
+          </div>}
+          {(chosenBlock||chosenArea)&&!styleGroups.length&&!gapControl&&<p>No matching controls.</p>}
           {(chosenBlock||chosenArea)&&styleGroups.map(([label,properties])=><details key={label} open={Boolean(search)||label==="Colors"||chosenArea?.id==="navSpacing"}>
             <summary>{label}</summary>
             {properties.map(styleControl)}

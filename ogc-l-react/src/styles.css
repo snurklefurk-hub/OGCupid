@@ -54,7 +54,7 @@ button, input, textarea, select {font:inherit;}
   color:var(--okc-sky);
   text-decoration:none;
 }
-.ogcl-nav-link.active {background:var(--okc-navy-deep);color:var(--okc-white);}
+.ogcl-nav-link.active {background:color-mix(in srgb,var(--okc-navy-deep) 65%,var(--okc-navy));color:var(--okc-white);}
 a.ogcl-nav-link:hover {background:var(--okc-navy-line);color:var(--okc-white);}
 .ogcl-nav-icon {flex:0 0 20px;text-align:center;color:var(--okc-sky-mid);font:18px/1 Arial,sans-serif;}
 .ogcl-left-note a {color:var(--okc-sky);}
