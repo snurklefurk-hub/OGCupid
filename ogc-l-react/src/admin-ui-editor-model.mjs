@@ -61,11 +61,11 @@ export const EDITOR_VIEWPORTS=Object.freeze([
 const shellText=[
   ...["matches","messages","visitors","quickmatch","community"]
     .map(name=>({id:"shell.nav."+name,label:"Main navigation · "+name,scope:"shell",max:90})),
-  ...["persona","trends","contact"]
+  ...["persona","ogtrends","contact"]
     .map(name=>({id:"shell.public."+name,label:"Left links · "+name,scope:"shell",max:90})),
   ...["profile","settings","account","admin","signout","signin","join"]
     .map(name=>({id:"shell.account."+name,label:"Account bar · "+name,scope:"shell",max:90})),
-  ...["trends","persona","contact","privacy","terms"]
+  ...["ogtrends","persona","contact","privacy","terms"]
     .map(name=>({id:"shell.footer."+name,label:"Footer · "+name,scope:"shell",max:90})),
   {id:"shell.footer.disclaimer",label:"Footer disclaimer",scope:"shell",max:500},
   {id:"shell.suggestions",label:"Suggested members heading",scope:"shell",max:90},
