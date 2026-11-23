@@ -88,11 +88,6 @@ function LeftRail() {
           </span>;
         })}
       </nav>
-      <nav className="ogcl-public-nav" aria-label="More on OG Cupid">
-        <NavLink data-ogc-edit-text="shell.public.persona" to="/persona">Dating Persona Test</NavLink>
-        <NavLink data-ogc-edit-text="shell.public.ogtrends" to="/ogtrends">OgTrends</NavLink>
-        <NavLink data-ogc-edit-text="shell.public.contact" to="/contact">Contact</NavLink>
-      </nav>
       {isMember && !discoveryUnavailable && recommendations.length>0 && <section className="ogcl-left-note" aria-label="Suggested members">
         <h2 data-ogc-edit-text="shell.suggestions">You might like</h2>
         <div className="ogcl-suggested-thumbnails">

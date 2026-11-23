@@ -12,16 +12,8 @@
 .ogcl-persona-gate .ogcl-content-panel a {color:#2963a4}
 @media(max-width:620px){.ogcl-editorial-bar{padding:9px;gap:8px}.ogcl-editorial-bar span{order:3;flex:1 0 100%;text-align:left}}
 
-/* The five primary member tabs remain unchanged; these are public sections. */
-.ogcl-public-nav{display:flex;flex-direction:column;border-top:1px solid #244a73;
-  border-bottom:1px solid #244a73;padding:8px 0;margin:6px 0 13px}
-.ogcl-public-nav a{color:#d5e1ed;font:12px/1.5 Verdana,sans-serif;
-  text-decoration:none;padding:6px 15px;border-left:3px solid transparent}
-.ogcl-public-nav a:hover,.ogcl-public-nav a.active{
-  border-left-color:#63a62f;color:#e8f2e0;background:#244a73}
 .ogcl-footer{font:11px/1.5 Verdana,sans-serif;color:#777;
   padding:16px 20px;margin:28px 0 0;border-top:1px solid #ddd;background:#f6f6f6}
 .ogcl-footer nav{display:flex;flex-wrap:wrap;gap:5px 14px;margin-top:8px}
 .ogcl-footer a{color:#2963a4}
-@media(max-width:700px){.ogcl-public-nav{flex-direction:row;flex-wrap:wrap;gap:5px}
-  .ogcl-public-nav a{padding:5px 8px}.ogcl-footer{padding:12px}}
+@media(max-width:700px){.ogcl-footer{padding:12px}}

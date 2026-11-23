@@ -10,11 +10,10 @@ function reactRoute(destination){
   if(destination==="/account/")return "/account";
   return destination?.replace(/\/$/,"") || null;
 }
-function Tile({title,body,destination,refinement=false,editorKey}) {
+function Tile({title,body,destination,editorKey}) {
   const inner=<><strong data-ogc-edit-text={editorKey?editorKey+".title":undefined}>{title}</strong><span data-ogc-edit-text={editorKey?editorKey+".body":undefined}>{body}</span></>;
-  const cls=refinement?"ogcl-editorial-card ogcl-editorial-refinement":"ogcl-editorial-card";
-  if(!destination)return <div className={cls+" ogcl-inert"}>{inner}</div>;
-  return <NavLink className={cls} to={reactRoute(destination)}>{inner}</NavLink>;
+  if(!destination)return <div className="ogcl-editorial-card ogcl-inert">{inner}</div>;
+  return <NavLink className="ogcl-editorial-card" to={reactRoute(destination)}>{inner}</NavLink>;
 }
 
 export function SidebarPromos({side}) {
@@ -47,6 +46,6 @@ export function ProfileRefinement() {
   const tile=PAGE_REFINEMENT;
   const url=refinementDestination(tile.destination,profile?.slug);
   return <section className="ogcl-refinement-slot" aria-label="Improve your profile">
-    <Tile title={tile.title} body={tile.body} destination={url} editorKey="shell.refinement" refinement/>
+    <Tile title={tile.title} body={tile.body} destination={url} editorKey="shell.refinement"/>
   </section>;
 }
