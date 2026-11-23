@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from "react";
-import {NavLink,useNavigate,useParams,useSearchParams} from "react-router-dom";
+import {Link,NavLink,useNavigate,useParams,useSearchParams} from "react-router-dom";
 import "./profile-actions.css";
 import {PUBLIC_DETAILS,PUBLIC_ESSAYS} from "./member-public-profile.mjs";
 import {essayDefinition} from "./member-essays.mjs";
@@ -119,10 +119,11 @@ export default function PublicMemberProfile({Photo}) {
             <h1>{profile.displayName}</h1>
             {profile.isOwner&&<EditPencil to="/settings" label="profile details"/>}
           </div>
-          <p className="ogcl-classic-profile-meta">
-            {[profile.age?profile.age+" years old":null,profile.cityRegion,
-              profile.details.gender,profile.details.orientation].filter(Boolean).join(" · ")}
-          </p>
+          <div className="ogcl-classic-profile-meta">
+            <p>{[profile.age,profile.details.gender,profile.details.orientation,profile.details.status]
+              .filter(Boolean).join(" / ")}</p>
+            {profile.cityRegion&&<p>{profile.cityRegion}</p>}
+          </div>
           {profile.personaCode&&<p className="ogcl-classic-persona">Dating Persona: <strong>{profile.personaCode}</strong></p>}
         </div>
         {!profile.isOwner&&<aside className="ogcl-profile-action-panel" aria-label="Profile actions">
@@ -150,10 +151,10 @@ export default function PublicMemberProfile({Photo}) {
         </aside>}
       </header>
       <nav className="ogcl-profile-tabs" aria-label="Member profile sections">
-        {TABS.map(t=><NavLink key={t.id}
+        {TABS.map(t=><Link key={t.id}
           to={"/profiles/"+profile.slug+(t.id==="about"?"":"?tab="+t.id)}
           aria-current={tab===t.id?"page":undefined}
-          className={tab===t.id?"active":""}>{t.label}</NavLink>)}
+          className={tab===t.id?"active":""}>{t.label}</Link>)}
       </nav>
       <div className="ogcl-profile-tab-content">
         {tab==="about"&&<div className="ogcl-public-columns">
@@ -175,16 +176,16 @@ export default function PublicMemberProfile({Photo}) {
                   profile.isOwner?<p className="ogcl-essay-empty">You haven't written this one yet.</p>:null}
               {saved===key&&<small className="ogcl-save-confirmation" role="status">Saved.</small>}
             </section>)}
-          </div>
-          <aside className="ogcl-public-details">
             <section className="ogcl-looking-for">
               <h2>I'm looking for {profile.isOwner&&<EditPencil to="/settings#looking-for" label="looking-for preferences"/>}</h2>
               <ul>
                 {formatLookingFor(profile.lookingFor).map((line,index)=><li key={index}>{line}</li>)}
               </ul>
             </section>
+          </div>
+          <aside className="ogcl-public-details">
             <section className="ogcl-my-details">
-              <h2>My details {profile.isOwner&&<EditPencil to="/settings" label="my details"/>}</h2>
+              <h2>My Details {profile.isOwner&&<EditPencil to="/settings" label="my details"/>}</h2>
               <dl>{PUBLIC_DETAILS.filter(d=>d.key!=="relationshipGoal"&&profile.details[d.key]).map(d=>
                 <React.Fragment key={d.key}><dt>{d.label}</dt><dd>{profile.details[d.key]}</dd></React.Fragment>)}</dl>
             </section>

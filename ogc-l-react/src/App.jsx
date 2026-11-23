@@ -1,12 +1,12 @@
 import React, {lazy, Suspense, useEffect, useMemo, useState} from "react";
-import {Navigate, NavLink, Outlet, Route, Routes} from "react-router-dom";
+import {Navigate, NavLink, Outlet, Route, Routes, useMatch} from "react-router-dom";
 import {defaultRoute, primaryNavigation} from "./navigation.mjs";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {SidebarPromos, ProfileFloater, ProfileRefinement} from "./ClassicSidebar.jsx";
 import {filterAndSortMembers, pageMembers} from "./member-directory.mjs";
 import {recommendedPhotoMembers} from "./classic-editorial.mjs";
 
-// Route components load only when visited. No visual redesign or new animation.
+// Route components load only when visited.
 const loadEditorial=()=>import("./EditorialPages.jsx");
 const EmbeddedEditorial=lazy(()=>loadEditorial().then(m=>({default:m.EmbeddedEditorial})));
 const PersonaRoute=lazy(()=>loadEditorial().then(m=>({default:m.PersonaRoute})));
@@ -77,41 +77,46 @@ function LeftRail() {
         <img src="/brand/ogcupid-logo-white.png" width="172" height="42" alt="OG Cupid" />
       </NavLink>
       <nav className="ogcl-primary" aria-label="OG Cupid main">
-        {primaryNavigation.map(({path,label}) =>
-          (isMember || (kind==="onboarding" && path==="/community")) ? <NavLink key={path} to={path}
+        {primaryNavigation.map(({path,label,icon}) => {
+          const content = <><span className="ogcl-nav-icon" aria-hidden="true">{icon}</span><span>{label}</span></>;
+          return (isMember || (kind==="onboarding" && path==="/community")) ? <NavLink key={path} to={path}
             className={({isActive})=>isActive?"ogcl-nav-link active":"ogcl-nav-link"}>
-            <span>{label}</span>
+            {content}
           </NavLink> : <span key={path} className="ogcl-nav-link ogcl-locked" aria-disabled="true">
-            <span>{label}</span>
-          </span>
-        )}
+            {content}
+          </span>;
+        })}
       </nav>
       <nav className="ogcl-public-nav" aria-label="More on OG Cupid">
         <NavLink to="/persona">Dating Persona Test</NavLink>
         <NavLink to="/ogtrends">OgTrends</NavLink>
         <NavLink to="/contact">Contact</NavLink>
       </nav>
-      <section className="ogcl-left-note" aria-label="Suggested members">
+      {isMember && !discoveryUnavailable && recommendations.length>0 && <section className="ogcl-left-note" aria-label="Suggested members">
         <h2>You might like</h2>
-        {isMember && !discoveryUnavailable &&
-          <div className="ogcl-suggested-thumbnails">
-            {recommendations.map(member=><a key={member.userId} href={profileHref(member.slug)}
-              aria-label={"View member profile: "+member.displayName}>
-              <MemberPhoto member={member}/>
-            </a>)}
-          </div>}
-      </section>
+        <div className="ogcl-suggested-thumbnails">
+          {recommendations.map(member=><a key={member.userId} href={profileHref(member.slug)}
+            aria-label={"View member profile: "+member.displayName}>
+            <MemberPhoto member={member}/>
+          </a>)}
+        </div>
+      </section>}
       <SidebarPromos side="left"/>
     </aside>
   );
 }
 
-function RightRail() {
+function RightRail({inMatches=false}) {
   const {kind,user,onboarding} = useMemberSession();
   const keys=["identity","locality","profile","photo","quiz","explored"];
   const percent=Math.round(keys.filter(key=>onboarding?.[key]===true).length/keys.length*100);
   return (
-    <aside className="ogcl-right" aria-label="Profile and site features">
+    <aside className={"ogcl-right"+(inMatches?" ogcl-right-in-matches":"")} aria-label="Profile and site features">
+      {inMatches ? <section className="ogcl-match-questions">
+        <h2>Improve your matches</h2>
+        <p>How would you answer the next match question?</p>
+        <NavLink className="ogcl-button" to="/questions">Answer questions</NavLink>
+      </section> : <ProfileFloater Photo={MemberPhoto}/>}
       {kind==="onboarding" && <section className="ogcl-side-card ogcl-onboarding-widget">
         {user?.id && onboarding?.photo && <MemberPhoto member={{userId:user.id}}/>}
         <h2>Complete your profile</h2>
@@ -152,6 +157,10 @@ function TopMemberNav() {
       <AdminLink />
       <button type="button" onClick={session.signOut}>Sign out</button>
     </>}
+    {session.kind==="guest" && <>
+      <NavLink to="/signin">Sign in</NavLink>
+      <NavLink to="/join">Join OG Cupid</NavLink>
+    </>}
   </nav>;
 }
 
@@ -160,13 +169,19 @@ function RouteLoading(){
 }
 
 function AppShell() {
+  const {kind} = useMemberSession();
+  const matches = useMatch("/matches");
+  const useMatchesLayout = kind==="member" && Boolean(matches);
   return (
-    <div className="ogcl-app">
-      <a className="ogcl-skip" href="#ogcl-content">Skip to content</a>
+    <div className={"ogcl-app"+(useMatchesLayout?" ogcl-app-matches":"")}>
+      <a className="ogcl-skip" href="#ogcl-content" onClick={event=>{
+        event.preventDefault();
+        document.getElementById("ogcl-content")?.focus();
+      }}>Skip to content</a>
       <LeftRail />
       <main id="ogcl-content" className="ogcl-center" tabIndex={-1}>
-        <div className="ogcl-banner"><span className="ogcl-banner-accent" aria-hidden="true" /><TopMemberNav/></div>
-        <Suspense fallback={<RouteLoading/>}><Outlet /></Suspense>
+        <div className="ogcl-banner"><TopMemberNav/></div>
+        <div className="ogcl-sheet"><Suspense fallback={<RouteLoading/>}><Outlet /></Suspense></div>
         <footer className="ogcl-footer" aria-label="Site information">
           <span>OG Cupid · Independent, not affiliated with OkCupid or Match Group.</span>
           <nav aria-label="Site links">
@@ -178,8 +193,7 @@ function AppShell() {
           </nav>
         </footer>
       </main>
-      <RightRail />
-      <ProfileFloater Photo={MemberPhoto}/>
+      {!useMatchesLayout && <RightRail />}
     </div>
   );
 }
@@ -331,7 +345,7 @@ export default function App() {
         <Route path="terms" element={<EmbeddedEditorial pageKey="terms"/>} />
         <Route path="contact" element={<ContactPage/>} />
         <Route path="photos" element={<MemberGate><PhotoManager/></MemberGate>} />
-        <Route path="matches" element={<MemberGate><MatchesView Photo={MemberPhoto}/></MemberGate>} />
+        <Route path="matches" element={<MemberGate><MatchesView Photo={MemberPhoto} sidebar={<RightRail inMatches/>}/></MemberGate>} />
         <Route path="profile" element={<MemberGate><ProfileEditor /></MemberGate>} />
         <Route path="settings" element={<MemberGate><ProfileSettings /></MemberGate>} />
         <Route path="profiles/:slug" element={<MemberGate><PublicMemberProfile Photo={MemberPhoto} /></MemberGate>} />

@@ -12,9 +12,9 @@ const app=read("./App.jsx"),floater=read("./ClassicSidebar.jsx"),css=read("./sty
 const quick=read("./QuickmatchView.jsx"),hearts=read("./QuickmatchHearts.jsx");
 const member=read("./PublicMemberProfile.jsx");
 
-test("2014 owner-approved desktop five-item navigation is compact and exact",()=>{
+test("desktop navigation keeps the five existing destinations with compact labels",()=>{
   assert.deepEqual(primaryNavigation.map(x=>x.label),
-    ["MATCHES","MESSAGES","VISITORS","QUICKMATCH","COMMUNITY"]);
+    ["Matches","Messages","Visitors","Quickmatch","Community"]);
   assert.match(css,/\.ogcl-nav-link \{/);
   assert.match(css,/@media\(min-width:801px\)/);
   assert.match(app,/<TopMemberNav\/>/);
@@ -82,5 +82,5 @@ test("member profile has owner-only green pencils and in-place four-tab layout",
   assert.match(member,/profile.isOwner&&<button/);
   assert.match(member,/await saveOwnEssay\(key,draft\)/);
   assert.match(member,/EditPencil to="\/settings"/);
-  assert.match(css,/grid-template-columns:minmax\(0,3fr\) minmax\(230px,2fr\)/);
+  assert.match(css,/grid-template-columns:minmax\(0,3fr\) minmax\(0,2fr\)/);
 });

@@ -38,12 +38,13 @@ test("sign-out clears private state before backend confirmation",()=>{
 
 test("three-column shell uses native document scrolling rather than per-column scrollbars",()=>{
   assert.match(css, /grid-template-columns:16% minmax\(0,1fr\) 16%/);
-  assert.match(css, /height:auto;width:100%;min-height:100vh/);
+  assert.match(css, /width:min\(1150px,100%\);\s*min-height:100vh;\s*margin:0 auto/);
   assert.match(css, /\.ogcl-left, \.ogcl-right \{height:auto;overflow:visible/);
   assert.match(css, /\.ogcl-center \{height:auto;[^}]*overflow:visible/);
   assert.doesNotMatch(css, /height:100dvh|\.ogcl-center \{[^}]*overflow:auto/);
-  assert.match(css, /position:absolute;z-index:25;right:10px;top:6px/);
-  assert.match(app, /<LeftRail\s*\/>\s*<main[^>]*>[^]*<Suspense[^]*?<Outlet\s*\/><\/Suspense>[^]*<RightRail\s*\/>/);
+  assert.match(css, /\.ogcl-app-matches \.ogcl-center \{grid-column:2\/-1/);
+  assert.match(app, /<LeftRail\s*\/>\s*<main[^>]*>[^]*<Suspense[^]*?<Outlet\s*\/><\/Suspense>[^]*!useMatchesLayout && <RightRail\s*\/>/);
+  assert.match(app, /sidebar=\{<RightRail inMatches\/>\}/);
 });
 
 test("React gateway does not persist bearer tokens or account data in browser storage",()=>{
