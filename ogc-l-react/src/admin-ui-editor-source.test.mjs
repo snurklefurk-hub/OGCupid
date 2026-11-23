@@ -37,18 +37,27 @@ test("page header minimum height round trips through scoped CSS",()=>{
   assert.throws(()=>parseEditorCss(".ogcl-left { min-height: 90px; }",draft,"*"),/unavailable/);
 });
 
-test("the five Main Nav links have independent CSS rules in the site shell",()=>{
+test("main navigation style edits affect all five buttons while preserving labels and unrelated overrides",()=>{
   const draft=blankEditorDraft();
-  const scope="*";
-  const css=formatEditorCss(draft,scope);
-  const routes=["matches","messages","visitors","quickmatch","community"];
-  const rule=route=>'.ogcl-left .ogcl-nav-link[data-ogc-nav="'+route+'"]';
-  for(const route of routes)assert.ok(css.includes(rule(route)+" {"));
-  assert.doesNotMatch(css,/\.ogcl-left \.ogcl-nav-link \{/);
-  const updated=parseEditorCss(rule("messages")+" { color: #123456; }",draft,scope);
-  assert.deepEqual(updated.areas[scope],{"shell.nav.messages":{color:"#123456"}});
-  assert.match(editorPreviewCss(updated,"/matches"),/\[data-ogc-nav="messages"\]\{color:#123456;/);
-  assert.doesNotMatch(editorPreviewCss(updated,"/matches"),/\[data-ogc-nav="matches"\]/);
+  const selector=".ogcl-left .ogcl-nav-link";
+  const legacy='.ogcl-left .ogcl-nav-link[data-ogc-nav="messages"]';
+  draft.areas["*"]={"shell.nav.messages":{borderRadius:3,color:"#123456"},"shell.nav.visitors":{borderTopLeftRadius:2}};
+  draft.texts["*"]={"shell.nav.messages":"Inbox"};
+  const css=formatEditorCss(draft,"*");
+  assert.deepEqual(parseEditorCss(css,draft,"*"),draft);
+  const corner=parseEditorCss(css.replace(selector+" {",selector+" { border-top-left-radius: 8px;"),draft,"*");
+  assert.equal(corner.areas["*"]["shell.nav.messages"].borderTopLeftRadius,8);
+  assert.equal(corner.areas["*"].mainNavLinks.borderTopLeftRadius,8);
+  const updated=parseEditorCss(css.replace(selector+" {",selector+" {\n  border-radius: 9px;"),draft,"*");
+  assert.deepEqual(updated.areas["*"],{mainNavLinks:{borderRadius:9},"shell.nav.messages":{color:"#123456"}});
+  assert.deepEqual(updated.texts,draft.texts);
+  assert.ok(editorPreviewCss(updated,"/matches").includes(selector+"{border-radius:9px;}"));
+  const next=parseEditorCss(formatEditorCss(updated,"*").replace("#123456","#654321"),updated,"*");
+  assert.deepEqual(next.areas["*"],{mainNavLinks:{borderRadius:9,color:"#654321"}});
+  const raw=structuredClone(next);
+  delete raw.areas["*"].mainNavLinks.borderRadius;
+  assert.deepEqual(parseEditorJson(JSON.stringify(raw),next),raw);
+  assert.throws(()=>parseEditorCss(selector+" { color: #aaaaaa; }\n"+legacy+" { color: #bbbbbb; }",draft,"*"),/Choose one color/);
 });
 
 test("CSS edits update the published model and can clear a scope",()=>{
