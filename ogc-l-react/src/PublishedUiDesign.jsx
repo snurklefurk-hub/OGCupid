@@ -1,3 +1,4 @@
+import {applySitePageCopy} from "./site-page-copy.mjs";
 import React,{useEffect,useMemo,useState} from "react";
 import {useLocation} from "react-router-dom";
 import "./published-ui-design.css";
@@ -37,6 +38,7 @@ function makeBlock(block){
 function updatePublishedDom(design,page){
   const root=window.document.querySelector(".ogcl-app");
   if(!root)return;
+  applySitePageCopy(root,design,page.startsWith("/messages/")?"/messages":page.replace(/\/$/,""));
   for(const target of EDITOR_TEXT_TARGETS){
     const textPage=target.route==="/messages"&&page.startsWith("/messages/")?"/messages":page;
     if(!editorTextTarget(target.id,textPage))continue;

@@ -51,7 +51,7 @@ test("public profile response explicitly excludes email, private answers and sto
   assert.match(photos,/FOR SELECT TO ogcupid_member_api/);
 });
 test("canonical React profile protects owner edits and delegates guest routing to member gate", () => {
-  assert.match(page,/location\.replace\("\/#\/profiles\/" \+/);
+  assert.match(page,/location\.replace\("\/profiles\/" \+/);
   assert.match(app,/<MemberGate><PublicMemberProfile Photo=\{MemberPhoto\}/);
   assert.match(view,/getPublicProfile\(slug\)/);
   assert.match(view,/!profile\?\.isOwner/);

@@ -1,3 +1,4 @@
+import {pageCopyPlugin} from "./page-copy-plugin.mjs";
 import { defineConfig } from "vite";
 import { copyFileSync, cpSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { SITEMAP_PATHS } from "./src/sitemap-pages.mjs";
@@ -17,7 +18,7 @@ if (!/^(\/|\/[a-z0-9-]+\/)$/i.test(base)) {
 
 export default defineConfig({
   base,
-  plugins: [{
+  plugins: [pageCopyPlugin(),{
     name: "ogcl-brand-asset",
     apply: "build",
     closeBundle() {
