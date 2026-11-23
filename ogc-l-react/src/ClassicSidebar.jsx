@@ -10,8 +10,8 @@ function reactRoute(destination){
   if(destination==="/account/")return "/account";
   return destination?.replace(/\/$/,"") || null;
 }
-function Tile({title,body,destination,refinement=false}) {
-  const inner=<><strong>{title}</strong><span>{body}</span></>;
+function Tile({title,body,destination,refinement=false,editorKey}) {
+  const inner=<><strong data-ogc-edit-text={editorKey?editorKey+".title":undefined}>{title}</strong><span data-ogc-edit-text={editorKey?editorKey+".body":undefined}>{body}</span></>;
   const cls=refinement?"ogcl-editorial-card ogcl-editorial-refinement":"ogcl-editorial-card";
   if(!destination)return <div className={cls+" ogcl-inert"}>{inner}</div>;
   return <NavLink className={cls} to={reactRoute(destination)}>{inner}</NavLink>;
@@ -22,10 +22,10 @@ export function SidebarPromos({side}) {
   const index=side==="right"?3:0;
   const tiles=PAGE_PROMOTIONS.slice(index,index+3);
   return <div className="ogcl-editorial-stack" aria-label={side==="right"?"More OG Cupid":"Explore OG Cupid"}>
-    {tiles.map(tile=>{
+    {tiles.map((tile,n)=>{
       const url=kind==="member"?promotionDestination(tile.destination,profile?.slug):null;
       return <Tile key={tile.title} title={tile.title} body={tile.body}
-        destination={url}/>;
+        editorKey={"shell.promo."+side+"."+n} destination={url}/>;
     })}
   </div>;
 }
@@ -47,6 +47,6 @@ export function ProfileRefinement() {
   const tile=PAGE_REFINEMENT;
   const url=refinementDestination(tile.destination,profile?.slug);
   return <section className="ogcl-refinement-slot" aria-label="Improve your profile">
-    <Tile title={tile.title} body={tile.body} destination={url} refinement/>
+    <Tile title={tile.title} body={tile.body} destination={url} editorKey="shell.refinement" refinement/>
   </section>;
 }
