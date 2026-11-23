@@ -71,3 +71,7 @@
 .ogcl-ui-editor-property select{min-width:0;max-width:100%;flex:1}
 .ogcl-ui-editor-property input[type=number]{width:82px}
 .ogcl-ui-editor-property button{margin-left:auto}
+
+.ogcl-ui-editor-publish{background:#63a62f!important;border-color:#3b7620!important;color:#fff!important;font-weight:700}
+.ogcl-ui-editor-publish:disabled{opacity:.5}
+.ogcl-ui-editor-footer select{max-width:240px}
