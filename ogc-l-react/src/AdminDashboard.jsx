@@ -158,11 +158,11 @@ export default function AdminDashboard(){
     <button type="button" className="ogcl-button" onClick={()=>void reload()}>Retry</button>
     </div></section>;
   return <section className="ogcl-view ogcl-admin" aria-labelledby="ogcl-admin-heading">
+    <div className="ogcl-period-stage">
     <header className="ogcl-view-head">
       <h1 id="ogcl-admin-heading">OG Cupid Administration</h1>
       <p>Member operations, abuse reports, and moderation audit · authorized access only</p>
     </header>
-    <div className="ogcl-content-panel">
       <div className="ogcl-admin-toolbar">
         <nav aria-label="Administration sections" className="ogcl-period-tabs">
           {["overview","reports","community","members","audit","ui-editor"].map(t=><button key={t} type="button"
@@ -172,6 +172,8 @@ export default function AdminDashboard(){
         <button type="button" className="ogcl-button ogcl-secondary" disabled={busy||tab==="ui-editor"}
           onClick={()=>void reload()}>{busy?"Working…":"Refresh"}</button>
       </div>
+    </div>
+    <div className="ogcl-content-panel">
       {error&&<p role="alert" className="ogcl-error">{error}</p>}
       {notice&&<p role="status" className="ogcl-save-confirmation">{notice}</p>}
 

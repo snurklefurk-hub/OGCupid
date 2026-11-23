@@ -87,11 +87,11 @@ export default function QuickmatchView({Photo}) {
   const paged=pageMembers(visible,page,24);
 
   return <section className="ogcl-view" aria-labelledby="ogcl-quickmatch-heading">
+    <div className="ogcl-period-stage">
     <header className="ogcl-view-head">
       <h1 id="ogcl-quickmatch-heading">Quickmatch</h1>
       <p>Meet somebody interesting. Your choices are saved privately.</p>
     </header>
-    <div className="ogcl-content-panel">
       <nav className="ogcl-quickmatch-tabs ogcl-period-tabs" aria-label="Quickmatch lists">
         {VIEWS.map(([key,label])=><button key={key} type="button"
           aria-current={tab===key?"page":undefined} disabled={busy}
@@ -99,6 +99,8 @@ export default function QuickmatchView({Photo}) {
           {label}{key==="incoming"&&quickState?" ("+quickState.incomingLikes.length+")":""}
         </button>)}
       </nav>
+    </div>
+    <div className="ogcl-content-panel">
       <p className="ogcl-note">Match percentages are based on real saved question answers.
         Friend and Enemy percentages aren't calculated yet.</p>
       {loading&&<p role="status">Loading your saved Quickmatch decisions…</p>}

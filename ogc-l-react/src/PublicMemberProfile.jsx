@@ -112,6 +112,7 @@ export default function PublicMemberProfile({Photo}) {
     {loading&&<p role="status">Loading member profile…</p>}
     {error&&<p className="ogcl-error" role="alert">{error}</p>}
     {profile&&<>
+      <div className="ogcl-period-stage ogcl-profile-period-stage">
       <header className="ogcl-classic-profile-head">
         <div className="ogcl-classic-profile-portrait"><Photo member={{userId:profile.userId}}/></div>
         <div className="ogcl-classic-profile-person">
@@ -156,6 +157,7 @@ export default function PublicMemberProfile({Photo}) {
           aria-current={tab===t.id?"page":undefined}
           className={tab===t.id?"active":""}>{t.label}</Link>)}
       </nav>
+      </div>
       <div className="ogcl-profile-tab-content">
         {tab==="about"&&<div className="ogcl-public-columns">
           <div className="ogcl-about-essays">

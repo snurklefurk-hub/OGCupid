@@ -252,7 +252,8 @@ export default function MatchesView({Photo}){
     }finally{setBusyId(null);}
   }
   return <section className="ogcl-view ogcl-matches-page" aria-labelledby="ogcl-matches-title">
-    <header className="ogcl-view-head ogcl-matches-head">
+    <div className="ogcl-period-stage">
+      <header className="ogcl-view-head ogcl-matches-head">
       <h1 id="ogcl-matches-title">Matches</h1>
       <NavLink to="/questions">Answer match questions</NavLink>
     </header>
@@ -262,6 +263,7 @@ export default function MatchesView({Photo}){
         {label}{id==="quiver"&&connections?" ("+connections.quiver.length+")":""}
       </button>)}
     </nav>
+    </div>
     <div className="ogcl-matches-body">
       {tab==="search"&&<SearchControls filters={filters} update={update}
         toggleChoice={toggleChoice} reset={reset} apply={()=>{setApplied(filters);setPage(1);setSearchRevision(x=>x+1);}}
