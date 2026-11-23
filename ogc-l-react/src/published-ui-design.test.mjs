@@ -33,5 +33,6 @@ test("published blocks do not execute newly invented button actions",()=>{
   assert.match(loader,/el\.disabled=true/);
   assert.match(loader,/el\.setAttribute\("href","#"\+block\.href\)/);
   assert.match(loader,/el\.textContent=block\.text/);
-  assert.match(loader,/EDITOR_PROPERTIES/);
+  assert.match(loader,/editorStyleEntries\(block\.style\)/);
+  assert.match(loader,/document:sanitizeEditorDraft\(data\.document\)/);
 });

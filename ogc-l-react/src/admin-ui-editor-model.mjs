@@ -19,6 +19,15 @@ export const EDITOR_MAIN_NAV_AREAS=Object.freeze(primaryNavigation.map(({path,la
   return {id:"shell.nav."+key,label,selector:'.ogcl-left .ogcl-nav-link[data-ogc-nav="'+key+'"]'};
 }));
 
+export const EDITOR_PROMO_AREAS=Object.freeze(["left","right"].flatMap(side=>
+  [0,1,2].map(index=>({
+    id:"shell.promo."+side+"."+index,label:(side==="left"?"Left":"Right")+" promo card "+(index+1),
+    selector:'.ogcl-'+side+' .ogcl-editorial-card[data-ogc-card="shell.promo.'+side+'.'+index+'"]'
+  }))
+));
+const tabBar=".ogcl-sheet .ogcl-view .ogcl-period-stage nav:is(.ogcl-period-tabs,.ogcl-profile-tabs)";
+const tabButton=tabBar+" > :is(button,a)";
+
 // Shared on ALL routes, irrespective of what is displayed in the center.
 // Include the top account links and legal footer even though they physically
 // sit above/below the center sheet in AppShell.
@@ -32,6 +41,16 @@ export const EDITOR_SHELL_AREAS=Object.freeze([
   {id:"publicNavigation",label:"Secondary navigation",selector:".ogcl-left .ogcl-public-nav"},
   {id:"leftPromos",label:"Left-column features",selector:".ogcl-left .ogcl-left-note"},
   {id:"leftEditorial",label:"Left-column promotion cards",selector:".ogcl-left .ogcl-editorial-stack"},
+  ...EDITOR_PROMO_AREAS,
+  ...[...EDITOR_PROMO_AREAS.map(area=>area.id),"shell.refinement"].flatMap(card=>
+    ["title","body"].map(part=>{
+      const id=card+"."+part;
+      return {id,label:part==="title"?"Card title":"Card copy",
+        selector:'.ogcl-editorial-card [data-ogc-edit-text="'+id+'"]'};
+    })
+  ),
+  {id:"refinementCard",label:"Profile refinement card",selector:'.ogcl-right .ogcl-editorial-card[data-ogc-card="shell.refinement"]'},
+  {id:"navSpacing",label:"Nav button spacing",selector:".ogcl-left .ogcl-main-nav"},
   {id:"rightRail",label:"Right column",selector:".ogcl-right"},
   {id:"profileFloater",label:"Your profile photo",selector:".ogcl-right .ogcl-profile-floater"},
   {id:"rightCard",label:"Right-column cards",selector:".ogcl-right .ogcl-side-card"},
@@ -48,6 +67,9 @@ export const EDITOR_SHELL_AREAS=Object.freeze([
 // A page-level selector must never reach .ogcl-left/.ogcl-right, top nav or
 // legal footer, even if additional classes are reused elsewhere in the app.
 export const EDITOR_PAGE_AREAS=Object.freeze([
+  {id:"tabBar",label:"Tab bar",selector:tabBar},
+  {id:"activeTab",label:"Selected tab",selector:tabButton+':is([aria-current="page"],.active)'},
+  {id:"tabButtons",label:"Tab buttons",selector:tabButton},
   {id:"pageTitle",label:"Page title",selector:".ogcl-sheet .ogcl-view-head h1"},
   {id:"pageHeader",label:"Page header",selector:".ogcl-sheet .ogcl-view-head"},
   {id:"mainContent",label:"Page content",selector:".ogcl-sheet .ogcl-view"},
@@ -119,31 +141,56 @@ export const EDITOR_BLOCK_TYPES=Object.freeze([
   {type:"divider",label:"Separator"},
   {type:"button",label:"Button"}
 ]);
+const sides=["Top","Right","Bottom","Left"];
+const corners=["TopLeft","TopRight","BottomRight","BottomLeft"];
+const cornerLabel=corner=>corner.replace(/(Left|Right)$/,side=>" "+side.toLowerCase());
+const number=(key,label,group,min,max,extra={})=>({key,label,group,kind:"number",min,max,...extra});
+const choice=(key,label,group,options)=>({key,label,group,kind:"select",options});
 export const EDITOR_PROPERTIES=Object.freeze([
-  {key:"backgroundColor",label:"Background",kind:"color"},
-  {key:"color",label:"Text color",kind:"color"},
-  {key:"borderColor",label:"Border color",kind:"color"},
-  {key:"fontSize",label:"Font size (px)",kind:"number",max:42},
-  {key:"fontFamily",label:"Typeface",kind:"select",options:["Verdana","Arial","Georgia","Tahoma"]},
-  {key:"fontWeight",label:"Font weight",kind:"select",options:["400","500","600","700"]},
-  {key:"textAlign",label:"Text alignment",kind:"select",options:["left","center","right"]},
-  {key:"lineHeight",label:"Line height (px)",kind:"number",max:80},
-  {key:"minHeight",label:"Minimum height (px)",kind:"number",max:480},
-  ...["Top","Right","Bottom","Left"].map(side=>({
-    key:"padding"+side,label:"Padding "+side.toLowerCase()+" (px)",kind:"number",max:80
-  })),
-  ...["Top","Right","Bottom","Left"].map(side=>({
-    key:"margin"+side,label:"Margin "+side.toLowerCase()+" (px)",kind:"number",max:80
-  })),
-  {key:"borderRadius",label:"Corner radius · top-left (px)",kind:"number",max:30},
-  {key:"borderWidth",label:"Border width (px)",kind:"number",max:12},
-  {key:"borderStyle",label:"Border style",kind:"select",options:["none","solid","dashed","dotted"]}
+  ...[["backgroundColor","Background"],["color","Text color"],["borderColor","Border color"]]
+    .map(([key,label])=>({key,label,group:"Colors",kind:"color"})),
+  choice("backgroundImage","Background image","Colors",["none"]),
+  ...["width","height","minWidth","minHeight","maxWidth","maxHeight"].map(key=>
+    number(key,({minHeight:"Minimum height",minWidth:"Minimum width",maxHeight:"Maximum height",maxWidth:"Maximum width"})[key]||
+      (key==="width"?"Width":"Height"),"Size",0,8192,{percent:true})),
+  choice("boxSizing","Box sizing","Size",["border-box","content-box"]),
+  choice("display","Display","Layout",["block","inline","inline-block","flex","inline-flex","grid","inline-grid"]),
+  choice("flexDirection","Flex direction","Layout",["row","column","row-reverse","column-reverse"]),
+  choice("flexWrap","Flex wrapping","Layout",["nowrap","wrap","wrap-reverse"]),
+  choice("justifyContent","Justify content","Layout",["start","center","end","space-between","space-around","space-evenly"]),
+  choice("alignItems","Align items","Layout",["start","center","end","stretch","baseline"]),
+  number("rowGap","Row gap (px)","Layout",0,512),
+  number("columnGap","Column gap (px)","Layout",0,512),
+  number("fontSize","Font size (px)","Type",0,256),
+  choice("fontFamily","Typeface","Type",["Verdana","Arial","Georgia","Tahoma","Trebuchet MS","Times New Roman","Courier New","system-ui"]),
+  choice("fontWeight","Font weight","Type",["100","200","300","400","500","600","700","800","900"]),
+  choice("fontStyle","Font style","Type",["normal","italic","oblique"]),
+  choice("textAlign","Text alignment","Type",["left","center","right","justify"]),
+  choice("textTransform","Text case","Type",["none","uppercase","lowercase","capitalize"]),
+  choice("textDecorationLine","Text decoration","Type",["none","underline","line-through","overline"]),
+  number("lineHeight","Line height (px)","Type",0,512),
+  number("letterSpacing","Letter spacing (px)","Type",-16,64),
+  ...sides.map(side=>number("padding"+side,"Padding "+side.toLowerCase()+" (px)","Spacing",0,512)),
+  ...sides.map(side=>number("margin"+side,"Margin "+side.toLowerCase()+" (px)","Spacing",-512,512)),
+  number("borderRadius","All corners (px)","Borders",0,2048),
+  ...corners.map(corner=>number("border"+corner+"Radius",cornerLabel(corner)+" radius (px)","Borders",0,2048)),
+  number("borderWidth","Border width (px)","Borders",0,128),
+  ...sides.map(side=>number("border"+side+"Width",side+" border width (px)","Borders",0,128)),
+  choice("borderStyle","Border style","Borders",["none","solid","dashed","dotted","double","inset","outset"])
 ]);
-const COLORS=new Set(EDITOR_PROPERTIES.filter(p=>p.kind==="color").map(p=>p.key));
-const NUMBERS=new Map([...EDITOR_PROPERTIES.filter(p=>p.kind==="number").map(p=>[p.key,p.max]),
-  ["padding",80],["margin",80]]); // Legacy one-value spacing survives older drafts.
-const SELECTS=new Map(EDITOR_PROPERTIES.filter(p=>p.kind==="select").map(p=>[p.key,p.options]));
-const FONTS=new Set(["Verdana","Arial","Georgia","Tahoma"]);
+const properties=new Map([...EDITOR_PROPERTIES,
+  number("padding","Padding","Spacing",0,512),number("margin","Margin","Spacing",-512,512)
+].map(property=>[property.key,property]));
+const structural=new Set(["siteBackground","leftRail","rightRail","centerSheet"]);
+
+// Preserve the desktop grid while allowing its children to be sized and arranged.
+export function editorPropertyAvailable(key,area){
+  const property=properties.get(key);
+  if(!property)return false;
+  if(area==="navSpacing")return key==="rowGap"||key==="columnGap";
+  return !structural.has(area)||!(key.startsWith("margin")||property.group==="Size"||property.group==="Layout");
+}
+export const editorStyleValue=value=>typeof value==="number"?value+"px":value;
 const allowedPages=new Set(EDITOR_PAGES.map(x=>x.path));
 const shellAreas=new Map(EDITOR_SHELL_AREAS.map(x=>[x.id,x.selector]));
 const pageAreas=new Map(EDITOR_PAGE_AREAS.map(x=>[x.id,x.selector]));
@@ -159,14 +206,15 @@ function cleanStyle(input,area=""){
   const result={};
   if(!isObject(input))return result;
   for(const [key,value] of Object.entries(input)){
-    if(key==="minHeight"&&area!=="pageHeader")continue;
-    // Margin on structural rails could break the edge-locked three columns.
-    if(key.startsWith("margin")&&["leftRail","rightRail","siteBackground","centerSheet"].includes(area))continue;
-    if(COLORS.has(key)&&typeof value==="string"&&HEX.test(value))
+    if(!editorPropertyAvailable(key,area))continue;
+    const property=properties.get(key);
+    if(property.kind==="color"&&typeof value==="string"&&(HEX.test(value)||value==="transparent"))
       result[key]=value.toLowerCase();
-    else if(NUMBERS.has(key)&&Number.isFinite(value)&&value>=0&&value<=NUMBERS.get(key))
+    else if(property.kind==="number"&&Number.isFinite(value)&&value>=property.min&&value<=property.max)
       result[key]=Math.round(value*10)/10;
-    else if(SELECTS.has(key)&&SELECTS.get(key).includes(value))result[key]=value;
+    else if(property.percent&&typeof value==="string"&&/^(?:0|[1-9]\d{0,2})(?:\.\d)?%$/.test(value)&&parseFloat(value)<=100)
+      result[key]=value;
+    else if(property.options?.includes(value))result[key]=value;
   }
   return result;
 }
@@ -229,10 +277,26 @@ export function sanitizeEditorDraft(raw){
   }
   return result;
 }
+// Database JSON objects can return keys in a different order. Individual edges
+// and corners take precedence over their corresponding all-sides control.
+export function styleShorthand(key){
+  if(/^border(?:Top|Bottom)(?:Left|Right)Radius$/.test(key))return "borderRadius";
+  if(/^border(?:Top|Right|Bottom|Left)Width$/.test(key))return "borderWidth";
+  return key.match(/^(padding|margin)(?:Top|Right|Bottom|Left)$/)?.[1];
+}
+export function editorStyleEntries(style){
+  const entries=Object.entries(style);
+  for(const [key] of entries.slice()){
+    const index=entries.findIndex(([name])=>name===key);
+    const earlier=entries.findIndex(([name])=>styleShorthand(name)===key);
+    if(earlier!==-1&&earlier<index)entries.splice(earlier,0,...entries.splice(index,1));
+  }
+  return entries;
+}
 function declarations(style,area){
-  return Object.entries(cleanStyle(style,area)).map(([k,v])=>{
+  return editorStyleEntries(cleanStyle(style,area)).map(([k,v])=>{
     const cssKey=k.replace(/[A-Z]/g,m=>"-"+m.toLowerCase());
-    return cssKey+":"+(NUMBERS.has(k)?v+"px":v)+";";
+    return cssKey+":"+editorStyleValue(v)+";";
   }).join("");
 }
 export function editorPreviewCss(raw,page){

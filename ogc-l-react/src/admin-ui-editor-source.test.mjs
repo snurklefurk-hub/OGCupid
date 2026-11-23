@@ -33,7 +33,7 @@ test("page header minimum height round trips through scoped CSS",()=>{
   assert.match(formatEditorCss(draft,page),/min-height: 90px;/);
   assert.match(editorPreviewCss(draft,page),/\.ogcl-view-head\{min-height:90px;/);
   assert.doesNotMatch(editorPreviewCss(draft,"/messages"),/min-height:/);
-  assert.throws(()=>parseEditorCss(selector+" { min-height: 481px; }",draft,page),/out of range/);
+  assert.throws(()=>parseEditorCss(selector+" { min-height: 8193px; }",draft,page),/out of range/);
   assert.throws(()=>parseEditorCss(".ogcl-left { min-height: 90px; }",draft,"*"),/unavailable/);
 });
 
@@ -91,4 +91,20 @@ test("Design JSON can edit static copy and blocks and validates without silently
   assert.throws(()=>parseEditorJson(JSON.stringify(initial)),/design\.areas\.\/matches\.leftRail/);
   assert.throws(()=>parseEditorJson('{"version":99}'),/schema version/);
   assert.throws(()=>parseEditorJson("{"),Error);
+});
+
+test("card dimensions, negative margins, gaps, fill and corner overrides round trip",()=>{
+  const selector='.ogcl-right .ogcl-editorial-card[data-ogc-card="shell.promo.right.1"]';
+  const css=selector+" { width: 72.5%; height: 60px; margin-top: -3px; border-radius: 7px; border-top-left-radius: 0; background-color: transparent; background-image: none; }";
+  const draft=parseEditorCss(css,blankEditorDraft(),"*");
+  assert.deepEqual(parseEditorCss(formatEditorCss(draft,"*"),draft,"*"),draft);
+  assert.match(editorPreviewCss(draft,"/messages"),/width:72.5%;height:60px;margin-top:-3px;/);
+  assert.deepEqual(draft.areas["*"]["shell.promo.right.1"].borderTopLeftRadius,0);
+  for(const value of ["101%","-2%","url(x)","0%; color: red"]){
+    assert.throws(()=>parseEditorCss(selector+" { width: "+value+"; }",draft,"*"));
+  }
+  assert.throws(()=>parseEditorCss(".ogcl-right { width: 60%; }",draft,"*"));
+  const layout=parseEditorCss(".ogcl-left .ogcl-main-nav { row-gap: 9px; }",draft,"*");
+  assert.equal(layout.areas["*"].navSpacing.rowGap,9);
+  assert.throws(()=>parseEditorCss(".ogcl-left .ogcl-main-nav { background-color: #ffffff; }",draft,"*"));
 });

@@ -152,3 +152,12 @@ test("only explicit internal routes are permitted for editor-created links",()=>
     {...valid.pages["/matches"][0],href:"https://evil.example"}
   ]}}),null);
 });
+
+test("admin saves expanded visual properties on individual cards and blocks",async()=>{
+  const style={width:"80%",marginTop:-4,letterSpacing:1.5,borderTopRightRadius:12,backgroundImage:"none"};
+  const document={...blank,areas:{"*":{"shell.promo.right.2":style,navSpacing:{rowGap:9}}},
+    pages:{"/matches":[{id:"block-style",type:"notice",text:"Test",hidden:false,style}]}};
+  const result=await send("/admin/ui-design","PUT",{document,expectedVersion:7});
+  assert.equal(result.status,200);
+  assert.deepEqual(JSON.parse(result.calls[0].args[0]),document);
+});
