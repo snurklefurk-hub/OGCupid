@@ -2,7 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 import {
-  EDITOR_PAGES,EDITOR_AREAS,blankEditorDraft,sanitizeEditorDraft,
+  EDITOR_PAGES,EDITOR_AREAS,EDITOR_SHELL_AREAS,EDITOR_PAGE_AREAS,
+  EDITOR_SCHEMA,editorAreaScope,blankEditorDraft,sanitizeEditorDraft,
   editorPreviewCss,moveEditorBlock
 } from "./admin-ui-editor-model.mjs";
 
@@ -42,17 +43,17 @@ test("draft only exposes supported routes, editable selectors and bounded block 
   assert.equal(clean.pages["/unknown"],undefined);
   const css=editorPreviewCss(clean,"/matches");
   assert.match(css,/--okc-blue:#123456/);
-  assert.match(css,/\.ogcl-view-head h1\{color:#abcdef;padding:18px;/);
+  assert.match(css,/\.ogcl-sheet \.ogcl-view-head h1\{color:#abcdef;padding:18px;/);
   assert.doesNotMatch(css,/<script>|gridTemplateColumns|iframe|none|evil/);
   assert.equal(editorPreviewCss(clean,"/unknown"),"");
 });
 
 test("malformed styles and unknown draft versions are discarded",()=>{
-  assert.deepEqual(sanitizeEditorDraft({version:2,areas:{}}),blankEditorDraft());
+  assert.deepEqual(sanitizeEditorDraft({version:99,areas:{}}),blankEditorDraft());
   const css=editorPreviewCss({version:1,areas:{"*":{centerSheet:{
     color:"red;body{display:none}",margin:-1,borderRadius:4
   }}}},"/matches");
-  assert.equal(css,".ogcl-sheet{border-radius:4px;}\n");
+  assert.equal(css,".ogcl-center .ogcl-sheet{border-radius:4px;}\n");
   assert.ok(!css.includes("display:none"));
 });
 
@@ -79,4 +80,97 @@ test("visual editor remains a private browser draft and cannot silently publish"
   assert.match(component,/event\.preventDefault\(\);event\.stopPropagation\(\)/);
   assert.doesNotMatch(component,/adminRequest|fetch\(|dangerouslySetInnerHTML/);
   assert.match(read("./styles.css"),/grid-template-columns:184px minmax\(0,1fr\) 184px/);
+});
+
+test("shared Site Shell and center Page Content have disjoint selector scopes",()=>{
+  assert.equal(EDITOR_SCHEMA,2);
+  assert.equal(EDITOR_SHELL_AREAS.length+EDITOR_PAGE_AREAS.length,EDITOR_AREAS.length);
+  assert.equal(editorAreaScope("leftRail"),"shell");
+  assert.equal(editorAreaScope("brand"),"shell");
+  assert.equal(editorAreaScope("accountLinks"),"shell");
+  assert.equal(editorAreaScope("legalFooter"),"shell");
+  assert.equal(editorAreaScope("pageTitle"),"page");
+  assert.equal(editorAreaScope("contentPanel"),"page");
+  assert.equal(editorAreaScope("madeUp"),null);
+  const ids=new Set();
+  for(const area of EDITOR_AREAS){
+    assert.ok(!ids.has(area.id),"duplicate area id");
+    ids.add(area.id);
+  }
+  for(const area of EDITOR_PAGE_AREAS)
+    assert.ok(area.selector.startsWith(".ogcl-sheet "),"page rules must live inside the center sheet");
+  for(const area of EDITOR_SHELL_AREAS)
+    assert.ok(!area.selector.startsWith(".ogcl-sheet "),"shell selectors must never be per-page");
+  assert.ok(EDITOR_SHELL_AREAS.some(a=>a.selector===".ogcl-center .ogcl-top-links"));
+  assert.ok(EDITOR_SHELL_AREAS.some(a=>a.selector===".ogcl-center .ogcl-footer"));
+});
+
+test("page-specific shell changes are discarded, and never leak to any other page",()=>{
+  const v2={
+    version:EDITOR_SCHEMA,tokens:{},
+    areas:{
+      "*":{leftRail:{color:"#123456"},accountLinks:{fontSize:14},
+        pageTitle:{color:"#777777"}},
+      "/matches":{pageTitle:{color:"#654321"},mainContent:{padding:10},
+        leftRail:{backgroundColor:"#ffffff"},legalFooter:{margin:40}},
+      "/messages":{pageTitle:{color:"#abcdef"},brand:{margin:20}}
+    },
+    pages:{}
+  };
+  const cleaned=sanitizeEditorDraft(v2);
+  assert.deepEqual(cleaned.areas["*"],{
+    leftRail:{color:"#123456"},accountLinks:{fontSize:14}
+  });
+  assert.deepEqual(cleaned.areas["/matches"],{
+    pageTitle:{color:"#654321"},mainContent:{padding:10}
+  });
+  assert.deepEqual(cleaned.areas["/messages"],{pageTitle:{color:"#abcdef"}});
+  const matches=editorPreviewCss(v2,"/matches");
+  const messages=editorPreviewCss(v2,"/messages");
+  assert.match(matches,/\.ogcl-left\{color:#123456;\}/);
+  assert.match(messages,/\.ogcl-left\{color:#123456;\}/);
+  assert.match(matches,/\.ogcl-center \.ogcl-top-links\{font-size:14px;\}/);
+  assert.match(messages,/\.ogcl-center \.ogcl-top-links\{font-size:14px;\}/);
+  assert.match(matches,/\.ogcl-sheet \.ogcl-view-head h1\{color:#654321;\}/);
+  assert.match(messages,/\.ogcl-sheet \.ogcl-view-head h1\{color:#abcdef;\}/);
+  assert.doesNotMatch(matches,/#abcdef|leftRail\{|legalFooter\{|#ffffff/);
+  assert.doesNotMatch(messages,/#654321/);
+});
+
+test("older saved drafts migrate without expanding one-page outer-column edits sitewide",()=>{
+  const older={
+    version:1,tokens:{"--okc-blue":"#445566"},
+    areas:{
+      "*":{siteBackground:{backgroundColor:"#123456"},
+        mainContent:{padding:6},brand:{padding:11}},
+      "/matches":{mainContent:{padding:12},leftRail:{backgroundColor:"#beef00"}},
+      "/quickmatch":{rightRail:{backgroundColor:"#ab1234"}}
+    },pages:{"/matches":[{id:"block-original",type:"paragraph",text:"Keep me"}]}
+  };
+  const migrated=sanitizeEditorDraft(older);
+  assert.equal(migrated.version,EDITOR_SCHEMA);
+  assert.deepEqual(migrated.areas["*"],{
+    siteBackground:{backgroundColor:"#123456"},brand:{padding:11}
+  });
+  assert.deepEqual(migrated.areas["/matches"],{mainContent:{padding:12}});
+  assert.deepEqual(migrated.areas["/quickmatch"],{mainContent:{padding:6}});
+  assert.equal(migrated.pages["/matches"][0].text,"Keep me");
+  const css=editorPreviewCss(older,"/matches");
+  assert.match(css,/\.ogcl-left \.ogcl-brand\{padding:11px;\}/);
+  assert.doesNotMatch(css,/#beef00|#ab1234/);
+});
+
+test("editor switches workspaces on preview selection but saves shell and page separately",()=>{
+  const component=read("./AdminUiEditor.jsx");
+  assert.match(component,/useState\("shell"\)/);
+  assert.match(component,/chooseWorkspace\("shell"\)/);
+  assert.match(component,/chooseWorkspace\("page"\)/);
+  assert.match(component,/Site Shell <small>Shared across every page/);
+  assert.match(component,/Page Content <small>Center column only/);
+  assert.match(component,/editorAreaScope\(selected\.id\)===workspace/);
+  assert.match(component,/setWorkspace\(editorAreaScope\(area\.id\)\)/);
+  assert.match(component,/next\.areas\[areaScope\]/);
+  assert.match(component,/workspace==="shell"&&<><h3>Global palette/);
+  assert.match(component,/:before-shell-split/);
+  assert.doesNotMatch(component,/scope==="global"/);
 });
