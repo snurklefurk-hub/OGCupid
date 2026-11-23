@@ -13,6 +13,7 @@ const loadEditorial=()=>import("./EditorialPages.jsx");
 const EmbeddedEditorial=lazy(()=>loadEditorial().then(m=>({default:m.EmbeddedEditorial})));
 const PersonaRoute=lazy(()=>loadEditorial().then(m=>({default:m.PersonaRoute})));
 const ContactPage=lazy(()=>import("./ContactPage.jsx"));
+const SitemapPage=lazy(()=>import("./SitemapPage.jsx"));
 const ProfileEditor=lazy(()=>import("./ProfileEditor.jsx"));
 const ProfileSettings=lazy(()=>import("./ProfileSettings.jsx"));
 const PublicMemberProfile=lazy(()=>import("./PublicMemberProfile.jsx"));
@@ -181,6 +182,7 @@ function AppShell() {
             <NavLink data-ogc-edit-text="shell.footer.ogtrends" to="/ogtrends">OgTrends</NavLink>
             <NavLink data-ogc-edit-text="shell.footer.persona" to="/persona">Dating Persona</NavLink>
             <NavLink data-ogc-edit-text="shell.footer.contact" to="/contact">Contact</NavLink>
+            <NavLink data-ogc-edit-text="shell.footer.sitemap" to="/sitemap">Sitemap</NavLink>
             <NavLink data-ogc-edit-text="shell.footer.privacy" to="/privacy">Privacy</NavLink>
             <NavLink data-ogc-edit-text="shell.footer.terms" to="/terms">Terms</NavLink>
           </nav>
@@ -337,6 +339,7 @@ export default function App() {
         <Route path="privacy" element={<EmbeddedEditorial pageKey="privacy"/>} />
         <Route path="terms" element={<EmbeddedEditorial pageKey="terms"/>} />
         <Route path="contact" element={<ContactPage/>} />
+        <Route path="sitemap" element={<SitemapPage/>} />
         <Route path="photos" element={<MemberGate><PhotoManager/></MemberGate>} />
         <Route path="matches" element={<MemberGate><MatchesView Photo={MemberPhoto}/></MemberGate>} />
         <Route path="profile" element={<MemberGate><ProfileEditor /></MemberGate>} />

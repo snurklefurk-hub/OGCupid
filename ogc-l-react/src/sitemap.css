@@ -1,0 +1,52 @@
+/* A compact old-web directory inside the permanent three-column shell. */
+.ogcl-sitemap .ogcl-sitemap-intro {
+  margin: 0 0 18px;
+  padding: 9px 11px;
+  background: #edf2f6;
+  border: 1px solid #d1dce5;
+  color: #566a7b;
+  font-size: 11px;
+}
+.ogcl-sitemap-grid {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 19px 22px;
+  align-items: start;
+}
+.ogcl-sitemap-group {min-width:0;}
+.ogcl-sitemap .ogcl-sitemap-group h2 {
+  margin: 0 0 8px;
+  padding: 0 0 6px;
+  font: bold 14px/19px Verdana,Arial,sans-serif;
+  border-bottom: 1px solid #c5d1dd;
+  color: #264e79;
+}
+.ogcl-sitemap-group ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ogcl-sitemap-group li {
+  padding: 5px 0 7px;
+  border-bottom: 1px solid #e2e5e8;
+}
+.ogcl-sitemap-group li a {
+  font: bold 12px/18px Verdana,Arial,sans-serif;
+  text-decoration: none;
+}
+.ogcl-sitemap-group li a:hover,
+.ogcl-sitemap-group li a:focus-visible {text-decoration:underline;}
+.ogcl-sitemap-group li span {
+  display: block;
+  font-size: 11px;
+  color: #666;
+  overflow-wrap: anywhere;
+}
+.ogcl-sitemap-access {color:#777;font-size:10px;}
+.ogcl-sitemap .ogcl-sitemap-footer {
+  margin: 22px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid #d5dfe8;
+  color:#677484;
+  font-size:11px;
+}
