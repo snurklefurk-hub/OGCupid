@@ -76,11 +76,14 @@ test("visual editor saves private server drafts and explicitly publishes revisio
   const component=read("./AdminUiEditor.jsx");
   assert.match(component,/adminRequest\("\/admin\/ui-design"\)/);
   assert.match(component,/adminRequest\("\/admin\/ui-design","PUT"/);
-  assert.match(component,/adminRequest\("\/admin\/ui-design\/publish","POST"/);
+  const publish=component.slice(component.indexOf("  async function publish()"),
+    component.indexOf("  async function rollback()"));
+  assert.match(publish,/adminRequest\("\/admin\/ui-design\/publish","POST"/);
+  assert.doesNotMatch(publish,/window\.confirm/);
   assert.match(component,/adminRequest\("\/admin\/ui-design\/rollback","POST"/);
   assert.match(component,/expectedVersion:serverVersion/);
   assert.match(component,/Publish to live site/);
-  assert.match(component,/window\.confirm/);
+  assert.match(component,/window\.confirm\("Restore revision #"/);
   assert.match(component,/setServerVersion\(null\)/);
   assert.match(component,/event\.preventDefault\(\);event\.stopPropagation\(\)/);
   assert.doesNotMatch(component,/dangerouslySetInnerHTML/);
