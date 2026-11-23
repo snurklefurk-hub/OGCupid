@@ -4,6 +4,8 @@ import "./admin.css";
 import CommunityReportsAdmin from "./CommunityReportsAdmin.jsx";
 import AdminMemberEditor from "./AdminMemberEditor.jsx";
 
+const AdminUiEditor=React.lazy(()=>import("./AdminUiEditor.jsx"));
+
 const choices=[
   ["start_review","Mark under review"],
   ["dismiss","Dismiss report"],
@@ -163,16 +165,17 @@ export default function AdminDashboard(){
     <div className="ogcl-content-panel">
       <div className="ogcl-admin-toolbar">
         <nav aria-label="Administration sections">
-          {["overview","reports","community","members","audit"].map(t=><button key={t} type="button"
+          {["overview","reports","community","members","audit","ui-editor"].map(t=><button key={t} type="button"
             className={tab===t?"selected":""} aria-current={tab===t?"page":undefined}
-            onClick={()=>{setTab(t);setError("");setNotice("");}}>{t==="audit"?"Action log":t[0].toUpperCase()+t.slice(1)}</button>)}
+            onClick={()=>{setTab(t);setError("");setNotice("");}}>{t==="audit"?"Action log":t==="ui-editor"?"UI Editor":t[0].toUpperCase()+t.slice(1)}</button>)}
         </nav>
-        <button type="button" className="ogcl-button ogcl-secondary" disabled={busy}
+        <button type="button" className="ogcl-button ogcl-secondary" disabled={busy||tab==="ui-editor"}
           onClick={()=>void reload()}>{busy?"Working…":"Refresh"}</button>
       </div>
       {error&&<p role="alert" className="ogcl-error">{error}</p>}
       {notice&&<p role="status" className="ogcl-save-confirmation">{notice}</p>}
 
+      {tab==="ui-editor"&&<React.Suspense fallback={<p role="status">Loading visual editor…</p>}><AdminUiEditor/></React.Suspense>}
       {tab==="overview"&&<>
         <div className="ogcl-admin-stats">
           {[

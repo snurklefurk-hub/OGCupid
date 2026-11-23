@@ -1,0 +1,49 @@
+/* Administrator-only visual-editor workspace. Never overrides the shell's
+   permanent three-column layout. The preview shows the actual desktop site. */
+.ogcl-ui-editor{--ui-border:#c2d3e2;color:#253746;font:12px/1.45 Verdana,Arial,sans-serif}
+.ogcl-ui-editor-intro{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.ogcl-ui-editor-intro h2{margin:0 0 5px;color:#183b62;font-size:17px}
+.ogcl-ui-editor-intro p{margin:0 0 12px}
+.ogcl-ui-draft-label{font:700 10px Verdana,sans-serif;letter-spacing:.05em;color:#7c3b10;background:#fff1da;border:1px solid #eacda0;padding:7px 9px;white-space:nowrap}
+.ogcl-ui-editor-toolbar{display:flex;align-items:flex-end;flex-wrap:wrap;gap:8px;padding:10px;border:1px solid var(--ui-border);background:#eef3f7}
+.ogcl-ui-editor-toolbar label,.ogcl-ui-editor-panel label,.ogcl-ui-editor-footer label{display:flex;flex-direction:column;gap:5px;font-size:11px;font-weight:700;color:#244866}
+.ogcl-ui-editor-toolbar button,.ogcl-ui-editor-add button,.ogcl-ui-editor-reorder button{border:1px solid #aabfd2;background:#fff;color:#183b62;border-radius:2px;padding:8px 10px;cursor:pointer}
+.ogcl-ui-editor-toolbar button:disabled,.ogcl-ui-editor-reorder button:disabled{opacity:.5;cursor:not-allowed}
+.ogcl-ui-editor-toolbar .ogcl-button{background:#2963a4;color:#fff;border-color:#183b62}
+.ogcl-ui-editor-grid{display:grid;grid-template-columns:minmax(135px,185px) minmax(0,1fr) minmax(170px,210px);gap:8px;margin-top:10px;align-items:start}
+.ogcl-ui-editor-grid.is-compact{grid-template-columns:minmax(0,1fr)}
+.ogcl-ui-editor-panel{border:1px solid var(--ui-border);background:#fff;padding:10px;min-width:0;max-height:950px;overflow:auto}
+.ogcl-ui-editor-panel h3{margin:0 0 10px;color:#183b62;font-size:13px}
+.ogcl-ui-editor-panel h3:not(:first-child){margin-top:18px;border-top:1px solid #d8e3ec;padding-top:11px}
+.ogcl-ui-editor-panel-caption{display:block;color:#596b7b;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.04em;margin:9px 0}
+.ogcl-ui-editor-elements{display:grid;gap:3px}
+.ogcl-ui-editor-elements button,.ogcl-ui-editor-block-list li>button{border:1px solid transparent;text-align:left;background:#f7f9fb;color:#244866;padding:7px 6px;cursor:pointer;overflow-wrap:anywhere;width:100%}
+.ogcl-ui-editor-elements button.selected,.ogcl-ui-editor-block-list li>button.selected{border-color:#2963a4;background:#e7eef5;font-weight:700}
+.ogcl-ui-editor-block-list{list-style:none;padding:0;margin:0;display:grid;gap:4px}
+.ogcl-ui-editor-block-list li{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;border:1px solid #e2eaf1;background:#fff}
+.ogcl-ui-editor-reorder{display:flex}
+.ogcl-ui-editor-reorder button{padding:5px 6px;border:0}
+.ogcl-ui-editor-add{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px}
+.ogcl-ui-editor-add select{min-width:100px;flex:1}
+.ogcl-ui-editor-selection{font-weight:700;background:#e7eef5;color:#183b62;padding:8px}
+.ogcl-ui-editor-panel label{margin:10px 0;min-width:0}
+.ogcl-ui-editor-panel textarea{resize:vertical;min-height:60px;width:100%}
+.ogcl-ui-editor-panel .ogcl-ui-editor-check{flex-direction:row;align-items:flex-start}
+.ogcl-ui-editor-properties{display:grid;gap:5px}
+.ogcl-ui-editor-property{display:flex;align-items:center;gap:6px}
+.ogcl-ui-editor-property input[type=color]{width:56px;height:34px;padding:2px;cursor:pointer}
+.ogcl-ui-editor-property input[type=number]{max-width:100px;min-width:0}
+.ogcl-ui-editor-property button{border:1px solid #bdcddb;background:white;cursor:pointer;padding:6px}
+.ogcl-ui-editor-stage-wrap{border:1px solid var(--ui-border);background:#f5f7fa;min-width:0;padding:7px}
+.ogcl-ui-editor-stage{min-height:400px;max-height:940px;overflow:auto;background:#e0e8ef;padding:10px;box-shadow:inset 0 0 0 1px #b6c6d6}
+.ogcl-ui-editor-frame-viewport{margin:0 auto;background:#fff;box-shadow:0 2px 14px #63778a55;overflow:hidden;position:relative}
+.ogcl-ui-editor-frame-viewport iframe{display:block;border:0;background:#fff;position:absolute;top:0;left:0}
+.ogcl-ui-editor-footer{display:flex;flex-wrap:wrap;align-items:center;gap:10px;border:1px solid var(--ui-border);border-top:0;padding:10px;margin-top:8px;background:#fff}
+.ogcl-ui-editor-footer span{flex:1;min-width:230px;color:#596b7b}
+.ogcl-ui-editor-notice{border:1px solid #9ebfd6;color:#1d4566;background:#eaf3fb;padding:10px;margin:8px 0}
+@container ogc-admin-content (max-width:950px){
+  .ogcl-ui-editor-grid{grid-template-columns:1fr}
+  .ogcl-ui-editor-stage-wrap{grid-row:1}
+  .ogcl-ui-editor-panel{max-height:none}
+}
+.ogcl-ui-editor{container-type:inline-size;container-name:ogc-admin-content}
