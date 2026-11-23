@@ -78,7 +78,7 @@ a.ogcl-nav-link:hover {background:var(--okc-navy-line);color:var(--okc-white);}
 .ogcl-view-head {
   padding:20px 18px 16px;
   border-bottom:1px solid var(--ogcl-line);
-  background:linear-gradient(var(--okc-white),var(--okc-paper-dim));
+  background:linear-gradient(to bottom,var(--ogc-tab-gradient-top),var(--ogc-tab-gradient-bottom));
 }
 .ogcl-view-head h1 {
   font:normal 26px/28px Verdana,sans-serif;

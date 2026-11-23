@@ -54,7 +54,12 @@ export function EmbeddedEditorial({pageKey}){
     if(!hash)return;
     try{document.getElementById(decodeURIComponent(hash.slice(1)))?.scrollIntoView();}catch{}
   },[pageKey,hash]);
-  return <section className="ogcl-view ogcl-editorial" aria-label={page.title}>
+  const trends=page.path.startsWith("/ogtrends/");
+  return <section className={"ogcl-view ogcl-editorial"+(trends?" ogcl-trends":"")} aria-label={page.title}>
+    {trends&&<header className="ogcl-view-head">
+      {pageKey!=="ogtrends"&&<NavLink to="/ogtrends">← OgTrends</NavLink>}
+      <h1>{page.title}</h1>
+    </header>}
     <div className="ogcl-content-panel">{editorialContent[pageKey]}</div>
   </section>;
 }
