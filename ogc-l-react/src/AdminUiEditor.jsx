@@ -450,7 +450,6 @@ export default function AdminUiEditor({onUnsavedChange}){
   }
   async function publish(){
     if(busy||serverVersion===null||sourceDirty)return;
-    if(!window.confirm("Publish this design to ALL visitors now?"))return;
     setBusy(true);setNotice("");
     try{
       const state=hasChanges?await persistDraft():{draftVersion:serverVersion};
