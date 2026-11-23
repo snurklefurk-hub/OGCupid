@@ -117,3 +117,13 @@ test("card dimensions, negative margins, gaps, fill and corner overrides round t
   assert.equal(layout.areas["*"].navSpacing.rowGap,9);
   assert.throws(()=>parseEditorCss(".ogcl-left .ogcl-main-nav { background-color: #ffffff; }",draft,"*"));
 });
+
+test("linked button edges win over legacy individual edges in the published and preview CSS",()=>{
+  const draft=blankEditorDraft();
+  draft.areas["*"]={mainNavLinks:{borderWidth:2,paddingBottom:7},"shell.nav.matches":{borderBottomWidth:0,padding:4,color:"#123456"}};
+  const css=editorPreviewCss(draft,"/matches");
+  assert.match(css,/border-width:2px/);
+  assert.doesNotMatch(css,/border-bottom-width:0/);
+  assert.match(css,/padding:4px;.*padding-bottom:7px/);
+  assert.equal(draft.areas["*"]["shell.nav.matches"].borderBottomWidth,0);
+});

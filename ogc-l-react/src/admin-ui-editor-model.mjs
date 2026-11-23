@@ -293,6 +293,19 @@ export function editorStyleEntries(style){
   }
   return entries;
 }
+// Linked styles take priority over older per-button overrides for the same
+// edge. Keep unrelated overrides and don't rewrite stored design history.
+export function navButtonOverrides(individual={},shared={}){
+  const overrides={...individual};
+  for(const [key,value] of editorStyleEntries(shared)){
+    delete overrides[key];
+    for(const name of Object.keys(overrides)){
+      if(styleShorthand(name)===key)delete overrides[name];
+    }
+    if(Object.hasOwn(overrides,styleShorthand(key)))overrides[key]=value;
+  }
+  return overrides;
+}
 function declarations(style,area){
   return editorStyleEntries(cleanStyle(style,area)).map(([k,v])=>{
     const cssKey=k.replace(/[A-Z]/g,m=>"-"+m.toLowerCase());
@@ -308,7 +321,8 @@ export function editorPreviewCss(raw,page){
   for(const [scope,allowed] of [["*",shellAreas],[page,pageAreas]])
     for(const [id,style] of Object.entries(draft.areas[scope]||{})){
       const selector=allowed.get(id);
-      const rules=declarations(style,id);
+      const effective=id.startsWith("shell.nav.")?navButtonOverrides(style,draft.areas["*"]?.mainNavLinks):style;
+      const rules=declarations(effective,id);
       if(selector&&rules)result+=selector+"{"+rules+"}\n";
     }
   return result;
