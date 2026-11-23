@@ -23,7 +23,7 @@ test("draft only exposes supported routes, editable selectors and bounded block 
   assert.equal(EDITOR_PAGES.every(page=>page.path.startsWith("/")),true);
   assert.equal(EDITOR_AREAS.some(area=>area.selector===".ogcl-left"),true);
   assert.equal(EDITOR_AREAS.some(area=>area.selector===".ogcl-right"),true);
-  assert.equal(EDITOR_AREAS.some(area=>area.selector===".ogcl-sheet"),true);
+  assert.equal(EDITOR_AREAS.some(area=>area.selector===".ogcl-center .ogcl-sheet"),true);
   const input={
     version:1,
     tokens:{"--okc-blue":"#123456","--evil":"red"},
