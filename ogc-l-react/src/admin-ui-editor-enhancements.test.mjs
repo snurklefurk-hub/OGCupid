@@ -121,7 +121,7 @@ test("editor renders draft text with textContent, never as HTML or changed URLs"
   assert.match(editor,/Style this region/);
   assert.match(editor,/setAvailableText\(/);
   assert.match(editor,/readStored\(storageKey/);
-  assert.doesNotMatch(editor,/dangerouslySetInnerHTML|adminRequest|fetch\(/);
+  assert.doesNotMatch(editor,/dangerouslySetInnerHTML|innerHTML\s*=/);
   const selectors=EDITOR_TEXT_TARGETS.filter(t=>t.scope==="page");
   assert.ok(selectors.every(t=>t.selector.startsWith(".ogcl-sheet ")));
   assert.ok(EDITOR_TEXT_TARGETS.every(t=>t.max<=500));

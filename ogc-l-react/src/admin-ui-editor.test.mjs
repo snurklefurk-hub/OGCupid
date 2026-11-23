@@ -72,13 +72,18 @@ test("page-builder block ordering is stable, bounded and supports keyboard fallb
   assert.match(component,/setSelected\(\{kind:"area"/);
 });
 
-test("visual editor remains a private browser draft and cannot silently publish",()=>{
+test("visual editor saves private server drafts and explicitly publishes revisions",()=>{
   const component=read("./AdminUiEditor.jsx");
-  assert.match(component,/window\.localStorage\.setItem/);
-  assert.match(component,/Draft saved to this browser only/);
-  assert.match(component,/Publishing to all visitors is not enabled yet/);
+  assert.match(component,/adminRequest\("\/admin\/ui-design"\)/);
+  assert.match(component,/adminRequest\("\/admin\/ui-design","PUT"/);
+  assert.match(component,/adminRequest\("\/admin\/ui-design\/publish","POST"/);
+  assert.match(component,/adminRequest\("\/admin\/ui-design\/rollback","POST"/);
+  assert.match(component,/expectedVersion:serverVersion/);
+  assert.match(component,/Publish to live site/);
+  assert.match(component,/window\.confirm/);
+  assert.match(component,/setServerVersion\(null\)/);
   assert.match(component,/event\.preventDefault\(\);event\.stopPropagation\(\)/);
-  assert.doesNotMatch(component,/adminRequest|fetch\(|dangerouslySetInnerHTML/);
+  assert.doesNotMatch(component,/dangerouslySetInnerHTML/);
   assert.match(read("./styles.css"),/grid-template-columns:184px minmax\(0,1fr\) 184px/);
 });
 

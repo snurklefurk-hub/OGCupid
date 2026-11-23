@@ -1,5 +1,6 @@
 import React,{useEffect,useMemo,useState} from "react";
 import {useLocation} from "react-router-dom";
+import "./published-ui-design.css";
 import {
   EDITOR_PAGES,EDITOR_TEXT_TARGETS,EDITOR_PROPERTIES,
   editorTextTarget,editorPreviewCss,sanitizeEditorDraft
@@ -34,13 +35,13 @@ function makeBlock(block){
   }
   return el;
 }
-function updatePublishedDom(document,page){
+function updatePublishedDom(design,page){
   const root=window.document.querySelector(".ogcl-app");
   if(!root)return;
   for(const target of EDITOR_TEXT_TARGETS){
     if(!editorTextTarget(target.id,page))continue;
     const scope=target.scope==="shell"?"*":page;
-    const value=document.texts?.[scope]?.[target.id];
+    const value=design.texts?.[scope]?.[target.id];
     if(typeof value!=="string")continue;
     const element=root.querySelector(target.selector);
     if(element&&!element.children.length&&element.textContent!==value)
@@ -48,11 +49,11 @@ function updatePublishedDom(document,page){
   }
   const view=allowedPages.has(page)?root.querySelector(".ogcl-sheet .ogcl-view"):null;
   if(!view)return;
-  const blocks=(document.pages?.[page]||[]).filter(block=>!block.hidden);
+  const blocks=(design.pages?.[page]||[]).filter(block=>!block.hidden);
   let region=view.querySelector("[data-ogc-published-blocks]");
   if(!blocks.length){region?.remove();return;}
   if(!region){
-    region=document.createElement("section");
+    region=window.document.createElement("section");
     region.className="ogcl-editor-preview-region ogcl-published-region";
     region.setAttribute("data-ogc-published-blocks",page);
     const head=view.querySelector(".ogcl-view-head");
@@ -99,9 +100,7 @@ export default function PublishedUiDesign(){
     const scoped=allowedPages.has(page)?document:{
       ...document,areas:{"*":document.areas?.["*"]||{}}
     };
-    return editorPreviewCss(scoped,allowedPages.has(page)?page:"/matches")+
-      "\n.ogcl-published-region{display:grid;gap:10px;padding:12px 18px;border-bottom:1px dashed #b7c9da;}\n"+
-      ".ogcl-published-region .ogcl-editor-preview-button:disabled{opacity:1;cursor:default;}";
+    return editorPreviewCss(scoped,allowedPages.has(page)?page:"/matches");
   },[release,page]);
   useEffect(()=>{
     if(!release||isEditorPreview)return;
