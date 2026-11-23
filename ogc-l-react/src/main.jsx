@@ -4,6 +4,7 @@ import { HashRouter } from "react-router-dom";
 import App from "./App.jsx";
 import {MemberSessionProvider} from "./MemberSessionProvider.jsx";
 import "./styles.css";
+import "./period-tabs.css";
 
 const root = document.getElementById("root");
 if (!root) throw new Error("OGC-L root element missing");

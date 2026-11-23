@@ -92,7 +92,7 @@ export default function QuickmatchView({Photo}) {
       <p>Meet somebody interesting. Your choices are saved privately.</p>
     </header>
     <div className="ogcl-content-panel">
-      <nav className="ogcl-quickmatch-tabs" aria-label="Quickmatch lists">
+      <nav className="ogcl-quickmatch-tabs ogcl-period-tabs" aria-label="Quickmatch lists">
         {VIEWS.map(([key,label])=><button key={key} type="button"
           aria-current={tab===key?"page":undefined} disabled={busy}
           onClick={()=>{setSearchParams(key==="matches"?{}:{tab:key});setError("");setNotice("");}}>
