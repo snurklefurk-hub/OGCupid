@@ -473,6 +473,17 @@ export default function AdminUiEditor(){
         </div>
         <p className="ogcl-admin-muted">Drag the added blocks to reorder, or use the arrow buttons.</p>
           </>}
+        <section className="ogcl-ui-editor-text-list" aria-label="Editable site text">
+          <h3>Text and labels</h3>
+          <p className="ogcl-admin-muted">Select a heading or label in the preview, or choose one below.</p>
+          <div className="ogcl-ui-editor-elements">
+            {EDITOR_TEXT_TARGETS.filter(target=>target.scope===workspace&&availableText.includes(target.id)).map(target=>
+              <button key={target.id} type="button" className={selected.kind==="text"&&selected.id===target.id?"selected":""}
+                onClick={()=>setSelected({kind:"text",id:target.id})}>{target.label}</button>)}
+          </div>
+          {!EDITOR_TEXT_TARGETS.some(target=>target.scope===workspace&&availableText.includes(target.id))&&
+            <p className="ogcl-admin-muted">No editable static text on this preview yet.</p>}
+        </section>
       </aside>}
       <div className="ogcl-ui-editor-stage-wrap">
         <p className="ogcl-ui-editor-panel-caption">{workspace==="shell"?"Shared site shell preview":"Center page preview"} · {viewport.width} × {viewport.height} CSS px · {Math.round(scale*100)}% · click text to edit · links disabled</p>
@@ -517,23 +528,32 @@ export default function AdminUiEditor(){
         {(chosenBlock||chosenArea)&&<>
         <p className="ogcl-ui-editor-computed-note">Current live values from the preview. Resetting a property restores its CSS value.</p>
         <div className="ogcl-ui-editor-properties">
-          {EDITOR_PROPERTIES.map(property=><label key={property.key}>{property.label}
-            <div className="ogcl-ui-editor-property">
-              {property.kind==="select"?
-                <select value={activeStyle[property.key]||""} onChange={e=>updateArea(property.key,e.target.value||null)}>
-                  <option value="">Site default</option>
-                  {property.options.map(value=><option key={value} value={value}>{value}</option>)}
-                </select>:
-                <input type={property.kind==="color"?"color":"number"}
-                  min={property.kind==="number"?0:undefined}
-                  max={property.kind==="number"?property.max:undefined}
-                  placeholder={property.kind==="number"?"Default":undefined}
-                  value={property.kind==="color"?(activeStyle[property.key]||"#ffffff"):(activeStyle[property.key]??"")}
-                  onChange={e=>updateArea(property.key,property.kind==="color"?e.target.value:
-                    e.target.value===""?null:Number(e.target.value))}/>} 
-              <button type="button" title={"Reset "+property.label} onClick={()=>updateArea(property.key,null)}>↺</button>
-            </div>
-          </label>)}
+          {EDITOR_PROPERTIES.map(property=>{
+            const override=activeStyle[property.key];
+            const live=inspected.values[property.key]||{value:"",raw:"Not available"};
+            const shown=override??live.value;
+            const value=shown??"";
+            return <label key={property.key}>{property.label}
+              <div className="ogcl-ui-editor-property">
+                {property.kind==="select"?
+                  <select value={value} onChange={e=>updateArea(property.key,e.target.value||null)}>
+                    {value===""&&<option value="">Current: {live.raw}</option>}
+                    {property.options.map(option=><option key={option} value={option}>{option}</option>)}
+                  </select>:
+                  <input type={property.kind==="color"?"color":"number"}
+                    min={property.kind==="number"?0:undefined}
+                    max={property.kind==="number"?property.max:undefined}
+                    step={property.kind==="number"?"0.1":undefined}
+                    value={property.kind==="color"?(value||"#ffffff"):value}
+                    onChange={e=>updateArea(property.key,property.kind==="color"?
+                      e.target.value:e.target.value===""?null:Number(e.target.value))}/>}
+                <button type="button" title={"Reset "+property.label} onClick={()=>updateArea(property.key,null)}>↺</button>
+              </div>
+              <span className="ogcl-ui-editor-computed-value" title="Computed from the preview">
+                Current: {live.raw}
+              </span>
+            </label>;
+          })}
         </div></>}
         {workspace==="shell"&&<><h3>Global palette</h3>
         <p className="ogcl-admin-muted">These colors are shared across all pages, including their center content.</p>
