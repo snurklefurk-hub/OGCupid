@@ -11,7 +11,7 @@ function Choices({label,options,selected,onChange,disabled}){
   </fieldset>;
 }
 export default function SignupIdentity({selection,onSaved}){
-  const {kind,accountRequest,refresh}=useMemberSession();
+  const {kind,user,accountRequest,refresh}=useMemberSession();
   const navigate=useNavigate();
   const [draft,setDraft]=useState(null),[error,setError]=useState(""),[busy,setBusy]=useState(false);
   const [loading,setLoading]=useState(true),[retry,setRetry]=useState(0);
@@ -19,21 +19,25 @@ export default function SignupIdentity({selection,onSaved}){
   useEffect(()=>{
     if(kind!=="onboarding")return;
     let active=true;setLoading(true);setError("");
-    accountRequest("/onboarding").then(data=>{
+    Promise.all([accountRequest("/onboarding"),accountRequest("/profile")]).then(([data,rawProfile])=>{
       if(!active)return;
       const state=data?.state||{};
       const gender=state.gender||selection?.gender||"";
       const orientation=state.orientation||selection?.orientation||"";
-      const interestedIn=Array.isArray(state.signup_interested_in)?state.signup_interested_in:signupLookingDefaults(gender,orientation);
-      const intentions=Array.isArray(state.signup_intentions)?state.signup_intentions:[];
-      touched.current=Array.isArray(state.signup_interested_in);
+      const stored=rawProfile?.profile;
+      const existingGenders=String(stored?.interestedIn||"").split(", ").filter(x=>PROFILE_GENDERS.includes(x));
+      const existingIntentions=String(stored?.relationshipGoal||"").split(", ").filter(x=>PROFILE_INTENTIONS.some(c=>c.value===x));
+      const interestedIn=Array.isArray(state.signup_interested_in)?state.signup_interested_in:existingGenders.length?existingGenders:signupLookingDefaults(gender,orientation);
+      const intentions=Array.isArray(state.signup_intentions)?state.signup_intentions:existingIntentions;
+      touched.current=Array.isArray(state.signup_interested_in)||existingGenders.length>0;
       setDraft({gender,orientation,interestedIn,intentions});
     }).catch(()=>{if(active)setError("Could not load your saved choices. Please retry.");})
       .finally(()=>{if(active)setLoading(false);});
     return()=>{active=false;};
-  },[kind,accountRequest,retry]); // selection is stable for this mounted step.
+  },[kind,user?.id,accountRequest,retry]); // selection is stable for this mounted step.
   if(kind==="member")return <Navigate to="/home" replace/>;
   if(kind==="guest")return <Navigate to="/signin" replace/>;
+  if(kind==="error"||kind==="unconfigured")return <p role="alert">Account service unavailable. <button type="button" onClick={()=>void refresh()}>Retry</button></p>;
   if(kind!=="onboarding"||loading)return <p role="status">Checking your account…</p>;
   if(!draft)return <div role="alert">{error} <button type="button" onClick={()=>setRetry(n=>n+1)}>Retry</button></div>;
   const updateIdentity=(key,value)=>setDraft(old=>{
