@@ -40,3 +40,16 @@ test("member table, real metrics, evidence and audit are integrated, without fak
   assert.match(css,/grid-template-columns/);
   assert.match(css,/@media\(max-width:600px\)/);
 });
+
+test("Admin → Members shows the recorded last activity under account status",()=>{
+  assert.match(dash,/<th>Status<\/th>/);
+  assert.match(dash,/<td><span>\{m\.banned\?/);
+  assert.match(dash,/<small>Last activity: \{m\.lastActivityAt\?stamp\(m\.lastActivityAt\):"No activity recorded"\}<\/small>/);
+  const migration=readFileSync(new URL("../../db/migrations/036_admin_member_last_activity.sql",import.meta.url),"utf8");
+  assert.match(migration,/CREATE OR REPLACE FUNCTION app_private\.admin_members\(/);
+  assert.match(migration,/app_private\.admin_is_authorized\(\)/);
+  assert.match(migration,/'lastActivityAt',activity\.last_seen_at/);
+  assert.match(migration,/LEFT JOIN app_private\.member_activity activity ON activity\.user_id=u\.id/);
+  assert.match(migration,/LEFT JOIN app_private\.member_onboarding o ON o\.user_id=u\.id/);
+  assert.doesNotMatch(migration,/GRANT .* TO PUBLIC|GRANT .* TO ogcupid_member_api|CREATE TABLE|INSERT INTO/);
+});

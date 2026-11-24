@@ -285,8 +285,10 @@ export default function AdminDashboard(){
             <td><strong>{m.name}</strong><small>{m.email}</small><small>{m.verified?"Verified":"Unverified"} · {m.role}</small></td>
             <td>{m.profile||"Not created"}<small>{m.onboarded?"Complete onboarding":"Incomplete onboarding"}</small></td>
             <td>{stamp(m.createdAt)}</td>
-            <td>{m.banned?(m.banExpires&&new Date(m.banExpires)<=new Date()?"Suspension expired":
-              m.banExpires?"Suspended until "+stamp(m.banExpires):"Permanently banned"):"Active"}</td>
+            <td><span>{m.banned?(m.banExpires&&new Date(m.banExpires)<=new Date()?"Suspension expired":
+              m.banExpires?"Suspended until "+stamp(m.banExpires):"Permanently banned"):"Active"}</span>
+              <small>Last activity: {m.lastActivityAt?stamp(m.lastActivityAt):"No activity recorded"}</small>
+            </td>
             <td><button type="button" className="ogcl-button ogcl-secondary" disabled={busy}
                 onClick={()=>setEditingMember(m)}>Edit profile, photos & answers</button>
               {m.banned&&!m.banExpires&&m.role!=="admin"?
