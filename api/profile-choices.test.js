@@ -26,3 +26,12 @@ test('only canonical gender and intention sets can be selected, legacy values su
   assert.equal(validProfileChoice('relationshipGoal','Long-term dating','Long-term dating'),true);
   assert.equal(validProfileChoice('relationshipGoal','new friends, something else'),false);
 });
+
+test('expanded profile identities and four intentions share the signup contract',()=>{
+  assert.equal(validProfileChoice('gender','Intersex'),true);
+  assert.equal(validProfileChoice('gender','Enby'),true);
+  assert.equal(validProfileChoice('orientation','Ace'),true);
+  assert.equal(validProfileChoice('interestedIn','Man, Woman, Transman, Transwoman, Intersex, Enby, Something else'),true);
+  assert.equal(validProfileChoice('relationshipGoal','activity partners'),false);
+  assert.equal(validProfileChoice('relationshipGoal','activity partners','activity partners'),true);
+});

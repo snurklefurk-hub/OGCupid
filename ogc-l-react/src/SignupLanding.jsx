@@ -22,5 +22,6 @@ export default function SignupLanding({onContinue,selection}){
           {SIGNUP_GENDERS.map(value=><option key={value}>{value}</option>)}
         </select>
         <button type="submit">CONTINUE</button>
+        {(gender==="Something else"||orientation==="Something else")&&<p className="ogcl-signup-more" role="status">Dont worry, we've got more options inside</p>}
       </form>;
 }

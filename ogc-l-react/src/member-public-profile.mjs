@@ -1,3 +1,4 @@
+import {presentIntentions} from "./profile-options.mjs";
 import {presentEthnicity} from "./member-settings.mjs";
 
 // Member-to-member profile reads from the authenticated Neon Function.
@@ -52,7 +53,7 @@ export function sanitizePublicProfile(payload,slug) {
   const age = Number.isInteger(p.age)&&p.age>=18&&p.age<=120 ? p.age : null;
   const essays=Object.freeze(Object.fromEntries(PUBLIC_ESSAYS.map(({key})=>[key,textValue(p[key],5000)])));
   const details=Object.freeze(Object.fromEntries(PUBLIC_DETAILS.map(({key})=>[
-    key,key==="ethnicity"?presentEthnicity(textValue(p[key],200)):textValue(p[key],200)
+    key,key==="ethnicity"?presentEthnicity(textValue(p[key],200)):key==="relationshipGoal"?presentIntentions(textValue(p[key],200)):textValue(p[key],200)
   ])));
   const owner=payload.isOwner===true;
   const answers=Array.isArray(payload.publicAnswers) ? payload.publicAnswers.filter(a=>

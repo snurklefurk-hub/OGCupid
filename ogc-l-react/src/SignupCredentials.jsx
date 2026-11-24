@@ -19,7 +19,7 @@ export default function SignupCredentials(){
     submitting.current=true;setBusy(true);setError("");
     try{
       await signUp(username,email,password);
-      navigate("/onboarding",{replace:true});
+      navigate("/signup3",{replace:true});
     }catch(e){
       setError(e?.code==="invalid"?e.message||"Please check your entries.":"We couldn't create your account. Please retry.");
     }finally{

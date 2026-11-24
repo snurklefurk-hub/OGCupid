@@ -88,3 +88,23 @@ test('V2 persona completion is saved for the signed-in member and rejects forged
   assert.match((await bad.json()).error,/did not match/);
   assert.equal(updated,null);
 });
+
+test('signup preferences are stored atomically on the authenticated onboarding row without marking any later steps complete',async()=>{
+  let params=null,sql=null,calls=0;
+  const memberId='11111111-1111-4111-8111-111111111111';
+  const withMember=(id,work)=>{assert.equal(id,memberId);calls++;return work({query:async(q,p)=>{sql=q;params=p;return {rowCount:1};}});};
+  const json=(_,body,status=200)=>new Response(JSON.stringify(body),{status});
+  const req=body=>new Request('https://example.test/onboarding',{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
+  const input={step:'signup-preferences',gender:'Enby',orientation:'Ace',interestedIn:['Intersex','Enby'],intentions:['new friends','casual sex']};
+  const result=await handleOnboarding(req(input),memberId,withMember,json);
+  assert.equal(result.status,200);
+  assert.deepEqual(params,[memberId,'Enby','Ace',['Intersex','Enby'],['new friends','casual sex']]);
+  assert.match(sql,/WHERE app_private.member_onboarding.explored_at IS NULL/);
+  assert.doesNotMatch(sql,/details_complete|adult_attested_at|birth_date/);
+  for(const invalid of [{...input,intentions:['activity partners']},{...input,interestedIn:['Man','Man']},{...input,gender:'invalid'}]){
+    assert.equal((await handleOnboarding(req(invalid),memberId,withMember,json)).status,400);
+  }
+  assert.equal(calls,1);
+  const denied=await handleOnboarding(req(input),memberId,(_id,work)=>work({query:async()=>({rowCount:0})}),json);
+  assert.equal(denied.status,400);
+});

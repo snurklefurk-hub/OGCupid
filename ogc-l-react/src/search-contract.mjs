@@ -14,7 +14,7 @@ export const MAX_SERVER_SEARCH_CANDIDATES=1000;
 
 const invalid=()=>{throw new Error("Invalid MATCHES search criteria");};
 function chosen(source,allowed){
-  if(!Array.isArray(source)||source.length>5||new Set(source).size!==source.length||
+  if(!Array.isArray(source)||source.length>allowed.size||new Set(source).size!==source.length||
      source.some(x=>typeof x!=="string"||!allowed.has(x)))invalid();
   return [...source].sort();
 }

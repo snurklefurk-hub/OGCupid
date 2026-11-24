@@ -1,3 +1,4 @@
+import {presentIntentions,storageIntentions} from "./profile-options.mjs";
 import React,{useEffect,useMemo,useRef,useState} from "react";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {LIVE_ESSAYS} from "./member-essays.mjs";
@@ -46,7 +47,7 @@ export default function AdminMemberEditor({member,onClose}){
     void adminRequest(urlFor(memberId,"content")).then(data=>{
       if(!alive)return;
       setContent(data);
-      setDrafts(data.profile||{});
+      setDrafts(data.profile?{...data.profile,relationship_goal:presentIntentions(data.profile.relationship_goal)}:{});
       setMinAge(data.profile?.preferred_age_min??"");
       setMaxAge(data.profile?.preferred_age_max??"");
     }).catch(e=>{
@@ -141,7 +142,7 @@ export default function AdminMemberEditor({member,onClose}){
   function saveField(field){
     const value=String(drafts[field.column]??"").trim();
     void perform(()=>adminRequest(path("field"),"PUT",{
-      field:field.column,value
+      field:field.column,value:field.key==="relationshipGoal"?storageIntentions(value):value
     }),field.label+" updated.",()=>{
       setContent(old=>({...old,profile:{...old.profile,[field.column]:value}}));
       setDrafts(old=>({...old,[field.column]:value}));
@@ -273,7 +274,7 @@ export default function AdminMemberEditor({member,onClose}){
                   onChange={e=>setDrafts(d=>({...d,[field.column]:e.target.value}))}/>}
             </label>
             <button type="button" className="ogcl-button ogcl-secondary" disabled={!canSave||
-              value===(content.profile[field.column]??"")}
+              value===(field.key==="relationshipGoal"?presentIntentions(content.profile[field.column]):content.profile[field.column]??"")}
               onClick={()=>saveField(field)}>Save</button>
           </div>;
         })}</div>

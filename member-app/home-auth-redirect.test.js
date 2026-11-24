@@ -108,6 +108,7 @@ test("React root owns session routing without legacy home redirect or spoofable 
   assert.match(html, /src="\/assets\/index-[^"]+\.js"/);
   assert.doesNotMatch(html,/home-auth-redirect\.js/);
   assert.match(provider,/setSession\(blank\)/);
-  assert.match(provider,/gateway\.load\(\)/);
+  assert.match(provider,/gateway\.loadIdentity\(\)/);
+  assert.match(provider,/gateway\.revalidate\(\)/);
   assert.match(provider,/setSession\(\{\.\.\.blank, kind:"guest"/);
 });

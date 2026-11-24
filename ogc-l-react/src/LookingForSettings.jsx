@@ -52,7 +52,7 @@ export default function LookingForSettings({profile,onSaved,saveOwnLookingFor}){
     }finally{setBusy(false);}
   }
   const legacyGender=split(profile.lookingFor.interestedIn).filter(x=>!LOOKING_GENDERS.some(g=>g.value===x));
-  const legacyIntent=split(profile.lookingFor.relationshipGoal).filter(x=>!LOOKING_INTENTIONS.some(g=>g.value===x));
+  const legacyIntent=split(profile.lookingFor.relationshipGoal).filter(x=>x.toLowerCase()!=="activity partners"&&!LOOKING_INTENTIONS.some(g=>g.value.toLowerCase()===x.toLowerCase()));
   const hasLocality=profile.lookingFor.hasValidatedLocality;
   return <section className="ogcl-settings-group ogcl-looking-settings" id="looking-for">
     <h2>I'm looking for</h2>

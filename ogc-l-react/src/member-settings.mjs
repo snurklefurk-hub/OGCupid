@@ -1,8 +1,9 @@
+import {PROFILE_GENDERS,PROFILE_ORIENTATIONS} from "./profile-options.mjs";
 import {validAgeRange} from "./member-looking-for.mjs";
 import {PET_CHOICES,selectedPets} from "./member-pets.mjs";
 // Staging Profile Settings: only fields stored by the established Neon /profile API.
 // Signup display name, DOB, and derived age are deliberately NOT writable here.
-const genders=["Man","Woman","Transman","Transwoman","Something else"];
+const genders=PROFILE_GENDERS;
 // Original profile categories from the November 13 structured details editor.
 // Keep the established ethnicity API/storage key; no database migration needed.
 export const ETHNICITY_CHOICES=Object.freeze([
@@ -21,7 +22,7 @@ const habits=["Never","Sometimes","Often","Just weed",
 const fields=[
   {key:"gender",label:"Gender",max:60,group:"identity",options:genders},
   {key:"orientation",label:"Orientation",max:60,group:"identity",
-    options:["Gay","Straight","Bi","Something else"]},
+    options:PROFILE_ORIENTATIONS},
   {key:"relationshipType",label:"Relationship style",max:50,group:"details",
     options:["Monogamous","Polyamorous"]},
   {key:"work",label:"Job",max:160,group:"details"},

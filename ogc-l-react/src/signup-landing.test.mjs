@@ -42,7 +42,7 @@ test("signup choices are allowlisted, ephemeral and confirmed through existing o
   assert.equal(signupIdentity("Gay","invalid"),null);
   assert.match(signup,/onContinue\(identity\);\s*navigate\("\/signup2"\)/);
   assert.doesNotMatch(signup+app+credentials,/localStorage|sessionStorage|indexedDB/);
-  assert.match(app,/\["\/signup","\/signup2","\/join","\/onboarding"\]/);
+  assert.match(app,/\["\/signup","\/signup1","\/signup2","\/signup3","\/join","\/onboarding"\]/);
   assert.match(app,/setSignupSelection\(null\)/);
   const onboarding=read("./Onboarding.jsx");
   assert.match(onboarding,/state\.gender\|\|signupSelection\?\.gender/);
@@ -64,7 +64,7 @@ test("signup step two uses existing credential validation and signup action",()=
   assert.match(credentials,/These are permanent\. Choose wisely/);
   assert.match(credentials,/form\.elements\.password\.value=""/);
   assert.match(credentials,/await signUp\(username,email,password\)/);
-  assert.match(credentials,/navigate\("\/onboarding",\{replace:true\}\)/);
+  assert.match(credentials,/navigate\("\/signup3",\{replace:true\}\)/);
   assert.match(credentials,/submitting\.current\|\|!form\.reportValidity\(\)/);
   assert.match(css,/\.ogcl-signup-tooltip\{position:absolute;top:26px;left:calc\(100% \+ 18px\)/);
 });
