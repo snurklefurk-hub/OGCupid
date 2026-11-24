@@ -1,14 +1,33 @@
-import React,{useEffect,useRef,useState} from "react";
+import React,{useEffect,useId,useRef,useState} from "react";
 import {Navigate,useNavigate} from "react-router-dom";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {PROFILE_GENDERS,PROFILE_ORIENTATIONS,PROFILE_LOOKING_GENDERS,PROFILE_INTENTIONS,signupLookingDefaults,validSignupPreferences} from "./profile-options.mjs";
 
 function Choices({label,options,selected,onChange,disabled}){
-  return <fieldset className="ogcl-signup3-choices" disabled={disabled}>
-    <legend>{label}</legend>
-    {options.map(({value,label})=><label key={value}><input type="checkbox" checked={selected.includes(value)}
-      onChange={e=>onChange(e.target.checked?[...selected,value]:selected.filter(x=>x!==value))}/> {label}</label>)}
-  </fieldset>;
+  const [open,setOpen]=useState(false);
+  const root=useRef(null),trigger=useRef(null),id=useId();
+  useEffect(()=>{
+    if(!open)return;
+    const close=e=>{if(!root.current?.contains(e.target))setOpen(false);};
+    document.addEventListener("pointerdown",close);
+    return()=>document.removeEventListener("pointerdown",close);
+  },[open]);
+  const summary=options.filter(x=>selected.includes(x.value)).map(x=>x.label).join(", ");
+  return <div ref={root} className="ogcl-signup3-choices" onBlur={e=>{if(!e.currentTarget.contains(e.relatedTarget))setOpen(false);}}
+    onKeyDown={e=>{if(e.key==="Escape"&&open){e.preventDefault();setOpen(false);trigger.current?.focus();}}}>
+    <span id={id+"-label"}>{label}</span>
+    <button ref={trigger} type="button" className="ogcl-signup3-dropdown" disabled={disabled}
+      aria-expanded={open&&!disabled} aria-controls={id+"-choices"} aria-labelledby={id+"-label "+id+"-summary"}
+      onClick={()=>setOpen(v=>!v)}><span id={id+"-summary"}>{summary||"Choose"}</span><span aria-hidden="true">▾</span></button>
+    <fieldset id={id+"-choices"} className="ogcl-signup3-menu" hidden={!open||disabled} disabled={disabled} aria-labelledby={id+"-label"}>
+      {options.map(({value,label})=><label key={value}><input type="checkbox" checked={selected.includes(value)}
+        onChange={e=>onChange(e.target.checked?[...selected,value]:selected.filter(x=>x!==value))}/> {label}</label>)}
+    </fieldset>
+  </div>;
+}
+function birthDateLimit(years){
+  const now=new Date();
+  return new Date(Date.UTC(now.getUTCFullYear()-years,now.getUTCMonth(),now.getUTCDate())).toISOString().slice(0,10);
 }
 export default function SignupIdentity({selection,onSaved}){
   const {kind,user,accountRequest,refresh}=useMemberSession();
@@ -30,7 +49,7 @@ export default function SignupIdentity({selection,onSaved}){
       const interestedIn=Array.isArray(state.signup_interested_in)?state.signup_interested_in:existingGenders.length?existingGenders:signupLookingDefaults(gender,orientation);
       const intentions=Array.isArray(state.signup_intentions)?state.signup_intentions:existingIntentions;
       touched.current=Array.isArray(state.signup_interested_in)||existingGenders.length>0;
-      setDraft({gender,orientation,interestedIn,intentions});
+      setDraft({gender,orientation,interestedIn,intentions,birthDate:String(state.birth_date||"").slice(0,10)});
     }).catch(()=>{if(active)setError("Could not load your saved choices. Please retry.");})
       .finally(()=>{if(active)setLoading(false);});
     return()=>{active=false;};
@@ -47,7 +66,7 @@ export default function SignupIdentity({selection,onSaved}){
   });
   async function submit(e){
     e.preventDefault();
-    if(submitting.current||!validSignupPreferences(draft))return;
+    if(submitting.current||!e.currentTarget.reportValidity()||!validSignupPreferences(draft)||!draft.birthDate)return;
     submitting.current=true;setBusy(true);setError("");
     try{
       const result=await accountRequest("/onboarding","PUT",{step:"signup-preferences",...draft});
@@ -60,6 +79,7 @@ export default function SignupIdentity({selection,onSaved}){
   }
   return <form className="ogcl-signup3" onSubmit={submit}>
     <h1>So who are you, really?</h1>
+    <label className="ogcl-signup3-birthdate">Birthdate<input type="date" name="birthDate" required min={birthDateLimit(120)} max={birthDateLimit(18)} value={draft.birthDate} disabled={busy} onChange={e=>setDraft(old=>({...old,birthDate:e.target.value}))}/></label>
     <div className="ogcl-signup3-grid">
       <p id="signup3-hint" className="ogcl-signup3-hint">Pick whatever is closest, we cant afford a 10k parameter search engine</p>
       <label className="ogcl-signup3-select">Gender
@@ -77,7 +97,7 @@ export default function SignupIdentity({selection,onSaved}){
       <Choices label="To have" options={PROFILE_INTENTIONS} selected={draft.intentions} disabled={busy}
         onChange={items=>setDraft(old=>({...old,intentions:items}))}/>
     </div>
-    <button type="submit" disabled={busy||!validSignupPreferences(draft)}>{busy?"SAVING…":"CONTINUE"}</button>
+    <button type="submit" disabled={busy||!draft.birthDate||!validSignupPreferences(draft)}>{busy?"SAVING…":"CONTINUE"}</button>
     {error&&<p className="ogcl-signup-error" role="alert">{error}</p>}
   </form>;
 }
