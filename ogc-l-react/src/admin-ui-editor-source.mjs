@@ -2,6 +2,7 @@ import {
   EDITOR_SCHEMA, EDITOR_PAGES, EDITOR_SHELL_AREAS, EDITOR_PAGE_AREAS,
   EDITOR_TOKENS, EDITOR_PROPERTIES, EDITOR_MAIN_NAV_AREAS, editorStyleEntries, editorStyleValue, styleShorthand, sanitizeEditorDraft,
 } from "./admin-ui-editor-model.mjs";
+import {isComponentArea} from "./shared-ui-components.mjs";
 
 const cssName = key => key.replace(/[A-Z]/g, letter => "-" + letter.toLowerCase());
 const properties = new Map([
@@ -130,7 +131,8 @@ export function parseEditorCss(source, draft, scope) {
   const css = source.replace(/\/\*[\s\S]*?\*\//g, comment => comment.replace(/[^\r\n]/g, " "));
   const next = structuredClone(draft);
   if (scope === "*") next.tokens = {};
-  const styles = {};
+  // Shell CSS edits must not discard separately managed component styles.
+  const styles = scope==="*"?Object.fromEntries(Object.entries(draft.areas["*"]||{}).filter(([id])=>isComponentArea(id))):{};
   const seen = new Set();
   const rule = /\s*([^{}]+)\{([^{}]*)\}/y;
   let offset = 0;
