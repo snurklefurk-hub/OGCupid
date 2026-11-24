@@ -6,7 +6,7 @@ import {defaultRoute,primaryNavigation} from "./navigation.mjs";
 import {SITEMAP_PATHS} from "./sitemap-pages.mjs";
 import {normalizeSiteRoute} from "./browser-location.mjs";
 const read=p=>readFileSync(new URL(p,import.meta.url),"utf8");
-const app=read("./App.jsx"),signup=read("./SignupLanding.jsx"),css=read("./signup-landing.css");
+const app=read("./App.jsx"),signup=read("./SignupLanding.jsx"),shell=read("./SignupShell.jsx"),credentials=read("./SignupCredentials.jsx"),css=read("./signup-landing.css");
 test("default landing respects verified session state and existing onboarding",()=>{
   assert.equal(defaultRoute,"/home");
   assert.equal(homeDestination("guest"),"/signup");
@@ -22,13 +22,15 @@ test("default landing respects verified session state and existing onboarding",(
   assert.match(app,/if\(kind==="member"\)return <Navigate to=\{defaultRoute\} replace\/>/);
 });
 test("signup is a standalone sibling route with only the requested features",()=>{
-  assert.match(app,/<\/Route>\s*<Route path="signup" element=\{<SignupLanding onContinue=\{setSignupSelection\}\/>\} \/>/);
+  assert.match(app,/<\/Route>\s*<Route element=\{<SignupShell\/>\}>\s*<Route path="signup" element=\{<SignupLanding onContinue=\{setSignupSelection\} selection=\{signupSelection\}\/>\} \/>/);
+  assert.match(app,/<Route path="signup2" element=\{<SignupCredentials\/>\} \/>/);
   assert.match(app,/<PublishedUiDesign \/>\s*<Routes>/);
-  assert.doesNotMatch(signup,/ogcl-app|ogcl-left|ogcl-right|ogcl-sheet|SidebarPromos/);
-  assert.match(signup,/to="\/home" className="ogcl-signup-logo"/);
+  assert.doesNotMatch(signup+shell+credentials,/ogcl-app|ogcl-left|ogcl-right|ogcl-sheet|SidebarPromos/);
+  assert.match(shell,/to="\/home" className="ogcl-signup-logo"/);
+  assert.match(shell,/<Outlet\/>/);
   assert.match(signup,/I am a/);
   assert.match(signup,/>CONTINUE<\/button>/);
-  assert.deepEqual([...signup.matchAll(/<NavLink to="([^"]+)"/g)].map(m=>m[1]),["/ogtrends","/signin","/home","/contact","/privacy","/terms"]);
+  assert.deepEqual([...shell.matchAll(/<NavLink to="([^"]+)"/g)].map(m=>m[1]),["/ogtrends","/signin","/home","/contact","/privacy","/terms"]);
   assert.match(css,/background:transparent/);
   assert.match(css,/grid-template-rows:auto 1fr auto/);
 });
@@ -38,8 +40,9 @@ test("signup choices are allowlisted, ephemeral and confirmed through existing o
   assert.deepEqual(signupIdentity("Bi","Man"),{orientation:"Bi",gender:"Man"});
   assert.equal(signupIdentity("invalid","Woman"),null);
   assert.equal(signupIdentity("Gay","invalid"),null);
-  assert.match(signup,/onContinue\(identity\);\s*navigate\("\/join"\)/);
-  assert.doesNotMatch(signup+app,/localStorage|sessionStorage|indexedDB/);
+  assert.match(signup,/onContinue\(identity\);\s*navigate\("\/signup2"\)/);
+  assert.doesNotMatch(signup+app+credentials,/localStorage|sessionStorage|indexedDB/);
+  assert.match(app,/\["\/signup","\/signup2","\/join","\/onboarding"\]/);
   assert.match(app,/setSignupSelection\(null\)/);
   const onboarding=read("./Onboarding.jsx");
   assert.match(onboarding,/state\.gender\|\|signupSelection\?\.gender/);
@@ -48,6 +51,20 @@ test("signup choices are allowlisted, ephemeral and confirmed through existing o
 });
 test("signup is a canonical static-publish and route recovery path",()=>{
   assert.ok(SITEMAP_PATHS.includes("/signup"));
+  assert.ok(SITEMAP_PATHS.includes("/signup2"));
+  assert.equal(normalizeSiteRoute("/signup2/","https://ogcupid.com"),"/signup2");
   assert.equal(normalizeSiteRoute("/signup/","https://ogcupid.com"),"/signup");
   assert.equal(normalizeSiteRoute("/home","https://ogcupid.com"),"/home");
+});
+
+test("signup step two uses existing credential validation and signup action",()=>{
+  assert.match(credentials,/<label>Username<input name="username" type="text" required minLength=\{2\} maxLength=\{60\}/);
+  assert.match(credentials,/<label>Email<input name="email" type="email" required maxLength=\{254\}/);
+  assert.match(credentials,/<label>Password<input name="password" type="password" required minLength=\{12\}/);
+  assert.match(credentials,/These are permanent\. Choose wisely/);
+  assert.match(credentials,/form\.elements\.password\.value=""/);
+  assert.match(credentials,/await signUp\(username,email,password\)/);
+  assert.match(credentials,/navigate\("\/onboarding",\{replace:true\}\)/);
+  assert.match(credentials,/submitting\.current\|\|!form\.reportValidity\(\)/);
+  assert.match(css,/\.ogcl-signup-tooltip\{position:absolute;top:26px;left:calc\(100% \+ 18px\)/);
 });
