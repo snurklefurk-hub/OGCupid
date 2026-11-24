@@ -38,3 +38,19 @@
   .ogcl-signup-form select{width:100%;min-width:0}
   .ogcl-signup-logo img{width:200px}
 }
+
+/* Signup step two: the form stays centered under the shared logo; the
+   contextual note sits to its right, outside the field column. */
+.ogcl-signup-credentials{position:relative;width:min(100%,340px);margin:0}
+.ogcl-signup-credentials-fields{display:grid;gap:12px}
+.ogcl-signup-credentials label{display:grid;gap:5px;font-size:14px}
+.ogcl-signup-credentials input{width:100%;min-width:0;min-height:48px;padding:0 14px;background:#fff;color:#50586a;border:1px solid #d4d8e0;border-radius:2px;font:16px Arial,sans-serif}
+.ogcl-signup-credentials small{font-size:11px;opacity:.85;margin-top:-6px}
+.ogcl-signup-credentials button{min-height:48px;padding:0 20px;border:1px solid transparent;border-radius:2px;background:#00c982;color:#fff;font:600 15px Arial,sans-serif;cursor:pointer}
+.ogcl-signup-credentials button:hover:not(:disabled){background:#00b874}
+.ogcl-signup-credentials button:disabled{opacity:.7;cursor:wait}
+.ogcl-signup-credentials input:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.ogcl-signup-tooltip{position:absolute;top:26px;left:calc(100% + 18px);width:152px;padding:10px 12px;border-radius:3px;background:#fff;color:#50586a;font-size:12px;line-height:1.45;box-shadow:0 2px 7px #0002}
+.ogcl-signup-tooltip::before{content:"";position:absolute;top:14px;right:100%;border:7px solid transparent;border-right-color:#fff}
+.ogcl-signup-error{margin:0;color:#fff;background:#7f2435;padding:8px;border-radius:3px;font-size:13px}
+@media(max-width:740px){.ogcl-signup-tooltip{position:static;width:100%;margin-top:12px}.ogcl-signup-tooltip::before{display:none}}
