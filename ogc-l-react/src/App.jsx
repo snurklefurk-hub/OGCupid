@@ -3,6 +3,8 @@ import {Navigate, NavLink, Outlet, Route, Routes, useLocation} from "react-route
 import {defaultRoute, primaryNavigation} from "./navigation.mjs";
 import PublishedUiDesign from "./PublishedUiDesign.jsx";
 import SignupLanding from "./SignupLanding.jsx";
+import SignupShell from "./SignupShell.jsx";
+import SignupCredentials from "./SignupCredentials.jsx";
 import {homeDestination} from "./signup-landing.mjs";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {SidebarPromos, ProfileFloater, ProfileRefinement} from "./ClassicSidebar.jsx";
@@ -340,7 +342,7 @@ export default function App() {
   const {pathname}=useLocation();
   const [signupSelection,setSignupSelection]=useState(null);
   useEffect(()=>{
-    if(!["/signup","/join","/onboarding"].includes(pathname.replace(/\/$/,"")))setSignupSelection(null);
+    if(!["/signup","/signup2","/join","/onboarding"].includes(pathname.replace(/\/$/,"")))setSignupSelection(null);
   },[pathname]);
   return (<>
     <PublishedUiDesign />
@@ -387,7 +389,10 @@ export default function App() {
           </div>
         </section>} />
       </Route>
-      <Route path="signup" element={<SignupLanding onContinue={setSignupSelection}/>} />
+      <Route element={<SignupShell/>}>
+        <Route path="signup" element={<SignupLanding onContinue={setSignupSelection} selection={signupSelection}/>} />
+        <Route path="signup2" element={<SignupCredentials/>} />
+      </Route>
     </Routes>
   </>);
 }
