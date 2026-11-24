@@ -146,6 +146,7 @@ export default function Onboarding({signupSelection=null,onIdentitySaved}={}){
     </div></section>;
   if(kind==="guest")return <Navigate to="/signin" replace/>;
   if(kind!=="onboarding")return <section className="ogcl-view" role="status">Checking your account…</section>;
+  if(status&&!status.identity)return <Navigate to="/signup3" replace/>;
   const step=nextStep(status);
   const state=status?.state||{};
   const progress=(!status?.identity?0:!status?.locality?20:!status?.profile?40:
