@@ -13,8 +13,8 @@ const raw={...Object.fromEntries(PROFILE_SETTINGS_FIELDS.map(f=>[f.key,""])),
   preferredAgeMin:null,preferredAgeMax:null,searchRadiusMiles:25,hasValidatedLocality:true,
   work:"Writer",gender:"Woman"};
 test("approved four group options, 18-99 age bounds and 50-mile label are exact",()=>{
-  assert.deepEqual(LOOKING_GENDERS.map(x=>x.label),["Men","Women","Trans Men","Trans Women","Something Else"]);
-  assert.deepEqual(LOOKING_INTENTIONS.map(x=>x.label),["New friends","Short-term dating","Long-term dating","Casual sex","Activity partners"]);
+  assert.deepEqual(LOOKING_GENDERS.map(x=>x.label),["Men","Women","Transmen","Transwomen","Intersex people","Enbies","Something else"]);
+  assert.deepEqual(LOOKING_INTENTIONS.map(x=>x.label),["long term dating","short term dating","friends","freaky stuff"]);
   assert.deepEqual(LOOKING_RADII.map(x=>x.value),[10,25,50,100,250,500,0]);
   assert.equal(LOOKING_RADII[0].label,"Near me");
   assert.equal(LOOKING_RADII.at(-1).label,"Anywhere");
@@ -46,7 +46,7 @@ test("explicit gender and intentions changes normalize storage and reject invali
   };
   const update=lookingForUpdate(source,draft);
   assert.equal(update.interestedIn,"Man, Woman");
-  assert.equal(update.relationshipGoal,"new friends, long-term dating");
+  assert.equal(update.relationshipGoal,"long-term dating, new friends");
   assert.equal(update.searchRadiusMiles,0);
   assert.throws(()=>lookingForUpdate(source,{...draft,preferredAgeMax:17}));
   assert.throws(()=>lookingForUpdate(source,{...draft,searchRadiusMiles:150}));
@@ -65,9 +65,9 @@ test("public About uses only member-visible age, distance and saved intentions",
     ...raw,displayName:"First Member",preferredAgeMin:21,preferredAgeMax:39,
     profileSearchRadiusMiles:10
   },publicAnswers:[],isOwner:false},"first-member");
-  assert.deepEqual(formatLookingFor(r.lookingFor),["Everyone","Ages 21–39","Near me","For Long-term dating"]);
+  assert.deepEqual(formatLookingFor(r.lookingFor),["Everyone","Ages 21–39","Near me","For long term dating"]);
   const other={...r.lookingFor,profileSearchRadiusMiles:0};
-  assert.deepEqual(formatLookingFor(other),["Everyone","Ages 21–39","Anywhere","For Long-term dating"]);
+  assert.deepEqual(formatLookingFor(other),["Everyone","Ages 21–39","Anywhere","For long term dating"]);
   assert.equal(JSON.stringify(r).includes("searchOriginLat"),false);
 });
 test("gateway owner-only PUT re-reads profile then saves all approved groups together",async()=>{
