@@ -30,18 +30,19 @@ export function assertPhotoKey(key) {
   }
   return key;
 }
-function sign(method,key,body=null) {
+function sign(method,key,body=null,query="") {
   const cfg=config();
-  assertPhotoKey(key);
+  if(key!==null)assertPhotoKey(key);
+  else if(method!=="GET"||!query)throw Error("Invalid storage list request");
   const now=new Date();
   const amzDate=now.toISOString().replace(/[-:]|\.\d{3}/g,"");
   const day=amzDate.slice(0,8);
   const scope=`${day}/${cfg.region}/s3/aws4_request`;
-  const path=`/${BUCKET}/${key}`;
+  const path=key===null?`/${BUCKET}`:`/${BUCKET}/${key}`;
   const bodyHash=sha256(body ?? Buffer.alloc(0));
   const signedHeaders="host;x-amz-content-sha256;x-amz-date";
   const canonicalHeaders=`host:${cfg.host}\nx-amz-content-sha256:${bodyHash}\nx-amz-date:${amzDate}\n`;
-  const canonicalRequest=[method,path,"",canonicalHeaders,signedHeaders,bodyHash].join("\n");
+  const canonicalRequest=[method,path,query,canonicalHeaders,signedHeaders,bodyHash].join("\n");
   const stringToSign=["AWS4-HMAC-SHA256",amzDate,scope,sha256(canonicalRequest)].join("\n");
   const signingKey=hmac(hmac(hmac(hmac("AWS4"+cfg.secret,day),cfg.region),"s3"),"aws4_request");
   const signature=createHmac("sha256",signingKey).update(stringToSign).digest("hex");
@@ -51,7 +52,7 @@ function sign(method,key,body=null) {
     "authorization":`AWS4-HMAC-SHA256 Credential=${cfg.key}/${scope}, SignedHeaders=${signedHeaders}, Signature=${signature}`,
   });
   if(body) headers.set("content-type","image/jpeg");
-  return { url:cfg.base+path,headers };
+  return { url:cfg.base+path+(query?"?"+query:""),headers };
 }
 async function storageRequest(method,key,body=null){
   const opts=sign(method,key,body);
@@ -77,4 +78,27 @@ export async function fetchPhoto(key){
 }
 export async function removePhoto(key){
   await storageRequest("DELETE",key);
+}
+
+export async function removePhotoPrefix(userId){
+  if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(userId))throw Error("Invalid cleanup owner");
+  const prefix="profile-photos/"+userId+"/";
+  // Repeatedly list the first page after deletion, including orphan uploads.
+  // Scope and validate every returned key before deleting anything.
+  for(let batch=0;batch<100;batch++){
+    const query="list-type=2&max-keys=100&prefix="+encodeURIComponent(prefix);
+    const opts=sign("GET",null,null,query);
+    const response=await fetch(opts.url,{headers:opts.headers,redirect:"error",cache:"no-store",signal:AbortSignal.timeout(15000)});
+    if(!response.ok)throw Error("Could not list private test photos");
+    const xml=await response.text();
+    if(xml.length>200000||!/<ListBucketResult(?:\s|>)/.test(xml))throw Error("Invalid storage listing");
+    const keys=[...xml.matchAll(/<Key>([^<]+)<\/Key>/g)].map(m=>m[1]);
+    if(!keys.length){
+      if(/<IsTruncated>true<\/IsTruncated>/.test(xml)||/<Contents>/.test(xml))throw Error("Incomplete storage listing");
+      return;
+    }
+    if(keys.some(k=>!k.startsWith(prefix)||!/^profile-photos\/[0-9a-f-]{36}\/[0-9a-f-]{36}\.jpg$/.test(k)))throw Error("Unexpected storage object key");
+    for(const key of keys)await removePhoto(key);
+  }
+  throw Error("Test photo cleanup batch limit reached");
 }
