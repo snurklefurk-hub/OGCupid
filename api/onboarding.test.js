@@ -95,13 +95,14 @@ test('signup preferences are stored atomically on the authenticated onboarding r
   const withMember=(id,work)=>{assert.equal(id,memberId);calls++;return work({query:async(q,p)=>{sql=q;params=p;return {rowCount:1};}});};
   const json=(_,body,status=200)=>new Response(JSON.stringify(body),{status});
   const req=body=>new Request('https://example.test/onboarding',{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
-  const input={step:'signup-preferences',gender:'Enby',orientation:'Ace',interestedIn:['Intersex','Enby'],intentions:['new friends','casual sex']};
+  const input={step:'signup-preferences',gender:'Enby',orientation:'Ace',interestedIn:['Intersex','Enby'],intentions:['new friends','casual sex'],birthDate:'1990-01-01'};
   const result=await handleOnboarding(req(input),memberId,withMember,json);
   assert.equal(result.status,200);
-  assert.deepEqual(params,[memberId,'Enby','Ace',['Intersex','Enby'],['new friends','casual sex']]);
+  assert.deepEqual(params,[memberId,'Enby','Ace',['Intersex','Enby'],['new friends','casual sex'],'1990-01-01']);
   assert.match(sql,/WHERE app_private.member_onboarding.explored_at IS NULL/);
-  assert.doesNotMatch(sql,/details_complete|adult_attested_at|birth_date/);
-  for(const invalid of [{...input,intentions:['activity partners']},{...input,interestedIn:['Man','Man']},{...input,gender:'invalid'}]){
+  assert.match(sql,/birth_date=COALESCE/);
+  assert.doesNotMatch(sql,/details_complete|adult_attested_at|locality_id/);
+  for(const invalid of [{...input,intentions:['activity partners']},{...input,interestedIn:['Man','Man']},{...input,gender:'invalid'},{...input,birthDate:'2999-01-01'},{...input,birthDate:'1990-02-30'},{...input,birthDate:''}]){
     assert.equal((await handleOnboarding(req(invalid),memberId,withMember,json)).status,400);
   }
   assert.equal(calls,1);

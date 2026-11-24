@@ -166,7 +166,7 @@ export default function Onboarding({signupSelection=null,onIdentitySaved}={}){
     if(!candidate?.id||!candidate?.key){setError("Choose a verified city or ZIP code first.");return;}
     await submit(async()=>{
       const result=await accountRequest("/onboarding","PUT",{
-        step:"locality",birthDate:f.elements.birthDate.value,
+        step:"locality",birthDate:f.elements.birthDate?.value||String(state.birth_date||"").slice(0,10),
         countryCode:country,zipCode:country==="US"?f.elements.zipCode.value:"",
         locality:{id:Number(candidate.id),key:candidate.key}
       });
@@ -230,10 +230,10 @@ export default function Onboarding({signupSelection=null,onIdentitySaved}={}){
         {dropdown("orientation","Orientation",orientations,state.orientation||signupSelection?.orientation,true)}
       </ActionForm>}
       {step==="locality"&&<ActionForm busy={busy} error={error} submitLabel="Save & continue" onSubmit={saveLocation}>
-        <h2>When and where?</h2>
-        <p>No street address, no GPS. Your date of birth is used for age and eligibility.</p>
-        <label>Birthdate<input type="date" name="birthDate" required defaultValue={String(state.birth_date||"").slice(0,10)}
-          max={new Date(Date.UTC(new Date().getUTCFullYear()-18,new Date().getUTCMonth(),new Date().getUTCDate())).toISOString().slice(0,10)}/></label>
+        <h2>{state.birth_date?"Where are you?":"When and where?"}</h2>
+        <p>No street address, no GPS.{!state.birth_date&&" Your date of birth is used for age and eligibility."}</p>
+        {!state.birth_date&&<label>Birthdate<input type="date" name="birthDate" required defaultValue={String(state.birth_date||"").slice(0,10)}
+          max={new Date(Date.UTC(new Date().getUTCFullYear()-18,new Date().getUTCMonth(),new Date().getUTCDate())).toISOString().slice(0,10)}/></label>}
         <label>Country<select name="countryCode" value={country}
           onChange={e=>{setCountry(e.target.value);setSelected(null);setLocation(null);}}>
           {countries.sort((a,b)=>countryNames.of(a).localeCompare(countryNames.of(b)))
