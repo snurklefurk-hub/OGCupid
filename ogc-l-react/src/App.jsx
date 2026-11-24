@@ -5,6 +5,7 @@ import PublishedUiDesign from "./PublishedUiDesign.jsx";
 import SignupLanding from "./SignupLanding.jsx";
 import SignupShell from "./SignupShell.jsx";
 import SignupCredentials from "./SignupCredentials.jsx";
+import SignupIdentity from "./SignupIdentity.jsx";
 import {homeDestination} from "./signup-landing.mjs";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {SidebarPromos, ProfileFloater, ProfileRefinement} from "./ClassicSidebar.jsx";
@@ -205,7 +206,7 @@ function SiteShell() {
 }
 
 function SignInForm() {
-  const {kind,signIn, error: sessionError} = useMemberSession();
+  const {kind,onboarding,signIn, error: sessionError} = useMemberSession();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   async function submit(event) {
@@ -225,7 +226,7 @@ function SignInForm() {
     } finally { setBusy(false); }
   }
   if(kind==="member")return <Navigate to={defaultRoute} replace/>;
-  if(kind==="onboarding")return <Navigate to="/onboarding" replace/>;
+  if(kind==="onboarding")return <Navigate to={onboarding?.identity?"/onboarding":"/signup3"} replace/>;
   return (
     <section className="ogcl-view" aria-labelledby="ogcl-signin-heading">
       <header className="ogcl-view-head">
@@ -332,8 +333,8 @@ const views = {
 };
 
 function HomeRoute(){
-  const {kind}=useMemberSession();
-  const destination=homeDestination(kind);
+  const {kind,onboarding}=useMemberSession();
+  const destination=kind==="onboarding"&&!onboarding?.identity?"/signup3":homeDestination(kind);
   if(destination)return <Navigate to={destination} replace/>;
   return <MemberGate><section className="ogcl-view"><header className="ogcl-view-head"><h1>Home</h1></header></section></MemberGate>;
 }
@@ -342,7 +343,7 @@ export default function App() {
   const {pathname}=useLocation();
   const [signupSelection,setSignupSelection]=useState(null);
   useEffect(()=>{
-    if(!["/signup","/signup2","/join","/onboarding"].includes(pathname.replace(/\/$/,"")))setSignupSelection(null);
+    if(!["/signup","/signup1","/signup2","/signup3","/join","/onboarding"].includes(pathname.replace(/\/$/,"")))setSignupSelection(null);
   },[pathname]);
   return (<>
     <PublishedUiDesign />
@@ -391,7 +392,9 @@ export default function App() {
       </Route>
       <Route element={<SignupShell/>}>
         <Route path="signup" element={<SignupLanding onContinue={setSignupSelection} selection={signupSelection}/>} />
+        <Route path="signup1" element={<Navigate to="/signup" replace/>} />
         <Route path="signup2" element={<SignupCredentials/>} />
+        <Route path="signup3" element={<SignupIdentity selection={signupSelection} onSaved={()=>setSignupSelection(null)}/>} />
       </Route>
     </Routes>
   </>);
