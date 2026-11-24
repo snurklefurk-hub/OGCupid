@@ -1,8 +1,9 @@
 import { scorePersonaV2 } from "./persona-v2-scoring.js";
+import {PROFILE_GENDERS,PROFILE_ORIENTATIONS,validSignupPreferences} from "../ogc-l-react/src/profile-options.mjs";
 
 // All calls arrive after JWT verification and use the transaction-scoped member ID.
-const genders = new Set(['Man','Woman','Transman','Transwoman','Something else']);
-const orientations = new Set(['Gay','Straight','Bi','Something else']);
+const genders = new Set(PROFILE_GENDERS);
+const orientations = new Set(PROFILE_ORIENTATIONS);
 const jsonBody = async request => {
   if (!(request.headers.get('content-type') || '').startsWith('application/json')) throw Error('Expected JSON');
   const raw = await request.text();
@@ -44,7 +45,7 @@ export async function handleOnboarding(request,userId,withMember,json,verifiedPl
     if (request.method === 'GET') {
       const result=await withMember(userId,async client => {
         const [state,profile,photos,answers,verified]=await Promise.all([
-          client.query('SELECT gender,orientation,birth_date,country_code,zip_code,locality_id,locality_shard,city_label,details_complete,match_age_min,match_age_max,explored_at,primary_self_photo_id,persona_code FROM app_private.member_onboarding WHERE user_id=$1::uuid',[userId]),
+          client.query('SELECT gender,orientation,birth_date,country_code,zip_code,locality_id,locality_shard,city_label,details_complete,match_age_min,match_age_max,explored_at,primary_self_photo_id,persona_code,signup_interested_in,signup_intentions FROM app_private.member_onboarding WHERE user_id=$1::uuid',[userId]),
           client.query('SELECT about_me, interested_in, relationship_goal FROM app_private.member_profiles WHERE user_id=$1::uuid',[userId]),
           client.query(`SELECT count(*)::int AS total,
             bool_or(is_primary AND id = (SELECT primary_self_photo_id FROM app_private.member_onboarding WHERE user_id=$1::uuid)) AS primary
@@ -70,6 +71,13 @@ export async function handleOnboarding(request,userId,withMember,json,verifiedPl
       if (!genders.has(body.gender) || !orientations.has(body.orientation)) throw Error('Choose your gender and orientation');
       await withMember(userId,client=>client.query(`INSERT INTO app_private.member_onboarding(user_id,gender,orientation) VALUES($1::uuid,$2,$3)
         ON CONFLICT(user_id) DO UPDATE SET gender=$2,orientation=$3`,[userId,body.gender,body.orientation]));
+    } else if (body.step==='signup-preferences') {
+      if (!validSignupPreferences(body)) throw Error('Choose valid identity and dating preferences');
+      const saved=await withMember(userId,client=>client.query(`INSERT INTO app_private.member_onboarding(user_id,gender,orientation,signup_interested_in,signup_intentions)
+        VALUES($1::uuid,$2,$3,$4::text[],$5::text[])
+        ON CONFLICT(user_id) DO UPDATE SET gender=$2,orientation=$3,signup_interested_in=$4::text[],signup_intentions=$5::text[]
+        WHERE app_private.member_onboarding.explored_at IS NULL RETURNING user_id`,[userId,body.gender,body.orientation,body.interestedIn,body.intentions]));
+      if (!saved.rowCount) throw Error('Use Profile Settings to update your completed profile');
     } else if (body.step==='locality') {
       if (!adultBirthDate(body.birthDate)) throw Error('Enter a valid birthdate (18 or older)');
       if (typeof body.countryCode!=='string' || !/^[A-Z]{2}$/.test(body.countryCode)) throw Error('Choose a country');
