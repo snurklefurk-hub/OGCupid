@@ -12,7 +12,7 @@ export default function SignupShell(){
   if(kind==="checking")return <main className="ogcl-signup-landing" aria-busy="true" aria-label="Checking account"/>;
   return <main className="ogcl-signup-landing" aria-label="Sign up for OG Cupid">
     <header className="ogcl-signup-top">
-      <NavLink to="/ogtrends">OgTrends</NavLink>
+      <span className="ogcl-signup-blog">Just here for the blog? <NavLink to="/ogtrends">click here to read OG Trends</NavLink></span>
       <NavLink to="/signin" className="ogcl-signup-signin">Sign in</NavLink>
     </header>
     <div className="ogcl-signup-content">
