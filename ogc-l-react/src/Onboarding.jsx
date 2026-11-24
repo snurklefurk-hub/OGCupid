@@ -1,12 +1,13 @@
+import {PROFILE_GENDERS,PROFILE_ORIENTATIONS,PROFILE_INTENTIONS,PROFILE_LOOKING_GENDERS} from "./profile-options.mjs";
 import React,{useEffect,useRef,useState} from "react";
 import {Navigate,NavLink,useNavigate} from "react-router-dom";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import PhotoManager from "./PhotoManager.jsx";
 import "./account.css";
 
-const genders=["Man","Woman","Transman","Transwoman","Something else"];
-const orientations=["Gay","Straight","Bi","Something else"];
-const goals=["long-term dating","short-term dating","new friends","casual sex","activity partners"];
+const genders=PROFILE_GENDERS;
+const orientations=PROFILE_ORIENTATIONS;
+const goals=PROFILE_INTENTIONS.map(x=>x.value);
 const countries="AD AE AF AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BV BW BY BZ CA CC CD CF CG CH CI CK CL CM CN CO CR CU CV CW CX CY CZ DE DJ DK DM DO DZ EC EE EG EH ER ES ET FI FJ FK FM FO FR GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GS GT GU GW GY HK HM HN HR HT HU ID IE IL IM IN IO IQ IR IS IT JE JM JO JP KE KG KH KI KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MF MG MH MK ML MM MN MO MP MQ MR MS MT MU MV MW MX MY MZ NA NC NE NF NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PN PR PS PT PW PY QA RE RO RS RU RW SA SB SC SD SE SG SH SI SJ SK SL SM SN SO SR SS ST SV SX SY SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG UM US UY UZ VA VC VE VG VI VN VU WF WS YE YT ZA ZM ZW".split(" ");
 const countryNames=new Intl.DisplayNames(["en"],{type:"region"});
 const cleanCity=value=>String(value||"").normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]/g,"");
@@ -92,7 +93,7 @@ export function CityChooser({country,stored,onPick}){
 function OptionChecks({title,name,values,selected}){
   return <fieldset><legend>{title}</legend><div className="ogcl-choice-grid">
     {values.map(v=><label className="ogcl-account-check" key={v}>
-      <input type="checkbox" name={name} value={v} defaultChecked={selected.includes(v)}/>{v}</label>)}
+      <input type="checkbox" name={name} value={v} defaultChecked={selected.includes(v)}/>{(name==="openTo"?PROFILE_INTENTIONS.find(x=>x.value===v)?.label:name==="interestedIn"?PROFILE_LOOKING_GENDERS.find(x=>x.value===v)?.label:null)||v}</label>)}
   </div></fieldset>;
 }
 function ActionForm({busy,error,children,onSubmit,submitLabel}){
@@ -242,9 +243,9 @@ export default function Onboarding({signupSelection=null,onIdentitySaved}={}){
       {step==="details"&&<ActionForm busy={busy} error={error} submitLabel="Save profile & continue" onSubmit={saveDetails}>
         <h2>Let’s fill out your profile.</h2>
         <OptionChecks title="I'm interested in" name="interestedIn" values={genders}
-          selected={String(profile?.interestedIn||"").split(", ")}/>
+          selected={profile?.interestedIn?String(profile.interestedIn).split(", "):state.signup_interested_in||[]}/>
         <OptionChecks title="I'm open to" name="openTo" values={goals}
-          selected={String(profile?.relationshipGoal||"").split(", ")}/>
+          selected={profile?.relationshipGoal?String(profile.relationshipGoal).split(", "):state.signup_intentions||[]}/>
         <div className="ogcl-account-inline">
           {dropdown("minAge","Age from",Array.from({length:82},(_,i)=>18+i),state.match_age_min||18,true)}
           {dropdown("maxAge","Age to",Array.from({length:82},(_,i)=>18+i),state.match_age_max||99,true)}
