@@ -434,12 +434,15 @@ a.ogcl-editorial-card:hover,a.ogcl-editorial-card:focus-visible {background:var(
 .ogcl-profile-floater + .ogcl-refinement-slot {margin-top:3px;}
 .ogcl-profile-floater {
   display:flex;
+  flex-direction:column;
+  gap:5px;
   align-items:center;
   justify-content:center;
   padding:12px;
   background:var(--okc-navy);
   text-decoration:none;
 }
+.ogcl-profile-card-name {max-width:100%;overflow-wrap:anywhere;text-align:center;color:var(--okc-white);font-weight:bold;}
 .ogcl-profile-floater:hover,.ogcl-profile-floater:focus-visible {background:var(--okc-navy-line);}
 .ogcl-profile-floater .ogcl-member-photo {
   width:65px;height:65px;border-radius:50%;object-fit:cover;

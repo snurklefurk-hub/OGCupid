@@ -54,7 +54,7 @@ export const EDITOR_SHELL_AREAS=Object.freeze([
   {id:"refinementCard",label:"Profile refinement card",selector:'.ogcl-right .ogcl-editorial-card[data-ogc-card="shell.refinement"]'},
   {id:"navSpacing",label:"Nav button spacing",selector:".ogcl-left .ogcl-main-nav"},
   {id:"rightRail",label:"Right column",selector:".ogcl-right"},
-  {id:"profileFloater",label:"Your profile photo",selector:".ogcl-right .ogcl-profile-floater"},
+  {id:"profileFloater",label:"Your profile card",selector:".ogcl-right .ogcl-profile-floater"},
   {id:"rightCard",label:"Right-column cards",selector:".ogcl-right .ogcl-side-card"},
   {id:"rightEditorial",label:"Right-column promotion cards",selector:".ogcl-right .ogcl-editorial-stack"},
   {id:"accountBar",label:"Top account bar",selector:".ogcl-center .ogcl-banner"},
