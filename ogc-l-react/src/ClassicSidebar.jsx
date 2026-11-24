@@ -33,14 +33,14 @@ export function SidebarPromos({side,selection}) {
   </div>;
 }
 
-// Completed members get only their real circular primary photograph in this
-// floating navy tile; profile prompts remain separate cards in the right rail.
 export function ProfileFloater({Photo}) {
   const {kind,user,profile}=useMemberSession();
   if(kind!=="member"||!user?.id)return null;
+  const name=profile?.displayName?.trim()||profile?.slug;
   return <NavLink to={profile?.slug?"/profiles/"+profile.slug:"/settings"}
     className="ogcl-profile-floater" aria-label="Open your profile">
     <Photo member={{userId:user.id}} />
+    {name&&<span className="ogcl-profile-card-name">{name}</span>}
   </NavLink>;
 }
 export function ProfileRefinement({selection}) {
