@@ -1,7 +1,9 @@
 import React, {lazy, Suspense, useEffect, useMemo, useState} from "react";
-import {Navigate, NavLink, Outlet, Route, Routes} from "react-router-dom";
+import {Navigate, NavLink, Outlet, Route, Routes, useLocation} from "react-router-dom";
 import {defaultRoute, primaryNavigation} from "./navigation.mjs";
 import PublishedUiDesign from "./PublishedUiDesign.jsx";
+import SignupLanding from "./SignupLanding.jsx";
+import {homeDestination} from "./signup-landing.mjs";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {SidebarPromos, ProfileFloater, ProfileRefinement} from "./ClassicSidebar.jsx";
 import {useSitePromos} from "./use-site-promos.mjs";
@@ -154,7 +156,7 @@ function TopMemberNav() {
     </>}
     {session.kind==="guest" && <>
       <NavLink data-ogc-edit-text="shell.account.signin" to="/signin">Sign in</NavLink>
-      <NavLink data-ogc-edit-text="shell.account.join" to="/join">Join OG Cupid</NavLink>
+      <NavLink data-ogc-edit-text="shell.account.join" to="/signup">Join OG Cupid</NavLink>
     </>}
   </nav>;
 }
@@ -164,10 +166,17 @@ function RouteLoading(){
 }
 
 function AppShell() {
+  const {pathname}=useLocation();
+  const {kind}=useMemberSession();
+  // No site shell flash before the default landing redirect or guest home redirect.
+  if(pathname==="/"||pathname.replace(/\/$/,"")==="/home"&&kind!=="member")return <Outlet/>;
+  return <SiteShell/>;
+}
+
+function SiteShell() {
   const promoSelection=useSitePromos();
   return (
     <div className="ogcl-app">
-      <PublishedUiDesign />
       <a className="ogcl-skip" href="#ogcl-content" onClick={event=>{
         event.preventDefault();
         document.getElementById("ogcl-content")?.focus();
@@ -213,7 +222,7 @@ function SignInForm() {
         : "Unable to sign in right now. Please retry.");
     } finally { setBusy(false); }
   }
-  if(kind==="member")return <Navigate to="/matches" replace/>;
+  if(kind==="member")return <Navigate to={defaultRoute} replace/>;
   if(kind==="onboarding")return <Navigate to="/onboarding" replace/>;
   return (
     <section className="ogcl-view" aria-labelledby="ogcl-signin-heading">
@@ -228,7 +237,7 @@ function SignInForm() {
           <button type="submit" disabled={busy}>{busy ? "Checking account…" : "Sign in"}</button>
           {(error || sessionError) && <p className="ogcl-error" role="alert">{error || sessionError}</p>}
         </form>
-        <p><NavLink to="/join">Make your profile</NavLink> · <NavLink to="/recover">Forgot your password?</NavLink> · <NavLink to="/verify">Verify email</NavLink></p>
+        <p><NavLink to="/signup">Make your profile</NavLink> · <NavLink to="/recover">Forgot your password?</NavLink> · <NavLink to="/verify">Verify email</NavLink></p>
         <p className="ogcl-note">New here? Create a free account to share more than a photo and a swipe.</p>
         <p className="ogcl-note"><NavLink to="/ogtrends">Read OgTrends</NavLink> · <NavLink to="/privacy">Privacy policy</NavLink> · <NavLink to="/terms">Terms</NavLink></p>
       </div>
@@ -320,17 +329,30 @@ const views = {
     "Visitor tracking isn't live yet. No activity is being recorded or invented."],
 };
 
+function HomeRoute(){
+  const {kind}=useMemberSession();
+  const destination=homeDestination(kind);
+  if(destination)return <Navigate to={destination} replace/>;
+  return <MemberGate><section className="ogcl-view"><header className="ogcl-view-head"><h1>Home</h1></header></section></MemberGate>;
+}
+
 export default function App() {
-  return (
+  const {pathname}=useLocation();
+  const [signupSelection,setSignupSelection]=useState(null);
+  useEffect(()=>{
+    if(!["/signup","/join","/onboarding"].includes(pathname.replace(/\/$/,"")))setSignupSelection(null);
+  },[pathname]);
+  return (<>
+    <PublishedUiDesign />
     <Routes>
       <Route element={<AppShell />}>
         <Route index element={<Navigate to={defaultRoute} replace />} />
-        <Route path="home" element={<section className="ogcl-view"><header className="ogcl-view-head"><h1>Home</h1></header></section>} />
+        <Route path="home" element={<HomeRoute/>} />
         <Route path="signin" element={<SignInForm />} />
         <Route path="join" element={<JoinForm/>} />
         <Route path="recover" element={<RecoveryForm/>} />
         <Route path="verify" element={<VerifyForm/>} />
-        <Route path="onboarding" element={<Onboarding/>} />
+        <Route path="onboarding" element={<Onboarding signupSelection={signupSelection} onIdentitySaved={()=>setSignupSelection(null)}/>} />
         <Route path="account" element={<AccountManagement/>} />
         <Route path="persona" element={<PersonaRoute/>} />
         <Route path="ogtrends" element={<EmbeddedEditorial pageKey="ogtrends"/>} />
@@ -365,6 +387,7 @@ export default function App() {
           </div>
         </section>} />
       </Route>
+      <Route path="signup" element={<SignupLanding onContinue={setSignupSelection}/>} />
     </Routes>
-  );
+  </>);
 }
