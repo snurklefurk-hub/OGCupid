@@ -4,6 +4,8 @@ on:
     branches: [main]
     paths:
       - 'api/**'
+      - 'ogc-l-react/src/admin-ui-editor-model.mjs'
+      - 'ogc-l-react/src/shared-ui-components.mjs'
       - '.github/workflows/bundle-member-function.yml'
   workflow_dispatch:
 permissions:

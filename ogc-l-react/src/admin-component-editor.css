@@ -1,0 +1,24 @@
+.ogcl-components-editor{min-width:0;display:grid;gap:12px}
+.ogcl-components-editor header h2,.ogcl-components-editor h3{margin:0 0 6px}
+.ogcl-components-editor header p{margin:4px 0}
+.ogcl-components-actions{display:flex;flex-wrap:wrap;align-items:end;gap:8px}
+.ogcl-components-actions label,.ogcl-components-inspector>label{display:grid;gap:4px}
+.ogcl-components-editor button,.ogcl-components-editor select,.ogcl-components-editor input:not([type=color]){font:inherit}
+.ogcl-components-grid{display:grid;grid-template-columns:minmax(145px,1fr) minmax(0,2.5fr);gap:12px}
+.ogcl-components-families,.ogcl-components-inspector{min-width:0;display:flex;flex-direction:column;gap:6px}
+.ogcl-components-families h3{margin-top:8px}
+.ogcl-components-families>button{text-align:left;border:1px solid #c8d3de;background:#f4f7fa;color:#234c77;padding:7px 9px;border-radius:3px;cursor:pointer}
+.ogcl-components-families>button[aria-pressed=true]{background:#315d8a;color:white;border-color:#224668}
+.ogcl-component-preview{min-height:105px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;padding:15px;box-sizing:border-box;border:1px solid #c8d3de;background:#fff}
+.ogcl-component-preview .classic-search{max-width:100%;width:auto}
+.ogcl-component-preview .chip-editor{position:static}
+.ogcl-components-options{display:flex;flex-wrap:wrap;gap:10px}
+.ogcl-components-hint{font-size:12px;margin:4px 0;color:#555}
+.ogcl-components-inspector fieldset{min-width:0;display:grid;gap:6px;border:1px solid #c8d3de;padding:10px}
+.ogcl-components-property{display:grid;grid-template-columns:minmax(90px,1fr) minmax(0,2fr);align-items:center;gap:8px}
+.ogcl-components-property label{overflow-wrap:anywhere}
+.ogcl-components-value{min-width:0;display:flex;align-items:center;gap:5px}
+.ogcl-components-value input:not([type=color]),.ogcl-components-value select{min-width:0;flex:1;width:100%;box-sizing:border-box}
+.ogcl-components-value input[type=color]{width:27px;height:26px;flex:none;padding:0}
+.ogcl-components-property small{grid-column:2;color:#a31a24}
+@media(max-width:700px){.ogcl-components-grid{grid-template-columns:1fr}.ogcl-components-families{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.ogcl-components-families h3{grid-column:1/-1}.ogcl-components-property{grid-template-columns:1fr}.ogcl-components-property small{grid-column:1}}

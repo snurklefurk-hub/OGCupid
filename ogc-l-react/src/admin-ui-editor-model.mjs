@@ -1,6 +1,7 @@
 // Admin-only, declarative UI editor draft format. The fixed shell and page
 // content have separate scopes; neither can alter the other through CSS.
 import {primaryNavigation} from "./navigation.mjs";
+import {isComponentArea,sanitizeComponentStyle,componentCss} from "./shared-ui-components.mjs";
 
 export const EDITOR_SCHEMA=2;
 export const EDITOR_PAGES=Object.freeze([
@@ -330,6 +331,7 @@ export function sanitizeEditorDraft(raw){
   const shell={};
   for(const [area,style] of Object.entries(global))
     if(shellAreas.has(area))shell[area]=cleanStyle(style,area);
+    else if(isComponentArea(area))shell[area]=sanitizeComponentStyle(style);
   if(Object.keys(shell).length)result.areas["*"]=shell;
 
   // Schema 1 allowed global page styles and page-specific shell overrides.
@@ -424,7 +426,7 @@ export function editorPreviewCss(raw,page){
         if(radius)result+=".ogcl-center .ogcl-sheet .ogcl-period-stage{"+radius+"}\n";
       }
     }
-  return result;
+  return result+componentCss(draft.areas["*"]);
 }
 export function editorBlockHtmlLabel(block){
   if(block.type==="divider")return "Separator";

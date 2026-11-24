@@ -88,13 +88,13 @@ export default function ProfileSettings(){
     return <div className="ogcl-setting-row" key={field.key}>
       <div className="ogcl-setting-summary">
         <div><dt>{field.label}</dt><dd>{value||"Not specified"}</dd></div>
-        {!editing&&<button type="button" disabled={busy} onClick={()=>edit(field)}>Edit</button>}
+        {!editing&&<button type="button" data-ogc-control="secondary" data-ogc-control-id="settings.edit" disabled={busy} onClick={()=>edit(field)}>Edit</button>}
       </div>
       {editing&&<form className="ogcl-setting-editor" onSubmit={save}>
         {field.multi?<fieldset>
           <legend>Choose any that apply</legend>
           {field.multi.map(option=><label key={option}>
-            <input type="checkbox" disabled={busy}
+            <input type="checkbox" data-ogc-control-id="settings.checkbox" disabled={busy}
               checked={draft.split(", ").includes(option)}
               onChange={event=>toggle(option,event.target.checked)}/>
             {option}
@@ -104,7 +104,7 @@ export default function ProfileSettings(){
         </fieldset>:
         field.options?<label>
           <span className="ogcl-visually-hidden">Choose {field.label}</span>
-          <select disabled={busy} value={draft} onChange={e=>setDraft(e.target.value)}>
+          <select data-ogc-control-id="settings.select" disabled={busy} value={draft} onChange={e=>setDraft(e.target.value)}>
             <option value="">Not specified</option>
             {oldOption&&<option value={draft}>{draft} (previous value)</option>}
             {field.options.map(option=><option key={option} value={option}>{option}</option>)}
@@ -112,12 +112,12 @@ export default function ProfileSettings(){
         </label>:
         <label>
           <span className="ogcl-visually-hidden">Edit {field.label}</span>
-          <input type="text" disabled={busy} maxLength={field.max} value={draft}
+          <input type="text" data-ogc-control-id="settings.input" disabled={busy} maxLength={field.max} value={draft}
             onChange={e=>setDraft(e.target.value)}/>
         </label>}
         <div className="ogcl-essay-actions">
-          <button type="submit" disabled={busy}>{busy?"Saving…":"Save"}</button>
-          <button type="button" disabled={busy} onClick={()=>{setActive(null);setError("");}}>Cancel</button>
+          <button type="submit" data-ogc-control="primary" data-ogc-control-id="settings.save" disabled={busy}>{busy?"Saving…":"Save"}</button>
+          <button type="button" data-ogc-control="secondary" data-ogc-control-id="settings.cancel" disabled={busy} onClick={()=>{setActive(null);setError("");}}>Cancel</button>
         </div>
       </form>}
     </div>;

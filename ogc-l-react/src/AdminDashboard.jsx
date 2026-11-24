@@ -5,6 +5,7 @@ import CommunityReportsAdmin from "./CommunityReportsAdmin.jsx";
 import AdminMemberEditor from "./AdminMemberEditor.jsx";
 
 const AdminUiEditor=React.lazy(()=>import("./AdminUiEditor.jsx"));
+const AdminComponentEditor=React.lazy(()=>import("./AdminComponentEditor.jsx"));
 const AdminPromos=React.lazy(()=>import("./AdminPromos.jsx"));
 
 const choices=[
@@ -25,6 +26,7 @@ export default function AdminDashboard(){
   const {adminRequest}=useMemberSession();
   const [tab,setTab]=useState("overview");
   const [editorDirty,setEditorDirty]=useState(false);
+  const [componentsDirty,setComponentsDirty]=useState(false);
   const [promoDirty,setPromoDirty]=useState(false);
   const [editingMember,setEditingMember]=useState(null);
   const [summary,setSummary]=useState(null);
@@ -168,15 +170,15 @@ export default function AdminDashboard(){
     </header>
       <div className="ogcl-admin-toolbar">
         <nav aria-label="Administration sections" className="ogcl-period-tabs">
-          {["overview","reports","community","members","promos","audit","ui-editor"].map(t=><button key={t} type="button"
+          {["overview","reports","community","members","promos","audit","ui-editor","ui-components"].map(t=><button key={t} type="button"
             className={tab===t?"selected":""} aria-current={tab===t?"page":undefined}
             onClick={()=>{
-              if(t!==tab&&(tab==="ui-editor"&&editorDirty||tab==="promos"&&promoDirty)&&
+              if(t!==tab&&(tab==="ui-editor"&&editorDirty||tab==="ui-components"&&componentsDirty||tab==="promos"&&promoDirty)&&
                 !window.confirm("Leave this editor and discard unsaved edits?"))return;
               setTab(t);setError("");setNotice("");
-            }}>{t==="audit"?"Action log":t==="ui-editor"?"UI Editor":t[0].toUpperCase()+t.slice(1)}</button>)}
+            }}>{t==="audit"?"Action log":t==="ui-editor"?"UI Editor":t==="ui-components"?"UI Components":t[0].toUpperCase()+t.slice(1)}</button>)}
         </nav>
-        <button type="button" className="ogcl-button ogcl-secondary" disabled={busy||tab==="ui-editor"}
+        <button type="button" className="ogcl-button ogcl-secondary" disabled={busy||tab==="ui-editor"||tab==="ui-components"}
           onClick={()=>void reload()}>{busy?"Working…":"Refresh"}</button>
       </div>
     </div>
@@ -186,6 +188,9 @@ export default function AdminDashboard(){
 
       {tab==="ui-editor"&&<React.Suspense fallback={<p role="status">Loading editor…</p>}>
         <AdminUiEditor onUnsavedChange={setEditorDirty}/>
+      </React.Suspense>}
+      {tab==="ui-components"&&<React.Suspense fallback={<p role="status">Loading components…</p>}>
+        <AdminComponentEditor onUnsavedChange={setComponentsDirty}/>
       </React.Suspense>}
       {tab==="promos"&&<React.Suspense fallback={<p role="status">Loading promos…</p>}>
         <AdminPromos onUnsavedChange={setPromoDirty}/>

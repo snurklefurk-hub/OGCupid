@@ -45,7 +45,8 @@ test("tabs keep their original navigation and protections",()=>{
   assert.match(matches,/onClick=\{\(\)=>setTab\(id\)\}/);
   assert.match(quickmatch,/setSearchParams\(key==="matches"\?\{\}:\{tab:key\}\)/);
   assert.match(admin,/onClick=\{\(\)=>\{[^]*editorDirty[^]*setTab\(t\);setError\(""\);setNotice\(""\);/);
-  assert.match(admin,/disabled=\{busy\|\|tab==="ui-editor"\}/);
+  assert.match(admin,/disabled=\{busy\|\|tab==="ui-editor"\|\|tab==="ui-components"\}/);
+  assert.match(admin,/tab==="ui-components"&&componentsDirty/);
   assert.match(admin,/if\(denied\)return/);
 });
 
