@@ -16,6 +16,11 @@ export function presentIntentions(raw){
   return raw.split(",").map(x=>x.trim()).filter(x=>x&&x.toLowerCase()!=="activity partners")
     .map(x=>PROFILE_INTENTIONS.find(c=>c.value.toLowerCase()===x.toLowerCase())?.label||x).join(", ");
 }
+export function storageIntentions(raw){
+  if(typeof raw!=="string")return "";
+  return raw.split(",").map(x=>x.trim()).filter(x=>x&&x.toLowerCase()!=="activity partners")
+    .map(x=>PROFILE_INTENTIONS.find(c=>c.value.toLowerCase()===x.toLowerCase()||c.label.toLowerCase()===x.toLowerCase())?.value||x).join(", ");
+}
 export function signupLookingDefaults(gender,orientation){
   if(!["Man","Woman"].includes(gender))return [];
   if(orientation==="Straight")return [gender==="Man"?"Woman":"Man"];
