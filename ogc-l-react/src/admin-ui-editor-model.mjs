@@ -60,6 +60,8 @@ export const EDITOR_SHELL_AREAS=Object.freeze([
   {id:"accountBar",label:"Top account bar",selector:".ogcl-center .ogcl-banner"},
   {id:"accountLinks",label:"Profile / Settings / Account / Admin / Sign out",selector:".ogcl-center .ogcl-top-links"},
   {id:"accountActions",label:"Top account link text & buttons",selector:".ogcl-center .ogcl-top-links a, .ogcl-center .ogcl-top-links button"},
+  {id:"headerCorners",label:"Center-column header corners",
+    selector:".ogcl-center .ogcl-sheet :where(.ogcl-period-stage,.ogcl-view-head):not(:where(.ogcl-period-stage .ogcl-view-head))"},
   {id:"centerSheet",label:"Center-column frame",selector:".ogcl-center .ogcl-sheet"},
   {id:"legalFooter",label:"Legal footer",selector:".ogcl-center .ogcl-footer"},
   {id:"footerLinks",label:"Footer link group",selector:".ogcl-center .ogcl-footer nav"},
@@ -274,7 +276,9 @@ const properties=new Map([...EDITOR_PROPERTIES,
 const structural=new Set(["siteBackground","leftRail","rightRail","centerSheet"]);
 
 // Preserve the desktop grid while allowing its children to be sized and arranged.
+export const isCornerProperty=key=>key==="borderRadius"||/^border(?:Top|Bottom)(?:Left|Right)Radius$/.test(key);
 export function editorPropertyAvailable(key,area){
+  if(area==="headerCorners")return isCornerProperty(key);
   const property=properties.get(key);
   if(!property)return false;
   if(area==="navSpacing")return key==="rowGap"||key==="columnGap";
@@ -414,6 +418,11 @@ export function editorPreviewCss(raw,page){
       const effective=id.startsWith("shell.nav.")?navButtonOverrides(style,draft.areas["*"]?.mainNavLinks):style;
       const rules=declarations(effective,id);
       if(selector&&rules)result+=selector+"{"+rules+"}\n";
+      if(id==="pageHeader"){
+        const corners=Object.fromEntries(Object.entries(style).filter(([key])=>isCornerProperty(key)));
+        const radius=declarations(corners,id);
+        if(radius)result+=".ogcl-center .ogcl-sheet .ogcl-period-stage{"+radius+"}\n";
+      }
     }
   return result;
 }
