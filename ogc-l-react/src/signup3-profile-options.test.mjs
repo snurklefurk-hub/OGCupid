@@ -48,3 +48,17 @@ test("signup3 uses the shared shell with a raised logo and stores choices only t
   assert.doesNotMatch(step,/localStorage|sessionStorage|indexedDB/);
   assert.ok(SITEMAP_PATHS.includes("/signup3"));
 });
+
+test("birthdate is above the identity controls and both preference dropdowns retain checkbox multi-select",()=>{
+  const step=read("./SignupIdentity.jsx"),legacy=read("./Onboarding.jsx"),css=read("./signup-landing.css");
+  assert.ok(step.indexOf('name="birthDate"')<step.indexOf('className="ogcl-signup3-grid"'));
+  assert.match(step,/type="date" name="birthDate" required min=\{birthDateLimit\(120\)\} max=\{birthDateLimit\(18\)\}/);
+  assert.match(step,/birthDate:String\(state\.birth_date/);
+  assert.match(step,/aria-expanded=\{open&&!disabled\}/);
+  assert.match(step,/type="checkbox" checked=\{selected\.includes\(value\)\}/);
+  assert.match(step,/hidden=\{!open\|\|disabled\}/);
+  assert.match(step,/e\.key==="Escape"/);
+  assert.match(css,/\.ogcl-signup3-menu\[hidden\]\{display:none\}/);
+  assert.match(legacy,/\{!state\.birth_date&&<label>Birthdate/);
+  assert.match(legacy,/birthDate:f\.elements\.birthDate\?\.value\|\|String\(state\.birth_date/);
+});
