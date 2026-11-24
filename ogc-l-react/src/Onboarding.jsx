@@ -244,9 +244,9 @@ export default function Onboarding({signupSelection=null,onIdentitySaved}={}){
       {step==="details"&&<ActionForm busy={busy} error={error} submitLabel="Save profile & continue" onSubmit={saveDetails}>
         <h2>Let’s fill out your profile.</h2>
         <OptionChecks title="I'm interested in" name="interestedIn" values={genders}
-          selected={profile?.interestedIn?String(profile.interestedIn).split(", "):state.signup_interested_in||[]}/>
+          selected={Array.isArray(state.signup_interested_in)?state.signup_interested_in:String(profile?.interestedIn||"").split(", ")}/>
         <OptionChecks title="I'm open to" name="openTo" values={goals}
-          selected={profile?.relationshipGoal?String(profile.relationshipGoal).split(", "):state.signup_intentions||[]}/>
+          selected={Array.isArray(state.signup_intentions)?state.signup_intentions:String(profile?.relationshipGoal||"").split(", ")}/>
         <div className="ogcl-account-inline">
           {dropdown("minAge","Age from",Array.from({length:82},(_,i)=>18+i),state.match_age_min||18,true)}
           {dropdown("maxAge","Age to",Array.from({length:82},(_,i)=>18+i),state.match_age_max||99,true)}
