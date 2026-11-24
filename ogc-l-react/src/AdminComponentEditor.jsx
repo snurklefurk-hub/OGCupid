@@ -93,7 +93,7 @@ function Sample({family,state}){
     ["matches.reset","settings.edit","settings.cancel"].includes(family)?"secondary":
     family==="button.primary"||["matches.search","settings.save"].includes(family)?"primary":undefined;
   return <button type={variant==="primary"?"submit":"button"} {...common} data-ogc-control={variant}
-    className={"ogcl-button"+(variant==="secondary"?" ogcl-secondary":variant==="danger"?" ogcl-danger":"")}
+    className={variant?"ogcl-button"+(variant==="secondary"?" ogcl-secondary":variant==="danger"?" ogcl-danger":""):undefined}
     disabled={disabled} aria-pressed={pressed} onClick={e=>{e.preventDefault();setPressed(!pressed);}}>{label}</button>;
 }
 
