@@ -68,3 +68,12 @@ test("signup step two uses existing credential validation and signup action",()=
   assert.match(credentials,/submitting\.current\|\|!form\.reportValidity\(\)/);
   assert.match(css,/\.ogcl-signup-tooltip\{position:absolute;top:26px;left:calc\(100% \+ 18px\)/);
 });
+
+test("signup shell blog invitation and step two note are plain and accessible",()=>{
+  assert.match(shell,/Just here for the blog\? <NavLink to="\/ogtrends">click here to read OG Trends<\/NavLink>/);
+  assert.match(credentials,/aria-describedby="signup-permanent"/);
+  const note=css.match(/\.ogcl-signup-tooltip\{([^}]+)\}/)?.[1]||"";
+  assert.match(note,/color:inherit/);
+  assert.doesNotMatch(note,/background|box-shadow|border|padding/);
+  assert.doesNotMatch(css,/\.ogcl-signup-tooltip::before/);
+});
