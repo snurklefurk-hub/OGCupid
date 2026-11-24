@@ -1,7 +1,7 @@
 name: Bundle Neon member API (no credentials)
 on:
   push:
-    branches: [main]
+    branches: [main, release/signup3-birthdate-bundle]
     paths:
       - 'api/**'
       - 'ogc-l-react/src/admin-ui-editor-model.mjs'
