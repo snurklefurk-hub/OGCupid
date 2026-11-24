@@ -73,10 +73,12 @@ export async function handleOnboarding(request,userId,withMember,json,verifiedPl
         ON CONFLICT(user_id) DO UPDATE SET gender=$2,orientation=$3`,[userId,body.gender,body.orientation]));
     } else if (body.step==='signup-preferences') {
       if (!validSignupPreferences(body)) throw Error('Choose valid identity and dating preferences');
-      const saved=await withMember(userId,client=>client.query(`INSERT INTO app_private.member_onboarding(user_id,gender,orientation,signup_interested_in,signup_intentions)
-        VALUES($1::uuid,$2,$3,$4::text[],$5::text[])
-        ON CONFLICT(user_id) DO UPDATE SET gender=$2,orientation=$3,signup_interested_in=$4::text[],signup_intentions=$5::text[]
-        WHERE app_private.member_onboarding.explored_at IS NULL RETURNING user_id`,[userId,body.gender,body.orientation,body.interestedIn,body.intentions]));
+      // Older cached clients may omit birthdate and still complete it during locality.
+      if (body.birthDate !== undefined && !adultBirthDate(body.birthDate)) throw Error('Enter a valid birthdate (18 or older)');
+      const saved=await withMember(userId,client=>client.query(`INSERT INTO app_private.member_onboarding(user_id,gender,orientation,signup_interested_in,signup_intentions,birth_date)
+        VALUES($1::uuid,$2,$3,$4::text[],$5::text[],$6::date)
+        ON CONFLICT(user_id) DO UPDATE SET gender=$2,orientation=$3,signup_interested_in=$4::text[],signup_intentions=$5::text[],birth_date=COALESCE($6::date,app_private.member_onboarding.birth_date)
+        WHERE app_private.member_onboarding.explored_at IS NULL RETURNING user_id`,[userId,body.gender,body.orientation,body.interestedIn,body.intentions,body.birthDate??null]));
       if (!saved.rowCount) throw Error('Use Profile Settings to update your completed profile');
     } else if (body.step==='locality') {
       if (!adultBirthDate(body.birthDate)) throw Error('Enter a valid birthdate (18 or older)');
