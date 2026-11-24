@@ -1,19 +1,8 @@
+import {PROFILE_LOOKING_GENDERS,PROFILE_INTENTIONS,presentIntentions} from "./profile-options.mjs";
 // Canonical persisted looking-for contract from the 18 Nov owner decisions.
 // UI labels differ from pre-existing storage tokens; do not rewrite old records.
-export const LOOKING_GENDERS=Object.freeze([
-  Object.freeze({value:"Man",label:"Men"}),
-  Object.freeze({value:"Woman",label:"Women"}),
-  Object.freeze({value:"Transman",label:"Trans Men"}),
-  Object.freeze({value:"Transwoman",label:"Trans Women"}),
-  Object.freeze({value:"Something else",label:"Something Else"})
-]);
-export const LOOKING_INTENTIONS=Object.freeze([
-  Object.freeze({value:"new friends",label:"New friends"}),
-  Object.freeze({value:"short-term dating",label:"Short-term dating"}),
-  Object.freeze({value:"long-term dating",label:"Long-term dating"}),
-  Object.freeze({value:"casual sex",label:"Casual sex"}),
-  Object.freeze({value:"activity partners",label:"Activity partners"})
-]);
+export const LOOKING_GENDERS=PROFILE_LOOKING_GENDERS;
+export const LOOKING_INTENTIONS=PROFILE_INTENTIONS;
 export const LOOKING_RADII=Object.freeze([
   Object.freeze({value:10,label:"Near me"}),
   Object.freeze({value:25,label:"25 miles"}),
@@ -34,7 +23,7 @@ export function multiChoiceString(raw,choices) {
   if(typeof raw!=="string")throw Error("Invalid profile preference");
   if(!raw.trim())return [];
   const values=raw.split(", ");
-  if(values.length>5 || values.length!==new Set(values).size ||
+  if(values.length>choices.length || values.length!==new Set(values).size ||
     !values.every(x=>choices.some(c=>c.value===x)))
     throw Error("Unrecognized profile preference");
   return values;
@@ -87,6 +76,6 @@ export function formatLookingFor(profile) {
     result.push(radius===10?"Near me":radius===0?"Anywhere":"Within "+label);
   }
   const goals=typeof profile?.relationshipGoal==="string"?profile.relationshipGoal:"";
-  if(goals)result.push("For "+goals);
+  if(presentIntentions(goals))result.push("For "+presentIntentions(goals));
   return result;
 }
