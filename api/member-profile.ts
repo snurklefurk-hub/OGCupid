@@ -4,7 +4,8 @@ import { createRemoteJWKSet, jwtVerify } from "jose";
 import { Pool, type PoolClient } from "pg";
 import { attachDatabasePool } from "@neon/functions";
 import { isPhotoPath, photoMethodAllowed, handlePhotoRequest } from "./member-photos.js";
-import { removePhoto } from "./photo-storage.js";
+import { removePhoto, removePhotoPrefix } from "./photo-storage.js";
+import { handleTestAccountPurge } from "./disposable-test-account.js";
 import { isKrustyKrabCookJob } from "./job-moderation.js";
 import { validProfileChoice } from "./profile-choices.js";
 import { handleOnboarding } from "./onboarding.js";
@@ -325,6 +326,11 @@ export default {
     }
 
     const url = new URL(request.url);
+    // Scheduled cleanup has no browser/JWT authority and accepts no target ID.
+    if(url.pathname==="/internal/disposable-test-purge"){
+      if(!deletionPool)return json(request,{error:"Cleanup unavailable"},503);
+      return handleTestAccountPurge(request,withDeletionAuthority,removePhotoPrefix,json);
+    }
     // Public design read never exposes administrator drafts or account state.
     if(url.pathname==="/ui-design" || url.pathname==="/ui-design/")
       return handlePublicUiDesign(request,pool,json);
