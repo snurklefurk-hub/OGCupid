@@ -76,7 +76,7 @@ function LeftRail({promoSelection}) {
   const recommendations = useMemo(() => recommendedPhotoMembers(discovery), [discovery]);
   return (
     <aside className="ogcl-left" aria-label="Primary navigation">
-      <NavLink className="ogcl-brand" to="/matches" aria-label="OG Cupid member home">
+      <NavLink className="ogcl-brand" to="/home" aria-label="OG Cupid home">
         <img src="/brand/ogcupid-logo-white.png" width="172" height="42" alt="OG Cupid" />
       </NavLink>
       <nav className="ogcl-main-nav" aria-label="OG Cupid main">
@@ -325,6 +325,7 @@ export default function App() {
     <Routes>
       <Route element={<AppShell />}>
         <Route index element={<Navigate to={defaultRoute} replace />} />
+        <Route path="home" element={<section className="ogcl-view"><header className="ogcl-view-head"><h1>Home</h1></header></section>} />
         <Route path="signin" element={<SignInForm />} />
         <Route path="join" element={<JoinForm/>} />
         <Route path="recover" element={<RecoveryForm/>} />
