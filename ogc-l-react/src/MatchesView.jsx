@@ -121,7 +121,7 @@ function SearchControls({filters,update,toggleChoice,reset,apply,hasLocation,mem
           menuRow(label||"Any time",filters.activity===label,()=>pick("activity",label))))}
         {fieldChip(fields.find(f=>f.key==="ethnicity"),"Race")}
       </div><div className="chip-extras">
-        <div className="filter-chip green"><button type="button" id="chip-advanced" aria-expanded={expanded}
+        <div className="filter-chip green"><button type="button" id="chip-advanced" data-ogc-control-id="matches.advanced" aria-expanded={expanded}
           aria-controls="advanced-filter-tray" onClick={()=>{setOpen("");setExpanded(!expanded);}}>
           Advanced <span aria-hidden="true">{expanded?"▴":"▾"}</span></button></div>
       </div><div id="advanced-filter-tray" className="advanced-filter-tray">
@@ -134,7 +134,7 @@ function SearchControls({filters,update,toggleChoice,reset,apply,hasLocation,mem
     <div className="chip-order"><p><span data-ogc-edit-text="copy.matches.order-by">Order by</span></p>
       {chip("sort",filters.sort==="match"?"Special Blend":SEARCH_SORTS.find(s=>s.value===filters.sort)?.label,
         SEARCH_SORTS.map(s=>menuRow(s.value==="match"?"Special Blend (Match %)":s.label,filters.sort===s.value,()=>pick("sort",s.value))))}
-    </div><footer><button type="submit"><span data-ogc-edit-text="copy.matches.search">Search</span></button><button type="button" onClick={()=>{reset();setExpanded(false);setOpen("");}}><span data-ogc-edit-text="copy.matches.reset">Reset</span></button></footer>
+    </div><footer><button type="submit" data-ogc-control="primary" data-ogc-control-id="matches.search"><span data-ogc-edit-text="copy.matches.search">Search</span></button><button type="button" data-ogc-control="secondary" data-ogc-control-id="matches.reset" onClick={()=>{reset();setExpanded(false);setOpen("");}}><span data-ogc-edit-text="copy.matches.reset">Reset</span></button></footer>
   </form>;
 }
 export default function MatchesView({Photo}){
