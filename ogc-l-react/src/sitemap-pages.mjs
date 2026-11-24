@@ -2,7 +2,8 @@
 // individual message threads, internal endpoints or legacy redirect aliases.
 export const SITEMAP_SECTIONS=Object.freeze([
   {title:"Getting started & your account",items:[
-    {path:"/home",label:"Home",note:"Home page placeholder",access:"public"},
+    {path:"/home",label:"Home",note:"Member landing page",access:"member"},
+    {path:"/signup",label:"Sign up",note:"Begin registration",access:"public"},
     {path:"/join",label:"Join OG Cupid",note:"Create an account",access:"public"},
     {path:"/signin",label:"Sign in",note:"Existing member access",access:"public"},
     {path:"/recover",label:"Recover your account",note:"Password recovery",access:"public"},

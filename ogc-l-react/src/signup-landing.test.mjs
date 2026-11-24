@@ -1,0 +1,53 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+import {SIGNUP_ORIENTATIONS,SIGNUP_GENDERS,signupIdentity,homeDestination,signupDestination} from "./signup-landing.mjs";
+import {defaultRoute,primaryNavigation} from "./navigation.mjs";
+import {SITEMAP_PATHS} from "./sitemap-pages.mjs";
+import {normalizeSiteRoute} from "./browser-location.mjs";
+const read=p=>readFileSync(new URL(p,import.meta.url),"utf8");
+const app=read("./App.jsx"),signup=read("./SignupLanding.jsx"),css=read("./signup-landing.css");
+test("default landing respects verified session state and existing onboarding",()=>{
+  assert.equal(defaultRoute,"/home");
+  assert.equal(homeDestination("guest"),"/signup");
+  assert.equal(homeDestination("onboarding"),"/onboarding");
+  for(const kind of ["member","checking","error","unconfigured"])assert.equal(homeDestination(kind),null);
+  assert.equal(signupDestination("member"),"/home");
+  assert.equal(signupDestination("onboarding"),"/onboarding");
+  assert.equal(signupDestination("guest"),null);
+  assert.equal(signupDestination("checking"),null);
+  assert.equal(primaryNavigation.length,5);
+  assert.match(app,/if\(pathname==="\/"\|\|pathname\.replace\([^\n]+kind!=="member"\)return <Outlet\/>/);
+  assert.match(app,/<Route path="home" element=\{<HomeRoute\/>\}/);
+  assert.match(app,/if\(kind==="member"\)return <Navigate to=\{defaultRoute\} replace\/>/);
+});
+test("signup is a standalone sibling route with only the requested features",()=>{
+  assert.match(app,/<\/Route>\s*<Route path="signup" element=\{<SignupLanding onContinue=\{setSignupSelection\}\/>\} \/>/);
+  assert.match(app,/<PublishedUiDesign \/>\s*<Routes>/);
+  assert.doesNotMatch(signup,/ogcl-app|ogcl-left|ogcl-right|ogcl-sheet|SidebarPromos/);
+  assert.match(signup,/to="\/home" className="ogcl-signup-logo"/);
+  assert.match(signup,/I am a/);
+  assert.match(signup,/>CONTINUE<\/button>/);
+  assert.deepEqual([...signup.matchAll(/<NavLink to="([^"]+)"/g)].map(m=>m[1]),["/ogtrends","/signin","/home","/contact","/privacy","/terms"]);
+  assert.match(css,/background:transparent/);
+  assert.match(css,/grid-template-rows:auto 1fr auto/);
+});
+test("signup choices are allowlisted, ephemeral and confirmed through existing onboarding",()=>{
+  assert.deepEqual(SIGNUP_ORIENTATIONS,["Straight","Gay","Bi","Something else"]);
+  assert.deepEqual(SIGNUP_GENDERS,["Man","Woman","Something else"]);
+  assert.deepEqual(signupIdentity("Bi","Man"),{orientation:"Bi",gender:"Man"});
+  assert.equal(signupIdentity("invalid","Woman"),null);
+  assert.equal(signupIdentity("Gay","invalid"),null);
+  assert.match(signup,/onContinue\(identity\);\s*navigate\("\/join"\)/);
+  assert.doesNotMatch(signup+app,/localStorage|sessionStorage|indexedDB/);
+  assert.match(app,/setSignupSelection\(null\)/);
+  const onboarding=read("./Onboarding.jsx");
+  assert.match(onboarding,/state\.gender\|\|signupSelection\?\.gender/);
+  assert.match(onboarding,/state\.orientation\|\|signupSelection\?\.orientation/);
+  assert.match(onboarding,/if\(!result\.saved\)throw Error\("Identity wasn't saved\."\);\s*onIdentitySaved\?\.\(\)/);
+});
+test("signup is a canonical static-publish and route recovery path",()=>{
+  assert.ok(SITEMAP_PATHS.includes("/signup"));
+  assert.equal(normalizeSiteRoute("/signup/","https://ogcupid.com"),"/signup");
+  assert.equal(normalizeSiteRoute("/home","https://ogcupid.com"),"/home");
+});

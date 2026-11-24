@@ -102,7 +102,7 @@ function ActionForm({busy,error,children,onSubmit,submitLabel}){
     {error&&<p role="alert" className="ogcl-error">{error}</p>}
   </form>;
 }
-export default function Onboarding(){
+export default function Onboarding({signupSelection=null,onIdentitySaved}={}){
   const {kind,user,accountRequest,refresh,signOut,requestEmailVerification}=useMemberSession();
   const navigate=useNavigate();
   const [status,setStatus]=useState(null),[profile,setProfile]=useState(null);
@@ -135,13 +135,13 @@ export default function Onboarding(){
     try{
       await work();
       const next=await load();
-      if(next?.explored){await refresh();navigate("/matches",{replace:true});}
+      if(next?.explored){await refresh();navigate("/home",{replace:true});}
     }catch(e){setError(e?.code==="invalid"?e.message:"Your changes couldn't be saved. Please retry.");}
     finally{setBusy(false);}
   }
   if(kind==="member")return <section className="ogcl-view"><header className="ogcl-view-head">
     <h1>You're all set.</h1></header><div className="ogcl-content-panel">
-      <p>You've completed onboarding. <NavLink to="/matches">See your matches</NavLink>.</p>
+      <p>You've completed onboarding. <NavLink to="/home">Go to Home</NavLink>.</p>
     </div></section>;
   if(kind==="guest")return <Navigate to="/signin" replace/>;
   if(kind!=="onboarding")return <section className="ogcl-view" role="status">Checking your account…</section>;
@@ -155,6 +155,7 @@ export default function Onboarding(){
       const data={step:"identity",gender:f.elements.gender.value,orientation:f.elements.orientation.value};
       const result=await accountRequest("/onboarding","PUT",data);
       if(!result.saved)throw Error("Identity wasn't saved.");
+      onIdentitySaved?.();
     });
   }
   async function saveLocation(e){
@@ -223,8 +224,8 @@ export default function Onboarding(){
       </div>
       {step==="identity"&&<ActionForm busy={busy} error={error} submitLabel="Save & continue" onSubmit={saveIdentity}>
         <h2>First, the basics.</h2>
-        {dropdown("gender","Gender",genders,state.gender,true)}
-        {dropdown("orientation","Orientation",orientations,state.orientation,true)}
+        {dropdown("gender","Gender",genders,state.gender||signupSelection?.gender,true)}
+        {dropdown("orientation","Orientation",orientations,state.orientation||signupSelection?.orientation,true)}
       </ActionForm>}
       {step==="locality"&&<ActionForm busy={busy} error={error} submitLabel="Save & continue" onSubmit={saveLocation}>
         <h2>When and where?</h2>

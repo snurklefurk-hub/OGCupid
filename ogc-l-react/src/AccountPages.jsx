@@ -35,7 +35,7 @@ export function JoinForm(){
     finally{setBusy(false);}
   }
   if(kind==="member")return <Frame title="You're already signed in" intro="Your account is ready.">
-    <NavLink to="/matches">Go to Matches</NavLink></Frame>;
+    <NavLink to="/home">Go to Home</NavLink></Frame>;
   if(kind==="onboarding")return <Frame title="Welcome back" intro="Continue your saved progress.">
     <NavLink to="/onboarding">Continue onboarding</NavLink></Frame>;
   return <Frame title="Create your OG Cupid account" intro="Online dating should be about people, not swiping.">
@@ -114,7 +114,7 @@ export function VerifyForm(){
         autoComplete="email" defaultValue={user?.email||""}/></label>
       <button type="submit" disabled={busy}>{busy?"Sending…":"Email me a verification link"}</button>
     </form><ErrorNote error={error} notice={notice}/>
-    <p><NavLink to={kind==="onboarding"?"/onboarding":kind==="member"?"/matches":"/signin"}>Continue</NavLink></p>
+    <p><NavLink to={kind==="onboarding"?"/onboarding":kind==="member"?"/home":"/signin"}>Continue</NavLink></p>
   </Frame>;
 }
 const defaultEmailPrefs={unreadMessages:false,unseenActivity:false,siteUpdates:false,necessaryOnly:true};
