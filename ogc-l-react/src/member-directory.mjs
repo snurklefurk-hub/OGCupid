@@ -1,3 +1,4 @@
+import {PROFILE_GENDERS,PROFILE_INTENTIONS} from "./profile-options.mjs";
 import {PET_CHOICES,selectedPets} from "./member-pets.mjs";
 import {ETHNICITY_CHOICES,presentEthnicity} from "./member-settings.mjs";
 // Directory operations on *real, already authenticated* discovery results.
@@ -38,10 +39,8 @@ export const SEARCH_SORTS=Object.freeze([
   Object.freeze({value:"newest",label:"Newest"})
 ]);
 export const SEARCH_RADII=Object.freeze([10,25,50,100,250,500,0]);
-export const SEARCH_GENDERS=Object.freeze(["Man","Woman","Transman","Transwoman","Something else"]);
-export const SEARCH_INTENTIONS=Object.freeze([
-  "new friends","short-term dating","long-term dating","casual sex","activity partners"
-]);
+export const SEARCH_GENDERS=PROFILE_GENDERS;
+export const SEARCH_INTENTIONS=Object.freeze(PROFILE_INTENTIONS.map(x=>x.value));
 const keyText=value=>String(value??"").toLocaleLowerCase().trim();
 const splitChoices=value=>typeof value==="string"
   ?value.split(",").map(keyText).filter(Boolean):[];
