@@ -56,7 +56,7 @@ function choiceRow(name, title, options, saved, multiple = false) {
   const selected = splitSaved(saved);
   return '<fieldset class="ogc-choice-row" data-single="' + String(!multiple) + '"><legend>' + title + '</legend><div class="ogc-options">' +
     options.map(option => '<label><input type="checkbox" name="' + name + '" value="' + option.replace(/"/g,"&quot;") + '"' +
-      (selected.includes(option) ? ' checked' : '') + '><span>' + option + '</span></label>').join("") + '</div></fieldset>';
+      (selected.includes(option) ? ' checked' : '') + '><span>' + (name === "openTo" ? ({"new friends":"friends","casual sex":"freaky stuff","long-term dating":"long term dating","short-term dating":"short term dating"}[option] || option) : name === "interestedIn" ? ({Man:"Men",Woman:"Women",Transman:"Transmen",Transwoman:"Transwomen",Intersex:"Intersex people",Enby:"Enbies"}[option] || option) : option) + '</span></label>').join("") + '</div></fieldset>';
 }
 function selectField(name,label,options,saved) {
   return '<label class="ogc-control">' + label + '<select name="' + name + '"><option value="">Select</option>' +
