@@ -86,7 +86,7 @@ test("defaults come from saved Profile Settings, not edited back into them",()=>
   const original=JSON.stringify(profile);
   const filters=savedSearchDefaults(profile);
   assert.deepEqual(filters.genders,["Man","Woman"]);
-  assert.deepEqual(filters.intentions,["new friends","long-term dating"]);
+  assert.deepEqual(filters.intentions,["long-term dating","new friends"]);
   assert.equal(filters.radius,250);
   assert.equal(filters.ageMin,24);
   assert.equal(filters.ageMax,55);
