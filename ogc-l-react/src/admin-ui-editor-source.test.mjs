@@ -127,3 +127,13 @@ test("linked button edges win over legacy individual edges in the published and 
   assert.match(css,/padding:4px;.*padding-bottom:7px/);
   assert.equal(draft.areas["*"]["shell.nav.matches"].borderBottomWidth,0);
 });
+
+test("page header radius reaches the painted tab stage and overrides the shared header corners",()=>{
+  const draft=blankEditorDraft();
+  draft.areas={"*":{headerCorners:{borderRadius:12}},"/matches":{pageHeader:{borderTopLeftRadius:21,minHeight:85}}};
+  const css=editorPreviewCss(draft,"/matches");
+  assert.ok(css.includes(".ogcl-center .ogcl-sheet .ogcl-period-stage{border-top-left-radius:21px;}"));
+  assert.ok(css.includes("border-radius:12px;"));
+  assert.doesNotMatch(editorPreviewCss(draft,"/messages"),/21px/);
+  assert.deepEqual(parseEditorCss(formatEditorCss(draft,"*"),draft,"*"),draft);
+});

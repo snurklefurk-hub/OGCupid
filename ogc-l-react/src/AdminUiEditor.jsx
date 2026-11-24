@@ -6,7 +6,7 @@ import {
   blankEditorDraft,sanitizeEditorDraft,editorPreviewCss,navButtonOverrides,
   moveEditorBlock,editorBlockHtmlLabel,EDITOR_PAGES,EDITOR_AREAS,
   EDITOR_SHELL_AREAS,EDITOR_PAGE_AREAS,EDITOR_MAIN_NAV_AREAS,EDITOR_SCHEMA,editorAreaScope,
-  EDITOR_TOKENS,EDITOR_BLOCK_TYPES,EDITOR_PROPERTIES,editorPropertyAvailable,editorStyleEntries,editorStyleValue,styleShorthand,
+  EDITOR_TOKENS,EDITOR_BLOCK_TYPES,EDITOR_PROPERTIES,editorPropertyAvailable,isCornerProperty,editorStyleEntries,editorStyleValue,styleShorthand,
   EDITOR_VIEWPORTS,EDITOR_TEXT_TARGETS,EDITOR_LINK_ROUTES,editorTextTarget
 } from "./admin-ui-editor-model.mjs";
 import {computedEditorSnapshot} from "./admin-ui-editor-inspector.mjs";
@@ -287,7 +287,7 @@ export default function AdminUiEditor({onUnsavedChange}){
       for(let parent=target;parent&&parent.nodeType===1;parent=parent.parentElement){
         // A click on a rail, header bar or footer changes the editor to the
         // Site Shell workspace. It can never become a per-page style.
-        const area=EDITOR_AREAS.find(a=>parent.matches(a.selector));
+        const area=EDITOR_AREAS.find(a=>a.id!=="headerCorners"&&parent.matches(a.selector));
         if(area){
           setWorkspace(editorAreaScope(area.id));
           setSelected({kind:"area",id:area.id});
@@ -347,6 +347,9 @@ export default function AdminUiEditor({onUnsavedChange}){
         const element=selector?doc.querySelector(selector):null;
         const values=element?computedEditorSnapshot(doc.defaultView.getComputedStyle(element),
           EDITOR_PROPERTIES):{};
+        const stage=selected.id==="pageHeader"&&element?.closest(".ogcl-period-stage");
+        if(stage)Object.assign(values,computedEditorSnapshot(doc.defaultView.getComputedStyle(stage),
+          EDITOR_PROPERTIES.filter(property=>isCornerProperty(property.key))));
         const textTarget=editorTextTarget(selected.id,page);
         const text=textTarget?
           doc.querySelector(textTarget.selector)?.getAttribute("data-ogc-editor-original-text")||"":"";
@@ -384,7 +387,7 @@ export default function AdminUiEditor({onUnsavedChange}){
     ["Main navigation",EDITOR_MAIN_NAV_AREAS.map(area=>area.id)],
     ["Top account links",["accountBar","accountLinks","accountActions"]],
     ["Right column",["rightRail","profileFloater","refinementCard","rightCard","rightEditorial",...["0","1","2"].map(n=>"shell.promo.right."+n)]],
-    ["Center frame & legal footer",["centerSheet","legalFooter","footerLinks","footerLinkLabels"]]
+    ["Center frame & legal footer",["centerSheet","headerCorners","legalFooter","footerLinks","footerLinkLabels"]]
   ];
   function chooseWorkspace(next){
     setWorkspace(next);
@@ -807,7 +810,7 @@ export default function AdminUiEditor({onUnsavedChange}){
               onClick={()=>updateGap(null)}>Reset</button>
           </div>}
           {(chosenBlock||chosenArea)&&!styleGroups.length&&!gapControl&&<p>No matching controls.</p>}
-          {(chosenBlock||chosenArea)&&styleGroups.map(([label,properties])=><details key={label} open={Boolean(search)||label==="Colors"||chosenArea?.id==="navSpacing"}>
+          {(chosenBlock||chosenArea)&&styleGroups.map(([label,properties])=><details key={label} open={Boolean(search)||label==="Colors"||chosenArea?.id==="headerCorners"||chosenArea?.id==="navSpacing"}>
             <summary>{label}</summary>
             {properties.map(styleControl)}
           </details>)}

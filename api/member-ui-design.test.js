@@ -176,3 +176,8 @@ test("authored paragraph edits round-trip for non-profile routes",()=>{
  }
  assert.equal(validatedDesign({...blank,texts:{"/profile":{[id]:"Wrong scope"}}}),null);
 });
+
+test("sitewide header corners save independently of the center frame",()=>{
+  const document={...blank,areas:{"*":{headerCorners:{borderRadius:18,borderBottomRightRadius:0}}}};
+  assert.deepEqual(validatedDesign(document),document);
+});
