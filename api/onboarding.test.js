@@ -143,3 +143,34 @@ test('signup8 saves private personal details and orientation atomically after si
   assert.equal((await handleOnboarding(req({...input,fields:{...input.fields,orientation:''}}),memberId,withMember,json)).status,400);
   assert.equal(calls,1);
 });
+
+test('signup9 finish requires verified own prior details, essay and primary photo without unlocking discovery',async()=>{
+  const memberId='11111111-1111-4111-8111-111111111111',photoId='22222222-2222-4222-8222-222222222222';
+  const valid={gender:'Man',orientation:'Straight',birth_date:new Date('1990-01-01'),locality_id:1,about_me:'A short but genuine self summary.',
+    signup5_details:{work:'',income:'',education:''},
+    signup6_details:{diet:'',drugs:'',drinking:'',smoking:'',vaping:'',weed:'',religion:'',religionImportance:''},
+    signup7_details:{relationshipType:'',kids:'',pets:'',status:''},
+    signup8_details:{orientation:'Straight',ethnicity:'',height:'',bodyType:'',languages:''}};
+  const json=(_,body,status=200)=>new Response(JSON.stringify(body),{status});
+  const req=confirmed=>new Request('https://example.test/onboarding',{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify({step:'signup9-finish',confirmed})});
+  let update=null;
+  const runner=(row,hasPhoto)=>async(id,work)=>{
+    assert.equal(id,memberId);
+    return work({query:async(sql,params)=>{
+      assert.equal(params[0],memberId);
+      if(sql.includes('SELECT o.*, p.about_me')){assert.match(sql,/o.explored_at IS NULL FOR UPDATE OF o,p/);return {rows:row?[row]:[]};}
+      if(sql.includes('SELECT id FROM app_private.member_photos'))return {rowCount:hasPhoto?1:0,rows:hasPhoto?[{id:photoId}]:[]};
+      if(sql.includes('UPDATE app_private.member_onboarding')){update={sql,params};return {rowCount:1};}
+      throw Error('Unexpected SQL '+sql);
+    }});
+  };
+  assert.equal((await handleOnboarding(req(true),memberId,runner(valid,true),json)).status,200);
+  assert.match(update.sql,/details_complete=true,primary_self_photo_id=\$2::uuid,signup9_completed_at=COALESCE/);
+  assert.doesNotMatch(update.sql,/explored_at|persona_code/);
+  assert.deepEqual(update.params,[memberId,photoId]);
+  for(const [row,photo,confirm] of [[null,true,true],[{...valid,about_me:'short'},true,true],[{...valid,signup8_details:null},true,true],[{...valid,birth_date:new Date('2099-01-01')},true,true],[valid,false,true],[valid,true,false]]){
+    update=null;
+    assert.equal((await handleOnboarding(req(confirm),memberId,runner(row,photo),json)).status,400);
+    assert.equal(update,null);
+  }
+});
