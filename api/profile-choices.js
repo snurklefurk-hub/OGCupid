@@ -1,13 +1,13 @@
 import {PROFILE_GENDERS,PROFILE_ORIENTATIONS,PROFILE_INTENTIONS} from "../ogc-l-react/src/profile-options.mjs";
 // Server validation for newly introduced controlled fields. Existing values
 // remain saveable verbatim so a legacy profile is never silently erased.
-import {HABIT_CHOICES,RELIGION_IMPORTANCE_CHOICES} from "../ogc-l-react/src/signup-detail-options.mjs";
+import {HABIT_CHOICES,RELIGION_IMPORTANCE_CHOICES,BODY_TYPE_CHOICES} from "../ogc-l-react/src/signup-detail-options.mjs";
 const habits = [...HABIT_CHOICES, 'Just weed',
   'Just weed · Sometimes', 'Just weed · Often', 'Just weed · Never'];
 const choices = {
   gender:PROFILE_GENDERS,
   orientation:PROFILE_ORIENTATIONS,
-  bodyType: ['Thin', 'Athletic', 'Average', 'Jacked', 'Chubby', 'Overweight'],
+  bodyType: BODY_TYPE_CHOICES,
   vaping: habits,
   drugs: habits,
   smoking: HABIT_CHOICES,
