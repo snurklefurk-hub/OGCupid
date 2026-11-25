@@ -7,6 +7,11 @@ on:
       - 'ogc-l-react/src/admin-ui-editor-model.mjs'
       - 'ogc-l-react/src/shared-ui-components.mjs'
       - 'ogc-l-react/src/signup-detail-options.mjs'
+      - 'ogc-l-react/src/profile-options.mjs'
+      - 'ogc-l-react/src/home-contract.mjs'
+      - 'ogc-l-react/src/ogtrends-catalog.mjs'
+      - 'ogc-l-react/src/sitemap-pages.mjs'
+      - 'ogc-l-react/src/persona-content.mjs'
       - '.github/workflows/bundle-member-function.yml'
   workflow_dispatch:
 permissions:
