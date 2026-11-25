@@ -3,7 +3,7 @@ import {Navigate,useNavigate} from "react-router-dom";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {PROFILE_GENDERS,PROFILE_ORIENTATIONS,PROFILE_LOOKING_GENDERS,PROFILE_INTENTIONS,signupLookingDefaults,validSignupPreferences} from "./profile-options.mjs";
 
-function Choices({label,options,selected,onChange,disabled}){
+export function Choices({label,options,selected,onChange,disabled}){
   const [open,setOpen]=useState(false);
   const root=useRef(null),trigger=useRef(null),id=useId();
   useEffect(()=>{

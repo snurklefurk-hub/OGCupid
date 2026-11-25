@@ -986,7 +986,7 @@ function wireForms() {
   const age = $("profile-age");
   for (let value = 18; value <= 120; value += 1) age.add(new Option(String(value), String(value)));
   const height = $("profile-height");
-  for (let inches = 48; inches <= 84; inches += 1) {
+  for (let inches = 48; inches <= 90; inches += 1) {
     const feet = Math.floor(inches / 12), remaining = inches % 12, cm = Math.round(inches * 2.54);
     height.add(new Option(`${feet}' ${remaining}\" (${cm} cm)`, `${feet}' ${remaining}\" (${cm} cm)`));
   }

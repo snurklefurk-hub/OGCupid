@@ -78,10 +78,9 @@ test("controlled fields and multi-choices validate with old values preserved",()
   assert.equal(composeSettingUpdate(prior,"drugs","Rarely").drugs,
     "Rarely");
 });
-test("race/ethnicity restores the original multi-select choices without changing storage keys",()=>{
+test("race/ethnicity uses the approved ordered multi-select choices without changing storage keys",()=>{
   assert.deepEqual(ETHNICITY_CHOICES,[
-    "Asian","Black","Hispanic","Indian","Native American",
-    "Middle Eastern","Pacific Islander","White","Other"
+    "White","Black","Asian","Hispanic","Native","Indian","Middle Eastern","Other"
   ]);
   const field=PROFILE_SETTINGS_FIELDS.find(item=>item.key==="ethnicity");
   assert.ok(!ETHNICITY_CHOICES.includes("Hispanic / Latin"));
@@ -92,13 +91,13 @@ test("race/ethnicity restores the original multi-select choices without changing
   assert.deepEqual(composeSettingUpdate(current,"ethnicity","Black, White"),{
     aboutMe:"Keep my essay",age:29,ethnicity:"Black, White"
   });
-  assert.deepEqual(composeSettingUpdate(current,"ethnicity","Asian, Indian, Native American"),{
-    aboutMe:"Keep my essay",age:29,ethnicity:"Asian, Indian, Native American"
+  assert.deepEqual(composeSettingUpdate(current,"ethnicity","Asian, Indian, Native"),{
+    aboutMe:"Keep my essay",age:29,ethnicity:"Asian, Indian, Native"
   });
   assert.throws(()=>composeSettingUpdate(current,"ethnicity","Invented category"));
   const legacy=profile();legacy.ethnicity="Hispanic / Latin, Indian, Native American";
   const sanitized=sanitizeOwnProfileSettings({profile:legacy},ME);
-  assert.equal(sanitized.fields.ethnicity,"Hispanic, Indian, Native American");
+  assert.equal(sanitized.fields.ethnicity,"Hispanic, Indian, Native");
   assert.equal(legacy.ethnicity,"Hispanic / Latin, Indian, Native American","reading must not mutate stored value");
   assert.deepEqual(composeSettingUpdate(sanitized,"work","Driver"),{
     aboutMe:"Keep my essay",age:29,work:"Driver"
@@ -106,14 +105,14 @@ test("race/ethnicity restores the original multi-select choices without changing
 });
 test("gateway saves a race edit without changing other saved profile fields",async()=>{
   const {service,read,calls}=mock();
-  const updated=await service.saveOwnSetting("ethnicity","Asian, Native American");
-  assert.equal(updated.fields.ethnicity,"Asian, Native American");
+  const updated=await service.saveOwnSetting("ethnicity","Asian, Native");
+  assert.equal(updated.fields.ethnicity,"Asian, Native");
   assert.equal(updated.fields.work,"Scientist");
-  assert.equal(read().ethnicity,"Asian, Native American");
+  assert.equal(read().ethnicity,"Asian, Native");
   assert.equal(read().orientation,"Bi");
   assert.deepEqual(calls.map(x=>x.options.method),["GET","PUT"]);
   assert.deepEqual(JSON.parse(calls[1].options.body),{
-    aboutMe:"Keep my essay",age:29,ethnicity:"Asian, Native American"
+    aboutMe:"Keep my essay",age:29,ethnicity:"Asian, Native"
   });
 });
 test("gateway reads latest server row and confirms one-field save with JWT",async()=>{

@@ -103,3 +103,11 @@
 .ogcl-signup-detail-field input:focus-visible{outline:3px solid white;outline-offset:3px}
 @media(max-width:740px){.ogcl-signup-detail-grid,.ogcl-signup6 .ogcl-signup-detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:420px){.ogcl-signup-detail-grid,.ogcl-signup6 .ogcl-signup-detail-grid,.ogcl-signup7 .ogcl-signup-detail-grid{grid-template-columns:1fr}.ogcl-signup-pets-grid button{font-size:12px;padding:5px}}
+
+.ogcl-signup8-subheading{margin:-12px 0 0;font-size:16px;font-weight:400;text-align:center}
+.ogcl-signup8 .ogcl-signup-detail-grid{grid-template-columns:repeat(5,minmax(0,1fr));align-items:start}
+.ogcl-signup8 .ogcl-signup3-choices{grid-row:auto}
+.ogcl-signup8 .ogcl-signup3-menu{max-height:280px;overflow-y:auto}
+@media(max-width:840px){.ogcl-signup8 .ogcl-signup-detail-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){.ogcl-signup8 .ogcl-signup-detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:420px){.ogcl-signup8 .ogcl-signup-detail-grid{grid-template-columns:1fr}}

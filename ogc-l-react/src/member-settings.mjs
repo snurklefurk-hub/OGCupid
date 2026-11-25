@@ -1,21 +1,18 @@
 import {PROFILE_GENDERS,PROFILE_ORIENTATIONS} from "./profile-options.mjs";
 import {validAgeRange} from "./member-looking-for.mjs";
-import {HABIT_CHOICES,RELIGION_IMPORTANCE_CHOICES,EDUCATION_CHOICES,DIET_CHOICES,KIDS_CHOICES,RELIGION_CHOICES} from "./signup-detail-options.mjs";
+import {HABIT_CHOICES,RELIGION_IMPORTANCE_CHOICES,EDUCATION_CHOICES,DIET_CHOICES,KIDS_CHOICES,RELIGION_CHOICES,BODY_TYPE_CHOICES,HEIGHT_CHOICES,LANGUAGE_CHOICES,SIGNUP_ETHNICITY_CHOICES} from "./signup-detail-options.mjs";
 import {PET_CHOICES,selectedPets} from "./member-pets.mjs";
 // Staging Profile Settings: only fields stored by the established Neon /profile API.
 // Signup display name, DOB, and derived age are deliberately NOT writable here.
 const genders=PROFILE_GENDERS;
 // Original profile categories from the November 13 structured details editor.
 // Keep the established ethnicity API/storage key; no database migration needed.
-export const ETHNICITY_CHOICES=Object.freeze([
-  "Asian","Black","Hispanic","Indian","Native American",
-  "Middle Eastern","Pacific Islander","White","Other"
-]);
+export const ETHNICITY_CHOICES=SIGNUP_ETHNICITY_CHOICES;
 // Keep legacy saved values intact; present the approved label in current UI.
 // This only normalizes displayed strings and never writes or migrates stored data.
 export function presentEthnicity(value) {
   return typeof value==="string" ? value.split(",")
-    .map(choice=>choice.trim()==="Hispanic / Latin"?"Hispanic":choice.trim())
+    .map(choice=>({"Hispanic / Latin":"Hispanic","Native American":"Native"}[choice.trim()]||choice.trim()))
     .filter(Boolean).join(", ") : "";
 }
 const habits=HABIT_CHOICES;
@@ -27,9 +24,9 @@ const fields=[
     options:["Monogamous","Polyamorous"]},
   {key:"work",label:"Job",max:160,group:"details"},
   {key:"education",label:"Education",max:120,group:"details",options:EDUCATION_CHOICES},
-  {key:"height",label:"Height",max:50,group:"details"},
+  {key:"height",label:"Height",max:50,group:"details",options:HEIGHT_CHOICES},
   {key:"bodyType",label:"Body type",max:30,group:"details",
-    options:["Thin","Athletic","Average","Jacked","Chubby","Overweight"]},
+    options:BODY_TYPE_CHOICES},
   {key:"ethnicity",label:"Race / ethnicity",max:200,group:"details",multi:ETHNICITY_CHOICES},
   {key:"kids",label:"Children",max:80,group:"details",options:KIDS_CHOICES.map(x=>x.value)},
   {key:"pets",label:"Pets",max:80,group:"details",multi:PET_CHOICES},
@@ -41,7 +38,7 @@ const fields=[
   {key:"diet",label:"Diet",max:100,group:"details",options:DIET_CHOICES},
   {key:"religion",label:"Religion",max:160,group:"details",options:RELIGION_CHOICES},
   {key:"religionImportance",label:"Religious importance",max:80,group:"details",options:RELIGION_IMPORTANCE_CHOICES},
-  {key:"languages",label:"Languages",max:160,group:"details"},
+  {key:"languages",label:"Languages",max:160,group:"details",multi:LANGUAGE_CHOICES},
   {key:"income",label:"Income",max:30,group:"details",
     options:["Broke","Pocket money","Fuck you money"]},
   {key:"status",label:"Relationship status",max:30,group:"details",
