@@ -43,7 +43,7 @@ export default function SignupLocation(){
       const result=await accountRequest("/onboarding","PUT",payload);
       if(!result?.saved)throw Error("Location wasn't saved.");
       await refresh();
-      navigate("/onboarding",{replace:true});
+      navigate("/signup5",{replace:true});
     }catch(e){setError(e?.code==="invalid"?e.message:"Your location couldn't be saved. Please retry.");}
     finally{submitting.current=false;setBusy(false);}
   }
