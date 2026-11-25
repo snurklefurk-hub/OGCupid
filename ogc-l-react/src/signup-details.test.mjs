@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import {HABIT_CHOICES,KIDS_CHOICES,SIGNUP_PET_CHOICES,SIGNUP_DETAIL_STEPS,validSignupDetailStep,nextSignupDetails,savedSignupDetails} from "./signup-detail-options.mjs";
+import {HABIT_CHOICES,RELIGION_CHOICES,KIDS_CHOICES,SIGNUP_PET_CHOICES,SIGNUP_DETAIL_STEPS,validSignupDetailStep,nextSignupDetails,savedSignupDetails} from "./signup-detail-options.mjs";
 import {SITEMAP_PATHS} from "./sitemap-pages.mjs";
 const read=p=>readFileSync(new URL(p,import.meta.url),"utf8");
 const empty=page=>Object.fromEntries(SIGNUP_DETAIL_STEPS[page].map(key=>[key,""]));
@@ -13,7 +13,7 @@ test("new detail choices and kids display mapping are canonical",()=>{
   assert.ok(!validSignupDetailStep(7,{...empty(7),pets:"Has dogs, Has dogs"}));
   assert.ok(!validSignupDetailStep(6,{...empty(6),drugs:"Just weed"}));
   assert.ok(!validSignupDetailStep(6,{...empty(6),religionImportance:"and it's really important"}));
-  assert.ok(validSignupDetailStep(6,{...empty(6),religion:"Christianity",religionImportance:"and it's really important",weed:"Sometimes"}));
+  assert.ok(validSignupDetailStep(6,{...empty(6),religion:"Protestant",religionImportance:"and it's really important",weed:"Sometimes"}));
   assert.ok(!validSignupDetailStep(5,{...empty(5),role:"admin"}));
 });
 test("steps resume in sequence, optional empty fields count as a saved page",()=>{
@@ -37,4 +37,14 @@ test("routes use the raised shell and private authenticated draft writes",()=>{
   assert.match(screen,/aria-pressed=\{selected.includes\(option\)\}/);
   assert.match(onboarding,/\.\.\.savedSignupDetails\(state\)/);
   assert.doesNotMatch(screen,/localStorage|sessionStorage|indexedDB/);
+});
+
+test("religion follows the approved order while previously saved drafts remain intact",()=>{
+  assert.deepEqual(RELIGION_CHOICES,["Agnostic","Protestant","Catholic","Orthodox","Islam","Judaism","Buddhist","Hindu","Sikh","Other"]);
+  for(const religion of RELIGION_CHOICES)assert.ok(validSignupDetailStep(6,{...empty(6),religion}));
+  const prior={...empty(6),religion:"Christianity",weed:"Rarely",religionImportance:"and it's really important"};
+  assert.ok(!validSignupDetailStep(6,prior));
+  assert.ok(validSignupDetailStep(6,prior,true));
+  assert.equal(nextSignupDetails({signup5_details:empty(5),signup6_details:prior}),"/signup7");
+  assert.equal(savedSignupDetails({signup6_details:prior}).religion,"Christianity");
 });
