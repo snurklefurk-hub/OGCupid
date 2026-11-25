@@ -8,7 +8,7 @@ const read=p=>readFileSync(new URL(p,import.meta.url),"utf8");
 test("expanded choices and displayed labels are canonical across the member UI",()=>{
   assert.deepEqual(PROFILE_GENDERS,["Man","Woman","Transman","Transwoman","Intersex","Enby","Something else"]);
   assert.deepEqual(PROFILE_ORIENTATIONS,["Straight","Gay","Bi","Ace","Something else"]);
-  assert.deepEqual(PROFILE_LOOKING_GENDERS.map(x=>x.label),["Men","Women","Transmen","Transwomen","Intersex people","Enbies","Something else"]);
+  assert.deepEqual(PROFILE_LOOKING_GENDERS.map(x=>x.label),["Men","Women","Transmen","Transwomen","Intersex","Enbies","Something else"]);
   assert.deepEqual(PROFILE_INTENTIONS.map(x=>x.label),["long term dating","short term dating","friends","freaky stuff"]);
   assert.equal(presentIntentions("new friends, activity partners, casual sex"),"friends, freaky stuff");
   assert.equal(storageIntentions("friends, freaky stuff"),"new friends, casual sex");
