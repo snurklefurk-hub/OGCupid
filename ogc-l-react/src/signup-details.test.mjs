@@ -48,3 +48,13 @@ test("religion follows the approved order while previously saved drafts remain i
   assert.equal(nextSignupDetails({signup5_details:empty(5),signup6_details:prior}),"/signup7");
   assert.equal(savedSignupDetails({signup6_details:prior}).religion,"Christianity");
 });
+
+test("signup7 places status, style and kids in order above a full-width pet grid",()=>{
+  const screen=read("./SignupDetails.jsx"),css=read("./signup-landing.css");
+  const step=screen.slice(screen.indexOf("{page===7&&"));
+  const fields=['select("status"','select("relationshipType"','select("kids"','<Pets '].map(value=>step.indexOf(value));
+  assert.ok(fields.every((index,i)=>index>=0&&(i===0||index>fields[i-1])));
+  assert.match(css,/\.ogcl-signup7 \.ogcl-signup-detail-grid\{grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
+  assert.match(css,/\.ogcl-signup-pets\{grid-column:1\/-1/);
+  assert.match(css,/\.ogcl-signup-pets-grid\{display:grid;grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
+});

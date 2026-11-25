@@ -87,10 +87,10 @@ export default function SignupDetails({page}){
       {select("religionImportance","Importance",RELIGION_IMPORTANCE_CHOICES,!draft.religion)}
     </div>}
     {page===7&&<div className="ogcl-signup-detail-grid">
+      {select("status","Relationship status",STATUS_CHOICES)}
       {select("relationshipType","Relationship style",RELATIONSHIP_CHOICES)}
       {select("kids","Do you want kids?",KIDS_CHOICES)}
       <Pets value={draft.pets} onChange={update} disabled={busy}/>
-      {select("status","Relationship status",STATUS_CHOICES)}
     </div>}
     <button type="submit" disabled={busy}>{busy?"SAVING…":"CONTINUE"}</button>
     {error&&<p className="ogcl-signup-error" role="alert">{error}</p>}
