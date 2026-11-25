@@ -1,3 +1,5 @@
+import {handleHomeAdmin} from "./member-home.js";
+const homeAdminPath=path=>/^\/admin\/home-posts\/?$/.test(path);
 import {isAdminEditorPath,adminEditorMethodAllowed,handleAdminEditor} from "./admin-member-editor.js";
 import {isAdminUiDesignPath,adminUiDesignMethodAllowed,handleAdminUiDesign} from "./member-ui-design.js";
 import {isAdminPromosPath,adminPromosMethodAllowed,handleAdminPromos} from "./member-promos.js";
@@ -24,8 +26,9 @@ async function bodyFor(request,keys){
   return {body:parsed};
 }
 
-export function isAdminPath(pathname){return adminRoute.test(pathname)||isAdminEditorPath(pathname)||isAdminUiDesignPath(pathname)||isAdminPromosPath(pathname);}
+export function isAdminPath(pathname){return homeAdminPath(pathname)||adminRoute.test(pathname)||isAdminEditorPath(pathname)||isAdminUiDesignPath(pathname)||isAdminPromosPath(pathname);}
 export function adminMethodAllowed(pathname,method){
+  if(homeAdminPath(pathname))return ["GET","POST"].includes(method);
   if(isAdminEditorPath(pathname))return adminEditorMethodAllowed(pathname,method);
   if(isAdminUiDesignPath(pathname))return adminUiDesignMethodAllowed(pathname,method);
   if(isAdminPromosPath(pathname))return adminPromosMethodAllowed(pathname,method);
@@ -35,6 +38,7 @@ export function adminMethodAllowed(pathname,method){
     : method==="GET";
 }
 export async function handleAdmin(request,userId,url,withMember,json){
+  if(homeAdminPath(url.pathname))return handleHomeAdmin(request,userId,withMember,json);
   if(isAdminEditorPath(url.pathname))return handleAdminEditor(request,userId,url,withMember,json);
   if(isAdminUiDesignPath(url.pathname))return handleAdminUiDesign(request,userId,url,withMember,json);
   if(isAdminPromosPath(url.pathname))return handleAdminPromos(request,userId,url,withMember,json);
