@@ -379,8 +379,8 @@ export default function App() {
     if(!["/signup","/signup1","/signup2","/signup3","/signup4","/signup5","/signup6","/signup7","/signup8","/signup9","/signup10","/join","/onboarding"].includes(pathname.replace(/\/$/,"")))setSignupSelection(null);
   },[pathname]);
   return (<>
-    <PublishedUiDesign />
     <HomeVisitTracker/>
+    <PublishedUiDesign />
     <Routes>
       <Route element={<AppShell />}>
         <Route index element={<Navigate to={defaultRoute} replace />} />
