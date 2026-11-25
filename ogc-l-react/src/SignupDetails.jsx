@@ -3,11 +3,10 @@ import {Navigate,useNavigate} from "react-router-dom";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {HABIT_CHOICES,EDUCATION_CHOICES,INCOME_CHOICES,DIET_CHOICES,RELIGION_CHOICES,RELIGION_IMPORTANCE_CHOICES,RELATIONSHIP_CHOICES,STATUS_CHOICES,KIDS_CHOICES,SIGNUP_PET_CHOICES,SIGNUP_DETAIL_STEPS,validSignupDetailStep,validSignupDetailValue,nextSignupDetails} from "./signup-detail-options.mjs";
 const headings={5:"What do you do?",6:"What do you like?",7:"what are you bringing?"};
-function Choice({label,name,options,value,onChange,disabled,note}){
+function Choice({label,name,options,value,onChange,disabled}){
   return <label className="ogcl-signup-detail-field">
-    {note&&<small className="ogcl-signup-detail-note" id={"signup-note-"+name}>{note}</small>}
     <span>{label}</span>
-    <select name={name} aria-describedby={note?"signup-note-"+name:undefined} value={value} disabled={disabled} onChange={e=>onChange(name,e.target.value)}>
+    <select name={name} value={value} disabled={disabled} onChange={e=>onChange(name,e.target.value)}>
       <option value="">Choose</option>
       {options.map(item=>{const option=typeof item==="string"?{label:item,value:item}:item;return <option key={option.value} value={option.value}>{option.label}</option>;})}
     </select>
@@ -55,7 +54,7 @@ export default function SignupDetails({page}){
   if(redirect)return <Navigate to={redirect} replace/>;
   if(!draft)return <p role="alert">{error} <button type="button" onClick={()=>setRetry(n=>n+1)}>Retry</button></p>;
   const update=(name,value)=>setDraft(old=>({...old,[name]:value,...(name==="religion"&&!value?{religionImportance:""}:{})}));
-  const select=(name,label,options,note,disabled=false)=><Choice name={name} label={label} options={options} note={note} value={draft[name]} onChange={update} disabled={busy||disabled}/>;
+  const select=(name,label,options,disabled=false)=><Choice name={name} label={label} options={options} value={draft[name]} onChange={update} disabled={busy||disabled}/>;
   async function submit(e){
     e.preventDefault();
     if(submitting.current||!e.currentTarget.reportValidity())return;
@@ -78,13 +77,13 @@ export default function SignupDetails({page}){
     </div>}
     {page===6&&<div className="ogcl-signup-detail-grid">
       {select("diet","Diet",DIET_CHOICES)}
-      {select("drugs","Drugs",HABIT_CHOICES,"the hard stuff")}
+      {select("drugs","Drugs (the hard stuff)",HABIT_CHOICES)}
       {select("drinking","Drinking",HABIT_CHOICES)}
       {select("smoking","Smoking",HABIT_CHOICES)}
       {select("vaping","Vaping",HABIT_CHOICES)}
-      {select("weed","Weed",HABIT_CHOICES,"any kind")}
+      {select("weed","Weed (any kind)",HABIT_CHOICES)}
       {select("religion","Religion",RELIGION_CHOICES)}
-      {select("religionImportance","Importance",RELIGION_IMPORTANCE_CHOICES,undefined,!draft.religion)}
+      {select("religionImportance","Importance",RELIGION_IMPORTANCE_CHOICES,!draft.religion)}
     </div>}
     {page===7&&<div className="ogcl-signup-detail-grid">
       {select("relationshipType","Relationship style",RELATIONSHIP_CHOICES)}
