@@ -1,5 +1,6 @@
 import {PROFILE_GENDERS,PROFILE_INTENTIONS} from "./profile-options.mjs";
 import {PET_CHOICES,selectedPets} from "./member-pets.mjs";
+import {BODY_TYPE_CHOICES} from "./signup-detail-options.mjs";
 import {ETHNICITY_CHOICES,presentEthnicity} from "./member-settings.mjs";
 // Directory operations on *real, already authenticated* discovery results.
 // The backend alone decides who is eligible. No inferred location, offline
@@ -8,7 +9,7 @@ export const DIRECTORY_PAGE_SIZE = 20;
 
 export const SEARCH_ADVANCED_GROUPS = Object.freeze([
   Object.freeze({name:"Appearance",fields:Object.freeze([
-    {key:"bodyType",label:"Body type",options:["Thin","Athletic","Average","Jacked","Chubby","Overweight"]},
+    {key:"bodyType",label:"Body type",options:BODY_TYPE_CHOICES},
     {key:"height",label:"Height",type:"text"}
   ])}),
   Object.freeze({name:"Lifestyle",fields:Object.freeze([
