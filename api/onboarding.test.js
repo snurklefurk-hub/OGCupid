@@ -135,7 +135,7 @@ test('signup8 saves private personal details and orientation atomically after si
   const withMember=(id,work)=>{assert.equal(id,memberId);calls++;return work({query:async(q,p)=>{sql=q;params=p;return {rowCount:1};}});};
   const json=(_,body,status=200)=>new Response(JSON.stringify(body),{status});
   const req=body=>new Request('https://example.test/onboarding',{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
-  const input={step:'signup-details',page:8,fields:{orientation:'Bi',ethnicity:'White, Native',height:'7\' 6" (229 cm)',bodyType:'used up',languages:'English, French'}};
+  const input={step:'signup-details',page:8,fields:{orientation:'Bi',ethnicity:'White, Native',height:'7\' 6" (229 cm)',bodyType:'used up',languages:'English, French, Other'}};
   assert.equal((await handleOnboarding(req(input),memberId,withMember,json)).status,200);
   assert.match(sql,/signup8_details=\$2::jsonb, orientation=\$3/);
   assert.match(sql,/signup7_details IS NOT NULL/);
