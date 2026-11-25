@@ -26,7 +26,8 @@ test("desktop navigation keeps the five existing destinations with compact label
 
 test("real member photo, not a name or fake progress, occupies completed-state floater",()=>{
   assert.match(floater,/className="ogcl-profile-floater"/);
-  assert.match(floater,/<Photo member=\{\{userId:user.id\}\}/);
+  assert.match(floater,/<Photo member=\{\{userId:user.id,avatarPhotoId:signupProfile\?\.avatarPhotoId\}\}/);
+  assert.match(floater,/kind==="onboarding"&&signupProfile\?\.userId===user\?\.id/);
   assert.match(floater,/kind!=="member"/);
   assert.match(css,/\.ogcl-profile-floater \.ogcl-member-photo/);
   assert.doesNotMatch(floater,/localStorage|sessionStorage|demo photo|fake avatar/i);
