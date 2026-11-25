@@ -1,6 +1,7 @@
 import {scoreQuestionCompatibility} from "./discovery-score.js";
 import {adjustedViewerMatchPercent} from "./member-discovery.js";
 import {historicalGuidance} from "../ogc-l-react/src/persona-content.mjs";
+import {OGTRENDS_PUBLICATIONS} from "../ogc-l-react/src/ogtrends-catalog.mjs";
 import {AWARD_DEFINITIONS,EXPLORER_PAGES} from "../ogc-l-react/src/home-contract.mjs";
 
 const MAX_CANDIDATES=2000;
@@ -116,6 +117,7 @@ export async function handleHome(request,userId,withMember,json){
           }
         }
       }
+      for(const article of OGTRENDS_PUBLICATIONS){if(Date.parse(article.publishedAt)<=Date.now())feed.push({id:'article-'+article.href,kind:'article',body:article.title,href:article.href,happenedAt:article.publishedAt});}
       return {progress,feed:latestFeed(feed),candidateLimit:MAX_CANDIDATES,truncated};
     });
     return json(request,result);
