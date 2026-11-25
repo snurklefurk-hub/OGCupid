@@ -30,7 +30,7 @@ test("signup is a standalone sibling route with only the requested features",()=
   assert.match(shell,/<Outlet context=\{\{setCard\}\}\/>/);
   assert.match(signup,/I am a/);
   assert.match(signup,/>CONTINUE<\/button>/);
-  assert.deepEqual([...shell.matchAll(/<NavLink to="([^"]+)"/g)].map(m=>m[1]),["/ogtrends","/signup10","/signin","/home","/contact","/privacy","/terms"]);
+  assert.deepEqual([...shell.matchAll(/<NavLink to="([^"]+)"/g)].map(m=>m[1]),["/ogtrends","/verify","/signup10","/signin","/home","/contact","/privacy","/terms"]);
   assert.match(css,/background:transparent/);
   assert.match(css,/grid-template-rows:auto 1fr auto/);
 });
