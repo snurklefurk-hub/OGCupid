@@ -259,12 +259,14 @@ function OwnProfileGate({children}) {
   useEffect(()=>{
     if(kind!=="onboarding")return;
     let live=true;setAllowed(null);
-    accountRequest("/profile").then(data=>{if(live)setAllowed(data?.profile?.userId===user?.id&&data.profile.slug===slug?slug:false);}).catch(()=>{if(live)setAllowed(false);});
+    Promise.all([accountRequest("/profile"),accountRequest("/onboarding")]).then(([data,progress])=>{
+      if(live)setAllowed(data?.profile?.userId===user?.id&&(!slug||data.profile.slug===slug)&&progress?.photo?{userId:user.id,slug}:false);
+    }).catch(()=>{if(live)setAllowed(false);});
     return()=>{live=false;};
   },[kind,user?.id,slug,accountRequest]);
   if(kind!=="onboarding")return <MemberGate>{children}</MemberGate>;
   if(allowed===null)return <RouteLoading/>;
-  return allowed===slug?children:<Navigate to="/signup9" replace/>;
+  return allowed?.userId===user?.id&&allowed?.slug===slug?children:<Navigate to="/onboarding" replace/>;
 }
 function MemberGate({children,allowOnboarding=false}) {
   const {kind, error, refresh} = useMemberSession();
@@ -384,10 +386,10 @@ export default function App() {
         <Route path="terms" element={<EmbeddedEditorial pageKey="terms"/>} />
         <Route path="contact" element={<ContactPage/>} />
         <Route path="sitemap" element={<SitemapPage/>} />
-        <Route path="photos" element={<MemberGate><PhotoManager/></MemberGate>} />
+        <Route path="photos" element={<OwnProfileGate><PhotoManager/></OwnProfileGate>} />
         <Route path="matches" element={<MemberGate><MatchesView Photo={MemberPhoto}/></MemberGate>} />
-        <Route path="profile" element={<MemberGate><ProfileEditor /></MemberGate>} />
-        <Route path="settings" element={<MemberGate allowOnboarding><ProfileSettings /></MemberGate>} />
+        <Route path="profile" element={<OwnProfileGate><ProfileEditor /></OwnProfileGate>} />
+        <Route path="settings" element={<OwnProfileGate><ProfileSettings /></OwnProfileGate>} />
         <Route path="profiles/:slug" element={<OwnProfileGate><PublicMemberProfile Photo={MemberPhoto} /></OwnProfileGate>} />
         <Route path="questions" element={<MemberGate allowOnboarding><MatchQuestions /></MemberGate>} />
         <Route path="quickmatch" element={<MemberGate><QuickmatchView Photo={MemberPhoto} /></MemberGate>} />
