@@ -12,14 +12,17 @@ export function CityChooser({country,stored,onPick,confirmation=false,disabled=f
   const [hint,setHint]=useState("");
   const [zip,setZip]=useState(stored?.zip||"");
   const seq=useRef(0);
-  const selectedLabel=useRef("");
-  const confirmed=city=>confirmation?`Oh, ${city.n}? I hear it’s nice this time of year`:"✓ "+cityLabel(city);
+  const selectedLabel=useRef(stored?.label||"");
+  const confirmed=city=>confirmation?`Oh, ${city.n}? I hear it's nice this time of year`:"✓ "+cityLabel(city);
   useEffect(()=>{
+    selectedLabel.current=stored?.label||"";
     setInput(stored?.label||"");
     setZip(stored?.zip||"");
+    if(stored?.label&&country!=="US")setHint(confirmation?`Oh, ${stored.label.split(",")[0]}? I hear it's nice this time of year`:"✓ "+stored.label);
   },[stored?.label,stored?.zip]);
   useEffect(()=>{
-    if(country!=="US"||!/^\d{5}$/.test(zip)){setHint("");return;}
+    if(country!=="US")return;
+    if(!/^\d{5}$/.test(zip)){setHint("");return;}
     let alive=true;const serial=++seq.current;
     setHint("Checking ZIP code…");
     (async()=>{
