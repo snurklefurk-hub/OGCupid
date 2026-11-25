@@ -9,7 +9,7 @@ export default function SignupShell(){
   const {kind,onboarding}=useMemberSession();
   const {pathname}=useLocation();
   const step=pathname.replace(/\/$/,"");
-  const identityStep=step==="/signup3"||step==="/signup4";
+  const identityStep=step==="/signup3"||step==="/signup4"||["/signup5","/signup6","/signup7"].includes(step);
   const destination=kind==="onboarding"
     ?identityStep?null:!onboarding?.identity?"/signup3":!onboarding?.locality?"/signup4":"/onboarding"
     :signupDestination(kind);
