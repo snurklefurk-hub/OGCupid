@@ -62,7 +62,7 @@ CREATE FUNCTION app_private.home_explorer_pages() RETURNS text[]
 $fn$;
 CREATE FUNCTION app_private.home_word_count(value text) RETURNS integer
  LANGUAGE sql IMMUTABLE SET search_path=pg_catalog AS $fn$
- SELECT CASE WHEN coalesce(btrim(value),'')='' THEN 0 ELSE cardinality(regexp_split_to_array(btrim(regexp_replace(value,'[[:space:]]+',' ','g')),' +')) END;
+ SELECT CASE WHEN btrim(regexp_replace(coalesce(value,''),'[[:space:]]+',' ','g'))='' THEN 0 ELSE cardinality(regexp_split_to_array(btrim(regexp_replace(value,'[[:space:]]+',' ','g')),' +')) END;
 $fn$;
 CREATE FUNCTION app_private.home_progress(p_event text DEFAULT NULL,p_path text DEFAULT NULL)
  RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,app_private AS $fn$
@@ -90,7 +90,7 @@ BEGIN
   SELECT coalesce(sum(n),0)::integer,coalesce(max(n),0)::integer INTO word_count,largest_essay
     FROM unnest(ARRAY[p.about_me,p.life_direction,p.good_at,p.first_things,p.favorites,p.six_things,p.thinking_about,p.friday_night,p.private_thing,p.message_me_if]) AS e(value)
     CROSS JOIN LATERAL (SELECT app_private.home_word_count(e.value) AS n) w;
-  SELECT count(*)::integer INTO votes FROM app_private.member_quickmatch_decisions WHERE user_id=actor AND decision IN ('like','dislike');
+  SELECT count(*)::integer INTO votes FROM app_private.member_quickmatch_decisions WHERE user_id=actor;
   SELECT count(*)::integer INTO messages FROM app_private.community_messages WHERE sender_id=actor AND hidden_at IS NULL;
   SELECT persona_code::text INTO persona FROM app_private.member_onboarding WHERE user_id=actor;
   SELECT EXISTS(SELECT 1 FROM app_private.member_quickmatch_decisions mine
@@ -170,10 +170,20 @@ BEGIN
 END;
 $fn$;
 CREATE TRIGGER home_award_event AFTER INSERT ON app_private.member_personality_awards FOR EACH ROW EXECUTE FUNCTION app_private.home_award_event();
+CREATE TABLE app_private.home_published_questions_seen (
+ question_id text PRIMARY KEY
+);
+REVOKE ALL ON app_private.home_published_questions_seen FROM PUBLIC,ogcupid_member_api,ogcupid_delete_api;
+ALTER TABLE app_private.home_published_questions_seen ENABLE ROW LEVEL SECURITY;
+ALTER TABLE app_private.home_published_questions_seen FORCE ROW LEVEL SECURITY;
+INSERT INTO app_private.home_published_questions_seen SELECT question_id FROM app_private.published_match_questions;
 CREATE FUNCTION app_private.home_question_event() RETURNS trigger
  LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,app_private AS $fn$
 BEGIN
- INSERT INTO app_private.home_events(kind,body,href) VALUES('question','A new match question has been added to the bank.','/questions');
+ INSERT INTO app_private.home_published_questions_seen VALUES(NEW.question_id) ON CONFLICT DO NOTHING;
+ IF FOUND THEN
+   INSERT INTO app_private.home_events(kind,body,href) VALUES('question','A new match question has been added to the bank.','/questions');
+ END IF;
  RETURN NEW;
 END;
 $fn$;
@@ -182,10 +192,7 @@ CREATE TRIGGER home_question_event AFTER INSERT ON app_private.published_match_q
 -- Backfill only real profile-publication timestamps, not fabricated edit/quiz times.
 INSERT INTO app_private.home_events(subject_id,kind,happened_at)
  SELECT user_id,'profile',explored_at FROM app_private.member_onboarding WHERE explored_at IS NOT NULL;
-INSERT INTO app_private.home_events(kind,body,href,happened_at) VALUES
- ('article','OgTrends #0: The Big Idea','/ogtrends/zero','2026-11-15T00:00:00Z'),
- ('article','The Perfect Dating Profile: Why Everything We Know Might Be Wrong','/ogtrends/perfect-profile','2026-11-05T00:00:00Z'),
- ('article','Your Ex Has Entered the Chat: Can Dating References Make Profiles More Honest?','/ogtrends/references','2026-11-05T00:00:00Z');
+-- Article events come from the shared published OgTrends catalog.
 INSERT INTO app_private.home_events(kind,body,href) VALUES
  ('award-available','Feature Creature — take the Persona Test and complete every What to do activity.','/home?tab=todo'),
  ('award-available','explorer — visit every permanent, non-admin site page.','/sitemap'),
@@ -193,3 +200,46 @@ INSERT INTO app_private.home_events(kind,body,href) VALUES
 REVOKE ALL ON FUNCTION app_private.home_explorer_pages(),app_private.home_word_count(text),app_private.home_progress(text,text),app_private.home_admin_post(text),
  app_private.home_onboarding_event(),app_private.home_essay_event(),app_private.home_award_event(),app_private.home_question_event() FROM PUBLIC,ogcupid_delete_api;
 GRANT EXECUTE ON FUNCTION app_private.home_progress(text,text),app_private.home_admin_post(text) TO ogcupid_member_api;
+
+-- Recheck milestones on actual authenticated actions, not client-provided counts.
+CREATE FUNCTION app_private.home_refresh_activity() RETURNS trigger
+ LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,app_private AS $fn$
+DECLARE actor uuid:=nullif(current_setting('app.current_user_id',true),'')::uuid;
+  subject uuid;
+BEGIN
+ IF TG_TABLE_NAME='community_messages' THEN subject:=NEW.sender_id; ELSE subject:=NEW.user_id; END IF;
+ IF actor=subject AND app_private.is_discoverable_member(actor) THEN
+   PERFORM app_private.home_progress(NULL,NULL);
+ END IF;
+ RETURN NEW;
+END;
+$fn$;
+CREATE TRIGGER home_answer_progress AFTER INSERT OR UPDATE ON app_private.member_match_answers
+ FOR EACH ROW EXECUTE FUNCTION app_private.home_refresh_activity();
+CREATE TRIGGER home_essay_progress AFTER UPDATE ON app_private.member_profiles
+ FOR EACH ROW WHEN (ROW(NEW.about_me,NEW.life_direction,NEW.good_at,NEW.first_things,NEW.favorites,NEW.six_things,NEW.thinking_about,NEW.friday_night,NEW.private_thing,NEW.message_me_if)
+ IS DISTINCT FROM ROW(OLD.about_me,OLD.life_direction,OLD.good_at,OLD.first_things,OLD.favorites,OLD.six_things,OLD.thinking_about,OLD.friday_night,OLD.private_thing,OLD.message_me_if))
+ EXECUTE FUNCTION app_private.home_refresh_activity();
+CREATE TRIGGER home_persona_progress AFTER UPDATE ON app_private.member_onboarding
+ FOR EACH ROW WHEN (NEW.persona_code IS DISTINCT FROM OLD.persona_code OR NEW.explored_at IS DISTINCT FROM OLD.explored_at)
+ EXECUTE FUNCTION app_private.home_refresh_activity();
+CREATE TRIGGER home_community_progress AFTER INSERT ON app_private.community_messages
+ FOR EACH ROW EXECUTE FUNCTION app_private.home_refresh_activity();
+CREATE FUNCTION app_private.home_vote_progress() RETURNS trigger
+ LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,app_private AS $fn$
+DECLARE actor uuid:=nullif(current_setting('app.current_user_id',true),'')::uuid;
+BEGIN
+ IF actor IS DISTINCT FROM NEW.user_id OR NEW.decision IS NULL THEN RETURN NEW; END IF;
+ IF NEW.decision='like' AND app_private.quickmatch_pair_permitted(actor,NEW.target_user_id)
+ AND EXISTS(SELECT 1 FROM app_private.member_quickmatch_decisions WHERE user_id=NEW.target_user_id AND target_user_id=actor AND decision='like') THEN
+   INSERT INTO app_private.member_home_progress(user_id,has_quiver)
+   SELECT id,true FROM unnest(ARRAY[actor,NEW.target_user_id]) AS id ORDER BY id
+   ON CONFLICT(user_id) DO UPDATE SET has_quiver=true;
+ END IF;
+ IF app_private.is_discoverable_member(actor) THEN PERFORM app_private.home_progress(NULL,NULL); END IF;
+ RETURN NEW;
+END;
+$fn$;
+CREATE TRIGGER home_vote_progress AFTER INSERT OR UPDATE ON app_private.member_quickmatch_decisions
+ FOR EACH ROW EXECUTE FUNCTION app_private.home_vote_progress();
+REVOKE ALL ON FUNCTION app_private.home_refresh_activity(),app_private.home_vote_progress() FROM PUBLIC,ogcupid_member_api,ogcupid_delete_api;
