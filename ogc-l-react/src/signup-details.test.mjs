@@ -32,7 +32,7 @@ test("routes use the raised shell and private authenticated draft writes",()=>{
     assert.ok(SITEMAP_PATHS.includes("/signup"+page));
     assert.ok(shell.includes('"/signup'+page+'"'));
   }
-  for(const text of ["What do you do?","What do you like?","what are you bringing?","the hard stuff","any kind","Do you want kids?"])assert.ok(screen.includes(text));
+  for(const text of ["What do you do?","What do you like?","what are you bringing?","Drugs (the hard stuff)","Weed (any kind)","Do you want kids?"])assert.ok(screen.includes(text));
   assert.match(screen,/step:"signup-details",page,fields/);
   assert.match(screen,/aria-pressed=\{selected.includes\(option\)\}/);
   assert.match(onboarding,/\.\.\.savedSignupDetails\(state\)/);
