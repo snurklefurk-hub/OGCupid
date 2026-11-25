@@ -83,7 +83,7 @@ export default function Onboarding({signupSelection=null,onIdentitySaved}={}){
   if(status&&!status.locality)return <Navigate to="/signup4" replace/>;
   const remaining=status?nextSignupDetails(status.state,status.profile):"/onboarding";
   if(status&&remaining!=="/onboarding")return <Navigate to={remaining} replace/>;
-  if(status&&!status.explored&&!status.state?.signup9_completed_at&&(!status.profile||!status.photo))return <Navigate to="/signup9" replace/>;
+  if(status&&!status.explored&&!status.state?.signup9_completed_at&&!status.profile&&nextSignupDetails(status.state)==="/onboarding")return <Navigate to="/signup9" replace/>;
   const step=nextStep(status);
   const state=status?.state||{};
   const progress=(!status?.identity?0:!status?.locality?20:!status?.profile?40:
