@@ -1,8 +1,10 @@
 import React,{useEffect,useRef,useState} from "react";
 import {Navigate,useNavigate} from "react-router-dom";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
-import {HABIT_CHOICES,EDUCATION_CHOICES,INCOME_CHOICES,DIET_CHOICES,RELIGION_CHOICES,RELIGION_IMPORTANCE_CHOICES,RELATIONSHIP_CHOICES,STATUS_CHOICES,KIDS_CHOICES,SIGNUP_PET_CHOICES,SIGNUP_DETAIL_STEPS,validSignupDetailStep,validSignupDetailValue,nextSignupDetails} from "./signup-detail-options.mjs";
-const headings={5:"What do you do?",6:"What do you like?",7:"what are you bringing?"};
+import {Choices} from "./SignupIdentity.jsx";
+import {PROFILE_ORIENTATIONS} from "./profile-options.mjs";
+import {SIGNUP_ETHNICITY_CHOICES,HEIGHT_CHOICES,BODY_TYPE_CHOICES,LANGUAGE_CHOICES,HABIT_CHOICES,EDUCATION_CHOICES,INCOME_CHOICES,DIET_CHOICES,RELIGION_CHOICES,RELIGION_IMPORTANCE_CHOICES,RELATIONSHIP_CHOICES,STATUS_CHOICES,KIDS_CHOICES,SIGNUP_PET_CHOICES,SIGNUP_DETAIL_STEPS,validSignupDetailStep,validSignupDetailValue,nextSignupDetails} from "./signup-detail-options.mjs";
+const headings={5:"What do you do?",6:"What do you like?",7:"what are you bringing?",8:"Lets get personal"};
 function Choice({label,name,options,value,onChange,disabled}){
   return <label className="ogcl-signup-detail-field">
     <span>{label}</span>
@@ -43,6 +45,7 @@ export default function SignupDetails({page}){
       const saved=state["signup"+page+"_details"],old=raw?.profile||{};
       const initial=validSignupDetailStep(page,saved,true)?saved:Object.fromEntries(SIGNUP_DETAIL_STEPS[page].map(key=>[key,validSignupDetailValue(key,old[key])?old[key]:""]));
       if(page===6&&!initial.religion)initial.religionImportance="";
+      if(page===8)initial.orientation=state.orientation;
       setDraft(initial);
     }).catch(()=>{if(active)setError("Could not load your saved choices. Please retry.");})
       .finally(()=>{if(active)setLoading(false);});
@@ -60,17 +63,18 @@ export default function SignupDetails({page}){
     e.preventDefault();
     if(submitting.current||!e.currentTarget.reportValidity())return;
     const fields=page===5?{...draft,work:draft.work.trim()}:draft;
-    if(!validSignupDetailStep(page,fields)){setError("Choose a current religion option or leave it blank.");return;}
+    if(!validSignupDetailStep(page,fields)){setError(page===6?"Choose a current religion option or leave it blank.":"Choose valid profile details.");return;}
     submitting.current=true;setBusy(true);setError("");
     try{
       const result=await accountRequest("/onboarding","PUT",{step:"signup-details",page,fields});
       if(!result?.saved)throw Error("Choices were not saved.");
-      navigate(page===7?"/onboarding":"/signup"+(page+1),{replace:true});
+      navigate(page===8?"/onboarding":"/signup"+(page+1),{replace:true});
     }catch(e){setError(e?.code==="invalid"?e.message:"Your choices couldn't be saved. Please retry.");}
     finally{submitting.current=false;setBusy(false);}
   }
   return <form className={"ogcl-signup3 ogcl-signup-details ogcl-signup"+page} onSubmit={submit}>
     <h1>{headings[page]}</h1>
+    {page===8&&<p className="ogcl-signup8-subheading">We\'re almost done, i swear</p>}
     {page===5&&<div className="ogcl-signup-detail-grid">
       <label className="ogcl-signup-detail-field"><span>Job</span><input name="work" maxLength={160} value={draft.work} disabled={busy} onChange={e=>update("work",e.target.value)}/></label>
       {select("income","Income",INCOME_CHOICES)}
@@ -91,6 +95,13 @@ export default function SignupDetails({page}){
       {select("relationshipType","Relationship style",RELATIONSHIP_CHOICES)}
       {select("kids","Do you want kids?",KIDS_CHOICES)}
       <Pets value={draft.pets} onChange={update} disabled={busy}/>
+    </div>}
+    {page===8&&<div className="ogcl-signup-detail-grid">
+      {select("orientation","Orientation",PROFILE_ORIENTATIONS)}
+      <Choices label="Ethnicity" options={SIGNUP_ETHNICITY_CHOICES.map(value=>({value,label:value}))} selected={draft.ethnicity?draft.ethnicity.split(", "):[]} onChange={items=>update("ethnicity",SIGNUP_ETHNICITY_CHOICES.filter(x=>items.includes(x)).join(", "))} disabled={busy}/>
+      {select("height","Height",HEIGHT_CHOICES)}
+      {select("bodyType","Body type",BODY_TYPE_CHOICES)}
+      <Choices label="Languages" options={LANGUAGE_CHOICES.map(value=>({value,label:value}))} selected={draft.languages?draft.languages.split(", "):[]} onChange={items=>update("languages",LANGUAGE_CHOICES.filter(x=>items.includes(x)).join(", "))} disabled={busy}/>
     </div>}
     <button type="submit" disabled={busy}>{busy?"SAVING…":"CONTINUE"}</button>
     {error&&<p className="ogcl-signup-error" role="alert">{error}</p>}
