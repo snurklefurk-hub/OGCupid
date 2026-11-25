@@ -266,7 +266,7 @@ function OwnProfileGate({children}) {
   },[kind,user?.id,slug,accountRequest]);
   if(kind!=="onboarding")return <MemberGate>{children}</MemberGate>;
   if(allowed===null)return <RouteLoading/>;
-  return allowed?.userId===user?.id&&allowed?.slug===slug?children:<Navigate to="/onboarding" replace/>;
+  return user?.id&&allowed?.userId===user.id&&allowed?.slug===slug?children:<Navigate to="/onboarding" replace/>;
 }
 function MemberGate({children,allowOnboarding=false}) {
   const {kind, error, refresh} = useMemberSession();
