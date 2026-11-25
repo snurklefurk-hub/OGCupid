@@ -1,3 +1,4 @@
+import {AWARD_DEFINITIONS} from "./home-contract.mjs";
 import {presentIntentions} from "./profile-options.mjs";
 import {presentEthnicity} from "./member-settings.mjs";
 
@@ -82,6 +83,7 @@ export function sanitizePublicProfile(payload,slug) {
       profileSearchRadiusMiles:[0,10,25,50,100,250,500].includes(p.profileSearchRadiusMiles)
         ? p.profileSearchRadiusMiles : null
     }),publicAnswers:Object.freeze(answers),
+    personalityAwards:Object.freeze((Array.isArray(payload.personalityAwards)?payload.personalityAwards:[]).filter(a=>a&&Object.hasOwn(AWARD_DEFINITIONS,a.code)&&typeof a.awardedAt==="string"&&Number.isFinite(Date.parse(a.awardedAt))).map(a=>Object.freeze({code:a.code,awardedAt:a.awardedAt}))),
     personaCode:typeof payload.personaCode==="string" && /^[A-Za-z0-9]{4,8}$/.test(payload.personaCode)
       ? payload.personaCode:null,
     isOwner:payload.isOwner===true
