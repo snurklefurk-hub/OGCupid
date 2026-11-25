@@ -3,16 +3,13 @@ import React,{useEffect,useRef,useState} from "react";
 import {Navigate,NavLink,useNavigate} from "react-router-dom";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import PhotoManager from "./PhotoManager.jsx";
+import {CityChooser,countries,countryNames} from "./CityChooser.jsx";
+export {CityChooser} from "./CityChooser.jsx";
 import "./account.css";
 
 const genders=PROFILE_GENDERS;
 const orientations=PROFILE_ORIENTATIONS;
 const goals=PROFILE_INTENTIONS.map(x=>x.value);
-const countries="AD AE AF AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BV BW BY BZ CA CC CD CF CG CH CI CK CL CM CN CO CR CU CV CW CX CY CZ DE DJ DK DM DO DZ EC EE EG EH ER ES ET FI FJ FK FM FO FR GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GS GT GU GW GY HK HM HN HR HT HU ID IE IL IM IN IO IQ IR IS IT JE JM JO JP KE KG KH KI KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MF MG MH MK ML MM MN MO MP MQ MR MS MT MU MV MW MX MY MZ NA NC NE NF NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PN PR PS PT PW PY QA RE RO RS RU RW SA SB SC SD SE SG SH SI SJ SK SL SM SN SO SR SS ST SV SX SY SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG UM US UY UZ VA VC VE VG VI VN VU WF WS YE YT ZA ZM ZW".split(" ");
-const countryNames=new Intl.DisplayNames(["en"],{type:"region"});
-const cleanCity=value=>String(value||"").normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]/g,"");
-const shardFor=value=>cleanCity(value).slice(0,2).padEnd(2,"_");
-const cityLabel=city=>[city.n,city.a&&city.a.toLowerCase()!==city.n.toLowerCase()?city.a:"",countryNames.of(city.c)].filter(Boolean).join(", ");
 function adultAge(value){
   const date=new Date(String(value||"").slice(0,10)+"T00:00:00Z");
   if(!Number.isFinite(date.getTime()))return null;
@@ -24,71 +21,6 @@ function adultAge(value){
 const nextStep=s=>!s?.identity?"identity":!s.locality?"locality":!s.profile?"details":
   !s.photo?"photo":!s.quiz?"quiz":s.explored?"done":"explore";
 
-export function CityChooser({country,stored,onPick}){
-  const [input,setInput]=useState(stored?.label||"");
-  const [results,setResults]=useState([]);
-  const [hint,setHint]=useState("");
-  const [zip,setZip]=useState(stored?.zip||"");
-  const seq=useRef(0);
-  useEffect(()=>{
-    setInput(stored?.label||"");
-    setZip(stored?.zip||"");
-  },[stored?.label,stored?.zip]);
-  useEffect(()=>{
-    if(country!=="US"||!/^\d{5}$/.test(zip)){return;}
-    let alive=true;const serial=++seq.current;
-    setHint("Checking ZIP code…");
-    (async()=>{
-      const res=await fetch("https://api.zippopotam.us/us/"+zip,{cache:"no-store"});
-      if(!res.ok)throw Error("ZIP code wasn't found.");
-      const data=await res.json();
-      const place=data.places?.[0];
-      if(!place?.["place name"])throw Error("ZIP code has no listed city.");
-      const key=shardFor(place["place name"]);
-      const list=await fetch("/locations/"+key+".json",{cache:"force-cache"}).then(r=>{
-        if(!r.ok)throw Error("City directory unavailable.");return r.json();
-      });
-      const city=list.find(item=>item.c==="US"&&
-        cleanCity(item.n)===cleanCity(place["place name"])&&
-        [place.state,place["state abbreviation"]].some(region=>cleanCity(item.a)===cleanCity(region)));
-      if(!city)throw Error("Couldn't verify that ZIP against our city directory.");
-      if(alive&&serial===seq.current){onPick({id:city.id,key,label:cityLabel(city)});setHint("✓ "+cityLabel(city));}
-    })().catch(e=>{if(alive&&serial===seq.current){onPick(null);setHint(e.message);}});
-    return()=>{alive=false;};
-  },[country,zip]);
-  useEffect(()=>{
-    if(country==="US")return;
-    const base=input.split(",")[0].trim(),needle=cleanCity(base);
-    if(needle.length<2){setResults([]);return;}
-    let live=true;const serial=++seq.current;
-    setHint("Searching cities…");
-    fetch("/locations/"+shardFor(base)+".json",{cache:"force-cache"})
-      .then(r=>{if(!r.ok)throw Error("City directory unavailable.");return r.json();})
-      .then(list=>{
-        if(!live||serial!==seq.current)return;
-        const options=list.filter(item=>item.c===country&&cleanCity(item.n).startsWith(needle)).slice(0,14);
-        setResults(options);
-        setHint(options.length?"Choose a city from the list.":"No matching city. Try a nearby city.");
-      }).catch(()=>{if(live&&serial===seq.current){setHint("City search unavailable.");setResults([]);}});
-    return()=>{live=false;};
-  },[country,input]);
-  if(country==="US")return <><label>ZIP code
-    <input name="zipCode" type="text" inputMode="numeric" pattern="[0-9]{5}" maxLength={5}
-      required value={zip} onChange={e=>{setZip(e.target.value);onPick(null);}}/></label>
-    <p className="ogcl-note" role="status">{hint}</p></>;
-  return <><label>City
-    <input type="search" value={input} required maxLength={100}
-      placeholder="Start typing your city"
-      onChange={e=>{setInput(e.target.value);onPick(null);}}/></label>
-    <p className="ogcl-note" role="status">{hint}</p>
-    {!!results.length&&<div role="listbox" className="ogcl-city-options">
-      {results.map(item=><button type="button" role="option" key={item.id}
-        onClick={()=>{const label=cityLabel(item);setInput(label);
-          setResults([]);setHint("✓ "+label);onPick({id:item.id,key:shardFor(item.n),label});}}>
-        {cityLabel(item)}</button>)}
-    </div>}
-  </>;
-}
 
 function OptionChecks({title,name,values,selected}){
   return <fieldset><legend>{title}</legend><div className="ogcl-choice-grid">
@@ -147,6 +79,7 @@ export default function Onboarding({signupSelection=null,onIdentitySaved}={}){
   if(kind==="guest")return <Navigate to="/signin" replace/>;
   if(kind!=="onboarding")return <section className="ogcl-view" role="status">Checking your account…</section>;
   if(status&&!status.identity)return <Navigate to="/signup3" replace/>;
+  if(status&&!status.locality)return <Navigate to="/signup4" replace/>;
   const step=nextStep(status);
   const state=status?.state||{};
   const progress=(!status?.identity?0:!status?.locality?20:!status?.profile?40:
