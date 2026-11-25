@@ -98,7 +98,7 @@ test('signup preferences are stored atomically on the authenticated onboarding r
   const input={step:'signup-preferences',gender:'Enby',orientation:'Ace',interestedIn:['Intersex','Enby'],intentions:['new friends','casual sex'],birthDate:'1990-01-01'};
   const result=await handleOnboarding(req(input),memberId,withMember,json);
   assert.equal(result.status,200);
-  assert.deepEqual(params,[memberId,'Enby','Ace',['Intersex','Enby'],['new friends','casual sex'],'1990-01-01']);
+  assert.deepEqual(params,[memberId,'Enby','Ace',['Intersex','Enby'],['new friends','casual sex'],'1990-01-01',null,null,null]);
   assert.match(sql,/WHERE app_private.member_onboarding.explored_at IS NULL/);
   assert.match(sql,/birth_date=COALESCE/);
   assert.doesNotMatch(sql,/details_complete|adult_attested_at|locality_id/);
@@ -173,4 +173,18 @@ test('signup9 finish requires verified own prior details, essay and primary phot
     assert.equal((await handleOnboarding(req(confirm),memberId,runner(row,photo),json)).status,400);
     assert.equal(update,null);
   }
+});
+
+test('signup3 validates and persists age and distance preferences atomically',async()=>{
+  const memberId='11111111-1111-4111-8111-111111111111';
+  const input={step:'signup-preferences',gender:'Man',orientation:'Straight',interestedIn:['Woman'],intentions:['long-term dating'],birthDate:'1990-01-01',ageMin:25,ageMax:45,distanceMiles:100};
+  let params,sql,calls=0;
+  const withMember=(id,work)=>{assert.equal(id,memberId);calls++;return work({query:async(q,p)=>{sql=q;params=p;return {rowCount:1};}});};
+  const json=(_,body,status=200)=>new Response(JSON.stringify(body),{status});
+  const req=body=>new Request('https://example.test/onboarding',{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
+  assert.equal((await handleOnboarding(req(input),memberId,withMember,json)).status,200);
+  assert.deepEqual(params.slice(-3),[25,45,100]);assert.match(sql,/signup_radius_miles/);
+  for(const invalid of [{...input,ageMin:17},{...input,ageMin:46},{...input,ageMax:120},{...input,distanceMiles:7},{...input,ageMax:undefined}])
+    assert.equal((await handleOnboarding(req(invalid),memberId,withMember,json)).status,400);
+  assert.equal(calls,1);
 });
