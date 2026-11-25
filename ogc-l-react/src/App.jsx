@@ -345,7 +345,7 @@ export default function App() {
   const {pathname}=useLocation();
   const [signupSelection,setSignupSelection]=useState(null);
   useEffect(()=>{
-    if(!["/signup","/signup1","/signup2","/signup3","/signup4","/signup5","/signup6","/signup7","/join","/onboarding"].includes(pathname.replace(/\/$/,"")))setSignupSelection(null);
+    if(!["/signup","/signup1","/signup2","/signup3","/signup4","/signup5","/signup6","/signup7","/signup8","/join","/onboarding"].includes(pathname.replace(/\/$/,"")))setSignupSelection(null);
   },[pathname]);
   return (<>
     <PublishedUiDesign />
@@ -401,6 +401,7 @@ export default function App() {
         <Route path="signup5" element={<SignupDetails key={5} page={5}/>} />
         <Route path="signup6" element={<SignupDetails key={6} page={6}/>} />
         <Route path="signup7" element={<SignupDetails key={7} page={7}/>} />
+        <Route path="signup8" element={<SignupDetails key={8} page={8}/>} />
       </Route>
     </Routes>
   </>);
