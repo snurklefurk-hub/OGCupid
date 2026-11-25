@@ -16,7 +16,8 @@ function profileDraft(state,existing,aboutMe){
   return {...savedSignupDetails(state),aboutMe,age,gender:state.gender,orientation:state.orientation,
     interestedIn:Array.isArray(state.signup_interested_in)?state.signup_interested_in.join(", "):existing?.interestedIn||"",
     relationshipGoal:Array.isArray(state.signup_intentions)?state.signup_intentions.join(", "):existing?.relationshipGoal||"",
-    cityRegion:state.city_label||"",locality,searchOrigin:locality,searchRadiusMiles:existing?.searchRadiusMiles??50};
+    cityRegion:state.city_label||"",locality,searchOrigin:locality,searchRadiusMiles:state.signup_radius_miles??existing?.searchRadiusMiles??50,
+    preferredAgeMin:Math.min(state.match_age_min??18,99),preferredAgeMax:Math.min(state.match_age_max??99,99)};
 }
 
 function CropStage({file,busy,onUpload,onCancel}){
