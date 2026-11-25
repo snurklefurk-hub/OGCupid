@@ -26,7 +26,7 @@ export default function SignupShell({Photo}){
         <div className="ogcl-signup9-tutorial">
           <div className="ogcl-signup9-pointer" aria-hidden="true">↑</div>
           <p>This is a quick link to your profile where you can fill out your preferences, essays, and see any personality awards you've gotten.</p>
-          <NavLink className="ogcl-signup9-primary" to="/signup10">next</NavLink>
+          <NavLink to="/signup10" className="ogcl-signup9-primary">next</NavLink>
         </div>
       </div>:<NavLink to="/signin" className="ogcl-signup-signin">Sign in</NavLink>}
     </header>
