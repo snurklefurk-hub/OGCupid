@@ -5,9 +5,9 @@ import {HABIT_CHOICES,EDUCATION_CHOICES,INCOME_CHOICES,DIET_CHOICES,RELIGION_CHO
 const headings={5:"What do you do?",6:"What do you like?",7:"what are you bringing?"};
 function Choice({label,name,options,value,onChange,disabled,note}){
   return <label className="ogcl-signup-detail-field">
-    {note&&<small className="ogcl-signup-detail-note">{note}</small>}
+    {note&&<small className="ogcl-signup-detail-note" id={"signup-note-"+name}>{note}</small>}
     <span>{label}</span>
-    <select name={name} value={value} disabled={disabled} onChange={e=>onChange(name,e.target.value)}>
+    <select name={name} aria-describedby={note?"signup-note-"+name:undefined} value={value} disabled={disabled} onChange={e=>onChange(name,e.target.value)}>
       <option value="">Choose</option>
       {options.map(item=>{const option=typeof item==="string"?{label:item,value:item}:item;return <option key={option.value} value={option.value}>{option.label}</option>;})}
     </select>
@@ -41,7 +41,9 @@ export default function SignupDetails({page}){
       const next=nextSignupDetails(state);
       if(next!=="/onboarding"&&Number(next.slice(-1))<page){setRedirect(next);return;}
       const saved=state["signup"+page+"_details"],old=raw?.profile||{};
-      setDraft(validSignupDetailStep(page,saved)?saved:Object.fromEntries(SIGNUP_DETAIL_STEPS[page].map(key=>[key,validSignupDetailValue(key,old[key])?old[key]:""])));
+      const initial=validSignupDetailStep(page,saved)?saved:Object.fromEntries(SIGNUP_DETAIL_STEPS[page].map(key=>[key,validSignupDetailValue(key,old[key])?old[key]:""]));
+      if(page===6&&!initial.religion)initial.religionImportance="";
+      setDraft(initial);
     }).catch(()=>{if(active)setError("Could not load your saved choices. Please retry.");})
       .finally(()=>{if(active)setLoading(false);});
     return()=>{active=false;};
