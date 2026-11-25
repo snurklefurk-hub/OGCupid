@@ -4,7 +4,7 @@ import {PROFILE_ORIENTATIONS} from './profile-options.mjs';
 const freeze=Object.freeze;
 export const SIGNUP_ETHNICITY_CHOICES=freeze(["White","Black","Asian","Hispanic","Native","Indian","Middle Eastern","Other"]);
 export const BODY_TYPE_CHOICES=freeze(["Thin","Athletic","Average","Jacked","Chubby","Overweight","used up"]);
-export const LANGUAGE_CHOICES=freeze(["English","Spanish","French","German","Russian","Italian","Polish","Ukrainian","Romanian","Dutch"]);
+export const LANGUAGE_CHOICES=freeze(["English","Spanish","French","German","Russian","Italian","Polish","Ukrainian","Romanian","Dutch","Other"]);
 export const HEIGHT_CHOICES=freeze(Array.from({length:43},(_,i)=>{
   const inches=i+48;
   return `${Math.floor(inches/12)}' ${inches%12}\" (${Math.round(inches*2.54)} cm)`;
