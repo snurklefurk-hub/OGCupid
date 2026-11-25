@@ -1,0 +1,23 @@
+.ogcl-home-refresh{display:flex;justify-content:flex-end;margin-bottom:8px}
+.ogcl-home-feed{display:grid}
+.ogcl-home-event{display:flex;align-items:flex-start;gap:12px;padding:14px 4px;border-bottom:1px solid #d4dbe5;min-width:0}
+.ogcl-home-event:first-child{padding-top:4px}
+.ogcl-home-event>a{flex:0 0 54px}
+.ogcl-home-event .ogcl-member-photo{width:54px;height:54px;object-fit:cover;border-radius:3px}
+.ogcl-home-event-copy{flex:1;min-width:0;overflow-wrap:anywhere}
+.ogcl-home-event-copy p{margin:4px 0 6px;white-space:pre-wrap;line-height:1.5}
+.ogcl-home-event time,.ogcl-home-muted{font-size:11px;color:#687483}
+.ogcl-home-task{display:grid;grid-template-columns:minmax(0,1fr) minmax(100px,42%);align-items:center;gap:18px;padding:14px 4px;border-bottom:1px solid #d4dbe5}
+.ogcl-home-task small,.ogcl-home-award small,.ogcl-personality-awards small{display:block;color:#687483;font-size:12px;margin-top:5px;line-height:1.5}
+.ogcl-home-progress{display:flex;align-items:center;gap:10px;justify-content:flex-end}
+.ogcl-home-progress strong{font-variant-numeric:tabular-nums;width:42px;text-align:right}
+.ogcl-home-progress progress{width:min(100%,190px);height:13px;accent-color:var(--okc-blue,#326ba6)}
+.ogcl-home-awards{margin:22px 0 0}
+.ogcl-home-award{padding:10px 4px;border-bottom:1px solid #d4dbe5;display:grid;grid-template-columns:1fr auto;gap:4px}
+.ogcl-home-award small{grid-column:1/-1}
+.ogcl-home-award-state{font-size:12px;color:#687483}
+.ogcl-home-admin-posts article{padding:12px 0;border-top:1px solid #ddd}
+.ogcl-home-admin-posts p{white-space:pre-wrap;overflow-wrap:anywhere}
+.ogcl-personality-awards{padding-left:20px}
+.ogcl-personality-awards li{margin:10px 0}
+@media(max-width:480px){.ogcl-home-task{grid-template-columns:1fr;gap:8px}.ogcl-home-progress{justify-content:flex-start}.ogcl-home-progress progress{width:100%}}
