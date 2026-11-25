@@ -52,10 +52,20 @@ test("public profile response explicitly excludes email, private answers and sto
 });
 test("canonical React profile protects owner edits and delegates guest routing to member gate", () => {
   assert.match(page,/location\.replace\("\/profiles\/" \+/);
-  assert.match(app,/<MemberGate><PublicMemberProfile Photo=\{MemberPhoto\}/);
+  assert.match(app,/<OwnProfileGate><PublicMemberProfile Photo=\{MemberPhoto\}/);
+  assert.match(app,/data.profile.slug===slug/);
+  assert.match(app,/if\(kind!=="onboarding"\)return <MemberGate>\{children\}<\/MemberGate>/);
   assert.match(view,/getPublicProfile\(slug\)/);
   assert.match(view,/!profile\?\.isOwner/);
   assert.match(view,/saveOwnEssay\(key,draft\)/);
   assert.match(provider,/saveOwnEssay,\s*getPublicProfile/);
   assert.doesNotMatch(view,/EngineerKen|Kennedy|Oakland/);
+});
+
+test("signup9 draft profiles and photos remain private until existing discovery eligibility",()=>{
+  const sql=readFileSync(new URL("../db/migrations/041_signup9_completion.sql",import.meta.url),"utf8");
+  assert.match(sql,/CREATE POLICY member_profiles_authenticated_read[\s\S]*?USING \(app_private.current_member_is_active\(\) AND app_private.is_discoverable_member\(user_id\)\)/);
+  assert.match(sql,/CREATE POLICY member_photo_authenticated_peer_read[\s\S]*?USING \(app_private.current_member_is_active\(\) AND app_private.is_discoverable_member\(user_id\)\)/);
+  assert.match(sql,/CREATE POLICY profile_routes_member_read[\s\S]*?OR app_private.is_discoverable_member\(user_id\)/);
+  assert.doesNotMatch(sql,/DROP POLICY member_profiles_owner_only|DROP POLICY member_photo_read|DISABLE ROW LEVEL SECURITY/);
 });
