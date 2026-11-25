@@ -1,7 +1,7 @@
 import {validSignupDetailStep} from "../ogc-l-react/src/signup-detail-options.mjs";
 import {isKrustyKrabCookJob} from "./job-moderation.js";
 import { scorePersonaV2 } from "./persona-v2-scoring.js";
-import {PROFILE_GENDERS,PROFILE_ORIENTATIONS,validSignupPreferences} from "../ogc-l-react/src/profile-options.mjs";
+import {PROFILE_GENDERS,PROFILE_ORIENTATIONS,validSignupPreferences,validSignupFilters} from "../ogc-l-react/src/profile-options.mjs";
 
 // All calls arrive after JWT verification and use the transaction-scoped member ID.
 const genders = new Set(PROFILE_GENDERS);
@@ -47,7 +47,7 @@ export async function handleOnboarding(request,userId,withMember,json,verifiedPl
     if (request.method === 'GET') {
       const result=await withMember(userId,async client => {
         const [state,profile,photos,answers,verified]=await Promise.all([
-          client.query('SELECT gender,orientation,birth_date,country_code,zip_code,locality_id,locality_shard,city_label,details_complete,match_age_min,match_age_max,explored_at,primary_self_photo_id,persona_code,signup_interested_in,signup_intentions,signup5_details,signup6_details,signup7_details,signup8_details,signup9_completed_at FROM app_private.member_onboarding WHERE user_id=$1::uuid',[userId]),
+          client.query('SELECT gender,orientation,birth_date,country_code,zip_code,locality_id,locality_shard,city_label,details_complete,match_age_min,match_age_max,explored_at,primary_self_photo_id,persona_code,signup_interested_in,signup_intentions,signup5_details,signup6_details,signup7_details,signup8_details,signup9_completed_at,signup_radius_miles FROM app_private.member_onboarding WHERE user_id=$1::uuid',[userId]),
           client.query('SELECT about_me, interested_in, relationship_goal FROM app_private.member_profiles WHERE user_id=$1::uuid',[userId]),
           client.query(`SELECT count(*)::int AS total,
             bool_or(is_primary AND id = (SELECT primary_self_photo_id FROM app_private.member_onboarding WHERE user_id=$1::uuid)) AS primary
@@ -77,10 +77,12 @@ export async function handleOnboarding(request,userId,withMember,json,verifiedPl
       if (!validSignupPreferences(body)) throw Error('Choose valid identity and dating preferences');
       // Older cached clients may omit birthdate and still complete it during locality.
       if (body.birthDate !== undefined && !adultBirthDate(body.birthDate)) throw Error('Enter a valid birthdate (18 or older)');
-      const saved=await withMember(userId,client=>client.query(`INSERT INTO app_private.member_onboarding(user_id,gender,orientation,signup_interested_in,signup_intentions,birth_date)
-        VALUES($1::uuid,$2,$3,$4::text[],$5::text[],$6::date)
-        ON CONFLICT(user_id) DO UPDATE SET gender=$2,orientation=$3,signup_interested_in=$4::text[],signup_intentions=$5::text[],birth_date=COALESCE($6::date,app_private.member_onboarding.birth_date)
-        WHERE app_private.member_onboarding.explored_at IS NULL RETURNING user_id`,[userId,body.gender,body.orientation,body.interestedIn,body.intentions,body.birthDate??null]));
+      const filters=["ageMin","ageMax","distanceMiles"].some(key=>Object.hasOwn(body,key));
+      if(filters&&!validSignupFilters(body))throw Error('Choose valid age and distance preferences');
+      const saved=await withMember(userId,client=>client.query(`INSERT INTO app_private.member_onboarding(user_id,gender,orientation,signup_interested_in,signup_intentions,birth_date,match_age_min,match_age_max,signup_radius_miles)
+        VALUES($1::uuid,$2,$3,$4::text[],$5::text[],$6::date,COALESCE($7,18),COALESCE($8,99),$9)
+        ON CONFLICT(user_id) DO UPDATE SET gender=$2,orientation=$3,signup_interested_in=$4::text[],signup_intentions=$5::text[],birth_date=COALESCE($6::date,app_private.member_onboarding.birth_date),match_age_min=COALESCE($7,app_private.member_onboarding.match_age_min),match_age_max=COALESCE($8,app_private.member_onboarding.match_age_max),signup_radius_miles=COALESCE($9,app_private.member_onboarding.signup_radius_miles)
+        WHERE app_private.member_onboarding.explored_at IS NULL RETURNING user_id`,[userId,body.gender,body.orientation,body.interestedIn,body.intentions,body.birthDate??null,filters?body.ageMin:null,filters?body.ageMax:null,filters?body.distanceMiles:null]));
       if (!saved.rowCount) throw Error('Use Profile Settings to update your completed profile');
     } else if (body.step==='signup-details') {
       if (![5,6,7,8].includes(body.page)||!validSignupDetailStep(body.page,body.fields)) throw Error('Choose valid profile details');
