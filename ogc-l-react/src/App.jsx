@@ -6,6 +6,7 @@ import SignupLanding from "./SignupLanding.jsx";
 import SignupShell from "./SignupShell.jsx";
 import SignupCredentials from "./SignupCredentials.jsx";
 import SignupIdentity from "./SignupIdentity.jsx";
+import SignupLocation from "./SignupLocation.jsx";
 import {homeDestination} from "./signup-landing.mjs";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {SidebarPromos, ProfileFloater, ProfileRefinement} from "./ClassicSidebar.jsx";
@@ -226,7 +227,7 @@ function SignInForm() {
     } finally { setBusy(false); }
   }
   if(kind==="member")return <Navigate to={defaultRoute} replace/>;
-  if(kind==="onboarding")return <Navigate to={onboarding?.identity?"/onboarding":"/signup3"} replace/>;
+  if(kind==="onboarding")return <Navigate to={!onboarding?.identity?"/signup3":!onboarding?.locality?"/signup4":"/onboarding"} replace/>;
   return (
     <section className="ogcl-view" aria-labelledby="ogcl-signin-heading">
       <header className="ogcl-view-head">
@@ -334,7 +335,7 @@ const views = {
 
 function HomeRoute(){
   const {kind,onboarding}=useMemberSession();
-  const destination=kind==="onboarding"&&!onboarding?.identity?"/signup3":homeDestination(kind);
+  const destination=kind==="onboarding"?(!onboarding?.identity?"/signup3":!onboarding?.locality?"/signup4":"/onboarding"):homeDestination(kind);
   if(destination)return <Navigate to={destination} replace/>;
   return <MemberGate><section className="ogcl-view"><header className="ogcl-view-head"><h1>Home</h1></header></section></MemberGate>;
 }
@@ -343,7 +344,7 @@ export default function App() {
   const {pathname}=useLocation();
   const [signupSelection,setSignupSelection]=useState(null);
   useEffect(()=>{
-    if(!["/signup","/signup1","/signup2","/signup3","/join","/onboarding"].includes(pathname.replace(/\/$/,"")))setSignupSelection(null);
+    if(!["/signup","/signup1","/signup2","/signup3","/signup4","/join","/onboarding"].includes(pathname.replace(/\/$/,"")))setSignupSelection(null);
   },[pathname]);
   return (<>
     <PublishedUiDesign />
@@ -395,6 +396,7 @@ export default function App() {
         <Route path="signup1" element={<Navigate to="/signup" replace/>} />
         <Route path="signup2" element={<SignupCredentials/>} />
         <Route path="signup3" element={<SignupIdentity selection={signupSelection} onSaved={()=>setSignupSelection(null)}/>} />
+        <Route path="signup4" element={<SignupLocation/>} />
       </Route>
     </Routes>
   </>);

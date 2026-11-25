@@ -16,7 +16,7 @@ const read=path=>readFileSync(new URL("../../public/"+path,import.meta.url),"utf
 const fixedLegacy=["account/persona.html","profiles/index.html","quiz/index.html"];
 const generatedEntries=SITEMAP_PATHS.map(path=>path.slice(1)+"/index.html");
 const canonical=[
-  "home","signup","signup1","signup2","signup3","signin","join","recover","verify","onboarding","account","persona",
+  "home","signup","signup1","signup2","signup3","signup4","signin","join","recover","verify","onboarding","account","persona",
   "ogtrends","ogtrends/zero","ogtrends/perfect-profile",
   "ogtrends/references","privacy","terms","contact","sitemap",
   "photos","matches","profile","settings","profiles/:slug","questions",
@@ -95,7 +95,7 @@ test("legacy Persona entry points redirect to clean, query-preserving routes",()
 
 test("static host fallback preserves dynamic deep links without resurrecting hashes",()=>{
   const cases=[
-    ["/home","",""],["/signup","",""],["/signup2","",""],["/signup3","",""],["/admin","",""],["/sitemap","",""],["/matches","",""],
+    ["/home","",""],["/signup","",""],["/signup2","",""],["/signup3","",""],["/signup4","",""],["/admin","",""],["/sitemap","",""],["/matches","",""],
     ["/messages/00000000-0000-4000-8000-000000000007","",""],
     ["/profiles/river-riley","?tab=questions","#photos"],
     ["/profiles/river-riley","","#photos"],

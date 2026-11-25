@@ -1,0 +1,28 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+import {normalizeSiteRoute} from "./browser-location.mjs";
+import {SITEMAP_PATHS} from "./sitemap-pages.mjs";
+const read=p=>readFileSync(new URL(p,import.meta.url),"utf8");
+test("signup4 shares raised logo and continues only after verified location",()=>{
+  const app=read("./App.jsx"),shell=read("./SignupShell.jsx"),identity=read("./SignupIdentity.jsx"),location=read("./SignupLocation.jsx"),legacy=read("./Onboarding.jsx"),chooser=read("./CityChooser.jsx");
+  assert.match(app,/<Route path="signup4" element=\{<SignupLocation\/>\}/);
+  assert.match(shell,/step==="\/signup3"\|\|step==="\/signup4"/);
+  assert.match(shell,/identityStep\?" ogcl-signup-content-top"/);
+  assert.match(identity,/navigate\("\/signup4",\{replace:true\}\)/);
+  assert.match(legacy,/if\(status&&!status.locality\)return <Navigate to="\/signup4" replace\/>/);
+  assert.match(location,/<h1>Where are you\?<\/h1>/);
+  assert.match(location,/useState\("US"\)/);
+  assert.match(location,/code==="US"\?"USA"/);
+  assert.match(location,/!state.gender\|\|!state.orientation\|\|!state.birth_date/);
+  assert.match(location,/step:"locality",birthDate:String\(state.birth_date\)/);
+  assert.match(location,/locality:\{id:Number\(selected.id\),key:selected.key\}/);
+  assert.match(location,/disabled=\{busy\|\|!selected\?\.id\|\|!selected\?\.key\}/);
+  assert.match(chooser,/api\.zippopotam\.us\/us\//);
+  assert.match(chooser,/Oh, \$\{city.n\}\? I hear it's nice this time of year/);
+  assert.match(chooser,/onPick\(null\)/);
+  assert.match(chooser,/if\(alive&&serial===seq.current\)/);
+  assert.match(location,/navigate\("\/onboarding",\{replace:true\}\)/);
+  assert.ok(SITEMAP_PATHS.includes("/signup4"));
+  assert.equal(normalizeSiteRoute("/signup4/","https://ogcupid.com"),"/signup4");
+});

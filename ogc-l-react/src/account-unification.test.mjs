@@ -75,8 +75,10 @@ test("onboarding keeps server-owned completion and verified locality/photo requi
   for(const step of ['step:"identity"','step:"locality"','step:"details"','step:"self-photo"','step:"explore"']){
     assert.ok((onboarding+photos).includes(step),step);
   }
-  assert.match(onboarding,/\/locations\//);
-  assert.match(onboarding,/api\.zippopotam\.us/);
+  const chooser=read("./CityChooser.jsx");
+  assert.match(onboarding,/import \{CityChooser,countries,countryNames\} from "\.\/CityChooser\.jsx"/);
+  assert.match(chooser,/\/locations\//);
+  assert.match(chooser,/api\.zippopotam\.us/);
   assert.match(onboarding,/accountRequest\("\/onboarding"\)/);
   assert.match(onboarding,/age:adultAge\(state\.birth_date\)/);
   assert.match(onboarding,/getUTCFullYear\(\)-18/);
