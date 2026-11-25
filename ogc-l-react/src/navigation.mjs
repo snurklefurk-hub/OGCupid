@@ -6,4 +6,4 @@ export const primaryNavigation = Object.freeze([
   Object.freeze({path:"/community",label:"Community",icon:"☷"})
 ]);
 export const defaultRoute="/home";
-export const validRoutePaths=Object.freeze([...primaryNavigation.map(item=>item.path),"/questions","/home","/signup","/signup1","/signup2","/signup3","/signup4"]);
+export const validRoutePaths=Object.freeze([...primaryNavigation.map(item=>item.path),"/questions","/home","/signup","/signup1","/signup2","/signup3","/signup4","/signup5","/signup6","/signup7"]);
