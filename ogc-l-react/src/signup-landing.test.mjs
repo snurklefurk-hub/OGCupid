@@ -22,15 +22,15 @@ test("default landing respects verified session state and existing onboarding",(
   assert.match(app,/if\(kind==="member"\)return <Navigate to=\{defaultRoute\} replace\/>/);
 });
 test("signup is a standalone sibling route with only the requested features",()=>{
-  assert.match(app,/<\/Route>\s*<Route element=\{<SignupShell\/>\}>\s*<Route path="signup" element=\{<SignupLanding onContinue=\{setSignupSelection\} selection=\{signupSelection\}\/>\} \/>/);
+  assert.match(app,/<\/Route>\s*<Route element=\{<SignupShell Photo=\{MemberPhoto\}\/>\}>\s*<Route path="signup" element=\{<SignupLanding onContinue=\{setSignupSelection\} selection=\{signupSelection\}\/>\} \/>/);
   assert.match(app,/<Route path="signup2" element=\{<SignupCredentials\/>\} \/>/);
   assert.match(app,/<PublishedUiDesign \/>\s*<Routes>/);
   assert.doesNotMatch(signup+shell+credentials,/ogcl-app|ogcl-left|ogcl-right|ogcl-sheet|SidebarPromos/);
   assert.match(shell,/to="\/home" className="ogcl-signup-logo"/);
-  assert.match(shell,/<Outlet\/>/);
+  assert.match(shell,/<Outlet context=\{\{setCard\}\}\/>/);
   assert.match(signup,/I am a/);
   assert.match(signup,/>CONTINUE<\/button>/);
-  assert.deepEqual([...shell.matchAll(/<NavLink to="([^"]+)"/g)].map(m=>m[1]),["/ogtrends","/signin","/home","/contact","/privacy","/terms"]);
+  assert.deepEqual([...shell.matchAll(/<NavLink to="([^"]+)"/g)].map(m=>m[1]),["/ogtrends","/signup10","/signin","/home","/contact","/privacy","/terms"]);
   assert.match(css,/background:transparent/);
   assert.match(css,/grid-template-rows:auto 1fr auto/);
 });
@@ -42,7 +42,7 @@ test("signup choices are allowlisted, ephemeral and confirmed through existing o
   assert.equal(signupIdentity("Gay","invalid"),null);
   assert.match(signup,/onContinue\(identity\);\s*navigate\("\/signup2"\)/);
   assert.doesNotMatch(signup+app+credentials,/localStorage|sessionStorage|indexedDB/);
-  assert.match(app,/\["\/signup","\/signup1","\/signup2","\/signup3","\/signup4","\/signup5","\/signup6","\/signup7","\/signup8","\/join","\/onboarding"\]/);
+  assert.match(app,/\["\/signup","\/signup1","\/signup2","\/signup3","\/signup4","\/signup5","\/signup6","\/signup7","\/signup8","\/signup9","\/signup10","\/join","\/onboarding"\]/);
   assert.match(app,/setSignupSelection\(null\)/);
   const onboarding=read("./Onboarding.jsx");
   assert.match(onboarding,/state\.gender\|\|signupSelection\?\.gender/);
