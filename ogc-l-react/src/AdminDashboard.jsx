@@ -172,7 +172,7 @@ export default function AdminDashboard(){
     </header>
       <div className="ogcl-admin-toolbar">
         <nav aria-label="Administration sections" className="ogcl-period-tabs">
-          {["overview","reports","community","members","home-posts","promos","audit","ui-editor","ui-components"].map(t=><button key={t} type="button"
+          {["overview","reports","community","members","promos","audit","ui-editor","ui-components","home-posts"].map(t=><button key={t} type="button"
             className={tab===t?"selected":""} aria-current={tab===t?"page":undefined}
             onClick={()=>{
               if(t!==tab&&(tab==="ui-editor"&&editorDirty||tab==="ui-components"&&componentsDirty||tab==="promos"&&promoDirty)&&
