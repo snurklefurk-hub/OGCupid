@@ -68,7 +68,7 @@ export default function SignupDetails({page}){
     try{
       const result=await accountRequest("/onboarding","PUT",{step:"signup-details",page,fields});
       if(!result?.saved)throw Error("Choices were not saved.");
-      navigate(page===8?"/onboarding":"/signup"+(page+1),{replace:true});
+      navigate("/signup"+(page+1),{replace:true});
     }catch(e){setError(e?.code==="invalid"?e.message:"Your choices couldn't be saved. Please retry.");}
     finally{submitting.current=false;setBusy(false);}
   }

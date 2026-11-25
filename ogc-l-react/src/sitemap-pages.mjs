@@ -12,6 +12,8 @@ export const SITEMAP_SECTIONS=Object.freeze([
     {path:"/signup6",label:"Sign up – lifestyle",note:"Lifestyle details",access:"member"},
     {path:"/signup7",label:"Sign up – relationships",note:"Relationship and pet preferences",access:"member"},
     {path:"/signup8",label:"Sign up – personal",note:"Personal details and languages",access:"member"},
+    {path:"/signup9",label:"Sign up – finishing touches",note:"Main photo and self summary",access:"member"},
+    {path:"/signup10",label:"Sign up – next step",note:"Continue personality and match question setup",access:"member"},
     {path:"/join",label:"Join OG Cupid",note:"Create an account",access:"public"},
     {path:"/signin",label:"Sign in",note:"Existing member access",access:"public"},
     {path:"/recover",label:"Recover your account",note:"Password recovery",access:"public"},

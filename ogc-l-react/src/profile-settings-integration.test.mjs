@@ -137,7 +137,7 @@ test("profile settings stay inside verified member route and link from owner vie
   const owner=readFileSync(new URL("./PublicMemberProfile.jsx",import.meta.url),"utf8");
   const provider=readFileSync(new URL("./MemberSessionProvider.jsx",import.meta.url),"utf8");
   const view=readFileSync(new URL("./ProfileSettings.jsx",import.meta.url),"utf8");
-  assert.match(app,/<MemberGate><ProfileSettings \/><\/MemberGate>/);
+  assert.match(app,/<OwnProfileGate><ProfileSettings \/><\/OwnProfileGate>/);
   assert.match(app,/to="\/settings">Settings/);
   assert.match(owner,/profile\.isOwner/);
   assert.match(owner,/EditPencil to="\/settings#looking-for"/);

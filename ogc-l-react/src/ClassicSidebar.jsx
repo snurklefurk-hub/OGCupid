@@ -33,13 +33,15 @@ export function SidebarPromos({side,selection}) {
   </div>;
 }
 
-export function ProfileFloater({Photo}) {
-  const {kind,user,profile}=useMemberSession();
-  if(kind!=="member"||!user?.id)return null;
+export function ProfileFloater({Photo,signupProfile=null}) {
+  const session=useMemberSession();
+  const {kind,user}=session;
+  const profile=kind==="onboarding"?signupProfile:session.profile;
+  if((kind!=="member"&&!(kind==="onboarding"&&signupProfile?.userId===user?.id))||!user?.id)return null;
   const name=profile?.displayName?.trim()||profile?.slug;
   return <NavLink to={profile?.slug?"/profiles/"+profile.slug:"/settings"}
     className="ogcl-profile-floater" aria-label="Open your profile">
-    <Photo member={{userId:user.id}} />
+    <Photo member={{userId:user.id,avatarPhotoId:signupProfile?.avatarPhotoId}} />
     {name&&<span className="ogcl-profile-card-name">{name}</span>}
   </NavLink>;
 }

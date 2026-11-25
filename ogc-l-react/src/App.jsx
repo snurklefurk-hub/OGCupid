@@ -1,5 +1,5 @@
 import React, {lazy, Suspense, useEffect, useMemo, useState} from "react";
-import {Navigate, NavLink, Outlet, Route, Routes, useLocation} from "react-router-dom";
+import {Navigate, NavLink, Outlet, Route, Routes, useLocation,useParams} from "react-router-dom";
 import {defaultRoute, primaryNavigation} from "./navigation.mjs";
 import PublishedUiDesign from "./PublishedUiDesign.jsx";
 import SignupLanding from "./SignupLanding.jsx";
@@ -8,6 +8,8 @@ import SignupCredentials from "./SignupCredentials.jsx";
 import SignupIdentity from "./SignupIdentity.jsx";
 import SignupLocation from "./SignupLocation.jsx";
 import SignupDetails from "./SignupDetails.jsx";
+import SignupFinish from "./SignupFinish.jsx";
+import SignupNext from "./SignupNext.jsx";
 import {homeDestination} from "./signup-landing.mjs";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {SidebarPromos, ProfileFloater, ProfileRefinement} from "./ClassicSidebar.jsx";
@@ -250,6 +252,22 @@ function SignInForm() {
   );
 }
 
+function OwnProfileGate({children}) {
+  const {kind,user,accountRequest}=useMemberSession();
+  const {slug}=useParams();
+  const [allowed,setAllowed]=useState(null);
+  useEffect(()=>{
+    if(kind!=="onboarding")return;
+    let live=true;setAllowed(null);
+    Promise.all([accountRequest("/profile"),accountRequest("/onboarding")]).then(([data,progress])=>{
+      if(live)setAllowed(data?.profile?.userId===user?.id&&(!slug||data.profile.slug===slug)&&progress?.photo?{userId:user.id,slug}:false);
+    }).catch(()=>{if(live)setAllowed(false);});
+    return()=>{live=false;};
+  },[kind,user?.id,slug,accountRequest]);
+  if(kind!=="onboarding")return <MemberGate>{children}</MemberGate>;
+  if(allowed===null)return <RouteLoading/>;
+  return user?.id&&allowed?.userId===user.id&&allowed?.slug===slug?children:<Navigate to="/onboarding" replace/>;
+}
 function MemberGate({children,allowOnboarding=false}) {
   const {kind, error, refresh} = useMemberSession();
   if (kind === "member" || (allowOnboarding && kind==="onboarding")) return children;
@@ -345,7 +363,7 @@ export default function App() {
   const {pathname}=useLocation();
   const [signupSelection,setSignupSelection]=useState(null);
   useEffect(()=>{
-    if(!["/signup","/signup1","/signup2","/signup3","/signup4","/signup5","/signup6","/signup7","/signup8","/join","/onboarding"].includes(pathname.replace(/\/$/,"")))setSignupSelection(null);
+    if(!["/signup","/signup1","/signup2","/signup3","/signup4","/signup5","/signup6","/signup7","/signup8","/signup9","/signup10","/join","/onboarding"].includes(pathname.replace(/\/$/,"")))setSignupSelection(null);
   },[pathname]);
   return (<>
     <PublishedUiDesign />
@@ -368,11 +386,11 @@ export default function App() {
         <Route path="terms" element={<EmbeddedEditorial pageKey="terms"/>} />
         <Route path="contact" element={<ContactPage/>} />
         <Route path="sitemap" element={<SitemapPage/>} />
-        <Route path="photos" element={<MemberGate><PhotoManager/></MemberGate>} />
+        <Route path="photos" element={<OwnProfileGate><PhotoManager/></OwnProfileGate>} />
         <Route path="matches" element={<MemberGate><MatchesView Photo={MemberPhoto}/></MemberGate>} />
-        <Route path="profile" element={<MemberGate><ProfileEditor /></MemberGate>} />
-        <Route path="settings" element={<MemberGate><ProfileSettings /></MemberGate>} />
-        <Route path="profiles/:slug" element={<MemberGate><PublicMemberProfile Photo={MemberPhoto} /></MemberGate>} />
+        <Route path="profile" element={<OwnProfileGate><ProfileEditor /></OwnProfileGate>} />
+        <Route path="settings" element={<OwnProfileGate><ProfileSettings /></OwnProfileGate>} />
+        <Route path="profiles/:slug" element={<OwnProfileGate><PublicMemberProfile Photo={MemberPhoto} /></OwnProfileGate>} />
         <Route path="questions" element={<MemberGate allowOnboarding><MatchQuestions /></MemberGate>} />
         <Route path="quickmatch" element={<MemberGate><QuickmatchView Photo={MemberPhoto} /></MemberGate>} />
         <Route path="messages" element={<MemberGate><MessagesView /></MemberGate>} />
@@ -392,7 +410,7 @@ export default function App() {
           </div>
         </section>} />
       </Route>
-      <Route element={<SignupShell/>}>
+      <Route element={<SignupShell Photo={MemberPhoto}/>}>
         <Route path="signup" element={<SignupLanding onContinue={setSignupSelection} selection={signupSelection}/>} />
         <Route path="signup1" element={<Navigate to="/signup" replace/>} />
         <Route path="signup2" element={<SignupCredentials/>} />
@@ -402,6 +420,8 @@ export default function App() {
         <Route path="signup6" element={<SignupDetails key={6} page={6}/>} />
         <Route path="signup7" element={<SignupDetails key={7} page={7}/>} />
         <Route path="signup8" element={<SignupDetails key={8} page={8}/>} />
+        <Route path="signup9" element={<SignupFinish/>} />
+        <Route path="signup10" element={<SignupNext/>} />
       </Route>
     </Routes>
   </>);

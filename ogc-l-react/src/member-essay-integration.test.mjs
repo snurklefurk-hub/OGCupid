@@ -8,7 +8,8 @@ const app = read("./App.jsx");
 const editor = read("./ProfileEditor.jsx");
 
 test("signed-in only native About route uses a verified member session",()=>{
-  assert.match(app,/<Route path="profile" element=\{<MemberGate><ProfileEditor \/><\/MemberGate>\}/);
+  assert.match(app,/<Route path="profile" element=\{<OwnProfileGate><ProfileEditor \/><\/OwnProfileGate>\}/);
+  assert.match(app,/data\?\.profile\?\.userId===user\?\.id&&\(!slug\|\|data.profile.slug===slug\)&&progress\?\.photo/);
   assert.match(provider,/getMemberAvatar, getMemberGallery,\s*loadOwnEssays, saveOwnEssay/);
   assert.match(gateway,/checkedMember\(sessionResult\?\.data\?\.user\)/);
   assert.match(gateway,/safeEssayProfile\(await readApi\("\/profile",jwt\),user.id\)/);
