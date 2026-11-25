@@ -1,6 +1,7 @@
 import React,{useEffect,useState} from "react";
 import {Link,NavLink,useNavigate,useParams,useSearchParams} from "react-router-dom";
 import "./profile-actions.css";
+import "./home.css";
 import {AWARD_DEFINITIONS} from "./home-contract.mjs";
 import {PUBLIC_DETAILS,PUBLIC_ESSAYS} from "./member-public-profile.mjs";
 import {essayDefinition} from "./member-essays.mjs";
