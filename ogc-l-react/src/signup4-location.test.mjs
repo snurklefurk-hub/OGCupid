@@ -22,7 +22,7 @@ test("signup4 shares raised logo and continues only after verified location",()=
   assert.match(chooser,/Oh, \$\{city.n\}\? I hear it's nice this time of year/);
   assert.match(chooser,/onPick\(null\)/);
   assert.match(chooser,/if\(alive&&serial===seq.current\)/);
-  assert.match(location,/navigate\("\/onboarding",\{replace:true\}\)/);
+  assert.match(location,/navigate\("\/signup5",\{replace:true\}\)/);
   assert.ok(SITEMAP_PATHS.includes("/signup4"));
   assert.equal(normalizeSiteRoute("/signup4/","https://ogcupid.com"),"/signup4");
 });

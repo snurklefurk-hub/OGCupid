@@ -42,7 +42,7 @@ test("signup choices are allowlisted, ephemeral and confirmed through existing o
   assert.equal(signupIdentity("Gay","invalid"),null);
   assert.match(signup,/onContinue\(identity\);\s*navigate\("\/signup2"\)/);
   assert.doesNotMatch(signup+app+credentials,/localStorage|sessionStorage|indexedDB/);
-  assert.match(app,/\["\/signup","\/signup1","\/signup2","\/signup3","\/signup4","\/join","\/onboarding"\]/);
+  assert.match(app,/\["\/signup","\/signup1","\/signup2","\/signup3","\/signup4","\/signup5","\/signup6","\/signup7","\/join","\/onboarding"\]/);
   assert.match(app,/setSignupSelection\(null\)/);
   const onboarding=read("./Onboarding.jsx");
   assert.match(onboarding,/state\.gender\|\|signupSelection\?\.gender/);

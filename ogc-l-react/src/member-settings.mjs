@@ -1,5 +1,6 @@
 import {PROFILE_GENDERS,PROFILE_ORIENTATIONS} from "./profile-options.mjs";
 import {validAgeRange} from "./member-looking-for.mjs";
+import {HABIT_CHOICES,RELIGION_IMPORTANCE_CHOICES,EDUCATION_CHOICES,DIET_CHOICES,KIDS_CHOICES,RELIGION_CHOICES} from "./signup-detail-options.mjs";
 import {PET_CHOICES,selectedPets} from "./member-pets.mjs";
 // Staging Profile Settings: only fields stored by the established Neon /profile API.
 // Signup display name, DOB, and derived age are deliberately NOT writable here.
@@ -17,8 +18,7 @@ export function presentEthnicity(value) {
     .map(choice=>choice.trim()==="Hispanic / Latin"?"Hispanic":choice.trim())
     .filter(Boolean).join(", ") : "";
 }
-const habits=["Never","Sometimes","Often","Just weed",
-  "Just weed · Sometimes","Just weed · Often","Just weed · Never"];
+const habits=HABIT_CHOICES;
 const fields=[
   {key:"gender",label:"Gender",max:60,group:"identity",options:genders},
   {key:"orientation",label:"Orientation",max:60,group:"identity",
@@ -26,19 +26,21 @@ const fields=[
   {key:"relationshipType",label:"Relationship style",max:50,group:"details",
     options:["Monogamous","Polyamorous"]},
   {key:"work",label:"Job",max:160,group:"details"},
-  {key:"education",label:"Education",max:120,group:"details"},
+  {key:"education",label:"Education",max:120,group:"details",options:EDUCATION_CHOICES},
   {key:"height",label:"Height",max:50,group:"details"},
   {key:"bodyType",label:"Body type",max:30,group:"details",
     options:["Thin","Athletic","Average","Jacked","Chubby","Overweight"]},
   {key:"ethnicity",label:"Race / ethnicity",max:200,group:"details",multi:ETHNICITY_CHOICES},
-  {key:"kids",label:"Children",max:80,group:"details"},
+  {key:"kids",label:"Children",max:80,group:"details",options:KIDS_CHOICES.map(x=>x.value)},
   {key:"pets",label:"Pets",max:80,group:"details",multi:PET_CHOICES},
-  {key:"smoking",label:"Smoking",max:60,group:"details",options:["Never","Sometimes","Often"]},
+  {key:"smoking",label:"Smoking",max:60,group:"details",options:habits},
   {key:"vaping",label:"Vaping",max:30,group:"details",options:habits},
-  {key:"drinking",label:"Drinking",max:60,group:"details",options:["Never","Sometimes","Often"]},
+  {key:"drinking",label:"Drinking",max:60,group:"details",options:habits},
   {key:"drugs",label:"Drugs",max:30,group:"details",options:habits},
-  {key:"diet",label:"Diet",max:100,group:"details"},
-  {key:"religion",label:"Religion",max:160,group:"details"},
+  {key:"weed",label:"Weed",max:30,group:"details",options:habits},
+  {key:"diet",label:"Diet",max:100,group:"details",options:DIET_CHOICES},
+  {key:"religion",label:"Religion",max:160,group:"details",options:RELIGION_CHOICES},
+  {key:"religionImportance",label:"Religious importance",max:80,group:"details",options:RELIGION_IMPORTANCE_CHOICES},
   {key:"languages",label:"Languages",max:160,group:"details"},
   {key:"income",label:"Income",max:30,group:"details",
     options:["Broke","Pocket money","Fuck you money"]},

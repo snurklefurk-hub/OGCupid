@@ -3,6 +3,7 @@ import React,{useEffect,useRef,useState} from "react";
 import {Navigate,NavLink,useNavigate} from "react-router-dom";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import PhotoManager from "./PhotoManager.jsx";
+import {nextSignupDetails,savedSignupDetails} from "./signup-detail-options.mjs";
 import {CityChooser,countries,countryNames} from "./CityChooser.jsx";
 export {CityChooser} from "./CityChooser.jsx";
 import "./account.css";
@@ -80,6 +81,8 @@ export default function Onboarding({signupSelection=null,onIdentitySaved}={}){
   if(kind!=="onboarding")return <section className="ogcl-view" role="status">Checking your account…</section>;
   if(status&&!status.identity)return <Navigate to="/signup3" replace/>;
   if(status&&!status.locality)return <Navigate to="/signup4" replace/>;
+  const remaining=status?nextSignupDetails(status.state,status.profile):"/onboarding";
+  if(status&&remaining!=="/onboarding")return <Navigate to={remaining} replace/>;
   const step=nextStep(status);
   const state=status?.state||{};
   const progress=(!status?.identity?0:!status?.locality?20:!status?.profile?40:
@@ -120,7 +123,8 @@ export default function Onboarding({signupSelection=null,onIdentitySaved}={}){
         aboutMe:f.elements.aboutMe.value.trim(),age:adultAge(state.birth_date),
         gender:state.gender,orientation:state.orientation,
         interestedIn:genderPrefs.join(", "),relationshipGoal:goalsPrefs.join(", "),
-        work:f.elements.work.value.trim(),cityRegion:state.city_label||"",
+        ...savedSignupDetails(state),
+        ...(f.elements.work?{work:f.elements.work.value.trim()}:{}),cityRegion:state.city_label||"",
         locality,searchOrigin:location,searchRadiusMiles:Number(f.elements.radius.value)
       });
       if(!write.profile?.userId)throw Error("Profile wasn't saved.");
@@ -187,7 +191,7 @@ export default function Onboarding({signupSelection=null,onIdentitySaved}={}){
             {[0,10,25,50,100,250,500].map(n=><option key={n} value={n}>{n===0?"Anywhere":n+" miles"}</option>)}
           </select></label>
         </div>
-        <label>What do you do?<input name="work" maxLength={160} defaultValue={profile?.work||""}/></label>
+        {!state.signup5_details&&<label>What do you do?<input name="work" maxLength={160} defaultValue={profile?.work||""}/></label>}
         <label>My Self Summary<textarea name="aboutMe" rows={8} required minLength={15} maxLength={5000}
           defaultValue={profile?.aboutMe||""} placeholder="What makes you tick? What should somebody know about you?"/></label>
         <p className="ogcl-note">After onboarding, edit the rest of your details and all ten About essays in Profile Settings.</p>

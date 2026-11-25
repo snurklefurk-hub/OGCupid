@@ -7,6 +7,7 @@ import SignupShell from "./SignupShell.jsx";
 import SignupCredentials from "./SignupCredentials.jsx";
 import SignupIdentity from "./SignupIdentity.jsx";
 import SignupLocation from "./SignupLocation.jsx";
+import SignupDetails from "./SignupDetails.jsx";
 import {homeDestination} from "./signup-landing.mjs";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {SidebarPromos, ProfileFloater, ProfileRefinement} from "./ClassicSidebar.jsx";
@@ -344,7 +345,7 @@ export default function App() {
   const {pathname}=useLocation();
   const [signupSelection,setSignupSelection]=useState(null);
   useEffect(()=>{
-    if(!["/signup","/signup1","/signup2","/signup3","/signup4","/join","/onboarding"].includes(pathname.replace(/\/$/,"")))setSignupSelection(null);
+    if(!["/signup","/signup1","/signup2","/signup3","/signup4","/signup5","/signup6","/signup7","/join","/onboarding"].includes(pathname.replace(/\/$/,"")))setSignupSelection(null);
   },[pathname]);
   return (<>
     <PublishedUiDesign />
@@ -397,6 +398,9 @@ export default function App() {
         <Route path="signup2" element={<SignupCredentials/>} />
         <Route path="signup3" element={<SignupIdentity selection={signupSelection} onSaved={()=>setSignupSelection(null)}/>} />
         <Route path="signup4" element={<SignupLocation/>} />
+        <Route path="signup5" element={<SignupDetails key={5} page={5}/>} />
+        <Route path="signup6" element={<SignupDetails key={6} page={6}/>} />
+        <Route path="signup7" element={<SignupDetails key={7} page={7}/>} />
       </Route>
     </Routes>
   </>);

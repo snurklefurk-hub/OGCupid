@@ -1,4 +1,4 @@
-export const PET_CHOICES=Object.freeze(["Doesn’t have pets","Has cats","Has dogs","Has exotics"]);
+export const PET_CHOICES=Object.freeze(["Doesn’t have pets","Has cats","Has dogs","Has exotics","Likes dogs","Likes cats","Likes exotics"]);
 export function selectedPets(value){
   if(!value)return [];
   const items=value.split(", ");

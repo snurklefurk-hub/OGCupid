@@ -1,3 +1,5 @@
+import {validSignupDetailStep} from "../ogc-l-react/src/signup-detail-options.mjs";
+import {isKrustyKrabCookJob} from "./job-moderation.js";
 import { scorePersonaV2 } from "./persona-v2-scoring.js";
 import {PROFILE_GENDERS,PROFILE_ORIENTATIONS,validSignupPreferences} from "../ogc-l-react/src/profile-options.mjs";
 
@@ -45,7 +47,7 @@ export async function handleOnboarding(request,userId,withMember,json,verifiedPl
     if (request.method === 'GET') {
       const result=await withMember(userId,async client => {
         const [state,profile,photos,answers,verified]=await Promise.all([
-          client.query('SELECT gender,orientation,birth_date,country_code,zip_code,locality_id,locality_shard,city_label,details_complete,match_age_min,match_age_max,explored_at,primary_self_photo_id,persona_code,signup_interested_in,signup_intentions FROM app_private.member_onboarding WHERE user_id=$1::uuid',[userId]),
+          client.query('SELECT gender,orientation,birth_date,country_code,zip_code,locality_id,locality_shard,city_label,details_complete,match_age_min,match_age_max,explored_at,primary_self_photo_id,persona_code,signup_interested_in,signup_intentions,signup5_details,signup6_details,signup7_details FROM app_private.member_onboarding WHERE user_id=$1::uuid',[userId]),
           client.query('SELECT about_me, interested_in, relationship_goal FROM app_private.member_profiles WHERE user_id=$1::uuid',[userId]),
           client.query(`SELECT count(*)::int AS total,
             bool_or(is_primary AND id = (SELECT primary_self_photo_id FROM app_private.member_onboarding WHERE user_id=$1::uuid)) AS primary
@@ -80,6 +82,16 @@ export async function handleOnboarding(request,userId,withMember,json,verifiedPl
         ON CONFLICT(user_id) DO UPDATE SET gender=$2,orientation=$3,signup_interested_in=$4::text[],signup_intentions=$5::text[],birth_date=COALESCE($6::date,app_private.member_onboarding.birth_date)
         WHERE app_private.member_onboarding.explored_at IS NULL RETURNING user_id`,[userId,body.gender,body.orientation,body.interestedIn,body.intentions,body.birthDate??null]));
       if (!saved.rowCount) throw Error('Use Profile Settings to update your completed profile');
+    } else if (body.step==='signup-details') {
+      if (![5,6,7].includes(body.page)||!validSignupDetailStep(body.page,body.fields)) throw Error('Choose valid profile details');
+      if (body.page===5&&isKrustyKrabCookJob(body.fields.work)) throw Error('That job entry is banned for being cringe.');
+      const columns={5:'signup5_details',6:'signup6_details',7:'signup7_details'};
+      const column=columns[body.page];
+      const prerequisites=body.page===5?'':body.page===6?' AND signup5_details IS NOT NULL':' AND signup5_details IS NOT NULL AND signup6_details IS NOT NULL';
+      const saved=await withMember(userId,client=>client.query(
+        'UPDATE app_private.member_onboarding SET '+column+'=$2::jsonb WHERE user_id=$1::uuid AND explored_at IS NULL AND birth_date IS NOT NULL AND locality_id IS NOT NULL AND gender IS NOT NULL AND orientation IS NOT NULL'+prerequisites+' RETURNING user_id',
+        [userId,JSON.stringify(body.fields)]));
+      if(!saved.rowCount)throw Error('Finish the preceding signup steps first');
     } else if (body.step==='locality') {
       if (!adultBirthDate(body.birthDate)) throw Error('Enter a valid birthdate (18 or older)');
       if (typeof body.countryCode!=='string' || !/^[A-Z]{2}$/.test(body.countryCode)) throw Error('Choose a country');

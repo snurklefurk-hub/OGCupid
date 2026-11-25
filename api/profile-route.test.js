@@ -39,7 +39,7 @@ test("public profile response explicitly excludes email, private answers and sto
   const end = api.indexOf("if (deletePath || verifyPath) {",start);
   assert.ok(start > 0 && end > start);
   const selected = api.slice(start,end);
-  assert.doesNotMatch(selected,/p\.email|p\.birth_date|object_key|auth_password|acceptable_options|importance/);
+  assert.doesNotMatch(selected,/p\.email|p\.birth_date|object_key|auth_password|acceptable_options|\bimportance\b/);
   assert.match(selected,/visible_member_public_answers/);
   assert.match(answerProjection,/a\.is_private=false/);
   assert.match(answerProjection,/SECURITY DEFINER/);

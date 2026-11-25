@@ -228,7 +228,7 @@ type MemberProfile = {
   fridayNight: string;
   privateThing: string;
   messageMeIf: string;
-  ethnicity: string; bodyType: string; vaping: string; drugs: string;
+  ethnicity: string; bodyType: string; vaping: string; drugs: string; weed: string; religionImportance: string;
   religion: string; sign: string; income: string; status: string; relationshipType: string;
   createdAt: string;
   updatedAt: string;
@@ -268,6 +268,7 @@ function present(row: Record<string, unknown>): MemberProfile {
     messageMeIf: String(row.message_me_if ?? ""),
     ethnicity: String(row.ethnicity ?? ""), bodyType: String(row.body_type ?? ""),
     vaping: String(row.vaping ?? ""), drugs: String(row.drugs ?? ""),
+    weed: String(row.weed ?? ""), religionImportance: String(row.religion_importance ?? ""),
     religion: String(row.religion ?? ""), sign: String(row.sign ?? ""),
     income: String(row.income ?? ""), status: String(row.status ?? ""),
     relationshipType: String(row.relationship_type ?? ""),
@@ -298,6 +299,8 @@ const profileTextFields = [
   ["bodyType", "body_type", 30],
   ["vaping", "vaping", 30],
   ["drugs", "drugs", 30],
+  ["weed", "weed", 30],
+  ["religionImportance", "religion_importance", 80],
   ["religion", "religion", 160],
   ["sign", "sign", 100],
   ["income", "income", 30],
@@ -449,7 +452,7 @@ export default {
                p.interested_in, p.relationship_goal, p.looking_for,
                p.work, p.education, p.height, p.kids, p.pets, p.smoking,
                p.drinking, p.diet, p.languages, p.ethnicity, p.body_type,
-               p.vaping, p.drugs, p.religion, p.sign, p.income, p.status,
+               p.vaping, p.drugs, p.weed, p.religion_importance, p.religion, p.sign, p.income, p.status,
                p.relationship_type, p.preferred_age_min, p.preferred_age_max,
                 app_private.visible_member_search_radius(p.user_id) AS profile_search_radius_miles,
                 p.life_direction, p.good_at, p.first_things, p.favorites,
@@ -747,7 +750,7 @@ export default {
       if (request.method === "GET") {
         const result = await withMember(userId, async client => {
           const profile = await client.query(
-            `SELECT user_id, display_name, about_me, age, city_region, gender, orientation, interested_in, relationship_goal, work, education, height, kids, pets, smoking, drinking, diet, languages, ethnicity, body_type, vaping, drugs, religion, sign, income, status, relationship_type, preferred_age_min, preferred_age_max, life_direction, good_at, first_things, favorites, six_things, thinking_about, friday_night, private_thing, message_me_if, created_at, updated_at FROM app_private.member_profiles WHERE user_id = $1::uuid`,
+            `SELECT user_id, display_name, about_me, age, city_region, gender, orientation, interested_in, relationship_goal, work, education, height, kids, pets, smoking, drinking, diet, languages, ethnicity, body_type, vaping, drugs, weed, religion_importance, religion, sign, income, status, relationship_type, preferred_age_min, preferred_age_max, life_direction, good_at, first_things, favorites, six_things, thinking_about, friday_night, private_thing, message_me_if, created_at, updated_at FROM app_private.member_profiles WHERE user_id = $1::uuid`,
             [userId],
           );
           const geo = await client.query(
