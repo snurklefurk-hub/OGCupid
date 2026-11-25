@@ -74,7 +74,7 @@ export default function SignupDetails({page}){
   }
   return <form className={"ogcl-signup3 ogcl-signup-details ogcl-signup"+page} onSubmit={submit}>
     <h1>{headings[page]}</h1>
-    {page===8&&<p className="ogcl-signup8-subheading">We\'re almost done, i swear</p>}
+    {page===8&&<p className="ogcl-signup8-subheading">We're almost done, i swear</p>}
     {page===5&&<div className="ogcl-signup-detail-grid">
       <label className="ogcl-signup-detail-field"><span>Job</span><input name="work" maxLength={160} value={draft.work} disabled={busy} onChange={e=>update("work",e.target.value)}/></label>
       {select("income","Income",INCOME_CHOICES)}
