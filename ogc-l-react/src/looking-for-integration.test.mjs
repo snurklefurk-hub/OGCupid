@@ -13,7 +13,7 @@ const raw={...Object.fromEntries(PROFILE_SETTINGS_FIELDS.map(f=>[f.key,""])),
   preferredAgeMin:null,preferredAgeMax:null,searchRadiusMiles:25,hasValidatedLocality:true,
   work:"Writer",gender:"Woman"};
 test("approved four group options, 18-99 age bounds and 50-mile label are exact",()=>{
-  assert.deepEqual(LOOKING_GENDERS.map(x=>x.label),["Men","Women","Transmen","Transwomen","Intersex people","Enbies","Something else"]);
+  assert.deepEqual(LOOKING_GENDERS.map(x=>x.label),["Men","Women","Transmen","Transwomen","Intersex","Enbies","Something else"]);
   assert.deepEqual(LOOKING_INTENTIONS.map(x=>x.label),["long term dating","short term dating","friends","freaky stuff"]);
   assert.deepEqual(LOOKING_RADII.map(x=>x.value),[10,25,50,100,250,500,0]);
   assert.equal(LOOKING_RADII[0].label,"Near me");

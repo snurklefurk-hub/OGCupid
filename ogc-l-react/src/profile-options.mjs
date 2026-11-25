@@ -3,7 +3,7 @@
 export const PROFILE_GENDERS=Object.freeze(["Man","Woman","Transman","Transwoman","Intersex","Enby","Something else"]);
 export const PROFILE_ORIENTATIONS=Object.freeze(["Straight","Gay","Bi","Ace","Something else"]);
 export const PROFILE_LOOKING_GENDERS=Object.freeze(PROFILE_GENDERS.map((value,i)=>Object.freeze({
-  value,label:["Men","Women","Transmen","Transwomen","Intersex people","Enbies","Something else"][i]
+  value,label:["Men","Women","Transmen","Transwomen","Intersex","Enbies","Something else"][i]
 })));
 export const PROFILE_INTENTIONS=Object.freeze([
   {value:"long-term dating",label:"long term dating"},
