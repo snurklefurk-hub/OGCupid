@@ -73,7 +73,7 @@ export default function SignupIdentity({selection,onSaved}){
       if(!result?.saved)throw Error("Choices were not saved.");
       onSaved?.();
       await refresh();
-      navigate("/onboarding",{replace:true});
+      navigate("/signup4",{replace:true});
     }catch(e){setError(e?.code==="invalid"?e.message:"Your choices couldn't be saved. Please retry.");}
     finally{submitting.current=false;setBusy(false);}
   }
