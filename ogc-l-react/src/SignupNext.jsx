@@ -4,7 +4,7 @@ import {useMemberSession} from "./MemberSessionProvider.jsx";
 
 // Step 10 is a temporary continuation of the existing quiz gate, pending its own design.
 export default function SignupNext(){
-  const {kind,user,accountRequest}=useMemberSession();
+  const {kind,user,accountRequest,refresh}=useMemberSession();
   const [status,setStatus]=useState(null),[error,setError]=useState(false),[retry,setRetry]=useState(0);
   useEffect(()=>{
     if(kind!=="onboarding")return;
@@ -14,7 +14,7 @@ export default function SignupNext(){
   },[kind,user?.id,accountRequest,retry]);
   if(kind==="member")return <Navigate to="/home" replace/>;
   if(kind==="guest")return <Navigate to="/signin" replace/>;
-  if(kind==="error"||kind==="unconfigured"||error)return <p role="alert">Couldn't check your progress. <button type="button" onClick={()=>setRetry(n=>n+1)}>Retry</button></p>;
+  if(kind==="error"||kind==="unconfigured"||error)return <p role="alert">Couldn't check your progress. <button type="button" onClick={()=>kind==="onboarding"?setRetry(n=>n+1):void refresh()}>Retry</button></p>;
   if(!status)return <p role="status">Checking your account…</p>;
   if(!status.photo)return <Navigate to="/signup9" replace/>;
   return <section className="ogcl-signup3"><h1>Let's get to know you</h1>
