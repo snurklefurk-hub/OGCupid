@@ -138,7 +138,7 @@ function SearchControls({filters,update,toggleChoice,reset,apply,hasLocation,mem
   </form>;
 }
 export default function MatchesView({Photo}){
-  const {user,discovery,searchMembers,loadConnections,setFavorite,loadOwnSettings}=useMemberSession();
+  const {user,discovery,searchMembers,loadConnections,setFavorite,loadOwnSettings,accountRequest}=useMemberSession();
   const [tab,setTab]=useState("search");
   const [filters,setFilters]=useState(()=>savedSearchDefaults(null));
   const [savedSettings,setSavedSettings]=useState(null);
@@ -266,7 +266,7 @@ export default function MatchesView({Photo}){
     </div>
     <div className="ogcl-matches-body">
       {tab==="search"&&<SearchControls filters={filters} update={update}
-        toggleChoice={toggleChoice} reset={reset} apply={()=>{setApplied(filters);setPage(1);setSearchRevision(x=>x+1);}}
+        toggleChoice={toggleChoice} reset={reset} apply={()=>{setApplied(filters);setPage(1);setSearchRevision(x=>x+1);void accountRequest("/home","POST",{event:"search"}).catch(()=>{});}}
         members={discovery}
         hasLocation={savedSettings?.lookingFor?.hasValidatedLocality===true}/>}
       {tab==="search"&&settingsError&&<p className="ogcl-matches-warning" role="status">{settingsError}</p>}
