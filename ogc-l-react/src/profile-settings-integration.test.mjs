@@ -75,8 +75,8 @@ test("controlled fields and multi-choices validate with old values preserved",()
   assert.throws(()=>composeSettingUpdate(prior,"aboutMe","new essay"));
   assert.throws(()=>composeSettingUpdate(prior,"pronouns","they/them"));
   assert.throws(()=>composeSettingUpdate(prior,"work","a".repeat(161)));
-  assert.equal(composeSettingUpdate(prior,"drugs","Just weed · Sometimes").drugs,
-    "Just weed · Sometimes");
+  assert.equal(composeSettingUpdate(prior,"drugs","Rarely").drugs,
+    "Rarely");
 });
 test("race/ethnicity restores the original multi-select choices without changing storage keys",()=>{
   assert.deepEqual(ETHNICITY_CHOICES,[
