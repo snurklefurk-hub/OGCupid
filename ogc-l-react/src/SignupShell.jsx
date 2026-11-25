@@ -8,9 +8,10 @@ import "./signup-landing.css";
 export default function SignupShell(){
   const {kind,onboarding}=useMemberSession();
   const {pathname}=useLocation();
-  const identityStep=pathname.replace(/\/$/,"")==="/signup3";
+  const step=pathname.replace(/\/$/,"");
+  const identityStep=step==="/signup3"||step==="/signup4";
   const destination=kind==="onboarding"
-    ?identityStep?null:!onboarding?.identity?"/signup3":"/onboarding"
+    ?identityStep?null:!onboarding?.identity?"/signup3":!onboarding?.locality?"/signup4":"/onboarding"
     :signupDestination(kind);
   if(destination)return <Navigate to={destination} replace/>;
   if(kind==="checking")return <main className="ogcl-signup-landing" aria-busy="true" aria-label="Checking account"/>;
