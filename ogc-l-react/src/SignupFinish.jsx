@@ -1,5 +1,5 @@
 import React,{useEffect,useRef,useState} from "react";
-import {Navigate,NavLink,useOutletContext} from "react-router-dom";
+import {Navigate,useOutletContext} from "react-router-dom";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {nextSignupDetails,savedSignupDetails} from "./signup-detail-options.mjs";
 import {ProfilePhotoCropper} from "../../member-app/photo-cropper.js";
@@ -65,7 +65,7 @@ export default function SignupFinish(){
       const main=album?.photos?.find(photo=>photo.isPrimary)||null;
       setProgress(status);setProfile(current);setPrimary(main);setEssay(current?.aboutMe||"");
       if(status?.state?.signup9_completed_at&&status.photo&&current?.slug&&main?.id){
-        setDone(true);setCard({...current,avatarPhotoId:main.id});
+        setDone(true);setCard({userId:current.userId,slug:current.slug,displayName:current.displayName,avatarPhotoId:main.id});
       }
     }).catch(()=>{if(live)setError("Couldn't load your saved progress. Please retry.");})
       .finally(()=>{if(live)setLoading(false);});
@@ -114,17 +114,13 @@ export default function SignupFinish(){
       const status=await accountRequest("/onboarding");
       if(!status?.photo||!status?.state?.signup9_completed_at)throw Error("Couldn't confirm your saved profile.");
       setProfile(saved.profile);setProgress(status);setDone(true);
-      setCard({...saved.profile,avatarPhotoId:primary.id});
+      setCard({userId:saved.profile.userId,slug:saved.profile.slug,displayName:saved.profile.displayName,avatarPhotoId:primary.id});
     }catch(e){setError(e?.message||"Your self summary couldn't be saved. Please retry.");}
     finally{lock.current=false;setBusy(false);}
   }
   return <section className="ogcl-signup3 ogcl-signup9" aria-label="the finishing touches">
     <h1>the finishing touches</h1>
-    {done?<div className="ogcl-signup9-tutorial">
-      <div className="ogcl-signup9-pointer" aria-hidden="true">↗</div>
-      <p>This is a quick link to your profile where you can fill out your preferences, essays, and see any personality awards you've gotten.</p>
-      <NavLink className="ogcl-signup9-primary" to="/signup10">next</NavLink>
-    </div>:!primary?<div className="ogcl-signup9-photo">
+    {done?null:!primary?<div className="ogcl-signup9-photo">
       <h2>upload your main pfp</h2>
       {!file?<label className="ogcl-signup9-file">Choose photo<input type="file" accept="image/jpeg,image/png,image/webp" disabled={busy}
         onChange={e=>{const selected=e.target.files?.[0];e.target.value="";if(selected){fileSerial.current++;setFile(selected);setError("");}}}/></label>:
