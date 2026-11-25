@@ -10,6 +10,7 @@ import { isKrustyKrabCookJob } from "./job-moderation.js";
 import { validProfileChoice } from "./profile-choices.js";
 import { handleOnboarding } from "./onboarding.js";
 import { handleDiscovery } from "./member-discovery.js";
+import { handleHome } from "./member-home.js";
 import { handleQuickmatch } from "./member-quickmatch.js";
 import { handleMessages } from "./member-messages.js";
 import { handleConnections,isConnectionPath,connectionMethodAllowed } from "./member-connections.js";
@@ -339,6 +340,7 @@ export default {
       return handlePublicUiDesign(request,pool,json);
     if(url.pathname==="/promos"||url.pathname==="/promos/")
       return handlePublicPromos(request,pool,json);
+    const homePath = url.pathname === "/home" || url.pathname === "/home/";
     const profilePath = url.pathname === "/profile" || url.pathname === "/profile/";
     const memberProfileMatch = url.pathname.match(/^\/profiles\/([a-z0-9]+(?:-[a-z0-9]+)*)\/?$/);
     const answersPath = url.pathname === "/answers" || url.pathname === "/answers/";
@@ -357,7 +359,7 @@ export default {
     // A credential check that can NEVER call the privileged eraser.
     // Only enabled for the one disposable development account.
     const verifyPath = url.pathname === "/account/reauth-check" || url.pathname === "/account/reauth-check/";
-    if (!profilePath && !memberProfileMatch && !discoveryPath && !discoverySearchPath && !presencePath && !quickmatchPath && !messagePath && !connectionPath && !adminPath && !communityPath && !answersPath && !emailPreferencesPath && !deletePath && !verifyPath && !photoPath && !onboardingPath) {
+    if (!homePath && !profilePath && !memberProfileMatch && !discoveryPath && !discoverySearchPath && !presencePath && !quickmatchPath && !messagePath && !connectionPath && !adminPath && !communityPath && !answersPath && !emailPreferencesPath && !deletePath && !verifyPath && !photoPath && !onboardingPath) {
       return json(request, { error: "Not found" }, 404);
     }
     // Self-service deletion is allowed only on the explicitly configured
@@ -379,7 +381,7 @@ export default {
            "5b03f41b-29b7-4a7a-9c72-71744dd8b2f2")) {
       return json(request, { error: "Not found" }, 404);
     }
-    const methodAllowed = memberProfileMatch ? request.method === "GET" : (discoveryPath || discoverySearchPath) ? request.method === "GET" : presencePath ? request.method === "PUT" : quickmatchPath ? ["GET", "PUT"].includes(request.method) : messagePath ? ["GET", "POST", "PUT", "DELETE"].includes(request.method) : connectionPath ? connectionMethodAllowed(url.pathname,request.method) : communityPath ? communityMethodAllowed(url.pathname,request.method) : photoPath
+    const methodAllowed = homePath ? ["GET","POST"].includes(request.method) : memberProfileMatch ? request.method === "GET" : (discoveryPath || discoverySearchPath) ? request.method === "GET" : presencePath ? request.method === "PUT" : quickmatchPath ? ["GET", "PUT"].includes(request.method) : messagePath ? ["GET", "POST", "PUT", "DELETE"].includes(request.method) : connectionPath ? connectionMethodAllowed(url.pathname,request.method) : communityPath ? communityMethodAllowed(url.pathname,request.method) : photoPath
       ? photoMethodAllowed(url.pathname, request.method)
       : deletePath || verifyPath
         ? request.method === "POST"
@@ -393,7 +395,7 @@ export default {
     if (!userId) return json(request, { error: "Unauthorized" }, 401);
 
     try {
-      if (profilePath || memberProfileMatch || discoveryPath || discoverySearchPath || presencePath || quickmatchPath || messagePath || connectionPath || adminPath || communityPath || answersPath || emailPreferencesPath || photoPath || onboardingPath) {
+      if (homePath || profilePath || memberProfileMatch || discoveryPath || discoverySearchPath || presencePath || quickmatchPath || messagePath || connectionPath || adminPath || communityPath || answersPath || emailPreferencesPath || photoPath || onboardingPath) {
         // A signed JWT can outlive the account/session that issued it.
         // Do not allow a deleted identity to read an empty profile as if it
         // were still a member, or attempt to recreate a profile via PUT.
@@ -413,6 +415,7 @@ export default {
       if (onboardingPath) {
         return await handleOnboarding(request,userId,withMember,json,verifiedPlace);
       }
+      if (homePath) return await handleHome(request,userId,withMember,json);
       if (discoveryPath || discoverySearchPath) {
         return await handleDiscovery(request,userId,withMember,json);
       }
@@ -482,7 +485,9 @@ export default {
           const persona = await client.query(
             "SELECT app_private.visible_member_persona($1::uuid) AS code",
             [row.user_id]);
+          const awards=await client.query("SELECT code,awarded_at FROM app_private.member_personality_awards WHERE user_id=$1::uuid ORDER BY awarded_at,code",[row.user_id]);
           return {
+            personalityAwards:awards.rows.map(award=>({code:String(award.code),awardedAt:award.awarded_at})),
             profile: { ...present(row), slug,
               profileSearchRadiusMiles: row.profile_search_radius_miles == null ? null : Number(row.profile_search_radius_miles) },
             isOwner,
