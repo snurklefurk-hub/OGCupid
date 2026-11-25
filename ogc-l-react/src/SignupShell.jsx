@@ -21,7 +21,14 @@ export default function SignupShell({Photo}){
   return <main className="ogcl-signup-landing" aria-label="Sign up for OG Cupid">
     <header className="ogcl-signup-top">
       <span className="ogcl-signup-blog">Just here for the blog? <NavLink to="/ogtrends">click here to read OG Trends</NavLink></span>
-      {step==="/signup9"&&kind==="onboarding"&&card?.userId===user?.id?<div className="ogcl-signup9-card" id="signup9-profile-card"><ProfileFloater Photo={Photo} signupProfile={card}/></div>:<NavLink to="/signin" className="ogcl-signup-signin">Sign in</NavLink>}
+      {step==="/signup9"&&kind==="onboarding"&&card?.userId===user?.id?<div className="ogcl-signup9-card" id="signup9-profile-card">
+        <ProfileFloater Photo={Photo} signupProfile={card}/>
+        <div className="ogcl-signup9-tutorial">
+          <div className="ogcl-signup9-pointer" aria-hidden="true">↑</div>
+          <p>This is a quick link to your profile where you can fill out your preferences, essays, and see any personality awards you've gotten.</p>
+          <NavLink className="ogcl-signup9-primary" to="/signup10">next</NavLink>
+        </div>
+      </div>:<NavLink to="/signin" className="ogcl-signup-signin">Sign in</NavLink>}
     </header>
     <div className={"ogcl-signup-content"+(identityStep?" ogcl-signup-content-top":"")}>
       <NavLink to="/home" className="ogcl-signup-logo" aria-label="OG Cupid home">
