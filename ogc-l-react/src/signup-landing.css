@@ -87,3 +87,19 @@
 .ogcl-signup4-fields .ogcl-note{grid-column:1/-1;text-align:center;color:inherit;min-height:18px;font-size:14px;margin:0}
 .ogcl-signup4-fields .ogcl-city-options{grid-column:1/-1;border-radius:2px}
 @media(max-width:480px){.ogcl-signup4-fields{grid-template-columns:1fr;gap:12px}}
+
+.ogcl-signup-details{width:min(100%,950px)}
+.ogcl-signup-detail-grid{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px 18px;text-align:left;align-items:end}
+.ogcl-signup6 .ogcl-signup-detail-grid{grid-template-columns:repeat(4,minmax(0,1fr));row-gap:24px}
+.ogcl-signup-detail-field{position:relative;display:grid;gap:8px;min-width:0;font-size:14px}
+.ogcl-signup-detail-field input,.ogcl-signup-detail-field select{width:100%;min-width:0;min-height:42px;padding:7px 10px;background:white;color:#50586a;border:1px solid #d4d8e0;border-radius:2px;font:inherit}
+.ogcl-signup-detail-note{font-size:12px;color:inherit;text-align:center}
+.ogcl-signup7 .ogcl-signup-detail-grid{grid-template-columns:repeat(2,minmax(0,1fr));width:min(100%,640px)}
+.ogcl-signup-pets{grid-column:1/-1;margin:0;border:0;padding:0;min-width:0}
+.ogcl-signup-pets legend{margin:0 0 8px;padding:0;font-size:14px}
+.ogcl-signup-pets-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.ogcl-signup-pets-grid button{min-height:42px;border:1px solid #d4d8e0;border-radius:2px;background:white;color:#50586a;cursor:pointer;font:inherit;padding:8px;overflow-wrap:anywhere}
+.ogcl-signup-pets-grid button[aria-pressed="true"]{background:#2963a4;color:#fff;border-color:#fff}
+.ogcl-signup-detail-field input:focus-visible{outline:3px solid white;outline-offset:3px}
+@media(max-width:740px){.ogcl-signup-detail-grid,.ogcl-signup6 .ogcl-signup-detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:420px){.ogcl-signup-detail-grid,.ogcl-signup6 .ogcl-signup-detail-grid,.ogcl-signup7 .ogcl-signup-detail-grid{grid-template-columns:1fr}.ogcl-signup-pets-grid button{font-size:12px;padding:5px}}
