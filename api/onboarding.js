@@ -47,7 +47,7 @@ export async function handleOnboarding(request,userId,withMember,json,verifiedPl
     if (request.method === 'GET') {
       const result=await withMember(userId,async client => {
         const [state,profile,photos,answers,verified]=await Promise.all([
-          client.query('SELECT gender,orientation,birth_date,country_code,zip_code,locality_id,locality_shard,city_label,details_complete,match_age_min,match_age_max,explored_at,primary_self_photo_id,persona_code,signup_interested_in,signup_intentions,signup5_details,signup6_details,signup7_details,signup8_details FROM app_private.member_onboarding WHERE user_id=$1::uuid',[userId]),
+          client.query('SELECT gender,orientation,birth_date,country_code,zip_code,locality_id,locality_shard,city_label,details_complete,match_age_min,match_age_max,explored_at,primary_self_photo_id,persona_code,signup_interested_in,signup_intentions,signup5_details,signup6_details,signup7_details,signup8_details,signup9_completed_at FROM app_private.member_onboarding WHERE user_id=$1::uuid',[userId]),
           client.query('SELECT about_me, interested_in, relationship_goal FROM app_private.member_profiles WHERE user_id=$1::uuid',[userId]),
           client.query(`SELECT count(*)::int AS total,
             bool_or(is_primary AND id = (SELECT primary_self_photo_id FROM app_private.member_onboarding WHERE user_id=$1::uuid)) AS primary
@@ -60,8 +60,8 @@ export async function handleOnboarding(request,userId,withMember,json,verifiedPl
       const s=result.state;
       const identity=Boolean(s?.gender && s?.orientation);
       const locality=Boolean(adultBirthDate(s?.birth_date?.toISOString?.().slice(0,10)) && s?.locality_id);
-      const profile=Boolean(s?.details_complete && result.profile?.interested_in?.trim() &&
-        result.profile?.relationship_goal?.trim() && result.profile?.about_me?.trim());
+      const profile=Boolean(s?.details_complete && result.profile?.about_me?.trim() &&
+        (s.signup9_completed_at || (result.profile?.interested_in?.trim() && result.profile?.relationship_goal?.trim())));
       const photo=Boolean(profile && s?.primary_self_photo_id && result.photos.primary);
       const quiz=Boolean(photo && (result.answers>=25 || s?.persona_code));
       return json(request,{identity,locality,profile,photo,quiz,explored:Boolean(s?.explored_at),verified:result.verified,answerCount:result.answers,photoCount:result.photos.total,state:s});
@@ -103,6 +103,22 @@ export async function handleOnboarding(request,userId,withMember,json,verifiedPl
         if (!row.rows[0]?.gender || !row.rows[0]?.orientation) throw Error('Complete identity first');
         await client.query(`UPDATE app_private.member_onboarding SET birth_date=$2::date,country_code=$3,zip_code=$4,locality_id=$5,locality_shard=$6,city_label=$7 WHERE user_id=$1::uuid`,
           [userId,body.birthDate,body.countryCode,body.countryCode==='US'?body.zipCode:null,place.id,place.key,place.label]);
+      });
+    } else if (body.step==='signup9-finish') {
+      if(body.confirmed!==true)throw Error('Confirm your main photo shows you');
+      await withMember(userId,async client=>{
+        const progress=await client.query(`SELECT o.*, p.about_me
+          FROM app_private.member_onboarding o JOIN app_private.member_profiles p ON p.user_id=o.user_id
+          WHERE o.user_id=$1::uuid AND o.explored_at IS NULL FOR UPDATE OF o,p`,[userId]);
+        const row=progress.rows[0];
+        if(!row||!genders.has(row.gender)||!orientations.has(row.orientation)||
+          !adultBirthDate(row.birth_date?.toISOString?.().slice(0,10))||!row.locality_id||
+          ![5,6,7,8].every(page=>validSignupDetailStep(page,row['signup'+page+'_details'],true))||
+          typeof row.about_me!=='string'||row.about_me.trim().length<15)
+          throw Error('Save your personal details and self summary first');
+        const photo=await client.query('SELECT id FROM app_private.member_photos WHERE user_id=$1::uuid AND is_primary=true',[userId]);
+        if(!photo.rowCount)throw Error('Upload and select a main photo first');
+        await client.query('UPDATE app_private.member_onboarding SET details_complete=true,primary_self_photo_id=$2::uuid,signup9_completed_at=COALESCE(signup9_completed_at,now()) WHERE user_id=$1::uuid',[userId,photo.rows[0].id]);
       });
     } else if (body.step==='details') {
       if (!Number.isInteger(body.matchAgeMin) || !Number.isInteger(body.matchAgeMax) || body.matchAgeMin < 18 || body.matchAgeMax > 120 || body.matchAgeMin > body.matchAgeMax) throw Error('Choose a valid age range');
