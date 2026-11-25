@@ -62,7 +62,7 @@ test("signup7 places status, style and kids in order above a full-width pet grid
 
 test("personal options have exact order, 43 one-inch heights and validated multi-selects",()=>{
   assert.deepEqual(SIGNUP_ETHNICITY_CHOICES,["White","Black","Asian","Hispanic","Native","Indian","Middle Eastern","Other"]);
-  assert.deepEqual(LANGUAGE_CHOICES,["English","Spanish","French","German","Russian","Italian","Polish","Ukrainian","Romanian","Dutch"]);
+  assert.deepEqual(LANGUAGE_CHOICES,["English","Spanish","French","German","Russian","Italian","Polish","Ukrainian","Romanian","Dutch","Other"]);
   assert.equal(HEIGHT_CHOICES.length,43);
   assert.equal(HEIGHT_CHOICES[0],"4' 0\" (122 cm)");
   assert.equal(HEIGHT_CHOICES.at(-1),"7' 6\" (229 cm)");
