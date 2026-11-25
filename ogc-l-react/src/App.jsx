@@ -10,6 +10,7 @@ import SignupLocation from "./SignupLocation.jsx";
 import SignupDetails from "./SignupDetails.jsx";
 import SignupFinish from "./SignupFinish.jsx";
 import SignupNext from "./SignupNext.jsx";
+import {explorerPath} from "./home-contract.mjs";
 import {homeDestination} from "./signup-landing.mjs";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {SidebarPromos, ProfileFloater, ProfileRefinement} from "./ClassicSidebar.jsx";
@@ -28,6 +29,7 @@ const ProfileSettings=lazy(()=>import("./ProfileSettings.jsx"));
 const PublicMemberProfile=lazy(()=>import("./PublicMemberProfile.jsx"));
 const QuickmatchView=lazy(()=>import("./QuickmatchView.jsx"));
 const MessagesView=lazy(()=>import("./MessagesView.jsx"));
+const HomeView=lazy(()=>import("./HomeView.jsx"));
 const MatchesView=lazy(()=>import("./MatchesView.jsx"));
 const CommunityChat=lazy(()=>import("./CommunityChat.jsx"));
 const AdminDashboard=lazy(()=>import("./AdminDashboard.jsx"));
@@ -356,7 +358,18 @@ function HomeRoute(){
   const {kind,onboarding}=useMemberSession();
   const destination=kind==="onboarding"?(!onboarding?.identity?"/signup3":!onboarding?.locality?"/signup4":"/onboarding"):homeDestination(kind);
   if(destination)return <Navigate to={destination} replace/>;
-  return <MemberGate><section className="ogcl-view"><header className="ogcl-view-head"><h1>Home</h1></header></section></MemberGate>;
+  return <MemberGate><HomeView Photo={MemberPhoto}/></MemberGate>;
+}
+
+function HomeVisitTracker(){
+  const {kind,user,profile,accountRequest}=useMemberSession();
+  const {pathname}=useLocation();
+  useEffect(()=>{
+    if(kind!=="member"||!user?.id)return;
+    const page=explorerPath(pathname,profile?.slug);
+    if(page&&page!=="/home")void accountRequest("/home","POST",{event:"visit",path:page}).catch(()=>{});
+  },[kind,user?.id,profile?.slug,pathname,accountRequest]);
+  return null;
 }
 
 export default function App() {
@@ -366,6 +379,7 @@ export default function App() {
     if(!["/signup","/signup1","/signup2","/signup3","/signup4","/signup5","/signup6","/signup7","/signup8","/signup9","/signup10","/join","/onboarding"].includes(pathname.replace(/\/$/,"")))setSignupSelection(null);
   },[pathname]);
   return (<>
+    <HomeVisitTracker/>
     <PublishedUiDesign />
     <Routes>
       <Route element={<AppShell />}>

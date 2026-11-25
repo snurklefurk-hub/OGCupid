@@ -350,6 +350,7 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
   // Existing production member Function remains the only data authority.
   async function accountRequest(path,method="GET",body=null) {
     const allowed={
+      "/home":new Set(["GET","POST"]),
       "/onboarding":new Set(["GET","PUT"]),
       "/profile":new Set(["GET","PUT"]),
       "/photos":new Set(["GET","POST"]),
@@ -501,7 +502,7 @@ export function createMemberGateway({authClient, authBaseUrl, memberApiBaseUrl, 
       const uiDesign=/^\/admin\/ui-design(?:\/(?:publish|rollback))?$/;
       const promos=/^\/admin\/promos(?:\/[1-9][0-9]{0,14})?$/;
       if(!(/^\/admin(?:\/(?:members|reports)(?:\/[0-9a-f-]{36}(?:\/(?:action|reinstate))?)?)?$/.test(pathname)||
-          editing.test(pathname)||uiDesign.test(pathname)||promos.test(pathname)) ||
+          editing.test(pathname)||uiDesign.test(pathname)||promos.test(pathname)||pathname==="/admin/home-posts") ||
          (path.includes("?") && (!path.startsWith("/admin/members?q=") || method!=="GET")) ||
          !["GET","POST","PUT","DELETE"].includes(method))
         throw new MemberAccessError("invalid","Unsupported admin request.");

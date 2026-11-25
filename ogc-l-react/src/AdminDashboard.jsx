@@ -2,6 +2,8 @@ import React,{useCallback,useEffect,useMemo,useRef,useState} from "react";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import "./admin.css";
 import CommunityReportsAdmin from "./CommunityReportsAdmin.jsx";
+import AdminHomePosts from "./AdminHomePosts.jsx";
+import "./home.css";
 import AdminMemberEditor from "./AdminMemberEditor.jsx";
 
 const AdminUiEditor=React.lazy(()=>import("./AdminUiEditor.jsx"));
@@ -170,13 +172,13 @@ export default function AdminDashboard(){
     </header>
       <div className="ogcl-admin-toolbar">
         <nav aria-label="Administration sections" className="ogcl-period-tabs">
-          {["overview","reports","community","members","promos","audit","ui-editor","ui-components"].map(t=><button key={t} type="button"
+          {["overview","reports","community","members","promos","audit","ui-editor","ui-components","home-posts"].map(t=><button key={t} type="button"
             className={tab===t?"selected":""} aria-current={tab===t?"page":undefined}
             onClick={()=>{
               if(t!==tab&&(tab==="ui-editor"&&editorDirty||tab==="ui-components"&&componentsDirty||tab==="promos"&&promoDirty)&&
                 !window.confirm("Leave this editor and discard unsaved edits?"))return;
               setTab(t);setError("");setNotice("");
-            }}>{t==="audit"?"Action log":t==="ui-editor"?"UI Editor":t==="ui-components"?"UI Components":t[0].toUpperCase()+t.slice(1)}</button>)}
+            }}>{t==="home-posts"?"A word from Admin":t==="audit"?"Action log":t==="ui-editor"?"UI Editor":t==="ui-components"?"UI Components":t[0].toUpperCase()+t.slice(1)}</button>)}
         </nav>
         <button type="button" className="ogcl-button ogcl-secondary" disabled={busy||tab==="ui-editor"||tab==="ui-components"}
           onClick={()=>void reload()}>{busy?"Working…":"Refresh"}</button>
@@ -195,6 +197,7 @@ export default function AdminDashboard(){
       {tab==="promos"&&<React.Suspense fallback={<p role="status">Loading promos…</p>}>
         <AdminPromos onUnsavedChange={setPromoDirty}/>
       </React.Suspense>}
+      {tab==="home-posts"&&<AdminHomePosts/>}
       {tab==="overview"&&<>
         <div className="ogcl-admin-stats">
           {[

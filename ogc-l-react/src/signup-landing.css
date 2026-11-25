@@ -137,3 +137,8 @@
 .ogcl-signup9-tutorial p{margin:0}
 @media(max-width:850px){.ogcl-signup-top:has(.ogcl-signup9-card){align-items:start}.ogcl-signup9-card{position:relative;top:auto;right:auto;min-width:0;flex:0 1 184px}.ogcl-signup9-tutorial{position:static;width:100%}.ogcl-signup9-pointer{justify-self:center;margin:0}}
 @media(max-width:480px){.ogcl-signup-top:has(.ogcl-signup9-card){display:grid;grid-template-columns:1fr;justify-items:end}.ogcl-signup9-card{width:min(100%,280px)}.ogcl-signup9-card .ogcl-profile-floater{width:184px;margin-left:auto}.ogcl-signup9-pointer{justify-self:end;margin-right:82px}}
+
+.ogcl-signup3-filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;width:min(100%,600px);text-align:left}
+.ogcl-signup3-filters label{display:grid;gap:8px;font-size:14px;min-width:0}
+.ogcl-signup3-filters select{min-width:0;width:100%;min-height:42px;background:white;color:#50586a;border:1px solid #d4d8e0;border-radius:2px;padding:7px 10px;font:inherit}
+@media(max-width:480px){.ogcl-signup3-filters{gap:8px}.ogcl-signup3-filters select{padding:6px}}

@@ -34,3 +34,9 @@ export function validSignupPreferences(body){
   return PROFILE_GENDERS.includes(body?.gender)&&PROFILE_ORIENTATIONS.includes(body?.orientation)&&
     valid(body?.interestedIn,PROFILE_GENDERS)&&valid(body?.intentions,PROFILE_INTENTIONS.map(x=>x.value));
 }
+
+export const SIGNUP_DISTANCE_CHOICES=Object.freeze([10,25,50,100,250,500,0]);
+export const SIGNUP_AGE_CHOICES=Object.freeze(Array.from({length:82},(_,i)=>18+i));
+export function validSignupFilters(body){
+  return SIGNUP_DISTANCE_CHOICES.includes(body?.distanceMiles)&&Number.isInteger(body.ageMin)&&Number.isInteger(body.ageMax)&&body.ageMin>=18&&body.ageMax<=99&&body.ageMin<=body.ageMax;
+}

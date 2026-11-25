@@ -1,6 +1,8 @@
 import React,{useEffect,useState} from "react";
 import {Link,NavLink,useNavigate,useParams,useSearchParams} from "react-router-dom";
 import "./profile-actions.css";
+import "./home.css";
+import {AWARD_DEFINITIONS} from "./home-contract.mjs";
 import {PUBLIC_DETAILS,PUBLIC_ESSAYS} from "./member-public-profile.mjs";
 import {essayDefinition} from "./member-essays.mjs";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
@@ -201,6 +203,8 @@ export default function PublicMemberProfile({Photo}) {
           <h2>Personality</h2>
           {profile.personaCode?<p>Dating Persona: <strong>{profile.personaCode}</strong></p>:
             <p>No saved Dating Persona result is available for this profile yet.</p>}
+          <h3>Personality awards</h3>
+          {profile.personalityAwards?.length?<ul className="ogcl-personality-awards">{profile.personalityAwards.map(award=><li key={award.code}><strong>{AWARD_DEFINITIONS[award.code].label}</strong><small>{AWARD_DEFINITIONS[award.code].description}</small></li>)}</ul>:<p>No personality awards earned yet.</p>}
           {profile.isOwner&&<p><NavLink to="/persona">Take the Dating Persona Test</NavLink></p>}
         </div>}
       </div>

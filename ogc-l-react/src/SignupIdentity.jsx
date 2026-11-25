@@ -1,7 +1,7 @@
 import React,{useEffect,useId,useRef,useState} from "react";
 import {Navigate,useNavigate} from "react-router-dom";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
-import {PROFILE_GENDERS,PROFILE_ORIENTATIONS,PROFILE_LOOKING_GENDERS,PROFILE_INTENTIONS,signupLookingDefaults,validSignupPreferences} from "./profile-options.mjs";
+import {PROFILE_GENDERS,PROFILE_ORIENTATIONS,PROFILE_LOOKING_GENDERS,PROFILE_INTENTIONS,signupLookingDefaults,validSignupPreferences,validSignupFilters,SIGNUP_DISTANCE_CHOICES,SIGNUP_AGE_CHOICES} from "./profile-options.mjs";
 
 export function Choices({label,options,selected,onChange,disabled}){
   const [open,setOpen]=useState(false);
@@ -49,7 +49,7 @@ export default function SignupIdentity({selection,onSaved}){
       const interestedIn=Array.isArray(state.signup_interested_in)?state.signup_interested_in:existingGenders.length?existingGenders:signupLookingDefaults(gender,orientation);
       const intentions=Array.isArray(state.signup_intentions)?state.signup_intentions:existingIntentions;
       touched.current=Array.isArray(state.signup_interested_in)||existingGenders.length>0;
-      setDraft({gender,orientation,interestedIn,intentions,birthDate:String(state.birth_date||"").slice(0,10)});
+      setDraft({gender,orientation,interestedIn,intentions,birthDate:String(state.birth_date||"").slice(0,10),ageMin:stored?.preferredAgeMin??state.match_age_min??18,ageMax:stored?.preferredAgeMax??Math.min(state.match_age_max??99,99),distanceMiles:state.signup_radius_miles??stored?.searchRadiusMiles??50});
     }).catch(()=>{if(active)setError("Could not load your saved choices. Please retry.");})
       .finally(()=>{if(active)setLoading(false);});
     return()=>{active=false;};
@@ -66,7 +66,7 @@ export default function SignupIdentity({selection,onSaved}){
   });
   async function submit(e){
     e.preventDefault();
-    if(submitting.current||!e.currentTarget.reportValidity()||!validSignupPreferences(draft)||!draft.birthDate)return;
+    if(submitting.current||!e.currentTarget.reportValidity()||!validSignupPreferences(draft)||!validSignupFilters(draft)||!draft.birthDate)return;
     submitting.current=true;setBusy(true);setError("");
     try{
       const result=await accountRequest("/onboarding","PUT",{step:"signup-preferences",...draft});
@@ -97,7 +97,12 @@ export default function SignupIdentity({selection,onSaved}){
       <Choices label="To have" options={PROFILE_INTENTIONS} selected={draft.intentions} disabled={busy}
         onChange={items=>setDraft(old=>({...old,intentions:items}))}/>
     </div>
-    <button type="submit" disabled={busy||!draft.birthDate||!validSignupPreferences(draft)}>{busy?"SAVING…":"CONTINUE"}</button>
+    <div className="ogcl-signup3-filters">
+      <label>Age from<select value={draft.ageMin} disabled={busy} onChange={e=>setDraft(old=>({...old,ageMin:Number(e.target.value)}))}>{SIGNUP_AGE_CHOICES.filter(age=>age<=draft.ageMax).map(age=><option key={age}>{age}</option>)}</select></label>
+      <label>Age to<select value={draft.ageMax} disabled={busy} onChange={e=>setDraft(old=>({...old,ageMax:Number(e.target.value)}))}>{SIGNUP_AGE_CHOICES.filter(age=>age>=draft.ageMin).map(age=><option key={age}>{age}</option>)}</select></label>
+      <label>Distance<select value={draft.distanceMiles} disabled={busy} onChange={e=>setDraft(old=>({...old,distanceMiles:Number(e.target.value)}))}>{SIGNUP_DISTANCE_CHOICES.map(miles=><option key={miles} value={miles}>{miles===0?"Anywhere":miles+" miles"}</option>)}</select></label>
+    </div>
+    <button type="submit" disabled={busy||!draft.birthDate||!validSignupPreferences(draft)||!validSignupFilters(draft)}>{busy?"SAVING…":"CONTINUE"}</button>
     {error&&<p className="ogcl-signup-error" role="alert">{error}</p>}
   </form>;
 }
