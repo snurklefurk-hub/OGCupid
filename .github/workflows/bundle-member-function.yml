@@ -6,6 +6,7 @@ on:
       - 'api/**'
       - 'ogc-l-react/src/admin-ui-editor-model.mjs'
       - 'ogc-l-react/src/shared-ui-components.mjs'
+      - 'ogc-l-react/src/signup-detail-options.mjs'
       - '.github/workflows/bundle-member-function.yml'
   workflow_dispatch:
 permissions:

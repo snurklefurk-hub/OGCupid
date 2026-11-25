@@ -1,11 +1,13 @@
 // Canonical signup choices; all persisted values are profile strings.
-// The legacy option labels for education, diet and religion are preserved.
+// The legacy option labels for education and diet are preserved.
 const freeze=Object.freeze;
 export const HABIT_CHOICES=freeze(["Often","Sometimes","Rarely","Never","Trying to quit"]);
 export const EDUCATION_CHOICES=freeze(["High school dropout","High school","Some college","Associate degree","Bachelor's degree","Master's degree","PhD"]);
 export const INCOME_CHOICES=freeze(["Broke","Pocket money","Fuck you money"]);
 export const DIET_CHOICES=freeze(["Vegan","Vegetarian","Carnivore","Omnivore","Takis","Other"]);
-export const RELIGION_CHOICES=freeze(["Agnosticism","Atheism","Buddhism","Christianity","Hinduism","Islam","Judaism","Sikhism","Other"]);
+export const RELIGION_CHOICES=freeze(["Agnostic","Protestant","Catholic","Orthodox","Islam","Judaism","Buddhist","Hindu","Sikh","Other"]);
+// Previously saved drafts remain valid; retired labels are not offered to new users.
+const legacyReligionChoices=freeze(["Agnosticism","Atheism","Buddhism","Christianity","Hinduism","Sikhism"]);
 export const RELIGION_IMPORTANCE_CHOICES=freeze(["but it doesn't matter","and it's kinda important","and it's really important"]);
 export const RELATIONSHIP_CHOICES=freeze(["Monogamous","Polyamorous"]);
 export const STATUS_CHOICES=freeze(["Single","Seeing someone","Married"]);
@@ -32,20 +34,20 @@ export function validSignupDetailValue(key,value){
   }
   return choices[key]?.includes(value)===true;
 }
-export function validSignupDetailStep(step,fields){
+export function validSignupDetailStep(step,fields,allowLegacyReligion=false){
   const keys=SIGNUP_DETAIL_STEPS[step];
-  return Boolean(keys&&fields&&typeof fields==="object"&&!Array.isArray(fields)&&Object.keys(fields).length===keys.length&&keys.every(key=>Object.hasOwn(fields,key)&&validSignupDetailValue(key,fields[key]))&&(!fields.religionImportance||fields.religion));
+  return Boolean(keys&&fields&&typeof fields==="object"&&!Array.isArray(fields)&&Object.keys(fields).length===keys.length&&keys.every(key=>Object.hasOwn(fields,key)&&(validSignupDetailValue(key,fields[key])||(allowLegacyReligion&&key==="religion"&&legacyReligionChoices.includes(fields[key]))))&&(!fields.religionImportance||fields.religion));
 }
 export function nextSignupDetails(state,profileComplete=false){
   if(profileComplete)return "/onboarding";
-  for(const step of [5,6,7])if(!validSignupDetailStep(step,state?.["signup"+step+"_details"]))return "/signup"+step;
+  for(const step of [5,6,7])if(!validSignupDetailStep(step,state?.["signup"+step+"_details"],true))return "/signup"+step;
   return "/onboarding";
 }
 export function savedSignupDetails(state){
   const fields={};
   for(const step of [5,6,7]){
     const draft=state?.["signup"+step+"_details"];
-    if(validSignupDetailStep(step,draft))Object.assign(fields,draft);
+    if(validSignupDetailStep(step,draft,true))Object.assign(fields,draft);
   }
   return fields;
 }
