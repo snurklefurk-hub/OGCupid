@@ -49,13 +49,17 @@ test("signup3 uses the shared shell with a raised logo and stores choices only t
   assert.ok(SITEMAP_PATHS.includes("/signup3"));
 });
 
-test("birthdate is above the identity controls and both preference dropdowns retain checkbox multi-select",()=>{
+test("birthdate is above the identity controls and both preference dropdowns use full-width text toggles",()=>{
   const step=read("./SignupIdentity.jsx"),legacy=read("./Onboarding.jsx"),css=read("./signup-landing.css");
   assert.ok(step.indexOf('name="birthDate"')<step.indexOf('className="ogcl-signup3-grid"'));
   assert.match(step,/type="date" name="birthDate" required min=\{birthDateLimit\(120\)\} max=\{birthDateLimit\(18\)\}/);
   assert.match(step,/birthDate:String\(state\.birth_date/);
   assert.match(step,/aria-expanded=\{open&&!disabled\}/);
-  assert.match(step,/type="checkbox" checked=\{selected\.includes\(value\)\}/);
+  assert.match(step,/type="button" className="ogcl-signup3-option" aria-pressed=\{selected\.includes\(value\)\}/);
+  assert.match(step,/onClick=\{\(\)=>onChange\(selected\.includes\(value\)\?selected\.filter\(x=>x!==value\):\[\.\.\.selected,value\]\)\}/);
+  assert.doesNotMatch(step,/type="(?:checkbox|radio)"/);
+  assert.match(css,/\.ogcl-signup3-menu \.ogcl-signup3-option\{display:block;width:100%/);
+  assert.match(css,/\.ogcl-signup3-option\[aria-pressed="true"\]\{background:/);
   assert.match(step,/hidden=\{!open\|\|disabled\}/);
   assert.match(step,/e\.key==="Escape"/);
   assert.match(css,/\.ogcl-signup3-menu\[hidden\]\{display:none\}/);

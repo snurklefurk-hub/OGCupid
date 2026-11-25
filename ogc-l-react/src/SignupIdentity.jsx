@@ -20,8 +20,8 @@ function Choices({label,options,selected,onChange,disabled}){
       aria-expanded={open&&!disabled} aria-controls={id+"-choices"} aria-labelledby={id+"-label "+id+"-summary"}
       onClick={()=>setOpen(v=>!v)}><span id={id+"-summary"}>{summary||"Choose"}</span><span aria-hidden="true">▾</span></button>
     <fieldset id={id+"-choices"} className="ogcl-signup3-menu" hidden={!open||disabled} disabled={disabled} aria-labelledby={id+"-label"}>
-      {options.map(({value,label})=><label key={value}><input type="checkbox" checked={selected.includes(value)}
-        onChange={e=>onChange(e.target.checked?[...selected,value]:selected.filter(x=>x!==value))}/> {label}</label>)}
+      {options.map(({value,label})=><button key={value} type="button" className="ogcl-signup3-option" aria-pressed={selected.includes(value)}
+        onClick={()=>onChange(selected.includes(value)?selected.filter(x=>x!==value):[...selected,value])}>{label}</button>)}
     </fieldset>
   </div>;
 }
