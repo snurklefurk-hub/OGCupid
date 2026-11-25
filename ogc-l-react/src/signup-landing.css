@@ -71,9 +71,11 @@
 .ogcl-signup3-dropdown span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ogcl-signup3-menu{position:absolute;z-index:5;top:100%;left:0;right:0;min-width:0;margin:3px 0 0;padding:6px 8px;border:1px solid #d4d8e0;border-radius:2px;background:white;color:#50586a;box-shadow:0 3px 9px #0003}
 .ogcl-signup3-menu[hidden]{display:none}
-.ogcl-signup3-menu label{display:flex;align-items:center;gap:5px;padding:5px 0;cursor:pointer}
-.ogcl-signup3-menu input{flex-shrink:0}
-.ogcl-signup3-birthdate input:focus-visible,.ogcl-signup3-menu input:focus-visible{outline:2px solid #2963a4;outline-offset:2px}
+.ogcl-signup3-menu .ogcl-signup3-option{display:block;width:100%;text-align:left;padding:8px 10px;margin:0;border:0;border-radius:2px;background:transparent;color:inherit;font:inherit;cursor:pointer;overflow-wrap:anywhere}
+.ogcl-signup3-menu .ogcl-signup3-option:hover{background:#e8eff8}
+.ogcl-signup3-menu .ogcl-signup3-option[aria-pressed="true"]{background:#2963a4;color:#fff;font-weight:600}
+.ogcl-signup3-menu .ogcl-signup3-option[aria-pressed="true"]:hover{background:#22558e}
+.ogcl-signup3-birthdate input:focus-visible,.ogcl-signup3-menu .ogcl-signup3-option:focus-visible{outline:2px solid #2963a4;outline-offset:2px}
 .ogcl-signup3 button[type=submit]{min-width:142px;min-height:48px;padding:0 20px;border:0;border-radius:2px;background:#00c982;color:white;font-weight:600;cursor:pointer}
 .ogcl-signup3 button:disabled{opacity:.6;cursor:default}
 @media(max-width:740px){.ogcl-signup3-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.ogcl-signup3-choices{grid-row:3}.ogcl-signup-more{grid-column:1/-1}.ogcl-signup3 h1{font-size:24px}}
