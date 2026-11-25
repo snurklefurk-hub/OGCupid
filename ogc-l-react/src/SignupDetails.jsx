@@ -8,6 +8,7 @@ function Choice({label,name,options,value,onChange,disabled}){
     <span>{label}</span>
     <select name={name} value={value} disabled={disabled} onChange={e=>onChange(name,e.target.value)}>
       <option value="">Choose</option>
+      {name==="religion"&&value&&!RELIGION_CHOICES.includes(value)&&<option value={value} disabled>{value} (previous choice)</option>}
       {options.map(item=>{const option=typeof item==="string"?{label:item,value:item}:item;return <option key={option.value} value={option.value}>{option.label}</option>;})}
     </select>
   </label>;
@@ -40,7 +41,7 @@ export default function SignupDetails({page}){
       const next=nextSignupDetails(state);
       if(next!=="/onboarding"&&Number(next.slice(-1))<page){setRedirect(next);return;}
       const saved=state["signup"+page+"_details"],old=raw?.profile||{};
-      const initial=validSignupDetailStep(page,saved)?saved:Object.fromEntries(SIGNUP_DETAIL_STEPS[page].map(key=>[key,validSignupDetailValue(key,old[key])?old[key]:""]));
+      const initial=validSignupDetailStep(page,saved,true)?saved:Object.fromEntries(SIGNUP_DETAIL_STEPS[page].map(key=>[key,validSignupDetailValue(key,old[key])?old[key]:""]));
       if(page===6&&!initial.religion)initial.religionImportance="";
       setDraft(initial);
     }).catch(()=>{if(active)setError("Could not load your saved choices. Please retry.");})
@@ -59,7 +60,7 @@ export default function SignupDetails({page}){
     e.preventDefault();
     if(submitting.current||!e.currentTarget.reportValidity())return;
     const fields=page===5?{...draft,work:draft.work.trim()}:draft;
-    if(!validSignupDetailStep(page,fields))return;
+    if(!validSignupDetailStep(page,fields)){setError("Choose a current religion option or leave it blank.");return;}
     submitting.current=true;setBusy(true);setError("");
     try{
       const result=await accountRequest("/onboarding","PUT",{step:"signup-details",page,fields});
