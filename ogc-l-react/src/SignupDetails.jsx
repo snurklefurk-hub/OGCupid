@@ -43,7 +43,6 @@ export default function SignupDetails({page}){
       const state=data?.state||{};
       if(!data?.identity||!state.birth_date){setRedirect("/signup3");return;}
       if(!data?.locality){setRedirect("/signup4");return;}
-      if(data.profile){setRedirect("/onboarding");return;}
       const next=nextSignupDetails(state);
       if(next!=="/onboarding"&&Number(next.slice(-1))<page){setRedirect(next);return;}
       const saved=state["signup"+page+"_details"],old=raw?.profile||{};
