@@ -10,7 +10,7 @@
 }
 .ogcl-signup-top a,.ogcl-signup-footer a{color:inherit;text-decoration:none}
 .ogcl-signup-top a:hover,.ogcl-signup-footer a:hover{text-decoration:underline}
-.ogcl-signup-blog{min-width:0;font-size:14px}
+.ogcl-signup-blog{min-width:0;display:grid;gap:3px;font-size:14px}.ogcl-signup-blog a:last-child{width:max-content}
 .ogcl-signup-blog a{text-decoration:underline}
 .ogcl-signup-signin{flex-shrink:0;border:1px solid rgba(255,255,255,.3);padding:8px 18px;border-radius:2px;font-size:14px}
 .ogcl-signup-content{
@@ -19,7 +19,7 @@
 }
 .ogcl-signup-logo{display:block;max-width:90%}
 .ogcl-signup-logo img{display:block;width:240px;max-width:100%;height:auto}
-.ogcl-signup-form{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}
+.ogcl-signup-start{margin:-16px 0 -24px;font:normal 26px/1.2 Arial,Helvetica,sans-serif;text-align:center}.ogcl-signup-form{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}
 .ogcl-signup-form>span{font-size:20px;white-space:nowrap}
 .ogcl-signup-form select{
   width:198px;max-width:100%;min-height:48px;padding:0 14px;
