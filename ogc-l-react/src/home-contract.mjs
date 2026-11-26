@@ -1,7 +1,7 @@
 import {SITEMAP_PATHS} from "./sitemap-pages.mjs";
 // Permanent site pages, plus the single owner-profile destination. Signup,
 // sign-in, recovery and individual dynamic URLs are not repeatable destinations.
-export const EXPLORER_PAGES=Object.freeze([...SITEMAP_PATHS.filter(path=>path!=="/admin"&&!/^\/signup(?:[0-9]+)?$/.test(path)&&!["/join","/signin","/recover"].includes(path)),"/profiles/me"]);
+export const EXPLORER_PAGES=Object.freeze([...SITEMAP_PATHS.filter(path=>path!=="/admin"&&!/^\/signup(?:[0-9]+)?$/.test(path)&&!["/join","/signin","/recover","/blade"].includes(path)),"/profiles/me"]);
 export const AWARD_DEFINITIONS=Object.freeze({
   "feature-creature":Object.freeze({label:"Feature Creature",description:"Take the Persona Test and complete every What to do activity."}),
   explorer:Object.freeze({label:"explorer",description:"Visit every permanent non-admin site page."}),
