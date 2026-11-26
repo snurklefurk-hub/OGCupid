@@ -4,14 +4,18 @@ import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {Choices} from "./SignupIdentity.jsx";
 import {PROFILE_ORIENTATIONS} from "./profile-options.mjs";
 import {SIGNUP_ETHNICITY_CHOICES,HEIGHT_CHOICES,BODY_TYPE_CHOICES,LANGUAGE_CHOICES,HABIT_CHOICES,EDUCATION_CHOICES,INCOME_CHOICES,DIET_CHOICES,RELIGION_CHOICES,RELIGION_IMPORTANCE_CHOICES,RELATIONSHIP_CHOICES,STATUS_CHOICES,KIDS_CHOICES,SIGNUP_PET_CHOICES,SIGNUP_DETAIL_STEPS,validSignupDetailStep,validSignupDetailValue,nextSignupDetails} from "./signup-detail-options.mjs";
-const headings={5:"What do you do?",6:"What do you like?",7:"what are you bringing?",8:"Lets get personal"};
+const headings={5:"What do you do?",6:"What do you like?",7:"What are you bringing?",8:"Let's get personal"};
+function signupOptionLabel(label){
+  const corrected=label.replace(/\bdont\b/g,"don't").replace(/\bem\b/g,"'em");
+  return corrected.charAt(0).toUpperCase()+corrected.slice(1);
+}
 function Choice({label,name,options,value,onChange,disabled}){
   return <label className="ogcl-signup-detail-field">
     <span>{label}</span>
     <select name={name} value={value} disabled={disabled} onChange={e=>onChange(name,e.target.value)}>
       <option value="">Choose</option>
       {name==="religion"&&value&&!RELIGION_CHOICES.includes(value)&&<option value={value} disabled>{value} (previous choice)</option>}
-      {options.map(item=>{const option=typeof item==="string"?{label:item,value:item}:item;return <option key={option.value} value={option.value}>{option.label}</option>;})}
+      {options.map(item=>{const option=typeof item==="string"?{label:item,value:item}:item;return <option key={option.value} value={option.value}>{signupOptionLabel(option.label)}</option>;})}
     </select>
   </label>;
 }
@@ -21,7 +25,7 @@ function Pets({value,onChange,disabled}){
     <legend>Pets</legend>
     <div className="ogcl-signup-pets-grid">
       {SIGNUP_PET_CHOICES.map(option=><button type="button" key={option} aria-pressed={selected.includes(option)}
-        onClick={()=>onChange("pets",SIGNUP_PET_CHOICES.filter(x=>x===option?!selected.includes(x):selected.includes(x)).join(", "))}>{option.replace("exotics","others/exotics")}</button>)}
+        onClick={()=>onChange("pets",SIGNUP_PET_CHOICES.filter(x=>x===option?!selected.includes(x):selected.includes(x)).join(", "))}>{signupOptionLabel(option.replace("exotics","other/exotic pets"))}</button>)}
     </div>
   </fieldset>;
 }
@@ -74,7 +78,7 @@ export default function SignupDetails({page}){
   }
   return <form className={"ogcl-signup3 ogcl-signup-details ogcl-signup"+page} onSubmit={submit}>
     <h1>{headings[page]}</h1>
-    {page===8&&<p className="ogcl-signup8-subheading">We're almost done, i swear</p>}
+    {page===8&&<p className="ogcl-signup8-subheading">We're almost done, I swear.</p>}
     {page===5&&<div className="ogcl-signup-detail-grid">
       <label className="ogcl-signup-detail-field"><span>Job</span><input name="work" maxLength={160} value={draft.work} disabled={busy} onChange={e=>update("work",e.target.value)}/></label>
       {select("income","Income",INCOME_CHOICES)}
@@ -105,7 +109,7 @@ export default function SignupDetails({page}){
     </div>}
     <div className="ogcl-signup-navigation">
       <button type="button" className="ogcl-signup-back" disabled={busy} onClick={()=>navigate("/signup"+(page-1),{replace:true})}>Back</button>
-      <button type="submit" disabled={busy}>{busy?"SAVING…":"CONTINUE"}</button>
+      <button type="submit" disabled={busy}>{busy?"Saving…":"Continue"}</button>
     </div>
     {error&&<p className="ogcl-signup-error" role="alert">{error}</p>}
   </form>;
