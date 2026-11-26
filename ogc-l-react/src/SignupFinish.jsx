@@ -1,5 +1,5 @@
 import React,{useEffect,useRef,useState} from "react";
-import {Navigate,useOutletContext} from "react-router-dom";
+import {Navigate,useNavigate,useOutletContext} from "react-router-dom";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {nextSignupDetails,savedSignupDetails} from "./signup-detail-options.mjs";
 import {ProfilePhotoCropper} from "../../member-app/photo-cropper.js";
@@ -53,6 +53,7 @@ function CropStage({file,busy,onUpload,onCancel}){
 export default function SignupFinish(){
   const {kind,user,accountRequest,refresh}=useMemberSession();
   const {setCard}=useOutletContext();
+  const navigate=useNavigate();
   const [progress,setProgress]=useState(null),[profile,setProfile]=useState(null),[primary,setPrimary]=useState(null);
   const [file,setFile]=useState(null),[essay,setEssay]=useState(""),[confirmed,setConfirmed]=useState(false);
   const [done,setDone]=useState(false),[loading,setLoading]=useState(true),[busy,setBusy]=useState(false),[error,setError]=useState(""),[retry,setRetry]=useState(0);
@@ -133,6 +134,7 @@ export default function SignupFinish(){
       <label className="ogcl-signup9-confirm"><input type="checkbox" checked={confirmed} disabled={busy} onChange={e=>setConfirmed(e.target.checked)}/> I confirm my main profile picture is a genuine photo of me.</label>
       <button className="ogcl-signup9-primary" type="submit" disabled={busy||!confirmed||essay.trim().length<15}>{busy?"SAVING…":"SAVE"}</button>
     </form>}
+    {!done&&!progress.profile&&<button type="button" className="ogcl-signup-back" disabled={busy} onClick={()=>navigate("/signup8",{replace:true})}>Back</button>}
     {error&&<p className="ogcl-signup-error" role="alert">{error}</p>}
   </section>;
 }
