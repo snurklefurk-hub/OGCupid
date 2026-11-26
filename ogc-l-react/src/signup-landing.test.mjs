@@ -17,7 +17,7 @@ test("default landing respects verified session state and existing onboarding",(
   assert.equal(signupDestination("guest"),null);
   assert.equal(signupDestination("checking"),null);
   assert.equal(primaryNavigation.length,5);
-  assert.match(app,/if\(pathname==="\/"\|\|pathname\.replace\([^\n]+kind!=="member"\)return <Outlet\/>/);
+  assert.ok(app.includes('if(pathname==="/"||(["/home","/blade"].includes(path)&&kind!=="member"))return <Outlet/>'));
   assert.match(app,/<Route path="home" element=\{<HomeRoute\/>\}/);
   assert.match(app,/if\(kind==="member"\)return <Navigate to=\{defaultRoute\} replace\/>/);
 });

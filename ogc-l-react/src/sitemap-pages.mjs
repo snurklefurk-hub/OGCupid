@@ -3,6 +3,7 @@
 export const SITEMAP_SECTIONS=Object.freeze([
   {title:"Getting started & your account",items:[
     {path:"/home",label:"Home",note:"Member landing page",access:"member"},
+    {path:"/blade",label:"Blade",note:"Alternate Home palette",access:"member"},
     {path:"/signup",label:"Sign up",note:"Begin registration",access:"public"},
     {path:"/signup1",label:"Sign up – first step",note:"Begin registration",access:"public"},
     {path:"/signup2",label:"Sign up – account",note:"Create your account credentials",access:"public"},
