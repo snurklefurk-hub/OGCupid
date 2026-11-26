@@ -10,14 +10,14 @@ export default function SignupShell(){
   const {pathname}=useLocation();
   const step=pathname.replace(/\/$/,"");
   const identityStep=step==="/signup3"||step==="/signup4"||["/signup5","/signup6","/signup7","/signup8","/signup9","/signup10"].includes(step);
-  const destination=kind==="onboarding"
+  const destination=step==="/about"?null:kind==="onboarding"
     ?identityStep?null:!onboarding?.identity?"/signup3":!onboarding?.locality?"/signup4":"/signup9"
     :signupDestination(kind);
   if(destination)return <Navigate to={destination} replace/>;
   if(kind==="checking")return <main className="ogcl-signup-landing" aria-busy="true" aria-label="Checking account"/>;
   return <main className="ogcl-signup-landing" aria-label="Sign up for OG Cupid">
     <header className="ogcl-signup-top">
-      <span className="ogcl-signup-blog">Just here for the blog? <NavLink to="/ogtrends">Click here to read OG Trends.</NavLink></span>
+      <span className="ogcl-signup-blog">Just here for the blog? <NavLink to="/ogtrends">Click here to read OG Trends.</NavLink><NavLink to="/about">Why you should join</NavLink></span>
       <NavLink to="/signin" className="ogcl-signup-signin">Sign in</NavLink>
     </header>
     <div className={"ogcl-signup-content"+(identityStep?" ogcl-signup-content-top":"")}>
