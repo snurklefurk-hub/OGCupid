@@ -1,0 +1,31 @@
+/* Swatches sampled at the center of each strip in the owner's reference. */
+.ogcl-app[data-theme="blade"] {
+  --okc-navy-deep: #1b081e;
+  --okc-navy: #3f0d48;
+  --okc-pink-dark: #8a065c;
+  --okc-pink: #cb2797;
+  --okc-sky: #e977bc;
+  --okc-sky-mid: #9571c9;
+  --okc-blue-light: #6138b0;
+  --okc-blue: #2b2194;
+  --okc-blue-top: #190a65;
+  --okc-line: #486b7f;
+  --okc-navy-line: var(--okc-blue-light);
+  --okc-heading: var(--okc-navy);
+  --okc-paper: color-mix(in srgb, var(--okc-sky-mid) 16%, white);
+  --ogcl-paper: var(--okc-paper);
+  --ogcl-ink: var(--okc-navy-deep);
+  --ogcl-link: var(--okc-pink-dark);
+  --ogc-tab-gradient-top: var(--okc-paper);
+  --ogc-tab-gradient-bottom: var(--okc-sky-mid);
+  --ogc-tab-edge: var(--okc-line);
+  --ogc-tab-ink: var(--okc-navy);
+  --ogc-tab-paper: var(--okc-paper);
+  background: linear-gradient(155deg, var(--okc-blue-top), var(--okc-navy) 48%, var(--okc-navy-deep));
+  color: var(--ogcl-ink);
+}
+[data-theme="blade"] .ogcl-home .ogcl-view-head h1 {color: var(--okc-pink-dark);}
+[data-theme="blade"] .ogcl-home :is(time, small, .ogcl-home-award-state, .ogcl-home-muted) {color: var(--okc-line);}
+[data-theme="blade"] .ogcl-home :is(.ogcl-home-event, .ogcl-home-task, .ogcl-home-award) {border-color: var(--okc-sky-mid);}
+[data-theme="blade"] .ogcl-home-refresh button {background: var(--okc-blue-light); color: white;}
+[data-theme="blade"] .ogcl-home-progress progress {accent-color: var(--okc-pink);}

@@ -2,6 +2,7 @@ import React, {lazy, Suspense, useEffect, useMemo, useState} from "react";
 import {Navigate, NavLink, Outlet, Route, Routes, useLocation,useParams} from "react-router-dom";
 import {defaultRoute, primaryNavigation} from "./navigation.mjs";
 import PublishedUiDesign from "./PublishedUiDesign.jsx";
+import "./blade.css";
 import SignupLanding from "./SignupLanding.jsx";
 import SignupShell from "./SignupShell.jsx";
 import SignupCredentials from "./SignupCredentials.jsx";
@@ -177,14 +178,15 @@ function AppShell() {
   const {pathname}=useLocation();
   const {kind}=useMemberSession();
   // No site shell flash before the default landing redirect or guest home redirect.
-  if(pathname==="/"||pathname.replace(/\/$/,"")==="/home"&&kind!=="member")return <Outlet/>;
-  return <SiteShell/>;
+  const path=pathname.replace(/\/$/,"").toLowerCase();
+  if(pathname==="/"||(["/home","/blade"].includes(path)&&kind!=="member"))return <Outlet/>;
+  return <SiteShell blade={path==="/blade"}/>;
 }
 
-function SiteShell() {
+function SiteShell({blade}) {
   const promoSelection=useSitePromos();
   return (
-    <div className="ogcl-app">
+    <div className="ogcl-app" data-theme={blade?"blade":undefined}>
       <a className="ogcl-skip" href="#ogcl-content" onClick={event=>{
         event.preventDefault();
         document.getElementById("ogcl-content")?.focus();
@@ -384,6 +386,7 @@ export default function App() {
       <Route element={<AppShell />}>
         <Route index element={<Navigate to={defaultRoute} replace />} />
         <Route path="home" element={<HomeRoute/>} />
+        <Route path="blade" element={<HomeRoute/>} />
         <Route path="signin" element={<SignInForm />} />
         <Route path="join" element={<JoinForm/>} />
         <Route path="recover" element={<RecoveryForm/>} />
