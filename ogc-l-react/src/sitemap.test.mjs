@@ -18,7 +18,7 @@ test("sitemap lists all canonical non-profile page routes, no arbitrary or priva
   const expected=[...routes,...previews].sort();
   assert.deepEqual([...SITEMAP_PATHS].sort(),expected);
   assert.equal(SITEMAP_PATHS.length,new Set(SITEMAP_PATHS).size);
-  assert.equal(SITEMAP_PATHS.length,37);
+  assert.equal(SITEMAP_PATHS.length,38);
   assert.ok(SITEMAP_PATHS.includes("/home"));
   assert.ok(!SITEMAP_PATHS.some(path=>path.includes(":")||path.startsWith("/profiles/")));
   assert.ok(SITEMAP_PATHS.includes("/profile"),"profile editing is a tool, not a personal profile URL");
