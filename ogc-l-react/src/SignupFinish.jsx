@@ -1,5 +1,5 @@
 import React,{useEffect,useRef,useState} from "react";
-import {Navigate,useNavigate,useOutletContext} from "react-router-dom";
+import {Navigate,useNavigate} from "react-router-dom";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
 import {nextSignupDetails,savedSignupDetails} from "./signup-detail-options.mjs";
 import {ProfilePhotoCropper} from "../../member-app/photo-cropper.js";
@@ -52,27 +52,24 @@ function CropStage({file,busy,onUpload,onCancel}){
 
 export default function SignupFinish(){
   const {kind,user,accountRequest,refresh}=useMemberSession();
-  const {setCard}=useOutletContext();
   const navigate=useNavigate();
   const [progress,setProgress]=useState(null),[profile,setProfile]=useState(null),[primary,setPrimary]=useState(null);
   const [file,setFile]=useState(null),[essay,setEssay]=useState("");
-  const [done,setDone]=useState(false),[loading,setLoading]=useState(true),[busy,setBusy]=useState(false),[error,setError]=useState(""),[retry,setRetry]=useState(0);
+  const [loading,setLoading]=useState(true),[busy,setBusy]=useState(false),[error,setError]=useState(""),[retry,setRetry]=useState(0);
   const lock=useRef(false),fileSerial=useRef(0),fileInput=useRef(null);
   useEffect(()=>{
     if(kind!=="onboarding")return;
-    let live=true;setLoading(true);setError("");setDone(false);setCard(null);
+    let live=true;setLoading(true);setError("");
     Promise.all([accountRequest("/onboarding"),accountRequest("/profile"),accountRequest("/photos")]).then(([status,p,album])=>{
       if(!live)return;
       const current=p?.profile?.userId===user?.id?p.profile:null;
       const main=album?.photos?.find(photo=>photo.isPrimary)||null;
       setProgress(status);setProfile(current);setPrimary(main);setEssay(current?.aboutMe||"");
-      if(status?.state?.signup9_completed_at&&status.photo&&current?.slug&&main?.id){
-        setDone(true);setCard({userId:current.userId,slug:current.slug,displayName:current.displayName,avatarPhotoId:main.id});
-      }
+      if(status?.explored){void refresh();}
     }).catch(()=>{if(live)setError("Couldn't load your saved progress. Please retry.");})
       .finally(()=>{if(live)setLoading(false);});
     return()=>{live=false;};
-  },[kind,user?.id,accountRequest,retry,setCard]);
+  },[kind,user?.id,accountRequest,retry,refresh]);
   if(kind==="member")return <Navigate to="/home" replace/>;
   if(kind==="guest")return <Navigate to="/signin" replace/>;
   if(kind==="error"||kind==="unconfigured")return <p role="alert">Account unavailable. <button type="button" onClick={()=>void refresh()}>Retry</button></p>;
@@ -81,7 +78,7 @@ export default function SignupFinish(){
   if(!progress.identity||!progress.state?.birth_date)return <Navigate to="/signup3" replace/>;
   if(!progress.locality)return <Navigate to="/signup4" replace/>;
   const next=nextSignupDetails(progress.state);
-  if(next!=="/onboarding")return <Navigate to={progress.profile?"/onboarding":next} replace/>;
+  if(next!=="/onboarding")return <Navigate to={next} replace/>;
   async function upload(jpeg){
     if(lock.current)return;
     lock.current=true;setBusy(true);setError("");
@@ -114,15 +111,14 @@ export default function SignupFinish(){
       const result=await accountRequest("/onboarding","PUT",{step:"signup9-finish",confirmed:true});
       if(result?.saved!==true)throw Error("Your profile and photo weren't confirmed.");
       const status=await accountRequest("/onboarding");
-      if(!status?.photo||!status?.state?.signup9_completed_at)throw Error("Couldn't confirm your saved profile.");
-      setProfile(saved.profile);setProgress(status);setDone(true);
-      setCard({userId:saved.profile.userId,slug:saved.profile.slug,displayName:saved.profile.displayName,avatarPhotoId:primary.id});
+      if(!status?.photo||!status?.state?.signup9_completed_at||!status?.explored)throw Error("Couldn't confirm your saved profile.");
+      if(await refresh())navigate("/home",{replace:true});
     }catch(e){setError(e?.message||"Your self summary couldn't be saved. Please retry.");}
     finally{lock.current=false;setBusy(false);}
   }
   return <section className="ogcl-signup3 ogcl-signup9" aria-label="The finishing touches">
     <h1>The finishing touches</h1>
-    {done?null:!primary?<div className="ogcl-signup9-photo">
+    {!primary?<div className="ogcl-signup9-photo">
       <p className="ogcl-signup9-note" id="signup9-photo-note">Upload one actual picture of yourself. You can upload more later of anything you want. Anime pfps, memes, your dogs, whatever. You gotta have a real pfp though.</p>
       {!file?<>
         <input ref={fileInput} type="file" hidden accept="image/jpeg,image/png,image/webp" disabled={busy}
@@ -136,7 +132,7 @@ export default function SignupFinish(){
       <textarea id="signup9-essay" aria-describedby="signup9-essay-note" name="aboutMe" rows={7} minLength={15} maxLength={5000} required value={essay} disabled={busy} onChange={e=>setEssay(e.target.value)}/>
       <button className="ogcl-signup9-primary" type="submit" disabled={busy||essay.trim().length<15}>{busy?"Saving…":"Save"}</button>
     </form>}
-    {!done&&!progress.profile&&<button type="button" className="ogcl-signup-back" disabled={busy} onClick={()=>navigate("/signup8",{replace:true})}>Back</button>}
+    {!progress.profile&&<button type="button" className="ogcl-signup-back" disabled={busy} onClick={()=>navigate("/signup8",{replace:true})}>Back</button>}
     {error&&<p className="ogcl-signup-error" role="alert">{error}</p>}
   </section>;
 }
