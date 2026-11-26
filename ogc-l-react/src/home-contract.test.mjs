@@ -39,7 +39,7 @@ test("the actual published article index and feed catalog remain aligned",()=>{
   assert.deepEqual(OGTRENDS_PUBLICATIONS.map(a=>a.href),links);
   for(const article of OGTRENDS_PUBLICATIONS){assert.ok(index.includes(article.title));assert.ok(Number.isFinite(Date.parse(article.publishedAt)));}
 });
-test("signup filters and two-stage email tutorial use persisted settings and correct navigation",()=>{
+test("signup filters use persisted settings and final signup navigates to Home",()=>{
   assert.ok(validSignupFilters({ageMin:18,ageMax:99,distanceMiles:0}));
   assert.ok(!validSignupFilters({ageMin:45,ageMax:20,distanceMiles:50}));
   assert.ok(!validSignupFilters({ageMin:18,ageMax:100,distanceMiles:50}));
@@ -50,9 +50,8 @@ test("signup filters and two-stage email tutorial use persisted settings and cor
   assert.match(identity,/disabled=\{busy\|\|!canContinue\}/);
   assert.match(finish,/searchRadiusMiles:state.signup_radius_miles\?\?/);
   assert.match(finish,/preferredAgeMin:Math.min\(state.match_age_min/);
-  assert.match(shell,/emailPrompt\?<><p role="status">Now would be a good time to validate your email/);
-  assert.match(shell,/onClick=\{\(\)=>setEmailPrompt\(true\)\}>Next/);
-  assert.match(shell,/to="\/signup10" className="ogcl-signup9-primary">Next/);
+  assert.match(finish,/if\(await refresh\(\)\)navigate\("\/home",\{replace:true\}\)/);
+  assert.doesNotMatch(shell,/to="\/signup10"/);
   assert.match(read("./App.jsx"),/<MemberGate><HomeView Photo=\{MemberPhoto\}/);
   assert.match(read("./MatchesView.jsx"),/apply=\{\(\)=>\{[^}]*accountRequest\("\/home","POST",\{event:"search"\}/);
 });

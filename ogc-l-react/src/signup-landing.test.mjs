@@ -22,15 +22,15 @@ test("default landing respects verified session state and existing onboarding",(
   assert.match(app,/if\(kind==="member"\)return <Navigate to=\{defaultRoute\} replace\/>/);
 });
 test("signup is a standalone sibling route with only the requested features",()=>{
-  assert.match(app,/<\/Route>\s*<Route element=\{<SignupShell Photo=\{MemberPhoto\}\/>\}>\s*<Route path="signup" element=\{<SignupLanding onContinue=\{setSignupSelection\} selection=\{signupSelection\}\/>\} \/>/);
+  assert.match(app,/<\/Route>\s*<Route element=\{<SignupShell\/>\}>\s*<Route path="signup" element=\{<SignupLanding onContinue=\{setSignupSelection\} selection=\{signupSelection\}\/>\} \/>/);
   assert.match(app,/<Route path="signup2" element=\{<SignupCredentials\/>\} \/>/);
   assert.match(app,/<PublishedUiDesign \/>\s*<Routes>/);
   assert.doesNotMatch(signup+shell+credentials,/ogcl-app|ogcl-left|ogcl-right|ogcl-sheet|SidebarPromos/);
   assert.match(shell,/to="\/home" className="ogcl-signup-logo"/);
-  assert.match(shell,/<Outlet context=\{\{setCard\}\}\/>/);
+  assert.match(shell,/<Outlet\/>/);
   assert.match(signup,/I am a/);
   assert.match(signup,/>Continue<\/button>/);
-  assert.deepEqual([...shell.matchAll(/<NavLink to="([^"]+)"/g)].map(m=>m[1]),["/ogtrends","/verify","/signup10","/signin","/home","/contact","/privacy","/terms"]);
+  assert.deepEqual([...shell.matchAll(/<NavLink to="([^"]+)"/g)].map(m=>m[1]),["/ogtrends","/signin","/home","/contact","/privacy","/terms"]);
   assert.match(css,/background:transparent/);
   assert.match(css,/grid-template-rows:auto 1fr auto/);
 });
