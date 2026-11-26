@@ -5,6 +5,7 @@ import PublishedUiDesign from "./PublishedUiDesign.jsx";
 import "./blade.css";
 import SignupLanding from "./SignupLanding.jsx";
 import SignupShell from "./SignupShell.jsx";
+import AboutPage from "./AboutPage.jsx";
 import SignupCredentials from "./SignupCredentials.jsx";
 import SignupIdentity from "./SignupIdentity.jsx";
 import SignupLocation from "./SignupLocation.jsx";
@@ -427,6 +428,7 @@ export default function App() {
         </section>} />
       </Route>
       <Route element={<SignupShell/>}>
+        <Route path="about" element={<AboutPage/>} />
         <Route path="signup" element={<SignupLanding onContinue={setSignupSelection} selection={signupSelection}/>} />
         <Route path="signup1" element={<Navigate to="/signup" replace/>} />
         <Route path="signup2" element={<SignupCredentials/>} />
