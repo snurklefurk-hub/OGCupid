@@ -21,14 +21,14 @@ export default function SignupShell({Photo}){
   if(kind==="checking")return <main className="ogcl-signup-landing" aria-busy="true" aria-label="Checking account"/>;
   return <main className="ogcl-signup-landing" aria-label="Sign up for OG Cupid">
     <header className="ogcl-signup-top">
-      <span className="ogcl-signup-blog">Just here for the blog? <NavLink to="/ogtrends">click here to read OG Trends</NavLink></span>
+      <span className="ogcl-signup-blog">Just here for the blog? <NavLink to="/ogtrends">Click here to read OG Trends.</NavLink></span>
       {step==="/signup9"&&kind==="onboarding"&&card?.userId===user?.id?<div className="ogcl-signup9-card" id="signup9-profile-card">
         <ProfileFloater Photo={Photo} signupProfile={card}/>
         <div className="ogcl-signup9-tutorial">
-          {emailPrompt?<><p role="status">now would be a good time to validate your email</p><NavLink to="/verify" target="_blank" rel="noopener noreferrer">Validate email</NavLink><NavLink to="/signup10" className="ogcl-signup9-primary">next</NavLink></>:<>
+          {emailPrompt?<><p role="status">Now would be a good time to validate your email.</p><NavLink to="/verify" target="_blank" rel="noopener noreferrer">Validate email</NavLink><NavLink to="/signup10" className="ogcl-signup9-primary">Next</NavLink></>:<>
           <div className="ogcl-signup9-pointer" aria-hidden="true">↑</div>
           <p>This is a quick link to your profile where you can fill out your preferences, essays, and see any personality awards you've gotten.</p>
-          <button type="button" className="ogcl-signup9-primary" onClick={()=>setEmailPrompt(true)}>next</button></>}
+          <button type="button" className="ogcl-signup9-primary" onClick={()=>setEmailPrompt(true)}>Next</button></>}
         </div>
       </div>:<NavLink to="/signin" className="ogcl-signup-signin">Sign in</NavLink>}
     </header>
