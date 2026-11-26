@@ -103,7 +103,10 @@ export default function SignupDetails({page}){
       {select("bodyType","Body type",BODY_TYPE_CHOICES)}
       <Choices label="Languages" options={LANGUAGE_CHOICES.map(value=>({value,label:value}))} selected={draft.languages?draft.languages.split(", "):[]} onChange={items=>update("languages",LANGUAGE_CHOICES.filter(x=>items.includes(x)).join(", "))} disabled={busy}/>
     </div>}
-    <button type="submit" disabled={busy}>{busy?"SAVING…":"CONTINUE"}</button>
+    <div className="ogcl-signup-navigation">
+      <button type="button" className="ogcl-signup-back" disabled={busy} onClick={()=>navigate("/signup"+(page-1),{replace:true})}>Back</button>
+      <button type="submit" disabled={busy}>{busy?"SAVING…":"CONTINUE"}</button>
+    </div>
     {error&&<p className="ogcl-signup-error" role="alert">{error}</p>}
   </form>;
 }
