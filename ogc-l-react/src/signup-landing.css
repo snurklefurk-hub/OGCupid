@@ -142,3 +142,11 @@
 .ogcl-signup3-filters label{display:grid;gap:8px;font-size:14px;min-width:0}
 .ogcl-signup3-filters select{min-width:0;width:100%;min-height:42px;background:white;color:#50586a;border:1px solid #d4d8e0;border-radius:2px;padding:7px 10px;font:inherit}
 @media(max-width:480px){.ogcl-signup3-filters{gap:8px}.ogcl-signup3-filters select{padding:6px}}
+
+/* Secondary navigation never submits the current signup form. */
+.ogcl-signup-navigation{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;max-width:100%}
+.ogcl-signup-credentials-fields .ogcl-signup-navigation{width:100%}
+.ogcl-signup-credentials-fields .ogcl-signup-navigation button[type=submit]{flex:1;min-width:0}
+.ogcl-signup-landing .ogcl-signup-back{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 20px;border:1px solid #ffffff80;border-radius:2px;background:transparent;color:inherit;font:600 15px Arial,sans-serif;text-decoration:none;cursor:pointer}
+.ogcl-signup-landing .ogcl-signup-back:hover:not(:disabled){background:#ffffff1a}
+.ogcl-signup-landing .ogcl-signup-back:disabled{opacity:.6;cursor:default}
