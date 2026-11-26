@@ -45,7 +45,7 @@ function CropStage({file,busy,onUpload,onCancel}){
     <div className="ogcl-signup9-actions">
       <button type="button" disabled={busy||!ready} onClick={()=>cropper.current?.reset()}>Reset crop</button>
       <button type="button" disabled={busy} onClick={onCancel}>Choose another photo</button>
-      <button type="button" className="ogcl-signup9-primary" disabled={busy||!ready} onClick={()=>void upload()}>{busy?"UPLOADING…":"UPLOAD PHOTO"}</button>
+      <button type="button" className="ogcl-signup9-primary" disabled={busy||!ready} onClick={()=>void upload()}>{busy?"Uploading…":"Upload"}</button>
     </div>
   </div>;
 }
@@ -55,9 +55,9 @@ export default function SignupFinish(){
   const {setCard}=useOutletContext();
   const navigate=useNavigate();
   const [progress,setProgress]=useState(null),[profile,setProfile]=useState(null),[primary,setPrimary]=useState(null);
-  const [file,setFile]=useState(null),[essay,setEssay]=useState(""),[confirmed,setConfirmed]=useState(false);
+  const [file,setFile]=useState(null),[essay,setEssay]=useState("");
   const [done,setDone]=useState(false),[loading,setLoading]=useState(true),[busy,setBusy]=useState(false),[error,setError]=useState(""),[retry,setRetry]=useState(0);
-  const lock=useRef(false),fileSerial=useRef(0);
+  const lock=useRef(false),fileSerial=useRef(0),fileInput=useRef(null);
   useEffect(()=>{
     if(kind!=="onboarding")return;
     let live=true;setLoading(true);setError("");setDone(false);setCard(null);
@@ -106,7 +106,7 @@ export default function SignupFinish(){
   }
   async function save(event){
     event.preventDefault();
-    if(lock.current||!primary?.id||!confirmed||essay.trim().length<15||essay.trim().length>5000)return;
+    if(lock.current||!primary?.id||essay.trim().length<15||essay.trim().length>5000)return;
     lock.current=true;setBusy(true);setError("");
     try{
       const saved=await accountRequest("/profile","PUT",profileDraft(progress.state,profile,essay.trim()));
@@ -120,19 +120,21 @@ export default function SignupFinish(){
     }catch(e){setError(e?.message||"Your self summary couldn't be saved. Please retry.");}
     finally{lock.current=false;setBusy(false);}
   }
-  return <section className="ogcl-signup3 ogcl-signup9" aria-label="the finishing touches">
-    <h1>the finishing touches</h1>
+  return <section className="ogcl-signup3 ogcl-signup9" aria-label="The finishing touches">
+    <h1>The finishing touches</h1>
     {done?null:!primary?<div className="ogcl-signup9-photo">
-      <h2>upload your main pfp</h2>
-      {!file?<label className="ogcl-signup9-file">Choose photo<input type="file" accept="image/jpeg,image/png,image/webp" disabled={busy}
-        onChange={e=>{const selected=e.target.files?.[0];e.target.value="";if(selected){fileSerial.current++;setFile(selected);setError("");}}}/></label>:
+      <p className="ogcl-signup9-note" id="signup9-photo-note">Upload one actual picture of yourself. You can upload more later of anything you want. Anime pfps, memes, your dogs, whatever. You gotta have a real pfp though.</p>
+      {!file?<>
+        <input ref={fileInput} type="file" hidden accept="image/jpeg,image/png,image/webp" disabled={busy}
+        onChange={e=>{const selected=e.target.files?.[0];e.target.value="";if(selected){fileSerial.current++;setFile(selected);setError("");}}}/>
+        <button type="button" className="ogcl-signup9-primary" aria-describedby="signup9-photo-note" disabled={busy} onClick={()=>fileInput.current?.click()}>Upload</button>
+      </>:
         <CropStage key={fileSerial.current} file={file} busy={busy} onUpload={upload} onCancel={()=>{setFile(null);setError("");}}/>}
     </div>:<form className="ogcl-signup9-essay" onSubmit={save}>
-      <label htmlFor="signup9-essay">my self summary</label>
-      <p className="ogcl-signup9-note" id="signup9-essay-note">Just put a little something down for now. You can fill out all the essays you want later, and upload more pics.</p>
+      <label htmlFor="signup9-essay">My self summary</label>
+      <p className="ogcl-signup9-note" id="signup9-essay-note">Just put a little something down for now. You can fill out all the essays you want later and upload more pics.</p>
       <textarea id="signup9-essay" aria-describedby="signup9-essay-note" name="aboutMe" rows={7} minLength={15} maxLength={5000} required value={essay} disabled={busy} onChange={e=>setEssay(e.target.value)}/>
-      <label className="ogcl-signup9-confirm"><input type="checkbox" checked={confirmed} disabled={busy} onChange={e=>setConfirmed(e.target.checked)}/> I confirm my main profile picture is a genuine photo of me.</label>
-      <button className="ogcl-signup9-primary" type="submit" disabled={busy||!confirmed||essay.trim().length<15}>{busy?"SAVING…":"SAVE"}</button>
+      <button className="ogcl-signup9-primary" type="submit" disabled={busy||essay.trim().length<15}>{busy?"Saving…":"Save"}</button>
     </form>}
     {!done&&!progress.profile&&<button type="button" className="ogcl-signup-back" disabled={busy} onClick={()=>navigate("/signup8",{replace:true})}>Back</button>}
     {error&&<p className="ogcl-signup-error" role="alert">{error}</p>}

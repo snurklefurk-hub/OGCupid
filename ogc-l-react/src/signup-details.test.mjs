@@ -33,7 +33,7 @@ test("routes use the raised shell and private authenticated draft writes",()=>{
     assert.ok(SITEMAP_PATHS.includes("/signup"+page));
     assert.ok(shell.includes('"/signup'+page+'"'));
   }
-  for(const text of ["What do you do?","What do you like?","what are you bringing?","Drugs (the hard stuff)","Weed (any kind)","Do you want kids?"])assert.ok(screen.includes(text));
+  for(const text of ["What do you do?","What do you like?","What are you bringing?","Drugs (the hard stuff)","Weed (any kind)","Do you want kids?"])assert.ok(screen.includes(text));
   assert.match(screen,/step:"signup-details",page,fields/);
   assert.match(screen,/aria-pressed=\{selected.includes\(option\)\}/);
   assert.match(onboarding,/\.\.\.savedSignupDetails\(state\)/);
@@ -78,8 +78,8 @@ test("personal options have exact order, 43 one-inch heights and validated multi
   assert.deepEqual(savedSignupDetails({signup8_details:draft}),profile);
   const screen=read("./SignupDetails.jsx");
   assert.match(screen,/if\(page===8\)initial.orientation=state.orientation/);
-  assert.ok(screen.includes("Lets get personal"));
-  assert.ok(screen.includes("We're almost done, i swear"));
+  assert.ok(screen.includes("Let's get personal"));
+  assert.ok(screen.includes("We're almost done, I swear."));
   assert.match(screen,/<Choices label="Ethnicity"/);
   assert.match(screen,/<Choices label="Languages"/);
 });

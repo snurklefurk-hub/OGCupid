@@ -34,10 +34,10 @@ export default function SignupCredentials(){
       <small id="signup-password-min">At least 12 characters</small>
       <div className="ogcl-signup-navigation">
         <button type="button" className="ogcl-signup-back" disabled={busy} onClick={()=>navigate("/signup",{replace:true})}>Back</button>
-        <button type="submit" disabled={busy}>{busy?"CREATING ACCOUNT…":"CONTINUE"}</button>
+        <button type="submit" disabled={busy}>{busy?"Creating account…":"Continue"}</button>
       </div>
       {error&&<p className="ogcl-signup-error" role="alert">{error}</p>}
     </div>
-    <aside id="signup-permanent" className="ogcl-signup-tooltip">These are permanent. Choose wisely</aside>
+    <aside id="signup-permanent" className="ogcl-signup-tooltip">These are permanent. Choose wisely.</aside>
   </form>;
 }

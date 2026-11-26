@@ -17,7 +17,7 @@ export default function SignupNext(){
   if(kind==="error"||kind==="unconfigured"||error)return <p role="alert">Couldn't check your progress. <button type="button" onClick={()=>kind==="onboarding"?setRetry(n=>n+1):void refresh()}>Retry</button></p>;
   if(!status)return <p role="status">Checking your account…</p>;
   if(!status.photo)return <Navigate to="/signup9" replace/>;
-  return <section className="ogcl-signup3"><h1>Let's get to know you</h1>
+  return <section className="ogcl-signup3"><h1>Let's get to know you.</h1>
     <p>Continue with the existing personality and match-question setup.</p>
     <div className="ogcl-signup-navigation">
       <NavLink className="ogcl-signup-back" to="/signup9" replace>Back</NavLink>

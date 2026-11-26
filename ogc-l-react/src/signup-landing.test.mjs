@@ -29,7 +29,7 @@ test("signup is a standalone sibling route with only the requested features",()=
   assert.match(shell,/to="\/home" className="ogcl-signup-logo"/);
   assert.match(shell,/<Outlet context=\{\{setCard\}\}\/>/);
   assert.match(signup,/I am a/);
-  assert.match(signup,/>CONTINUE<\/button>/);
+  assert.match(signup,/>Continue<\/button>/);
   assert.deepEqual([...shell.matchAll(/<NavLink to="([^"]+)"/g)].map(m=>m[1]),["/ogtrends","/verify","/signup10","/signin","/home","/contact","/privacy","/terms"]);
   assert.match(css,/background:transparent/);
   assert.match(css,/grid-template-rows:auto 1fr auto/);
@@ -70,7 +70,7 @@ test("signup step two uses existing credential validation and signup action",()=
 });
 
 test("signup shell blog invitation and step two note are plain and accessible",()=>{
-  assert.match(shell,/Just here for the blog\? <NavLink to="\/ogtrends">click here to read OG Trends<\/NavLink>/);
+  assert.match(shell,/Just here for the blog\? <NavLink to="\/ogtrends">Click here to read OG Trends\.<\/NavLink>/);
   assert.match(credentials,/aria-describedby="signup-permanent"/);
   const note=css.match(/\.ogcl-signup-tooltip\{([^}]+)\}/)?.[1]||"";
   assert.match(note,/color:inherit/);

@@ -21,7 +21,7 @@ export default function SignupLanding({onContinue,selection}){
         <select aria-label="Gender" value={gender} onChange={e=>setGender(e.target.value)}>
           {SIGNUP_GENDERS.map(value=><option key={value}>{value}</option>)}
         </select>
-        <button type="submit">CONTINUE</button>
-        {(gender==="Something else"||orientation==="Something else")&&<p className="ogcl-signup-more" role="status">Dont worry, we've got more options inside</p>}
+        <button type="submit">Continue</button>
+        {(gender==="Something else"||orientation==="Something else")&&<p className="ogcl-signup-more" role="status">Don't worry, we've got more options inside.</p>}
       </form>;
 }

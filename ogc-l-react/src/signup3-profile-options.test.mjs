@@ -37,9 +37,9 @@ test("signup3 uses the shared shell with a raised logo and stores choices only t
   assert.match(app,/<Route path="signup1" element=\{<Navigate to="\/signup"/);
   assert.match(shell,/identityStep\?" ogcl-signup-content-top"/);
   assert.match(signup,/gender==="Something else"\|\|orientation==="Something else"/);
-  assert.match(signup,/Dont worry, we've got more options inside/);
+  assert.match(signup,/Don't worry, we've got more options inside\./);
   assert.match(step,/So who are you, really\?/);
-  assert.match(step,/Pick whatever is closest, we cant afford a 10k parameter search engine/);
+  assert.match(step,/Pick whatever is closest\. We can't afford a 10k-parameter search engine\./);
   assert.match(step,/state\.gender\|\|selection\?\.gender/);
   assert.match(step,/state\.orientation\|\|selection\?\.orientation/);
   assert.match(step,/step:"signup-preferences"/);

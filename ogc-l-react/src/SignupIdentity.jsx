@@ -79,7 +79,7 @@ export default function SignupIdentity({selection,onSaved}){
     <h1>So who are you, really?</h1>
     <label className="ogcl-signup3-birthdate">Birthdate<input type="date" name="birthDate" required min={birthDateLimit(120)} max={birthDateLimit(18)} value={draft.birthDate} disabled={busy} onChange={e=>setDraft(old=>({...old,birthDate:e.target.value}))}/></label>
     <div className="ogcl-signup3-grid">
-      <p id="signup3-hint" className="ogcl-signup3-hint">Pick whatever is closest, we cant afford a 10k parameter search engine</p>
+      <p id="signup3-hint" className="ogcl-signup3-hint">Pick whatever is closest. We can't afford a 10k-parameter search engine.</p>
       <label className="ogcl-signup3-select">Gender
         <select required value={draft.gender} disabled={busy} aria-describedby="signup3-hint" onChange={e=>updateIdentity("gender",e.target.value)}>
           <option value="">Choose</option>{PROFILE_GENDERS.map(value=><option key={value}>{value}</option>)}
@@ -92,7 +92,7 @@ export default function SignupIdentity({selection,onSaved}){
       </label>
       <Choices label="Looking for" options={PROFILE_LOOKING_GENDERS} selected={draft.interestedIn} disabled={busy}
         onChange={items=>{touched.current=true;setDraft(old=>({...old,interestedIn:items}));}}/>
-      <Choices label="To have" options={PROFILE_INTENTIONS} selected={draft.intentions} disabled={busy}
+      <Choices label="To have" options={PROFILE_INTENTIONS.map(({value,label})=>({value,label:label.charAt(0).toUpperCase()+label.slice(1).replace(" term","-term")}))} selected={draft.intentions} disabled={busy}
         onChange={items=>setDraft(old=>({...old,intentions:items}))}/>
     </div>
     <div className="ogcl-signup3-filters">
@@ -100,7 +100,7 @@ export default function SignupIdentity({selection,onSaved}){
       <label>Age to<select required value={draft.ageMax} disabled={busy} onChange={e=>setDraft(old=>({...old,ageMax:Number(e.target.value)}))}>{SIGNUP_AGE_CHOICES.filter(age=>age>=draft.ageMin).map(age=><option key={age}>{age}</option>)}</select></label>
       <label>Distance<select required value={draft.distanceMiles} disabled={busy} onChange={e=>setDraft(old=>({...old,distanceMiles:Number(e.target.value)}))}>{SIGNUP_DISTANCE_CHOICES.map(miles=><option key={miles} value={miles}>{miles===0?"Anywhere":miles+" miles"}</option>)}</select></label>
     </div>
-    <button type="submit" className="ogcl-signup3-continue" disabled={busy||!canContinue}>{busy?"SAVING…":"CONTINUE"}</button>
+    <button type="submit" className="ogcl-signup3-continue" disabled={busy||!canContinue}>{busy?"Saving…":"Continue"}</button>
     {error&&<p className="ogcl-signup-error" role="alert">{error}</p>}
   </form>;
 }
