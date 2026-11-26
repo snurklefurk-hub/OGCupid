@@ -11,16 +11,14 @@ test("signup9 keeps the existing cropper, profile and essay in the signup shell"
   assert.match(screen,/instance\?\.dispose\(\)/);
   assert.match(screen,/accountRequest\("\/profile","PUT",profileDraft/);
   assert.match(screen,/accountRequest\("\/photos","POST",jpeg\)/);
-  assert.match(screen,/\{done\?null:!primary\?/);
+  assert.match(screen,/\{!primary\?/);
   assert.match(screen,/signup9-finish",confirmed:true/);
-  assert.match(screen,/if\(!status\?\.photo\|\|!status\?\.state\?\.signup9_completed_at\)/);
-  assert.match(screen,/setCard\(\{userId:saved.profile.userId,slug:saved.profile.slug,displayName:saved.profile.displayName,avatarPhotoId:primary.id\}\)/);
+  assert.match(screen,/if\(!status\?\.photo\|\|!status\?\.state\?\.signup9_completed_at\|\|!status\?\.explored\)/);
+  assert.match(screen,/if\(await refresh\(\)\)navigate\("\/home",\{replace:true\}\)/);
+  assert.match(app,/<Route path="onboarding" element=\{<Navigate to="\/home" replace\/>\}/);
+  assert.match(app,/<Route path="signup10" element=\{<Navigate to="\/home" replace\/>\}/);
   assert.match(screen,/minLength=\{15\} maxLength=\{5000\}/);
   assert.ok(screen.includes("Just put a little something down for now. You can fill out all the essays you want later and upload more pics."));
-  assert.ok(shell.includes("This is a quick link to your profile where you can fill out your preferences, essays, and see any personality awards you've gotten."));
-  assert.match(shell,/step==="\/signup9"&&kind==="onboarding"&&card\?\.userId===user\?\.id/);
-  assert.match(shell,/<ProfileFloater Photo=\{Photo\} signupProfile=\{card\}/);
-  assert.match(shell,/to="\/signup10" className="ogcl-signup9-primary">Next/);
   assert.match(app,/progress\?\.photo\?\{userId:user.id,slug\}:false/);
   assert.match(app,/data.profile.slug===slug/);
   for(const page of [9,10]){
@@ -28,7 +26,6 @@ test("signup9 keeps the existing cropper, profile and essay in the signup shell"
     assert.ok(SITEMAP_PATHS.includes("/signup"+page));
   }
   assert.doesNotMatch(screen,/localStorage|sessionStorage|indexedDB/);
-  assert.match(read("./SignupNext.jsx"),/if\(!status.photo\)return <Navigate to="\/signup9"/);
 });
 test("crop controls preserve freeform selection and server-compatible output dimensions",()=>{
   const original=cropRect(800,600,{x:100,y:100,width:400,height:300});
