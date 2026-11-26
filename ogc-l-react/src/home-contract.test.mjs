@@ -45,7 +45,9 @@ test("signup filters and two-stage email tutorial use persisted settings and cor
   assert.ok(!validSignupFilters({ageMin:18,ageMax:100,distanceMiles:50}));
   assert.ok(!validSignupFilters({ageMin:18,ageMax:99,distanceMiles:7}));
   const identity=read("./SignupIdentity.jsx"),finish=read("./SignupFinish.jsx"),shell=read("./SignupShell.jsx");
-  assert.match(identity,/validSignupFilters\(draft\)/);
+  assert.match(identity,/canContinueSignup3\(draft\)/);
+  assert.match(read("./signup3-validation.mjs"),/validSignupFilters\(draft\)/);
+  assert.match(identity,/disabled=\{busy\|\|!canContinue\}/);
   assert.match(finish,/searchRadiusMiles:state.signup_radius_miles\?\?/);
   assert.match(finish,/preferredAgeMin:Math.min\(state.match_age_min/);
   assert.match(shell,/emailPrompt\?<><p role="status">now would be a good time to validate your email/);
