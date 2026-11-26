@@ -50,9 +50,19 @@ test("signup filters and two-stage email tutorial use persisted settings and cor
   assert.match(identity,/disabled=\{busy\|\|!canContinue\}/);
   assert.match(finish,/searchRadiusMiles:state.signup_radius_miles\?\?/);
   assert.match(finish,/preferredAgeMin:Math.min\(state.match_age_min/);
-  assert.match(shell,/emailPrompt\?<><p role="status">now would be a good time to validate your email/);
-  assert.match(shell,/onClick=\{\(\)=>setEmailPrompt\(true\)\}>next/);
-  assert.match(shell,/to="\/signup10" className="ogcl-signup9-primary">next/);
+  assert.match(shell,/emailPrompt\?<><p role="status">Now would be a good time to validate your email/);
+  assert.match(shell,/onClick=\{\(\)=>setEmailPrompt\(true\)\}>Next/);
+  assert.match(shell,/to="\/signup10" className="ogcl-signup9-primary">Next/);
   assert.match(read("./App.jsx"),/<MemberGate><HomeView Photo=\{MemberPhoto\}/);
   assert.match(read("./MatchesView.jsx"),/apply=\{\(\)=>\{[^}]*accountRequest\("\/home","POST",\{event:"search"\}/);
+});
+
+test("signup9 uses one green Upload control and no confirmation checkbox",()=>{
+  const source=read("./SignupFinish.jsx");
+  assert.match(source,/type="file" hidden/);
+  assert.match(source,/className="ogcl-signup9-primary" aria-describedby="signup9-photo-note"[^\n]+>Upload<\/button>/);
+  assert.match(source,/Upload one actual picture of yourself\. You can upload more later of anything you want\. Anime pfps, memes, your dogs, whatever\. You gotta have a real pfp though\./);
+  assert.doesNotMatch(source,/setConfirmed|I confirm my main profile picture/);
+  assert.match(source,/!primary\?\.id\|\|essay\.trim\(\)\.length<15/);
+  assert.match(source,/step:"signup9-finish",confirmed:true/);
 });
