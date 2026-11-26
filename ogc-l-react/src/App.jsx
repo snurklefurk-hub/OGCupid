@@ -9,7 +9,6 @@ import SignupIdentity from "./SignupIdentity.jsx";
 import SignupLocation from "./SignupLocation.jsx";
 import SignupDetails from "./SignupDetails.jsx";
 import SignupFinish from "./SignupFinish.jsx";
-import SignupNext from "./SignupNext.jsx";
 import {explorerPath} from "./home-contract.mjs";
 import {homeDestination} from "./signup-landing.mjs";
 import {useMemberSession} from "./MemberSessionProvider.jsx";
@@ -232,7 +231,7 @@ function SignInForm() {
     } finally { setBusy(false); }
   }
   if(kind==="member")return <Navigate to={defaultRoute} replace/>;
-  if(kind==="onboarding")return <Navigate to={!onboarding?.identity?"/signup3":!onboarding?.locality?"/signup4":"/onboarding"} replace/>;
+  if(kind==="onboarding")return <Navigate to={!onboarding?.identity?"/signup3":!onboarding?.locality?"/signup4":"/signup9"} replace/>;
   return (
     <section className="ogcl-view" aria-labelledby="ogcl-signin-heading">
       <header className="ogcl-view-head">
@@ -277,7 +276,7 @@ function MemberGate({children,allowOnboarding=false}) {
   if (kind === "checking") return (
     <section className="ogcl-view"><p role="status">Checking your account…</p></section>
   );
-  if (kind === "onboarding") return <Onboarding/>;
+  if (kind === "onboarding") return <Navigate to="/home" replace/>;
   return (
     <section className="ogcl-view" role="alert">
       <header className="ogcl-view-head"><h1>Account unavailable</h1></header>
@@ -356,7 +355,7 @@ const views = {
 
 function HomeRoute(){
   const {kind,onboarding}=useMemberSession();
-  const destination=kind==="onboarding"?(!onboarding?.identity?"/signup3":!onboarding?.locality?"/signup4":"/onboarding"):homeDestination(kind);
+  const destination=kind==="onboarding"?(!onboarding?.identity?"/signup3":!onboarding?.locality?"/signup4":"/signup9"):homeDestination(kind);
   if(destination)return <Navigate to={destination} replace/>;
   return <MemberGate><HomeView Photo={MemberPhoto}/></MemberGate>;
 }
@@ -389,7 +388,7 @@ export default function App() {
         <Route path="join" element={<JoinForm/>} />
         <Route path="recover" element={<RecoveryForm/>} />
         <Route path="verify" element={<VerifyForm/>} />
-        <Route path="onboarding" element={<Onboarding signupSelection={signupSelection} onIdentitySaved={()=>setSignupSelection(null)}/>} />
+        <Route path="onboarding" element={<Navigate to="/home" replace/>} />
         <Route path="account" element={<AccountManagement/>} />
         <Route path="persona" element={<PersonaRoute/>} />
         <Route path="ogtrends" element={<EmbeddedEditorial pageKey="ogtrends"/>} />
@@ -424,7 +423,7 @@ export default function App() {
           </div>
         </section>} />
       </Route>
-      <Route element={<SignupShell Photo={MemberPhoto}/>}>
+      <Route element={<SignupShell/>}>
         <Route path="signup" element={<SignupLanding onContinue={setSignupSelection} selection={signupSelection}/>} />
         <Route path="signup1" element={<Navigate to="/signup" replace/>} />
         <Route path="signup2" element={<SignupCredentials/>} />
@@ -435,7 +434,7 @@ export default function App() {
         <Route path="signup7" element={<SignupDetails key={7} page={7}/>} />
         <Route path="signup8" element={<SignupDetails key={8} page={8}/>} />
         <Route path="signup9" element={<SignupFinish/>} />
-        <Route path="signup10" element={<SignupNext/>} />
+        <Route path="signup10" element={<Navigate to="/home" replace/>} />
       </Route>
     </Routes>
   </>);
