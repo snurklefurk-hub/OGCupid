@@ -16,11 +16,11 @@ test("signup9 keeps the existing cropper, profile and essay in the signup shell"
   assert.match(screen,/if\(!status\?\.photo\|\|!status\?\.state\?\.signup9_completed_at\)/);
   assert.match(screen,/setCard\(\{userId:saved.profile.userId,slug:saved.profile.slug,displayName:saved.profile.displayName,avatarPhotoId:primary.id\}\)/);
   assert.match(screen,/minLength=\{15\} maxLength=\{5000\}/);
-  assert.ok(screen.includes("Just put a little something down for now. You can fill out all the essays you want later, and upload more pics."));
+  assert.ok(screen.includes("Just put a little something down for now. You can fill out all the essays you want later and upload more pics."));
   assert.ok(shell.includes("This is a quick link to your profile where you can fill out your preferences, essays, and see any personality awards you've gotten."));
   assert.match(shell,/step==="\/signup9"&&kind==="onboarding"&&card\?\.userId===user\?\.id/);
   assert.match(shell,/<ProfileFloater Photo=\{Photo\} signupProfile=\{card\}/);
-  assert.match(shell,/to="\/signup10" className="ogcl-signup9-primary">next/);
+  assert.match(shell,/to="\/signup10" className="ogcl-signup9-primary">Next/);
   assert.match(app,/progress\?\.photo\?\{userId:user.id,slug\}:false/);
   assert.match(app,/data.profile.slug===slug/);
   for(const page of [9,10]){
