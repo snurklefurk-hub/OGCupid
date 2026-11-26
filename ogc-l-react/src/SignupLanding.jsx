@@ -13,7 +13,7 @@ export default function SignupLanding({onContinue,selection}){
     onContinue(identity);
     navigate("/signup2");
   }
-  return <form className="ogcl-signup-form" onSubmit={submit}>
+  return <><h1 className="ogcl-signup-start">Lets get started</h1><form className="ogcl-signup-form" onSubmit={submit}>
         <span>I am a</span>
         <select aria-label="Orientation" value={orientation} onChange={e=>setOrientation(e.target.value)}>
           {SIGNUP_ORIENTATIONS.map(value=><option key={value}>{value}</option>)}
@@ -23,5 +23,5 @@ export default function SignupLanding({onContinue,selection}){
         </select>
         <button type="submit">Continue</button>
         {(gender==="Something else"||orientation==="Something else")&&<p className="ogcl-signup-more" role="status">Don't worry, we've got more options inside.</p>}
-      </form>;
+      </form></>;
 }
