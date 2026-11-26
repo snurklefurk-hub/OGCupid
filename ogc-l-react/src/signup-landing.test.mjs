@@ -32,9 +32,9 @@ test("signup is a standalone sibling route with only the requested features",()=
   assert.match(signup,/>Continue<\/button>/);
   assert.deepEqual([...shell.matchAll(/<NavLink to="([^"]+)"/g)].map(m=>m[1]),["/ogtrends","/about","/signin","/home","/contact","/privacy","/terms"]);
   assert.match(shell,/step==="\\/about"\?null/);
-  assert.match(shell,/Why you should join<\\/NavLink>/);
-  assert.match(signup,/<h1 className="ogcl-signup-start">Lets get started<\\/h1>/);
-  assert.match(app,/<Route path="about" element=\\{<AboutPage\\/>\\}/);
+  assert.match(shell,/Why you should join<\/NavLink>/);
+  assert.match(signup,/<h1 className="ogcl-signup-start">Lets get started<\/h1>/);
+  assert.match(app,/<Route path="about" element=\{<AboutPage\/>\}/);
   assert.ok(SITEMAP_PATHS.includes("/about"));
   assert.match(css,/background:transparent/);
   assert.match(css,/grid-template-rows:auto 1fr auto/);
