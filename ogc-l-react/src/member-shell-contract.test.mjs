@@ -21,7 +21,7 @@ test("member routes and sidebar navigation are both gated on verified membership
 });
 
 test("onboarding, registration, recovery and account actions live inside React",()=>{
-  assert.match(app, /<Route path="onboarding" element=\{<Onboarding/);
+  assert.match(app, /<Route path="onboarding" element=\{<Navigate to="\/home" replace\/>\}/);
   assert.match(app, /<Route path="join" element=\{<JoinForm/);
   assert.match(app, /<Route path="recover" element=\{<RecoveryForm/);
   assert.match(app, /<Route path="account" element=\{<AccountManagement/);
