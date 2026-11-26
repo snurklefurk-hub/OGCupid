@@ -19,6 +19,9 @@ export default function SignupNext(){
   if(!status.photo)return <Navigate to="/signup9" replace/>;
   return <section className="ogcl-signup3"><h1>Let's get to know you</h1>
     <p>Continue with the existing personality and match-question setup.</p>
-    <NavLink className="ogcl-signup9-primary" to="/onboarding">Continue</NavLink>
+    <div className="ogcl-signup-navigation">
+      <NavLink className="ogcl-signup-back" to="/signup9" replace>Back</NavLink>
+      <NavLink className="ogcl-signup9-primary" to="/onboarding">Continue</NavLink>
+    </div>
   </section>;
 }

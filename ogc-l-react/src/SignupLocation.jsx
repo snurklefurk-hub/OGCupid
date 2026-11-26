@@ -55,7 +55,10 @@ export default function SignupLocation(){
       </select></label>
       <CityChooser key={country} country={country} stored={stored} onPick={setSelected} confirmation disabled={busy}/>
     </div>
-    <button type="submit" disabled={busy||!selected?.id||!selected?.key}>{busy?"SAVING…":"CONTINUE"}</button>
+    <div className="ogcl-signup-navigation">
+      <button type="button" className="ogcl-signup-back" disabled={busy} onClick={()=>navigate("/signup3",{replace:true})}>Back</button>
+      <button type="submit" disabled={busy||!selected?.id||!selected?.key}>{busy?"SAVING…":"CONTINUE"}</button>
+    </div>
     {error&&<p role="alert" className="ogcl-signup-error">{error}</p>}
   </form>;
 }
