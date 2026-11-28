@@ -5,7 +5,6 @@ export const SITEMAP_SECTIONS=Object.freeze([
     {path:"/home",label:"Home",note:"Member landing page",access:"member"},
     {path:"/blade",label:"Blade",note:"Alternate Home palette",access:"member"},
     {path:"/signup",label:"Sign up",note:"Begin registration",access:"public"},
-    {path:"/about",label:"Why you should join",note:"About OG Cupid",access:"public"},
     {path:"/signup1",label:"Sign up – first step",note:"Begin registration",access:"public"},
     {path:"/signup2",label:"Sign up – account",note:"Create your account credentials",access:"public"},
     {path:"/signup3",label:"Sign up – identity",note:"Choose identity and dating preferences",access:"member"},
